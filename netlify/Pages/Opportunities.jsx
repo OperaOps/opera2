@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { User } from "@/entities/User";
+import { User } from "../Entities/User";
 import {
   TrendingUp, DollarSign, Users, Heart, Zap, Sparkles, Lightbulb, RefreshCw, Calendar } from
 "lucide-react";

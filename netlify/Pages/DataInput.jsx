@@ -3,9 +3,9 @@
 import React, { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { UploadFile, ExtractDataFromUploadedFile } from "@/integrations/Core";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "../components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Progress } from "../components/ui/progress";
 import { 
   Upload, 
   FileText, 

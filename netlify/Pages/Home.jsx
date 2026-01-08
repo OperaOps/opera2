@@ -2,8 +2,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User } from "@/entities/User";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
 import { Send, Mic, Sparkles, Loader2, CheckCircle } from "lucide-react";
 import { askWithContext } from "@/Components/ai/operaAI.js";
 import StructuredResponse from "@/Components/ai/StructuredResponse";
