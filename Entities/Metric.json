@@ -1,0 +1,51 @@
+{
+    "name": "Metric",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Name of the metric"
+      },
+      "value": {
+        "type": "number",
+        "description": "Current value of the metric"
+      },
+      "unit": {
+        "type": "string",
+        "description": "Unit of measurement (%, $, count, etc.)"
+      },
+      "category": {
+        "type": "string",
+        "enum": [
+          "financial",
+          "operational",
+          "marketing",
+          "clinical"
+        ],
+        "description": "Category of the metric"
+      },
+      "trend": {
+        "type": "string",
+        "enum": [
+          "up",
+          "down",
+          "stable"
+        ],
+        "description": "Trend direction"
+      },
+      "trend_percentage": {
+        "type": "number",
+        "description": "Percentage change"
+      },
+      "timestamp": {
+        "type": "string",
+        "format": "date-time",
+        "description": "When the metric was last updated"
+      }
+    },
+    "required": [
+      "name",
+      "value",
+      "category"
+    ]
+  }

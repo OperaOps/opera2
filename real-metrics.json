@@ -1,0 +1,132 @@
+{
+  "totalPatients": 1000,
+  "totalAppointments": 1000,
+  "uniquePatients": 413,
+  "appointmentYears": [
+    "1999"
+  ],
+  "busiestHours": [
+    {
+      "hour": "15:00",
+      "count": 160
+    },
+    {
+      "hour": "08:00",
+      "count": 158
+    },
+    {
+      "hour": "09:00",
+      "count": 128
+    },
+    {
+      "hour": "14:00",
+      "count": 123
+    },
+    {
+      "hour": "16:00",
+      "count": 101
+    }
+  ],
+  "todaySchedule": [
+    {
+      "patient": "Brett Gage",
+      "time": "08:00:00"
+    },
+    {
+      "patient": "Keith Fitzgerald",
+      "time": "08:00:00"
+    },
+    {
+      "patient": "Marilyn Motazedi",
+      "time": "08:00:00"
+    },
+    {
+      "patient": "Melissa Wilson",
+      "time": "08:15:00"
+    },
+    {
+      "patient": "Jordan Anderson",
+      "time": "08:45:00"
+    },
+    {
+      "patient": "Melissa Farinelli",
+      "time": "09:15:00"
+    },
+    {
+      "patient": "Amanda Moreno",
+      "time": "09:15:00"
+    },
+    {
+      "patient": "Brent Driller",
+      "time": "09:30:00"
+    },
+    {
+      "patient": "Troy Driller",
+      "time": "09:30:00"
+    },
+    {
+      "patient": "Lisa Barrett",
+      "time": "09:45:00"
+    },
+    {
+      "patient": "Cassandra Frederick",
+      "time": "10:00:00"
+    },
+    {
+      "patient": "Heather Westbrook",
+      "time": "10:30:00"
+    },
+    {
+      "patient": "Tyler Zenthoefer",
+      "time": "10:45:00"
+    },
+    {
+      "patient": "Krystal Bley",
+      "time": "11:15:00"
+    },
+    {
+      "patient": "Chad Killian",
+      "time": "13:15:00"
+    },
+    {
+      "patient": "Malea Dew",
+      "time": "13:15:00"
+    },
+    {
+      "patient": "Christina Wimer",
+      "time": "14:30:00"
+    },
+    {
+      "patient": "Kyle Chariott",
+      "time": "15:00:00"
+    },
+    {
+      "patient": "Caitlin Conley",
+      "time": "15:00:00"
+    },
+    {
+      "patient": "Erin Conley",
+      "time": "15:00:00"
+    },
+    {
+      "patient": "Ian Baugh",
+      "time": "15:15:00"
+    },
+    {
+      "patient": "Jenny Morse",
+      "time": "15:30:00"
+    },
+    {
+      "patient": "Steve Wallace",
+      "time": "15:45:00"
+    }
+  ],
+  "servicesOffered": 248,
+  "locations": 4,
+  "averageAppointmentsPerPatient": 2.4,
+  "mostPopularService": "REFINEMENTDEL",
+  "dateRange": {
+    "earliest": "1999-07-02",
+    "latest": "1999-09-03"
+  }
+}

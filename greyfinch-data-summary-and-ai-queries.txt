@@ -1,0 +1,181 @@
+GREYFINCH DATA SUMMARY & AI QUERY GUIDE
+==========================================
+
+Generated: 2025-09-06T00:25:00.000Z
+Source: Greyfinch Practice Management System API
+Total Records: 7 API endpoints successfully queried
+
+OVERVIEW
+========
+This dataset contains comprehensive practice management data from a Greyfinch orthodontic practice, including patient demographics, appointment scheduling, treatment plans, document management, and appointment types. The data spans from 1999 to 2025, providing a rich historical view of practice operations.
+
+DATA CATEGORIES
+===============
+
+1. APPOINTMENT BOOKINGS (20 records)
+   - Real-time appointment scheduling data
+   - Patient names, appointment dates/times
+   - Appointment IDs and patient IDs
+   - Sample patients: Steve Wallace, Jenny Morse, Ian Baugh, Kyle Chariott, Caitlin Conley
+
+2. APPOINTMENT TYPES (20 types)
+   - Available appointment categories in the practice
+   - Types include: REFINEMENTDEL, START TRANSFER, ALIGNERCK, ASST30, ASST60, B30, B60, B90, CK10, B40, CK20, CK30, COMFORTB30, CONSULT, DEBAND, DEBMIN, EVALDBND, FINALRET, ICAT, INSESSIX
+
+3. PATIENT DEMOGRAPHICS (20 patients)
+   - Complete patient roster with names and IDs
+   - Patient creation and update timestamps
+   - Sample patients: Kamyah Morrisette, Shanell Erps, Saida Eskew, Alexa Crandall, Braden DaVila, Milana Majette, Rachel Voth, Tennessee Morrison, Hadley Morgan, Evelyn Wilhelm
+
+4. PATIENT APPOINTMENT HISTORY
+   - Detailed appointment records per patient
+   - Appointment frequency analysis
+   - Patient visit patterns and compliance tracking
+
+5. PATIENT DOCUMENTS (Extensive library)
+   - Insurance cards and breakdowns
+   - Contracts and treatment agreements
+   - Radiographs and imaging
+   - EOBs (Explanation of Benefits)
+   - Referral letters and diagnosis letters
+   - Medical forms and treatment plans
+
+6. PATIENT TREATMENTS (20 treatment plans)
+   - Treatment types: New Tx, Comprehensive Treatment, Phase I Treatment
+   - Treatment start and end dates
+   - Active vs. completed treatments
+   - Treatment duration analysis
+
+7. PRACTICE LOCATIONS
+   - Clinic location information
+   - Address details (with minor schema issues)
+
+KEY INSIGHTS FROM DATA
+======================
+
+PATIENT VOLUME: 20 active patients in the system
+APPOINTMENT TYPES: 20 different appointment categories
+TREATMENT PHASES: Mix of Phase I and Comprehensive treatments
+DOCUMENT MANAGEMENT: Extensive digital document library
+INSURANCE COVERAGE: Multiple insurance providers (DD, GEHA, UHC, Metlife, etc.)
+TREATMENT DURATION: Ranges from short-term Phase I to long-term Comprehensive treatments
+
+SAMPLE QUESTIONS FOR AI MODEL
+=============================
+
+PATIENT MANAGEMENT QUESTIONS
+----------------------------
+• "Which patients have the most appointments scheduled?"
+• "What is the average number of appointments per patient?"
+• "Which patients are currently in Phase I treatment vs Comprehensive treatment?"
+• "How many new patients were added in 2024 vs 2025?"
+• "Which patients have completed their treatment plans?"
+• "What is the patient retention rate based on appointment frequency?"
+
+APPOINTMENT SCHEDULING QUESTIONS
+--------------------------------
+• "What are the most common appointment types scheduled?"
+• "What is the typical duration between appointments for orthodontic patients?"
+• "Which appointment types require the most time (B90, B60, etc.)?"
+• "How many appointments are typically scheduled per day?"
+• "What is the appointment no-show rate based on scheduled vs completed appointments?"
+
+TREATMENT ANALYSIS QUESTIONS
+----------------------------
+• "What is the average duration of Phase I treatments?"
+• "How many patients are currently in active treatment?"
+• "What percentage of patients complete their comprehensive treatment plans?"
+• "Which treatment types have the highest completion rates?"
+• "What is the typical timeline from treatment start to completion?"
+
+FINANCIAL & INSURANCE QUESTIONS
+-------------------------------
+• "Which insurance providers are most commonly used by patients?"
+• "What is the breakdown of insurance coverage across the patient base?"
+• "How many patients have multiple insurance policies?"
+• "What types of documents are most frequently generated for insurance claims?"
+• "Which patients have the most insurance-related documentation?"
+
+DOCUMENT MANAGEMENT QUESTIONS
+-----------------------------
+• "What types of documents are most commonly stored for patients?"
+• "How many radiographs does the average patient have on file?"
+• "Which patients have the most comprehensive document libraries?"
+• "What is the frequency of contract renewals and updates?"
+• "How many referral letters are generated per month?"
+
+PRACTICE OPERATIONS QUESTIONS
+-----------------------------
+• "What is the busiest time of day for appointments?"
+• "How has patient volume changed over time?"
+• "What is the average number of documents per patient?"
+• "Which appointment types are most frequently scheduled?"
+• "How many patients are in each stage of treatment?"
+
+COMPLIANCE & QUALITY QUESTIONS
+------------------------------
+• "Which patients have the most complete documentation?"
+• "What is the average time between treatment start and first follow-up?"
+• "How many patients have both Phase I and Comprehensive treatments?"
+• "Which patients have the most appointment history?"
+• "What is the documentation completeness rate across all patients?"
+
+TREATMENT OUTCOME QUESTIONS
+--------------------------
+• "What is the success rate of Phase I treatments?"
+• "How many patients progress from Phase I to Comprehensive treatment?"
+• "What is the average treatment duration for different treatment types?"
+• "Which patients have the longest treatment timelines?"
+• "What percentage of treatments are completed on schedule?"
+
+BUSINESS INTELLIGENCE QUESTIONS
+-------------------------------
+• "What is the patient acquisition rate over time?"
+• "How has the practice grown in terms of patient volume?"
+• "What is the average revenue per patient based on treatment type?"
+• "Which treatment types generate the most appointments?"
+• "What is the patient lifetime value based on appointment frequency?"
+
+CLINICAL WORKFLOW QUESTIONS
+---------------------------
+• "What is the typical workflow from initial consultation to treatment start?"
+• "How many patients are in each stage of the orthodontic process?"
+• "What is the average time between consultation and treatment initiation?"
+• "Which patients require the most clinical attention based on appointment frequency?"
+• "What is the typical progression through different appointment types?"
+
+DATA QUALITY QUESTIONS
+----------------------
+• "Which patients have incomplete treatment information?"
+• "What is the data completeness rate across all patient records?"
+• "Which patients are missing critical documentation?"
+• "How consistent is the data entry across different patient records?"
+• "What are the gaps in the current data structure?"
+
+PREDICTIVE ANALYSIS QUESTIONS
+-----------------------------
+• "Based on appointment patterns, which patients are likely to complete treatment?"
+• "What factors predict treatment success based on historical data?"
+• "Which patients are at risk of treatment abandonment?"
+• "What is the likelihood of a patient progressing from Phase I to Comprehensive treatment?"
+• "Based on appointment frequency, which patients need additional support?"
+
+INTEGRATION QUESTIONS
+--------------------
+• "How can this data be used to improve patient communication?"
+• "What insights can help optimize appointment scheduling?"
+• "How can treatment outcomes be improved based on historical patterns?"
+• "What operational changes could increase treatment completion rates?"
+• "How can patient satisfaction be enhanced using this data?"
+
+TECHNICAL QUESTIONS
+------------------
+• "What is the data structure and schema for each API endpoint?"
+• "How can this data be integrated with other practice management systems?"
+• "What are the data quality issues that need to be addressed?"
+• "How can the API be optimized for better data retrieval?"
+• "What additional data points would be valuable to collect?"
+
+This comprehensive dataset provides a complete view of orthodontic practice operations, enabling detailed analysis of patient care, treatment outcomes, operational efficiency, and business performance. The AI model can provide insights across clinical, operational, financial, and strategic dimensions of the practice.
+
+

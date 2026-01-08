@@ -1,0 +1,17 @@
+{
+    "endpoint": "https://connect-api.greyfinch.com/v1/graphql",
+    "authHeader": "Authorization: Bearer <accessToken>",
+    "queries": [
+      { "name": "appointmentBookings", "label": "agenda" },
+      { "name": "appointmentAvailability", "label": "open slots" },
+      { "name": "appointmentTypes", "label": "types" },
+      { "name": "appointmentTemplates", "label": "templates" },
+      { "name": "locations", "label": "clinics" },
+      { "name": "patients", "label": "patients" },
+      { "name": "patients.person", "label": "demographics" },
+      { "name": "patients.appointments", "label": "appt list" },
+      { "name": "patients.documents", "label": "docs" },
+      { "name": "patients.treatments", "label": "treatments" },
+      { "name": "company/division/location/employee", "label": "org/roster" }
+    ]
+  }

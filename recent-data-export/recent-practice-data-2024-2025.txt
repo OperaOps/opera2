@@ -1,0 +1,112 @@
+# Recent Practice Data (2024-2025)
+# Generated from Greyfinch Connect API
+# Combined on: 2025-09-29T20:45:02.745Z
+
+
+# RECENT APPOINTMENTS
+Appointment: Olivia Schaad on 2024-01-02 at 07:40:00
+Appointment: PATIENT FALCON on 2024-01-02 at 15:00:00
+Appointment: Claudio Vannelli on 2024-01-02 at 15:30:00
+Appointment: Jennsen Smoot on 2024-01-03 at 07:10:00
+Appointment: Geddy Smoot on 2024-01-03 at 07:30:00
+Appointment: Isiah Summers on 2024-01-03 at 07:10:00
+Appointment: Mathias Summers on 2024-01-03 at 07:30:00
+Appointment: Celeste Mizunaga on 2024-01-03 at 08:00:00
+Appointment: Olivia Baker on 2024-01-03 at 07:30:00
+Appointment: Naava Schwager on 2024-01-03 at 08:00:00
+Appointment: Kaydence Abbott on 2024-01-03 at 07:10:00
+Appointment: Eva Hamilton on 2024-01-03 at 08:00:00
+Appointment: Makynzie Hoskins on 2024-01-03 at 08:20:00
+Appointment: Andon Day on 2024-01-03 at 08:00:00
+Appointment: Elizabeth Dominguez on 2024-01-03 at 09:00:00
+Appointment: Justin Bull on 2024-01-03 at 08:20:00
+Appointment: Madison Pilger on 2024-01-03 at 08:30:00
+Appointment: Brandon Tate on 2024-01-03 at 08:30:00
+Appointment: Parker Kliniske on 2024-01-03 at 08:40:00
+Appointment: Jayden Cook on 2024-01-03 at 09:10:00
+Appointment: Olivia Schaad on 2024-01-02 at 07:40:00
+Appointment: PATIENT FALCON on 2024-01-02 at 15:00:00
+Appointment: Claudio Vannelli on 2024-01-02 at 15:30:00
+Appointment: Jennsen Smoot on 2024-01-03 at 07:10:00
+Appointment: Geddy Smoot on 2024-01-03 at 07:30:00
+Appointment: Isiah Summers on 2024-01-03 at 07:10:00
+Appointment: Mathias Summers on 2024-01-03 at 07:30:00
+Appointment: Celeste Mizunaga on 2024-01-03 at 08:00:00
+Appointment: Olivia Baker on 2024-01-03 at 07:30:00
+Appointment: Naava Schwager on 2024-01-03 at 08:00:00
+Appointment: Kaydence Abbott on 2024-01-03 at 07:10:00
+Appointment: Eva Hamilton on 2024-01-03 at 08:00:00
+Appointment: Makynzie Hoskins on 2024-01-03 at 08:20:00
+Appointment: Andon Day on 2024-01-03 at 08:00:00
+Appointment: Elizabeth Dominguez on 2024-01-03 at 09:00:00
+Appointment: Justin Bull on 2024-01-03 at 08:20:00
+Appointment: Madison Pilger on 2024-01-03 at 08:30:00
+Appointment: Brandon Tate on 2024-01-03 at 08:30:00
+Appointment: Parker Kliniske on 2024-01-03 at 08:40:00
+Appointment: Jayden Cook on 2024-01-03 at 09:10:00
+
+
+# RECENT PATIENTS
+Patient: Kamyah Morrisette (ID: 73fbe6f9-0a83-470e-a742-463daf67a581) - Created: 2025-04-24T18:14:16.692407
+Patient: Shanell Erps (ID: 4f461151-e582-426d-8d0d-e47ebc79b0f5) - Created: 2024-09-04T15:12:48.905089
+Patient: Saida Eskew (ID: 4055d9d3-8458-456e-a973-233ccfb31d75) - Created: 2024-09-04T15:28:46.180767
+Patient: Alexa Crandall (ID: db00e54e-2977-4469-bc16-1efca48dfa60) - Created: 2024-11-22T15:24:56.495175
+Patient: Braden DaVila (ID: 1c2ec794-4b5a-46ff-897f-846acbf7687c) - Created: 2024-11-22T21:47:49.162648
+Patient: Milana Majette  (ID: f9b93473-9927-4a1f-bbe8-b85394151505) - Created: 2024-11-22T17:32:04.379816
+Patient: Rachel Voth (ID: 29941507-3972-44b5-a47b-920f8b38b71f) - Created: 2024-11-26T04:39:33.450793
+Patient: Tennessee Morrison (ID: 21437c30-4007-413b-b765-13a9043eac2b) - Created: 2025-02-17T18:48:10.869006
+Patient: Hadley Morgan (ID: c4e18f7b-cda0-4031-86bb-35c7671e406a) - Created: 2024-11-26T23:33:41.289103
+Patient: Evelyn Wilhelm (ID: c7d22cc9-67f1-443e-8452-2eb90c41b434) - Created: 2024-11-27T00:05:46.424355
+Patient: Rishabh Confido Test (ID: e7d2e6ad-29bf-4441-a5aa-e332a33e6da3) - Created: 2024-11-27T09:48:50.30261
+Patient: Justice Kimmig (ID: 607be445-e7a0-400a-ba10-e0cd5313bb62) - Created: 2025-07-02T16:20:01.044829
+Patient: Rishabh Test Sharma Test (ID: 178b5f1d-1f63-43b0-9a8d-41315618c836) - Created: 2024-11-27T14:18:24.964604
+Patient: Finn Olson (ID: 93b738f7-55ab-4f9b-a018-98e15e3b8353) - Created: 2024-11-27T16:34:06.041152
+Patient: Reese  Pastoral (ID: bbf0a13c-8d92-4fc9-b32d-ff8a467b48c3) - Created: 2025-02-18T00:42:02.234216
+Patient: Sterling Miller (ID: 8cc84184-d082-402a-8f25-d52bca5d2bbb) - Created: 2024-11-27T18:24:20.034538
+Patient: Ellen Graham (ID: af055e92-0b4c-4fe0-affd-e529f460ebc9) - Created: 2024-11-26T16:50:12.826012
+Patient: Timothy Watkins (ID: 0490b19a-919e-450c-ab93-65c84b725978) - Created: 2025-02-17T21:20:15.702042
+Patient: Timeen Wegmeyer (ID: 4c7e0c67-586a-4d56-8145-b7e13b3b3ee7) - Created: 2024-07-04T02:13:15.25
+Patient: Christopher Alwood (ID: 9c29b60b-6ebc-474d-a067-85859645df8c) - Created: 2024-07-04T02:13:15.261
+
+
+# RECENT LOCATIONS
+Location: Royal Pine - Colorado Springs, CO (ID: 0c120319-a8e1-44de-9f39-d9be1762e86f)
+Location: Falcon - Peyton, CO (ID: 165d6b24-1cb7-43ac-9350-7600877abb92)
+Location: Serenity MedSpa - Colorado Springs, CO (ID: da315b0f-d0da-4536-bdfe-11a906e30e2d)
+Location: Falcon Implants & Oral Surgery - Peyton, CO (ID: 12b3e165-730b-4c87-9961-65018ac08c60)
+
+
+# RECENT APPOINTMENT-TYPES
+Service: REFINEMENTDEL (ID: f3067221-d48b-45bf-805a-2e30a6dfcc6e)
+Service: START TRANSFER (ID: 432797b7-47be-4c23-a773-ecff26d9a19b)
+Service: ALIGNERCK (ID: 06cb5b8c-7f52-497b-9c23-887e26008e97)
+Service: ASST30 (ID: 25bd33e9-4d98-4f77-a628-42ebd893eff9)
+Service: ASST60 (ID: d49b9799-5b8c-42f4-a768-7ac45bf65806)
+Service: B30 (ID: 86fb03bf-d4d0-42bb-8e7d-4928b67e0024)
+Service: B60 (ID: d4970c1f-5c94-452e-92a0-cffc83ff45bb)
+Service: B90 (ID: 43730e21-6a71-43b0-8f92-a5fa5f82407e)
+Service: CK10 (ID: 6004194c-0ef7-447f-8f38-cece1310e34a)
+Service: B40 (ID: dce2d4d3-81a1-4af7-a74e-d3c2cea6498c)
+Service: CK20 (ID: 103adac1-47e4-40fe-a7f9-4d4e8baee338)
+Service: CK30 (ID: 2534fddc-95eb-43bb-bce1-64aa848be6a3)
+Service: COMFORTB30 (ID: 7a201ad3-0356-4fbd-8519-a7178fea65ff)
+Service: CONSULT (ID: 69acf169-4719-4d02-be62-d9ff7841e19f)
+Service: DEBAND (ID: c40da125-383c-48a5-9e32-56ab6fd1c90a)
+Service: DEBMIN (ID: c3806c95-e536-4454-b14d-0f197477a698)
+Service: EVALDBND (ID: 9d08d697-a4ce-4a74-bd72-65ec090d8943)
+Service: FINALRET (ID: d3187613-05eb-40e1-a8d4-23b584c324de)
+Service: ICAT (ID: dbfe0f9d-88b6-4c53-b600-a948d1dff404)
+Service: INSESSIX (ID: 8fb463e4-74f8-46bf-8924-fb9eb6eba1b2)
+
+
+
+# Intelligent Data Analysis
+# Total Records: 84
+# Data Period: 2024-2025
+# Generated: 2025-09-29T20:45:02.748Z
+
+# System Context for AI Assistant
+# This data contains recent practice information from 2024-2025
+# Use this for current operations, recent trends, and up-to-date insights
+# Format: Entity: Details - Additional Info
+

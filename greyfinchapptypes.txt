@@ -1,0 +1,248 @@
+appointmentTypes	f3067221-d48b-45bf-805a-2e30a6dfcc6e	REFINEMENTDEL	{"id":"f3067221-d48b-45bf-805a-2e30a6dfcc6e","name":"REFINEMENTDEL"}
+appointmentTypes	432797b7-47be-4c23-a773-ecff26d9a19b	START TRANSFER	{"id":"432797b7-47be-4c23-a773-ecff26d9a19b","name":"START TRANSFER"}
+appointmentTypes	06cb5b8c-7f52-497b-9c23-887e26008e97	ALIGNERCK	{"id":"06cb5b8c-7f52-497b-9c23-887e26008e97","name":"ALIGNERCK"}
+appointmentTypes	25bd33e9-4d98-4f77-a628-42ebd893eff9	ASST30	{"id":"25bd33e9-4d98-4f77-a628-42ebd893eff9","name":"ASST30"}
+appointmentTypes	d49b9799-5b8c-42f4-a768-7ac45bf65806	ASST60	{"id":"d49b9799-5b8c-42f4-a768-7ac45bf65806","name":"ASST60"}
+appointmentTypes	86fb03bf-d4d0-42bb-8e7d-4928b67e0024	B30	{"id":"86fb03bf-d4d0-42bb-8e7d-4928b67e0024","name":"B30"}
+appointmentTypes	d4970c1f-5c94-452e-92a0-cffc83ff45bb	B60	{"id":"d4970c1f-5c94-452e-92a0-cffc83ff45bb","name":"B60"}
+appointmentTypes	43730e21-6a71-43b0-8f92-a5fa5f82407e	B90	{"id":"43730e21-6a71-43b0-8f92-a5fa5f82407e","name":"B90"}
+appointmentTypes	6004194c-0ef7-447f-8f38-cece1310e34a	CK10	{"id":"6004194c-0ef7-447f-8f38-cece1310e34a","name":"CK10"}
+appointmentTypes	dce2d4d3-81a1-4af7-a74e-d3c2cea6498c	B40	{"id":"dce2d4d3-81a1-4af7-a74e-d3c2cea6498c","name":"B40"}
+appointmentTypes	103adac1-47e4-40fe-a7f9-4d4e8baee338	CK20	{"id":"103adac1-47e4-40fe-a7f9-4d4e8baee338","name":"CK20"}
+appointmentTypes	2534fddc-95eb-43bb-bce1-64aa848be6a3	CK30	{"id":"2534fddc-95eb-43bb-bce1-64aa848be6a3","name":"CK30"}
+appointmentTypes	7a201ad3-0356-4fbd-8519-a7178fea65ff	COMFORTB30	{"id":"7a201ad3-0356-4fbd-8519-a7178fea65ff","name":"COMFORTB30"}
+appointmentTypes	69acf169-4719-4d02-be62-d9ff7841e19f	CONSULT	{"id":"69acf169-4719-4d02-be62-d9ff7841e19f","name":"CONSULT"}
+appointmentTypes	c40da125-383c-48a5-9e32-56ab6fd1c90a	DEBAND	{"id":"c40da125-383c-48a5-9e32-56ab6fd1c90a","name":"DEBAND"}
+appointmentTypes	c3806c95-e536-4454-b14d-0f197477a698	DEBMIN	{"id":"c3806c95-e536-4454-b14d-0f197477a698","name":"DEBMIN"}
+appointmentTypes	9d08d697-a4ce-4a74-bd72-65ec090d8943	EVALDBND	{"id":"9d08d697-a4ce-4a74-bd72-65ec090d8943","name":"EVALDBND"}
+appointmentTypes	d3187613-05eb-40e1-a8d4-23b584c324de	FINALRET	{"id":"d3187613-05eb-40e1-a8d4-23b584c324de","name":"FINALRET"}
+appointmentTypes	dbfe0f9d-88b6-4c53-b600-a948d1dff404	ICAT	{"id":"dbfe0f9d-88b6-4c53-b600-a948d1dff404","name":"ICAT"}
+appointmentTypes	8fb463e4-74f8-46bf-8924-fb9eb6eba1b2	INSESSIX	{"id":"8fb463e4-74f8-46bf-8924-fb9eb6eba1b2","name":"INSESSIX"}
+appointmentTypes	022b597a-1995-412e-b689-7e33ca248bef	INSFLHA	{"id":"022b597a-1995-412e-b689-7e33ca248bef","name":"INSFLHA"}
+appointmentTypes	0e01621b-c394-4b9e-8143-3ecbb3939634	INSFXTR	{"id":"0e01621b-c394-4b9e-8143-3ecbb3939634","name":"INSFXTR"}
+appointmentTypes	6a30c41b-70c5-466e-8359-b3f603d85d9d	INSHAWLEY	{"id":"6a30c41b-70c5-466e-8359-b3f603d85d9d","name":"INSHAWLEY"}
+appointmentTypes	d3f7661a-ad8c-4820-ac85-b1824ba7bec2	COMFORT	{"id":"d3f7661a-ad8c-4820-ac85-b1824ba7bec2","name":"COMFORT"}
+appointmentTypes	c0eab986-6729-4926-a3da-301907101d20	FINANCIALS	{"id":"c0eab986-6729-4926-a3da-301907101d20","name":"FINANCIALS"}
+appointmentTypes	f1c2e9d4-89d4-42c7-a14d-43cd197f9b39	INSERTBP	{"id":"f1c2e9d4-89d4-42c7-a14d-43cd197f9b39","name":"INSERTBP"}
+appointmentTypes	9cc2cc4d-ca8c-4318-9945-96a168779dc7	INSMSE	{"id":"9cc2cc4d-ca8c-4318-9945-96a168779dc7","name":"INSMSE"}
+appointmentTypes	536c2755-c19d-4605-9a50-dcc85d4ea28d	INSNANCE	{"id":"536c2755-c19d-4605-9a50-dcc85d4ea28d","name":"INSNANCE"}
+appointmentTypes	5da5736f-7443-4180-a1a6-841abe618513	INSRPE	{"id":"5da5736f-7443-4180-a1a6-841abe618513","name":"INSRPE"}
+appointmentTypes	306becd1-e0e9-44b5-a5f4-0c112dd235b7	INSTCRIB	{"id":"306becd1-e0e9-44b5-a5f4-0c112dd235b7","name":"INSTCRIB"}
+appointmentTypes	79bbe7aa-8247-4096-9b14-96843e2d63c2	INSTPA	{"id":"79bbe7aa-8247-4096-9b14-96843e2d63c2","name":"INSTPA"}
+appointmentTypes	54991883-a60c-475b-9ba1-ea959bcfaabe	Cephalometric	{"id":"54991883-a60c-475b-9ba1-ea959bcfaabe","name":"Cephalometric"}
+appointmentTypes	56ae9f1b-4afa-413e-8927-f5a7364239e0	IMP	{"id":"56ae9f1b-4afa-413e-8927-f5a7364239e0","name":"IMP"}
+appointmentTypes	db4f10a2-a0d0-4a3a-997a-d56875089e32	RET	{"id":"db4f10a2-a0d0-4a3a-997a-d56875089e32","name":"RET"}
+appointmentTypes	0a36ef41-1e3e-42a7-9e15-795ae8d0060c	SA	{"id":"0a36ef41-1e3e-42a7-9e15-795ae8d0060c","name":"SA"}
+appointmentTypes	249cb695-f7b5-4d3e-9de4-d8cc3fe2f7ce	INSERT50	{"id":"249cb695-f7b5-4d3e-9de4-d8cc3fe2f7ce","name":"INSERT50"}
+appointmentTypes	19afea32-76b9-4fe0-8fcd-48e667386049	40	{"id":"19afea32-76b9-4fe0-8fcd-48e667386049","name":"40"}
+appointmentTypes	476ad64f-5c36-4578-9dc0-f68d0ddf305f	Full Records	{"id":"476ad64f-5c36-4578-9dc0-f68d0ddf305f","name":"Full Records"}
+appointmentTypes	35cacba7-dfd6-4ebc-8f24-3c7cf2417fdc	Follow Up Appointment	{"id":"35cacba7-dfd6-4ebc-8f24-3c7cf2417fdc","name":"Follow Up Appointment"}
+appointmentTypes	5f47dd6c-c494-401a-b994-2c1110f21b09	Splint Impressions	{"id":"5f47dd6c-c494-401a-b994-2c1110f21b09","name":"Splint Impressions"}
+appointmentTypes	fba7ac65-f72e-461a-bd13-2decc417bd9c	30 Min Banding	{"id":"fba7ac65-f72e-461a-bd13-2decc417bd9c","name":"30 Min Banding"}
+appointmentTypes	bd3c3f2a-cd54-462e-bf79-d338a41bef89	Walk In Patient (No Appointment Made)	{"id":"bd3c3f2a-cd54-462e-bf79-d338a41bef89","name":"Walk In Patient (No Appointment Made)"}
+appointmentTypes	48df21ed-d8ee-4429-8c04-94411192d55c	OCCGUARD	{"id":"48df21ed-d8ee-4429-8c04-94411192d55c","name":"OCCGUARD"}
+appointmentTypes	ddf2cdac-fd0e-4850-ae22-ad3b823b6598	LUNCH	{"id":"ddf2cdac-fd0e-4850-ae22-ad3b823b6598","name":"LUNCH"}
+appointmentTypes	0b6cbd47-c263-4b2a-bab9-e2dffce1e2f4	SPLINT	{"id":"0b6cbd47-c263-4b2a-bab9-e2dffce1e2f4","name":"SPLINT"}
+appointmentTypes	30d9ad9d-4ed2-4ba0-b4b7-6349904da604	40 Min Banding	{"id":"30d9ad9d-4ed2-4ba0-b4b7-6349904da604","name":"40 Min Banding"}
+appointmentTypes	84336a63-2c40-4562-b42c-ea7b80a53b3c	INSERT20	{"id":"84336a63-2c40-4562-b42c-ea7b80a53b3c","name":"INSERT20"}
+appointmentTypes	92860f87-0ca3-4799-b393-8464c00bdb96	ORTHORET	{"id":"92860f87-0ca3-4799-b393-8464c00bdb96","name":"ORTHORET"}
+appointmentTypes	e4aff76e-a873-4578-8378-9f9a4abc8b1a	INSERT30	{"id":"e4aff76e-a873-4578-8378-9f9a4abc8b1a","name":"INSERT30"}
+appointmentTypes	2dd7dd15-73ef-429e-b720-f9c3eb51c59b	20	{"id":"2dd7dd15-73ef-429e-b720-f9c3eb51c59b","name":"20"}
+appointmentTypes	ebfb2b98-5d80-42a9-886a-14ceddc4683b	IMPS	{"id":"ebfb2b98-5d80-42a9-886a-14ceddc4683b","name":"IMPS"}
+appointmentTypes	6d7cdc86-9389-4869-9bb9-ad8e72f096a1	Splint therapy imps	{"id":"6d7cdc86-9389-4869-9bb9-ad8e72f096a1","name":"Splint therapy imps"}
+appointmentTypes	361aaccc-bb25-488c-af4e-09fe6f21ad48	FXD APPL	{"id":"361aaccc-bb25-488c-af4e-09fe6f21ad48","name":"FXD APPL"}
+appointmentTypes	e4a33a81-a831-4743-a149-ae6b54c8ef4e	RR92.50	{"id":"e4a33a81-a831-4743-a149-ae6b54c8ef4e","name":"RR92.50"}
+appointmentTypes	81fb26be-1fb9-4b93-8741-1d4dc2e7e8f8	FINALIMP	{"id":"81fb26be-1fb9-4b93-8741-1d4dc2e7e8f8","name":"FINALIMP"}
+appointmentTypes	b5ef8e8a-7ab5-4902-b0e8-7bd6c7365dac	Insert Splint	{"id":"b5ef8e8a-7ab5-4902-b0e8-7bd6c7365dac","name":"Insert Splint"}
+appointmentTypes	72c580a6-4b39-4474-8f9a-58e4bef199bb	FLLA	{"id":"72c580a6-4b39-4474-8f9a-58e4bef199bb","name":"FLLA"}
+appointmentTypes	0aea2991-466c-4f00-b99f-23d6bbe334d1	INSERT10	{"id":"0aea2991-466c-4f00-b99f-23d6bbe334d1","name":"INSERT10"}
+appointmentTypes	3486d08d-27a1-468e-ae51-f63ba892c78e	Insert Headgear	{"id":"3486d08d-27a1-468e-ae51-f63ba892c78e","name":"Insert Headgear"}
+appointmentTypes	8bc755b4-44cd-45ff-a629-a6d2a89e8f53	10	{"id":"8bc755b4-44cd-45ff-a629-a6d2a89e8f53","name":"10"}
+appointmentTypes	09576917-e46b-4c95-b589-11ccf3f1ad79	other	{"id":"09576917-e46b-4c95-b589-11ccf3f1ad79","name":"other"}
+appointmentTypes	453010fc-09d0-47e9-b746-84961b6940f2	Panelipse	{"id":"453010fc-09d0-47e9-b746-84961b6940f2","name":"Panelipse"}
+appointmentTypes	aeb6f4a3-3dfa-4dc8-abed-130978933b04	A15	{"id":"aeb6f4a3-3dfa-4dc8-abed-130978933b04","name":"A15"}
+appointmentTypes	cec8d4b4-9859-4d2b-8baa-0d5e05411e0f	START120	{"id":"cec8d4b4-9859-4d2b-8baa-0d5e05411e0f","name":"START120"}
+appointmentTypes	bce2b0e2-8d2e-47dd-bf3a-a71aed9c3aad	INTRAORALSCAN	{"id":"bce2b0e2-8d2e-47dd-bf3a-a71aed9c3aad","name":"INTRAORALSCAN"}
+appointmentTypes	e53b9dce-a4b8-42d0-bf06-c98ca3a132a4	SPLINT THERAPY TREATMENT ONLY	{"id":"e53b9dce-a4b8-42d0-bf06-c98ca3a132a4","name":"SPLINT THERAPY TREATMENT ONLY"}
+appointmentTypes	b761753e-4190-4aa1-8b13-89c939707039	60	{"id":"b761753e-4190-4aa1-8b13-89c939707039","name":"60"}
+appointmentTypes	f792ac23-d198-48ef-bda1-5333b7c301e9	They w/c as needed	{"id":"f792ac23-d198-48ef-bda1-5333b7c301e9","name":"They w/c as needed"}
+appointmentTypes	b1148303-35ab-4f21-8d80-185adb1d7fae	MEETING	{"id":"b1148303-35ab-4f21-8d80-185adb1d7fae","name":"MEETING"}
+appointmentTypes	e7cf14f0-4d46-4417-bbf0-d238adc0cef5	Insert appliance 10 minutes	{"id":"e7cf14f0-4d46-4417-bbf0-d238adc0cef5","name":"Insert appliance 10 minutes"}
+appointmentTypes	8de0fc3a-a84e-435f-b311-52a5f3f96550	RETS	{"id":"8de0fc3a-a84e-435f-b311-52a5f3f96550","name":"RETS"}
+appointmentTypes	98c7eb3f-93bb-4552-b547-118bac56e684	30	{"id":"98c7eb3f-93bb-4552-b547-118bac56e684","name":"30"}
+appointmentTypes	6cdd50e8-2965-487e-a173-70a162cf7626	CEXAM	{"id":"6cdd50e8-2965-487e-a173-70a162cf7626","name":"CEXAM"}
+appointmentTypes	e64743f0-27d8-42d9-ad34-790a66703ea6	Appointment Not Allowed	{"id":"e64743f0-27d8-42d9-ad34-790a66703ea6","name":"Appointment Not Allowed"}
+appointmentTypes	85fc2138-c798-42f6-81b8-cf682138de63	Orthognathic Consult	{"id":"85fc2138-c798-42f6-81b8-cf682138de63","name":"Orthognathic Consult"}
+appointmentTypes	826f4ee4-874a-45d5-930e-33212dc1b520	Standard Appointment	{"id":"826f4ee4-874a-45d5-930e-33212dc1b520","name":"Standard Appointment"}
+appointmentTypes	937aa05e-dd9d-4748-a881-920da4fadb61	Splint therapy	{"id":"937aa05e-dd9d-4748-a881-920da4fadb61","name":"Splint therapy"}
+appointmentTypes	97f372c5-7f67-4110-93de-5f352244e768	TMJ510	{"id":"97f372c5-7f67-4110-93de-5f352244e768","name":"TMJ510"}
+appointmentTypes	30fc17ce-1346-465b-ad5d-6b5e8211e9a9	Intraoral Scan 40 mins	{"id":"30fc17ce-1346-465b-ad5d-6b5e8211e9a9","name":"Intraoral Scan 40 mins"}
+appointmentTypes	fe4f3006-2504-4358-9dd5-616d141599eb	TMJ	{"id":"fe4f3006-2504-4358-9dd5-616d141599eb","name":"TMJ"}
+appointmentTypes	e21fa834-f9fa-4763-a661-22ee9d3efe54	PROG	{"id":"e21fa834-f9fa-4763-a661-22ee9d3efe54","name":"PROG"}
+appointmentTypes	7a6a1e93-a606-4b61-bb69-e8d53c8549fa	Insert Positioner	{"id":"7a6a1e93-a606-4b61-bb69-e8d53c8549fa","name":"Insert Positioner"}
+appointmentTypes	6b75dadd-d099-436e-a465-a9c85dd75862	Parent conference	{"id":"6b75dadd-d099-436e-a465-a9c85dd75862","name":"Parent conference"}
+appointmentTypes	f48da2d1-9a1c-40cb-8f5d-f615e9ddfe87	Insert retainer	{"id":"f48da2d1-9a1c-40cb-8f5d-f615e9ddfe87","name":"Insert retainer"}
+appointmentTypes	9371f122-f0b7-4319-be48-5ad61e740ff9	START50	{"id":"9371f122-f0b7-4319-be48-5ad61e740ff9","name":"START50"}
+appointmentTypes	92558979-0548-47a9-9544-b00f5c323738	IPR	{"id":"92558979-0548-47a9-9544-b00f5c323738","name":"IPR"}
+appointmentTypes	d9ecffdd-f6de-4c96-a143-20c91d36c8ce	INITIAL INV DEL	{"id":"d9ecffdd-f6de-4c96-a143-20c91d36c8ce","name":"INITIAL INV DEL"}
+appointmentTypes	28445c32-f965-4e81-b4bb-8e4bbde27a31	BAND 2 MOLARS	{"id":"28445c32-f965-4e81-b4bb-8e4bbde27a31","name":"BAND 2 MOLARS"}
+appointmentTypes	2a05090c-2261-400a-8cd7-77dfa2b421d2	DO NOT USE	{"id":"2a05090c-2261-400a-8cd7-77dfa2b421d2","name":"DO NOT USE"}
+appointmentTypes	30a34cdb-8c69-4c2c-bb8d-495b533cbac3	INV. REF. RECS	{"id":"30a34cdb-8c69-4c2c-bb8d-495b533cbac3","name":"INV. REF. RECS"}
+appointmentTypes	3b8ef793-a75e-45bb-953f-d5f414e197b6	GRAD PATIENT	{"id":"3b8ef793-a75e-45bb-953f-d5f414e197b6","name":"GRAD PATIENT"}
+appointmentTypes	c99d2bf4-95de-4013-916d-579b59faaff1	TEMPLATE ONLY	{"id":"c99d2bf4-95de-4013-916d-579b59faaff1","name":"TEMPLATE ONLY"}
+appointmentTypes	2cd881a4-cfcc-4565-8634-c4f5771512e1	BOND 7 X4	{"id":"2cd881a4-cfcc-4565-8634-c4f5771512e1","name":"BOND 7 X4"}
+appointmentTypes	cce8cb46-0d17-479e-a50f-25fca5da9b37	REPO 6 BRACKETS	{"id":"cce8cb46-0d17-479e-a50f-25fca5da9b37","name":"REPO 6 BRACKETS"}
+appointmentTypes	b8e0d44e-8b51-4289-9edb-d7f494c471d0	PREP RPE	{"id":"b8e0d44e-8b51-4289-9edb-d7f494c471d0","name":"PREP RPE"}
+appointmentTypes	6ea2c9d2-9e5c-4e7b-99ac-a4dd86ed5a64	INV CHECK	{"id":"6ea2c9d2-9e5c-4e7b-99ac-a4dd86ed5a64","name":"INV CHECK"}
+appointmentTypes	f3e78978-020b-437c-aea8-7c607ab98ba5	REPO 7 BRACKETS	{"id":"f3e78978-020b-437c-aea8-7c607ab98ba5","name":"REPO 7 BRACKETS"}
+appointmentTypes	59ebca5f-8e7e-4e56-a019-f0b940e859c6	BAND 3 MOLARS	{"id":"59ebca5f-8e7e-4e56-a019-f0b940e859c6","name":"BAND 3 MOLARS"}
+appointmentTypes	9a28daea-974e-4127-b3fa-35043a933590	Splint Adjustment	{"id":"9a28daea-974e-4127-b3fa-35043a933590","name":"Splint Adjustment"}
+appointmentTypes	fa40650f-66cb-4459-a4cb-d0b81239296b	MC GROWTH RECAL	{"id":"fa40650f-66cb-4459-a4cb-d0b81239296b","name":"MC GROWTH RECAL"}
+appointmentTypes	8588ec1f-99c0-4019-b8c3-f1557ce7480b	BOND 7 X2	{"id":"8588ec1f-99c0-4019-b8c3-f1557ce7480b","name":"BOND 7 X2"}
+appointmentTypes	c026e65b-5681-441f-a8d1-13fcb96c6d9d	DEL HERBST	{"id":"c026e65b-5681-441f-a8d1-13fcb96c6d9d","name":"DEL HERBST"}
+appointmentTypes	2e0af233-4418-49d5-9980-69c1520689dc	FLA CHECK	{"id":"2e0af233-4418-49d5-9980-69c1520689dc","name":"FLA CHECK"}
+appointmentTypes	1951a1c4-55f2-4eb0-a7d6-d179c9ceac6d	PLACE 1 TAD	{"id":"1951a1c4-55f2-4eb0-a7d6-d179c9ceac6d","name":"PLACE 1 TAD"}
+appointmentTypes	5c21fc6f-a1ee-4935-aa81-81541d9fd55c	HAWLEY SOS	{"id":"5c21fc6f-a1ee-4935-aa81-81541d9fd55c","name":"HAWLEY SOS"}
+appointmentTypes	55a5cc24-fe38-4620-ac74-a7c80d5460c0	MOUTHGUARD IMP	{"id":"55a5cc24-fe38-4620-ac74-a7c80d5460c0","name":"MOUTHGUARD IMP"}
+appointmentTypes	460614ac-9292-449b-a03c-f33d05a2da19	SEP TPA	{"id":"460614ac-9292-449b-a03c-f33d05a2da19","name":"SEP TPA"}
+appointmentTypes	712445af-42a5-49d4-901e-e902109fe6ee	PLACE HEADGEAR	{"id":"712445af-42a5-49d4-901e-e902109fe6ee","name":"PLACE HEADGEAR"}
+appointmentTypes	ae223d4b-af6d-480f-afd4-914f7bb393cd	IMPRESS HAWLEY	{"id":"ae223d4b-af6d-480f-afd4-914f7bb393cd","name":"IMPRESS HAWLEY"}
+appointmentTypes	d9fb50ae-2210-4d51-9fb0-242580419b1b	PLACE 2 TADS	{"id":"d9fb50ae-2210-4d51-9fb0-242580419b1b","name":"PLACE 2 TADS"}
+appointmentTypes	a6eeb59e-4f08-4ad0-83e5-2079b23c8902	DEB REC BO LING	{"id":"a6eeb59e-4f08-4ad0-83e5-2079b23c8902","name":"DEB REC BO LING"}
+appointmentTypes	cdfe8851-e7b0-4d73-b3e6-c15087f5462b	DELIVER TPA	{"id":"cdfe8851-e7b0-4d73-b3e6-c15087f5462b","name":"DELIVER TPA"}
+appointmentTypes	17df5a4b-4e23-4e4e-aca6-fb20f8af196a	MOD. OL IMPRESS	{"id":"17df5a4b-4e23-4e4e-aca6-fb20f8af196a","name":"MOD. OL IMPRESS"}
+appointmentTypes	f5e51f52-8d86-43e5-8927-3c32c7bad413	SEP HERBST	{"id":"f5e51f52-8d86-43e5-8927-3c32c7bad413","name":"SEP HERBST"}
+appointmentTypes	0dd3d136-e6a6-4382-af66-5b7b1b679849	REPO X BRACKETS	{"id":"0dd3d136-e6a6-4382-af66-5b7b1b679849","name":"REPO X BRACKETS"}
+appointmentTypes	134325f4-2cb8-437e-ab16-f055d5675cdc	IMP BONDED LING	{"id":"134325f4-2cb8-437e-ab16-f055d5675cdc","name":"IMP BONDED LING"}
+appointmentTypes	e2561359-e9a3-404b-9eaf-3f0331d08250	DELIVER HAWLEY	{"id":"e2561359-e9a3-404b-9eaf-3f0331d08250","name":"DELIVER HAWLEY"}
+appointmentTypes	adb5eeb3-55dc-48c3-8fe7-d0d2f5376be9	BOND 2 BRKTS	{"id":"adb5eeb3-55dc-48c3-8fe7-d0d2f5376be9","name":"BOND 2 BRKTS"}
+appointmentTypes	32a8e80a-618d-42f9-b8bb-9d989818cfae	CEM. 2 HBRT CWN	{"id":"32a8e80a-618d-42f9-b8bb-9d989818cfae","name":"CEM. 2 HBRT CWN"}
+appointmentTypes	7515c347-0e1b-450d-86bf-e655b511377a	Unknown Code	{"id":"7515c347-0e1b-450d-86bf-e655b511377a","name":"Unknown Code"}
+appointmentTypes	775e2533-7cfd-4d7b-a03b-0fbb4e5e4dee	SEP FLA	{"id":"775e2533-7cfd-4d7b-a03b-0fbb4e5e4dee","name":"SEP FLA"}
+appointmentTypes	29ddb465-d12c-4726-8483-733e76fa47ba	RPE SOS	{"id":"29ddb465-d12c-4726-8483-733e76fa47ba","name":"RPE SOS"}
+appointmentTypes	21058a05-86d8-4464-9eb6-f13881d45541	MOD. OL CHECK	{"id":"21058a05-86d8-4464-9eb6-f13881d45541","name":"MOD. OL CHECK"}
+appointmentTypes	e9a22737-9b87-487b-b620-489b1fae1f88	OVERLAY CHECK	{"id":"e9a22737-9b87-487b-b620-489b1fae1f88","name":"OVERLAY CHECK"}
+appointmentTypes	334b724a-07e8-41f1-9850-19bef9779518	SEP RPE	{"id":"334b724a-07e8-41f1-9850-19bef9779518","name":"SEP RPE"}
+appointmentTypes	f9b168fe-540b-46d6-b155-ae40cd7f4369	STARTW/MSE	{"id":"f9b168fe-540b-46d6-b155-ae40cd7f4369","name":"STARTW/MSE"}
+appointmentTypes	5f91a08c-8292-4109-9359-37e7754f9550	MODELS	{"id":"5f91a08c-8292-4109-9359-37e7754f9550","name":"MODELS"}
+appointmentTypes	db18f6ec-96a8-44cc-bc8f-bc7df5cb8ca6	Cosmetic Re-Tie	{"id":"db18f6ec-96a8-44cc-bc8f-bc7df5cb8ca6","name":"Cosmetic Re-Tie"}
+appointmentTypes	807d6f27-0cbc-4cbf-8cf1-71cad31ae609	REPO 5 BRACKETS	{"id":"807d6f27-0cbc-4cbf-8cf1-71cad31ae609","name":"REPO 5 BRACKETS"}
+appointmentTypes	55991805-ae31-4c50-b36e-8373a442e713	REMOVE RPE	{"id":"55991805-ae31-4c50-b36e-8373a442e713","name":"REMOVE RPE"}
+appointmentTypes	a6fae880-f5d8-4563-8fd6-6f9c4b32fb06	DAMON DETAIL	{"id":"a6fae880-f5d8-4563-8fd6-6f9c4b32fb06","name":"DAMON DETAIL"}
+appointmentTypes	b07ecb1d-585c-4af0-98f1-29357a81099f	STAN DETAIL	{"id":"b07ecb1d-585c-4af0-98f1-29357a81099f","name":"STAN DETAIL"}
+appointmentTypes	7fbcb145-0daa-4a34-bfc0-9a7b2455d4c6	BOND 5 BRACKETS	{"id":"7fbcb145-0daa-4a34-bfc0-9a7b2455d4c6","name":"BOND 5 BRACKETS"}
+appointmentTypes	2f2834ac-58db-4240-88b0-cb6a22e7baca	STAN CHANGE LAW	{"id":"2f2834ac-58db-4240-88b0-cb6a22e7baca","name":"STAN CHANGE LAW"}
+appointmentTypes	2535bb83-3296-4f20-8b68-3478385d4c18	BOND LING U2-2	{"id":"2535bb83-3296-4f20-8b68-3478385d4c18","name":"BOND LING U2-2"}
+appointmentTypes	cef12479-ae34-4fd1-a8d4-6f02f90fae6a	BOND STANDARD	{"id":"cef12479-ae34-4fd1-a8d4-6f02f90fae6a","name":"BOND STANDARD"}
+appointmentTypes	32421d46-7146-40af-b5f3-0d087f950bb6	TPA CHECK	{"id":"32421d46-7146-40af-b5f3-0d087f950bb6","name":"TPA CHECK"}
+appointmentTypes	eb3565ad-99af-449c-bfd3-bcd60dbb5ae8	DETAIL ARCHWIRE	{"id":"eb3565ad-99af-449c-bfd3-bcd60dbb5ae8","name":"DETAIL ARCHWIRE"}
+appointmentTypes	0b85bb8c-00e6-46e5-9f72-242e4328c815	HERBST ADVANCE	{"id":"0b85bb8c-00e6-46e5-9f72-242e4328c815","name":"HERBST ADVANCE"}
+appointmentTypes	f9676646-2ee0-458a-bb96-075a6693a85b	ADAPT40	{"id":"f9676646-2ee0-458a-bb96-075a6693a85b","name":"ADAPT40"}
+appointmentTypes	5017650c-a04c-44c0-9e17-f83d0d2bfcfc	INVISALIGN IPR	{"id":"5017650c-a04c-44c0-9e17-f83d0d2bfcfc","name":"INVISALIGN IPR"}
+appointmentTypes	58962301-a639-4497-88cf-5851dc970c3b	BOND Q UPPER	{"id":"58962301-a639-4497-88cf-5851dc970c3b","name":"BOND Q UPPER"}
+appointmentTypes	d2c0efc0-521c-4d67-8997-45b8a5febff3	HEADGEAR CHECK	{"id":"d2c0efc0-521c-4d67-8997-45b8a5febff3","name":"HEADGEAR CHECK"}
+appointmentTypes	61933385-e923-4840-bfbb-26ddcdd4c1f7	DELIVER RPE	{"id":"61933385-e923-4840-bfbb-26ddcdd4c1f7","name":"DELIVER RPE"}
+appointmentTypes	b08d9305-d853-4dda-b469-7928421ecc48	INV REF REC XUN	{"id":"b08d9305-d853-4dda-b469-7928421ecc48","name":"INV REF REC XUN"}
+appointmentTypes	2f3c6ebd-003b-4ed1-9ee7-18c383ae05cf	OVERLAY IMPRESS	{"id":"2f3c6ebd-003b-4ed1-9ee7-18c383ae05cf","name":"OVERLAY IMPRESS"}
+appointmentTypes	94ba6c44-e927-4091-a2fb-ecd8502f9a34	CEM 4 HRB CWN	{"id":"94ba6c44-e927-4091-a2fb-ecd8502f9a34","name":"CEM 4 HRB CWN"}
+appointmentTypes	ce1f22b5-758b-4ae5-a478-ae36ecf0bee0	INV REF CHECK 2	{"id":"ce1f22b5-758b-4ae5-a478-ae36ecf0bee0","name":"INV REF CHECK 2"}
+appointmentTypes	358c7f1f-d986-4e48-b4e5-9549ce539adf	INV REF REC 1	{"id":"358c7f1f-d986-4e48-b4e5-9549ce539adf","name":"INV REF REC 1"}
+appointmentTypes	e3a71ec1-5148-4f84-9db0-8a0adfe148ba	BOND SOS	{"id":"e3a71ec1-5148-4f84-9db0-8a0adfe148ba","name":"BOND SOS"}
+appointmentTypes	60d9ae29-b45d-48ff-88e6-026ee3d0168c	RPE & FLA DELIV	{"id":"60d9ae29-b45d-48ff-88e6-026ee3d0168c","name":"RPE & FLA DELIV"}
+appointmentTypes	1a12c1cd-1f43-4fe4-a9b3-418a5918af7a	PREP FLA	{"id":"1a12c1cd-1f43-4fe4-a9b3-418a5918af7a","name":"PREP FLA"}
+appointmentTypes	e9e93d42-5201-449c-9c86-4ae3d76ee51b	SEP BAND	{"id":"e9e93d42-5201-449c-9c86-4ae3d76ee51b","name":"SEP BAND"}
+appointmentTypes	c5ef9f5a-5e37-455d-a909-fed7ab371e5f	DEL MOUTHGUARD	{"id":"c5ef9f5a-5e37-455d-a909-fed7ab371e5f","name":"DEL MOUTHGUARD"}
+appointmentTypes	5e16cc65-373c-4600-b079-7ba47247e5de	20 min Bonding	{"id":"5e16cc65-373c-4600-b079-7ba47247e5de","name":"20 min Bonding"}
+appointmentTypes	cd28f333-79d3-4d36-8a48-653a672b45f8	INV. MISC.	{"id":"cd28f333-79d3-4d36-8a48-653a672b45f8","name":"INV. MISC."}
+appointmentTypes	a4c7c841-7980-4580-aae0-3f61dc0691ef	PANO PLAN REPOS	{"id":"a4c7c841-7980-4580-aae0-3f61dc0691ef","name":"PANO PLAN REPOS"}
+appointmentTypes	deef62e2-57d5-42e8-b93f-9b4ba3249407	BOND DAMON Q	{"id":"deef62e2-57d5-42e8-b93f-9b4ba3249407","name":"BOND DAMON Q"}
+appointmentTypes	8c5f9b33-1d76-4d4c-9f45-356d1d798ba6	MOD OVL DELIVER	{"id":"8c5f9b33-1d76-4d4c-9f45-356d1d798ba6","name":"MOD OVL DELIVER"}
+appointmentTypes	83a6e9fe-bbb1-4a79-8b72-e90c6e5e8f06	AW IN CLEANING	{"id":"83a6e9fe-bbb1-4a79-8b72-e90c6e5e8f06","name":"AW IN CLEANING"}
+appointmentTypes	14cf2290-80d5-4569-a534-a3030050e746	PROG-XRAY	{"id":"14cf2290-80d5-4569-a534-a3030050e746","name":"PROG-XRAY"}
+appointmentTypes	28f0e8ff-4b58-4be2-b287-82d0ca5d3b1f	DAM CHANGE UAW	{"id":"28f0e8ff-4b58-4be2-b287-82d0ca5d3b1f","name":"DAM CHANGE UAW"}
+appointmentTypes	1c1fd785-82d6-4e2f-ad27-eafe99b3e0ff	FLA SOS	{"id":"1c1fd785-82d6-4e2f-ad27-eafe99b3e0ff","name":"FLA SOS"}
+appointmentTypes	46faa9d2-7ac0-4f55-ae7b-1b7249f99448	BOND 3 BRACKETS	{"id":"46faa9d2-7ac0-4f55-ae7b-1b7249f99448","name":"BOND 3 BRACKETS"}
+appointmentTypes	02452a54-4593-4bc7-ad55-a4b0ecb3685d	REPO 8 BRACKETS	{"id":"02452a54-4593-4bc7-ad55-a4b0ecb3685d","name":"REPO 8 BRACKETS"}
+appointmentTypes	7103fe6d-9d4b-4d1e-8084-59284be28730	BOND X BRACKETS	{"id":"7103fe6d-9d4b-4d1e-8084-59284be28730","name":"BOND X BRACKETS"}
+appointmentTypes	002f972d-1074-4989-a965-43e8382d4570	Bonding or IPR	{"id":"002f972d-1074-4989-a965-43e8382d4570","name":"Bonding or IPR"}
+appointmentTypes	4e2da663-09a2-45b5-b2f4-768830564ef5	TPA PREP	{"id":"4e2da663-09a2-45b5-b2f4-768830564ef5","name":"TPA PREP"}
+appointmentTypes	dcc48c69-235c-4aae-80a3-e42fe10d91c0	NPEXAMA	{"id":"dcc48c69-235c-4aae-80a3-e42fe10d91c0","name":"NPEXAMA"}
+appointmentTypes	b49db29c-b097-4c93-9919-107fedce1c70	NPEXAMC	{"id":"b49db29c-b097-4c93-9919-107fedce1c70","name":"NPEXAMC"}
+appointmentTypes	2a009974-27e4-443d-8da0-e26dac67bfa9	OBS	{"id":"2a009974-27e4-443d-8da0-e26dac67bfa9","name":"OBS"}
+appointmentTypes	2ad9c89e-35ad-4dd4-ad0f-d88d0088cdc7	OBS-XRAY	{"id":"2ad9c89e-35ad-4dd4-ad0f-d88d0088cdc7","name":"OBS-XRAY"}
+appointmentTypes	e1acdd2b-6c5c-4d8a-bfe5-da326fee285c	REC20	{"id":"e1acdd2b-6c5c-4d8a-bfe5-da326fee285c","name":"REC20"}
+appointmentTypes	fe8819dd-91ff-44a9-8a70-631b0c30a8aa	SEPS	{"id":"fe8819dd-91ff-44a9-8a70-631b0c30a8aa","name":"SEPS"}
+appointmentTypes	1e89e0aa-439b-4885-bd97-ec63a652c7e9	RECORDS	{"id":"1e89e0aa-439b-4885-bd97-ec63a652c7e9","name":"RECORDS"}
+appointmentTypes	4399f4aa-ebff-45b6-aa91-b2a85fb59a66	RPE CHECK	{"id":"4399f4aa-ebff-45b6-aa91-b2a85fb59a66","name":"RPE CHECK"}
+appointmentTypes	60a4431f-ea25-4586-80fb-5060839f3fb3	BOND 7 X1	{"id":"60a4431f-ea25-4586-80fb-5060839f3fb3","name":"BOND 7 X1"}
+appointmentTypes	a1973da0-524c-49e7-81dc-a43287974d9f	Invisalign Impressions	{"id":"a1973da0-524c-49e7-81dc-a43287974d9f","name":"Invisalign Impressions"}
+appointmentTypes	d4174679-a93a-48b9-a682-237a303d13e8	STAND RETI	{"id":"d4174679-a93a-48b9-a682-237a303d13e8","name":"STAND RETI"}
+appointmentTypes	1f7ab34a-4d96-4b4f-8c36-c3f1a20a97f4	Non Sched Time	{"id":"1f7ab34a-4d96-4b4f-8c36-c3f1a20a97f4","name":"Non Sched Time"}
+appointmentTypes	8f90873c-7a02-4035-a8da-951168da4164	BO REC PHASE 1	{"id":"8f90873c-7a02-4035-a8da-951168da4164","name":"BO REC PHASE 1"}
+appointmentTypes	3798888f-ca17-4e11-99df-5281b8938343	STAN CHANGE UAW	{"id":"3798888f-ca17-4e11-99df-5281b8938343","name":"STAN CHANGE UAW"}
+appointmentTypes	bae11602-3842-431d-9054-f7683fca2c8d	3 REPOS	{"id":"bae11602-3842-431d-9054-f7683fca2c8d","name":"3 REPOS"}
+appointmentTypes	b331daf9-b788-4adf-8a4f-f6ca6eec1c78	HAWLEY CHECK	{"id":"b331daf9-b788-4adf-8a4f-f6ca6eec1c78","name":"HAWLEY CHECK"}
+appointmentTypes	70d09487-8284-4285-a13f-b9dc0ebfadf9	DAM CHANGE U&L	{"id":"70d09487-8284-4285-a13f-b9dc0ebfadf9","name":"DAM CHANGE U&L"}
+appointmentTypes	d81d7986-c1d2-4310-b9a7-f5fbb650924c	BOND STAN LOWER	{"id":"d81d7986-c1d2-4310-b9a7-f5fbb650924c","name":"BOND STAN LOWER"}
+appointmentTypes	1ec0e4c4-ec4a-432e-992a-95707e0dfb71	BAND 4 MOLARS	{"id":"1ec0e4c4-ec4a-432e-992a-95707e0dfb71","name":"BAND 4 MOLARS"}
+appointmentTypes	e4d8f833-6a24-4ae2-985c-82c92f6e6187	STAN CHANGE U&L	{"id":"e4d8f833-6a24-4ae2-985c-82c92f6e6187","name":"STAN CHANGE U&L"}
+appointmentTypes	88dcc74b-2491-4eab-89bf-11a7c849eda5	BO REC STAND	{"id":"88dcc74b-2491-4eab-89bf-11a7c849eda5","name":"BO REC STAND"}
+appointmentTypes	6f317d38-af6d-43fe-8732-52086350528a	DAMON RETI	{"id":"6f317d38-af6d-43fe-8732-52086350528a","name":"DAMON RETI"}
+appointmentTypes	6972c43e-d232-4ef3-8897-beb0f1f052f9	1 REPO	{"id":"6972c43e-d232-4ef3-8897-beb0f1f052f9","name":"1 REPO"}
+appointmentTypes	f5c98c70-2215-4868-a8f9-8509cab9f628	BOND Q LOWER	{"id":"f5c98c70-2215-4868-a8f9-8509cab9f628","name":"BOND Q LOWER"}
+appointmentTypes	e028b36f-2cee-4b49-bc49-199ab4c88262	SEP ERUPTION	{"id":"e028b36f-2cee-4b49-bc49-199ab4c88262","name":"SEP ERUPTION"}
+appointmentTypes	727bd15e-40ad-4051-938f-da7307994d85	BOND CLEAR UPPE	{"id":"727bd15e-40ad-4051-938f-da7307994d85","name":"BOND CLEAR UPPE"}
+appointmentTypes	78a40c98-ad32-4baf-a349-a4b94eb14227	BOND 4 BRACKETS	{"id":"78a40c98-ad32-4baf-a349-a4b94eb14227","name":"BOND 4 BRACKETS"}
+appointmentTypes	c0bff87d-88b8-4187-bf28-b2365290d789	HERBST PREP	{"id":"c0bff87d-88b8-4187-bf28-b2365290d789","name":"HERBST PREP"}
+appointmentTypes	764b9717-2941-4705-a74d-f31a860ded04	BOND LING U3-3	{"id":"764b9717-2941-4705-a74d-f31a860ded04","name":"BOND LING U3-3"}
+appointmentTypes	3f03ff14-296d-4db6-b64b-1c06f864f8ce	OVERLAY SOS	{"id":"3f03ff14-296d-4db6-b64b-1c06f864f8ce","name":"OVERLAY SOS"}
+appointmentTypes	daa6e2ef-0e33-4c89-a0a2-fb3a5eda3648	2ND CONSULT	{"id":"daa6e2ef-0e33-4c89-a0a2-fb3a5eda3648","name":"2ND CONSULT"}
+appointmentTypes	bae1eef3-0bab-49b3-9ffa-2c27949b024c	HAWLEY MISC CK	{"id":"bae1eef3-0bab-49b3-9ffa-2c27949b024c","name":"HAWLEY MISC CK"}
+appointmentTypes	431541b4-6c9d-41cb-a0a2-d7672211114e	RECEM 1 HBST CR	{"id":"431541b4-6c9d-41cb-a0a2-d7672211114e","name":"RECEM 1 HBST CR"}
+appointmentTypes	5fb5f59f-2eb6-47fc-95ee-b3541fe2098a	BOND REC DAMON	{"id":"5fb5f59f-2eb6-47fc-95ee-b3541fe2098a","name":"BOND REC DAMON"}
+appointmentTypes	f0048e27-0d9a-4c0c-9bb8-e6806a450702	DAM CHANGE LAW	{"id":"f0048e27-0d9a-4c0c-9bb8-e6806a450702","name":"DAM CHANGE LAW"}
+appointmentTypes	f537bde0-77d2-4078-ae9e-68f908b32c74	BOND REC CLEAR	{"id":"f537bde0-77d2-4078-ae9e-68f908b32c74","name":"BOND REC CLEAR"}
+appointmentTypes	cdac3217-d264-437d-a3e9-6861c86f8338	2 REPOS	{"id":"cdac3217-d264-437d-a3e9-6861c86f8338","name":"2 REPOS"}
+appointmentTypes	64302500-30fe-431f-9440-8915b8430575	RPE & FLA PREP	{"id":"64302500-30fe-431f-9440-8915b8430575","name":"RPE & FLA PREP"}
+appointmentTypes	a819f159-a7a7-4704-80e5-493dbce9778f	AW OUT CLEANING	{"id":"a819f159-a7a7-4704-80e5-493dbce9778f","name":"AW OUT CLEANING"}
+appointmentTypes	286012b1-cfb8-41d0-996b-8b406ae2fce4	INV REF CHECK 1	{"id":"286012b1-cfb8-41d0-996b-8b406ae2fce4","name":"INV REF CHECK 1"}
+appointmentTypes	b29ee889-1209-4c33-8149-f3e86c1bf741	BOND LING L3-3	{"id":"b29ee889-1209-4c33-8149-f3e86c1bf741","name":"BOND LING L3-3"}
+appointmentTypes	1d24388c-37e0-4f6c-aeb5-beb3d3ad1e57	PROG-SCAN	{"id":"1d24388c-37e0-4f6c-aeb5-beb3d3ad1e57","name":"PROG-SCAN"}
+appointmentTypes	6268e0c5-59ed-4c81-b49c-be32f37baaaf	RETCK	{"id":"6268e0c5-59ed-4c81-b49c-be32f37baaaf","name":"RETCK"}
+appointmentTypes	9a952e92-aaa6-45ca-a193-c0c87ca9e7f0	START60	{"id":"9a952e92-aaa6-45ca-a193-c0c87ca9e7f0","name":"START60"}
+appointmentTypes	46eae3ca-58e4-43c4-9096-f96c0469af9f	STARTCLEARALIGNER	{"id":"46eae3ca-58e4-43c4-9096-f96c0469af9f","name":"STARTCLEARALIGNER"}
+appointmentTypes	61a1944e-b6f6-4ccf-8be7-ce663ad6820b	STARTLTD	{"id":"61a1944e-b6f6-4ccf-8be7-ce663ad6820b","name":"STARTLTD"}
+appointmentTypes	2e11a7b0-002b-4b0b-875c-a374831eee81	STARTPH1W/FXTR	{"id":"2e11a7b0-002b-4b0b-875c-a374831eee81","name":"STARTPH1W/FXTR"}
+appointmentTypes	635a16c9-9082-4770-bc24-1dc02e73318e	STARTPH2	{"id":"635a16c9-9082-4770-bc24-1dc02e73318e","name":"STARTPH2"}
+appointmentTypes	67ec7b18-575d-48f7-a0b4-d75b304b0adf	STARTW/RPE	{"id":"67ec7b18-575d-48f7-a0b4-d75b304b0adf","name":"STARTW/RPE"}
+appointmentTypes	31eba596-8ac5-437b-8769-523d5b08ef0b	SUPERVISE	{"id":"31eba596-8ac5-437b-8769-523d5b08ef0b","name":"SUPERVISE"}
+appointmentTypes	bfd6cf17-7949-4321-9ff4-c1b9c762c211	WIRESOUT	{"id":"bfd6cf17-7949-4321-9ff4-c1b9c762c211","name":"WIRESOUT"}
+appointmentTypes	5e11d502-6986-492d-a628-b65ada23b6ac	Trios Scan	{"id":"5e11d502-6986-492d-a628-b65ada23b6ac","name":"Trios Scan"}
+appointmentTypes	55bde457-f48e-4156-aad2-2965a03cef02	RPE & FLA CHECK	{"id":"55bde457-f48e-4156-aad2-2965a03cef02","name":"RPE & FLA CHECK"}
+appointmentTypes	4ea43b9c-df76-4979-b526-e2236d4e510a	BOND CLEAR FULL	{"id":"4ea43b9c-df76-4979-b526-e2236d4e510a","name":"BOND CLEAR FULL"}
+appointmentTypes	06f0440e-c450-4f3c-b62f-15e564246c0a	DELIVER OVERLAY	{"id":"06f0440e-c450-4f3c-b62f-15e564246c0a","name":"DELIVER OVERLAY"}
+appointmentTypes	8a61145d-b6ee-4361-9d73-61c95e040601	4 REPOS	{"id":"8a61145d-b6ee-4361-9d73-61c95e040601","name":"4 REPOS"}
+appointmentTypes	5534f49e-bc00-41d5-9d6c-c779cca01c15	DELIVER FLA	{"id":"5534f49e-bc00-41d5-9d6c-c779cca01c15","name":"DELIVER FLA"}
+appointmentTypes	e452e52d-651a-4470-91aa-e85dafa3729e	START TEMPLATE	{"id":"e452e52d-651a-4470-91aa-e85dafa3729e","name":"START TEMPLATE"}
+appointmentTypes	df8237f2-c413-4bb4-883d-31f34d7d12af	BOND 7 X3	{"id":"df8237f2-c413-4bb4-883d-31f34d7d12af","name":"BOND 7 X3"}
+appointmentTypes	7dc7da1e-3814-4d68-8342-8727f60b9843	BOND STAND UPPE	{"id":"7dc7da1e-3814-4d68-8342-8727f60b9843","name":"BOND STAND UPPE"}
+appointmentTypes	9aba13ae-0c43-4512-bf2b-1f342c60baec	BAND 1 MOLAR	{"id":"9aba13ae-0c43-4512-bf2b-1f342c60baec","name":"BAND 1 MOLAR"}
+appointmentTypes	52ddb59a-0d23-4ee9-bfbb-f97a3aac453f	STARTW/BRACES	{"id":"52ddb59a-0d23-4ee9-bfbb-f97a3aac453f","name":"STARTW/BRACES"}
+appointmentTypes	fbe8b0e8-9900-40fd-b140-2cd43d27550c	WIRESIN	{"id":"fbe8b0e8-9900-40fd-b140-2cd43d27550c","name":"WIRESIN"}
+appointmentTypes	3652b3be-5572-42fe-9791-a55aeb8b0093	SURGPREP	{"id":"3652b3be-5572-42fe-9791-a55aeb8b0093","name":"SURGPREP"}
+appointmentTypes	104c4aac-09fb-49a6-b7e5-e92f9729c273	STARTCOMPW/FXTR	{"id":"104c4aac-09fb-49a6-b7e5-e92f9729c273","name":"STARTCOMPW/FXTR"}
+appointmentTypes	ef19e97f-a329-4d0f-ace7-e50076cd3e80	OBSTART	{"id":"ef19e97f-a329-4d0f-ace7-e50076cd3e80","name":"OBSTART"}
+appointmentTypes	caec44c7-44a1-4b05-b151-2ffce6e1546b	BONE GRAFT	{"id":"caec44c7-44a1-4b05-b151-2ffce6e1546b","name":"BONE GRAFT"}
+appointmentTypes	c010ddca-f1a0-49f6-9858-9ff4902d32bb	INC & DRAIN	{"id":"c010ddca-f1a0-49f6-9858-9ff4902d32bb","name":"INC & DRAIN"}
+appointmentTypes	4035fe52-df85-4721-803b-a07317fdb4bb	POST OP	{"id":"4035fe52-df85-4721-803b-a07317fdb4bb","name":"POST OP"}
+appointmentTypes	2d28b17e-9c31-4e94-892e-d07e558bcdd2	EMERGENCY	{"id":"2d28b17e-9c31-4e94-892e-d07e558bcdd2","name":"EMERGENCY"}
+appointmentTypes	d72b47f2-3b9e-4583-ace7-c0aa6e1a5830	IMPLANTS	{"id":"d72b47f2-3b9e-4583-ace7-c0aa6e1a5830","name":"IMPLANTS"}
+appointmentTypes	fad81205-e460-4088-a13b-f225c9bcc378	SIMPLE EXT	{"id":"fad81205-e460-4088-a13b-f225c9bcc378","name":"SIMPLE EXT"}
+appointmentTypes	065f9f75-de4a-4b58-8228-d468e7604bb1	MSE	{"id":"065f9f75-de4a-4b58-8228-d468e7604bb1","name":"MSE"}
+appointmentTypes	de26cd3f-50c3-4a4d-bef6-54d1e4c1e9cb	E&B	{"id":"de26cd3f-50c3-4a4d-bef6-54d1e4c1e9cb","name":"E&B"}
+appointmentTypes	3c054d48-d6bd-4888-81f5-c936f6cc3da3	WISDOM TEETH	{"id":"3c054d48-d6bd-4888-81f5-c936f6cc3da3","name":"WISDOM TEETH"}
+appointmentTypes	4d7e68d6-9e47-4856-83e3-aeff048090bc	LUXATION	{"id":"4d7e68d6-9e47-4856-83e3-aeff048090bc","name":"LUXATION"}
+appointmentTypes	be7dc46a-e70f-465c-a728-11289dedc0a2	CONSULT/TREAT	{"id":"be7dc46a-e70f-465c-a728-11289dedc0a2","name":"CONSULT/TREAT"}
+appointmentTypes	6e93ba7d-7e05-4f5f-84f5-f36c33f6e1bc	START60CMP	{"id":"6e93ba7d-7e05-4f5f-84f5-f36c33f6e1bc","name":"START60CMP"}
+appointmentTypes	6b570909-e915-4e37-bcae-7d275cfe41b9	TAD Placement	{"id":"6b570909-e915-4e37-bcae-7d275cfe41b9","name":"TAD Placement"}
+appointmentTypes	94fb9680-cb53-41c7-9a0a-59c85259a8fc	Biopsy	{"id":"94fb9680-cb53-41c7-9a0a-59c85259a8fc","name":"Biopsy"}

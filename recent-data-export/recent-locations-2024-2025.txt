@@ -1,0 +1,4 @@
+Location: Royal Pine - Colorado Springs, CO (ID: 0c120319-a8e1-44de-9f39-d9be1762e86f)
+Location: Falcon - Peyton, CO (ID: 165d6b24-1cb7-43ac-9350-7600877abb92)
+Location: Serenity MedSpa - Colorado Springs, CO (ID: da315b0f-d0da-4536-bdfe-11a906e30e2d)
+Location: Falcon Implants & Oral Surgery - Peyton, CO (ID: 12b3e165-730b-4c87-9961-65018ac08c60)
