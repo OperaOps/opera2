@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react";
-import CinematicSidebar from "@/Components/layout/CinematicSidebar";
+import CinematicSidebar from "./layout/CinematicSidebar";
 
 export default function PageLayout({ children }: { children: React.ReactNode }) {
   return (

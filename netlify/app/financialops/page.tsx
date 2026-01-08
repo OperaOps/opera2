@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import FinancialOps from "@/Pages/FinancialOps.jsx"
-import CinematicSidebar from "@/Components/layout/CinematicSidebar";
+import FinancialOps from "../../Pages/FinancialOps.jsx"
+import CinematicSidebar from "../../Components/layout/CinematicSidebar";
 
 export default function FinancialOpsPage() {
   return (

@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import Opportunities from "@/Pages/Opportunities.jsx"
-import CinematicSidebar from "@/Components/layout/CinematicSidebar";
+import Opportunities from "../../Pages/Opportunities.jsx"
+import CinematicSidebar from "../../Components/layout/CinematicSidebar";
 
 export default function OpportunitiesPage() {
   return (

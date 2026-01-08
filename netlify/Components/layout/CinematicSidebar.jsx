@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { createPageUrl } from "@/utils";
+import { createPageUrl } from "../../utils";
 import {
   Menu,
   X,

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getStructuredAIResponse, askWithContext } from "../ai/operaAI.js";
 import StructuredResponse from "../ai/StructuredResponse";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import { createPageUrl } from "../../utils";
 import { Sparkles, Send, Mic, X, Loader2, Upload, Image } from "lucide-react";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";

@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import DataInput from "@/Pages/DataInput.jsx"
-import CinematicSidebar from "@/Components/layout/CinematicSidebar";
+import DataInput from "../../Pages/DataInput.jsx"
+import CinematicSidebar from "../../Components/layout/CinematicSidebar";
 
 export default function DataInputPage() {
   return (

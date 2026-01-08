@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, PieChart, Pie, Cell } from 'recharts';
-import MetricCard from "@/Components/dashboard/MetricCard";
+import MetricCard from "../Components/dashboard/MetricCard";
 import { DollarSign, FileText, TrendingDown, Percent, Calendar } from "lucide-react";
 
 const containerVariants = {

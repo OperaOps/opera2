@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import Compare from "@/Pages/Compare.jsx"
-import CinematicSidebar from "@/Components/layout/CinematicSidebar";
+import Compare from "../../Pages/Compare.jsx"
+import CinematicSidebar from "../../Components/layout/CinematicSidebar";
 
 export default function ComparePage() {
   return (

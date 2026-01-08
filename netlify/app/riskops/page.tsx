@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import RiskOps from "@/Pages/RiskOps.jsx"
-import CinematicSidebar from "@/Components/layout/CinematicSidebar";
+import RiskOps from "../../Pages/RiskOps.jsx"
+import CinematicSidebar from "../../Components/layout/CinematicSidebar";
 
 export default function RiskOpsPage() {
   return (

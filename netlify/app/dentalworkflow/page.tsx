@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import DentalWorkflow from "@/Pages/DentalWorkflow.jsx"
-import CinematicSidebar from "@/Components/layout/CinematicSidebar";
+import DentalWorkflow from "../../Pages/DentalWorkflow.jsx"
+import CinematicSidebar from "../../Components/layout/CinematicSidebar";
 
 export default function DentalWorkflowPage() {
   return (

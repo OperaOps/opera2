@@ -1,13 +1,13 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User } from "@/entities/User";
+import { User } from "../Entities/User";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Send, Mic, Sparkles, Loader2, CheckCircle } from "lucide-react";
-import { askWithContext } from "@/Components/ai/operaAI.js";
-import StructuredResponse from "@/Components/ai/StructuredResponse";
-import CinematicSidebar from "@/Components/layout/CinematicSidebar";
+import { askWithContext } from "../Components/ai/operaAI.js";
+import StructuredResponse from "../Components/ai/StructuredResponse";
+import CinematicSidebar from "../Components/layout/CinematicSidebar";
 
 const ParticleAnimation = () => {
   const particles = Array.from({ length: 30 }, (_, i) => ({

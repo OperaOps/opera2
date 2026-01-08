@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import Dashboard from "@/Pages/Dashboard.jsx"
-import CinematicSidebar from "@/Components/layout/CinematicSidebar";
+import Dashboard from "../../Pages/Dashboard.jsx"
+import CinematicSidebar from "../../Components/layout/CinematicSidebar";
 
 export default function DashboardPage() {
   return (

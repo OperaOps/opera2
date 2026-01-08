@@ -2,8 +2,8 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import MetricCard from "@/Components/dashboard/MetricCard";
-import LiveChart from "@/Components/dashboard/LiveChart";
+import MetricCard from "../Components/dashboard/MetricCard";
+import LiveChart from "../Components/dashboard/LiveChart";
 import { Users, UserCheck, Clock, UserX, Activity } from "lucide-react";
 
 const containerVariants = {

@@ -6,8 +6,8 @@ import { User } from "../Entities/User";
 import {
   TrendingUp, DollarSign, Users, Heart, Zap, Sparkles, Lightbulb, RefreshCw, Calendar } from
 "lucide-react";
-import OpportunityWidget from "@/Components/opportunities/OpportunityWidget.jsx";
-import OpportunityMetrics from "@/Components/opportunities/OpportunityMetrics.jsx";
+import OpportunityWidget from "../Components/opportunities/OpportunityWidget.jsx";
+import OpportunityMetrics from "../Components/opportunities/OpportunityMetrics.jsx";
 
 const containerVariants = {
   hidden: { opacity: 0 },

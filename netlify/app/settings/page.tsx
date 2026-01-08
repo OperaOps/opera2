@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import Settings from "@/Pages/Settings.jsx"
-import CinematicSidebar from "@/Components/layout/CinematicSidebar";
+import Settings from "../../Pages/Settings.jsx"
+import CinematicSidebar from "../../Components/layout/CinematicSidebar";
 
 export default function SettingsPage() {
   return (

@@ -2,8 +2,8 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import MetricCard from "@/Components/dashboard/MetricCard";
-import LiveChart from "@/Components/dashboard/LiveChart";
+import MetricCard from "../Components/dashboard/MetricCard";
+import LiveChart from "../Components/dashboard/LiveChart";
 import { Shield, Smile, AlertTriangle, Target, FileCheck } from "lucide-react";
 import { RadialBarChart, RadialBar, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 

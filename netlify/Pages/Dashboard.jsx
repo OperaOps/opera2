@@ -6,9 +6,9 @@ import {
   Users, Calendar, Clock, TrendingUp, Building, Activity, CalendarDays
 } from "lucide-react";
 
-import MetricCard from "@/Components/dashboard/MetricCard";
-import LiveChart from "@/Components/dashboard/LiveChart";
-import CalendarWidget from "@/Components/dashboard/CalendarWidget";
+import MetricCard from "../Components/dashboard/MetricCard";
+import LiveChart from "../Components/dashboard/LiveChart";
+import CalendarWidget from "../Components/dashboard/CalendarWidget";
 
 const containerVariants = {
   hidden: { opacity: 0 },
