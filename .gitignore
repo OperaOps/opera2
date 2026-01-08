@@ -56,4 +56,14 @@ next-env.d.ts
 # *.md
 # !README.md
 
+# large data files (prevent committing large greyfinch/practice data files)
+*greyfinch*complete*rag*.txt
+*practice*data*.txt
+greyfinch-complete-rag.txt
+practice-data.txt
+greyfinchcompleteragtxt
+practicedatatxt
+*greyfinch*.txt
+!recent-data-export/recent-practice-data-2024-2025.txt
+
 
