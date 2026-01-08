@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, CheckCircle, ArrowRight } from "lucide-react";
-import { Button } from "../../components/ui/button";
+import { Button } from "../ui/button";
 
 export default function OpportunityWidget({ opportunity, icon: Icon }) {
   const [isExpanded, setIsExpanded] = useState(false);

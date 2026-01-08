@@ -5,8 +5,8 @@ import StructuredResponse from "../ai/StructuredResponse";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { Sparkles, Send, Mic, X, Loader2, Upload, Image } from "lucide-react";
-import { Input } from "../../components/ui/input";
-import { Button } from "../../components/ui/button";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 export default function AskOperaWidget() {
   const [inputValue, setInputValue] = useState("");
