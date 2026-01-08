@@ -34,4 +34,26 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# old backups
+/operaReal/
+
+# development scripts
+/scripts/
+/recent-data-export/
+/apiTest/
+
+# data files
+/checkpoint-*.json
+/bulletproof-checkpoint-*.json
+/data/
+*.db
+/practice-data.txt
+
+# temporary files
+/temp/
+
+# docs (optional - keeping for now)
+# *.md
+# !README.md
+
 

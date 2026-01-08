@@ -1,5 +1,0 @@
-# Greyfinch Continuous Data Export - ALL Available Data
-# Format: Entity	ID	CreatedAt	JSON
-# Generated: 2025-09-15T16:35:05.643Z
-# This export uses continuous pagination to ensure ALL data is captured
-

@@ -1,5 +1,0 @@
-# Greyfinch Resilient Data Export - ALL Available Data
-# Format: Entity	ID	CreatedAt	JSON
-# Generated: 2025-09-15T17:23:56.316Z
-# This export uses continuous pagination with checkpointing
-

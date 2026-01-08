@@ -1,4 +1,0 @@
-locations	0c120319-a8e1-44de-9f39-d9be1762e86f	Royal Pine	{"id":"0c120319-a8e1-44de-9f39-d9be1762e86f","name":"Royal Pine","address":{"city":"Colorado Springs","state":"CO"}}
-locations	165d6b24-1cb7-43ac-9350-7600877abb92	Falcon	{"id":"165d6b24-1cb7-43ac-9350-7600877abb92","name":"Falcon","address":{"city":"Peyton","state":"CO"}}
-locations	da315b0f-d0da-4536-bdfe-11a906e30e2d	Serenity MedSpa	{"id":"da315b0f-d0da-4536-bdfe-11a906e30e2d","name":"Serenity MedSpa","address":{"city":"Colorado Springs","state":"CO"}}
-locations	12b3e165-730b-4c87-9961-65018ac08c60	Falcon Implants & Oral Surgery	{"id":"12b3e165-730b-4c87-9961-65018ac08c60","name":"Falcon Implants & Oral Surgery","address":{"city":"Peyton","state":"CO"}}
