@@ -1,0 +1,28 @@
+{
+  "name": "dynamic-rag-system",
+  "version": "1.0.0",
+  "description": "Dynamic RAG system that makes targeted API calls instead of loading bulk data",
+  "main": "dynamic-rag-orchestrator.ts",
+  "scripts": {
+    "test": "npx tsx test-dynamic-rag.ts",
+    "build": "tsc",
+    "dev": "npx tsx --watch test-dynamic-rag.ts"
+  },
+  "dependencies": {
+    "axios": "^1.12.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "tsx": "^4.20.5",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "rag",
+    "ai",
+    "dynamic-queries",
+    "efficiency",
+    "api-optimization"
+  ],
+  "author": "Opera AI Team",
+  "license": "MIT"
+}

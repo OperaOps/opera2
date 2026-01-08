@@ -1,0 +1,133 @@
+import { NextRequest, NextResponse } from 'next/server'
+import fs from 'fs/promises'
+import path from 'path'
+
+// Use your new API key
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCo5UmdR9fU_3ejsUh7s4Vhp06m0DBqmDY'
+const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent'
+
+async function readPracticeData(): Promise<string> {
+  try {
+    const dataPath = path.resolve('/Users/anishsuvarna/Downloads/opera copy/practice-data.txt')
+    const content = await fs.readFile(dataPath, 'utf8')
+    console.log('Using conversational practice data (3,253 records)')
+    return content
+  } catch (error) {
+    console.log('Practice data not found, using empty context')
+    return 'No practice data available.'
+  }
+}
+\\\
+
+export async function POST(req: NextRequest) {
+  try {
+    const { question } = await req.json()
+    if (!question || typeof question !== 'string') {
+      return NextResponse.json({ error: 'Missing question' }, { status: 400 })
+    }
+
+    console.log(`💬 Conversational AI processing: "${question}"`)
+
+    // Handle simple greetings and conversational responses
+    const lowerQuestion = question.toLowerCase().trim()
+    
+    if (lowerQuestion === 'hi' || lowerQuestion === 'hello' || lowerQuestion === 'hey') {
+      return NextResponse.json({ 
+        answer: 'Hi! I\'m Opera, your practice assistant. How can I help you today?' 
+      })
+    }
+    
+    if (lowerQuestion.includes('how are you') || lowerQuestion.includes('how\'s it going')) {
+      return NextResponse.json({ 
+        answer: 'I\'m doing great! Ready to help you with your practice. What would you like to know?' 
+      })
+    }
+
+    // Get practice data for analysis
+    const practiceData = await readPracticeData()
+    
+    console.log(`📊 Loaded practice data for analysis`)
+
+    // Sample the data to keep it under token limits
+    const dataLines = practiceData.split('\n').slice(0, 100); // Take first 100 lines
+    const sampledData = dataLines.join('\n');
+    
+    const promptIntro = `You are Opera, a dental practice assistant. Answer questions about practice data.
+
+Practice Data (sample):
+${sampledData}
+
+Question: ${question}
+
+Answer based on the data above. Be conversational and helpful.`
+
+    const contents = [
+      {
+        role: 'user',
+        parts: [
+          {
+            text: promptIntro
+          }
+        ]
+      }
+    ]
+
+    console.log(`🔑 Using Gemini API with key: ${GEMINI_API_KEY.substring(0, 10)}...`)
+    console.log(`🌐 API Endpoint: ${GEMINI_ENDPOINT}`)
+
+    const response = await fetch(GEMINI_ENDPOINT + `?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents,
+        generationConfig: {
+          temperature: 0.8, // Higher temperature for more conversational responses
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024, // Shorter responses for better conversation
+        },
+      }),
+    })
+
+    console.log(`📡 API Response Status: ${response.status}`)
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('❌ Gemini API error:', errorText)
+      
+      // Return detailed error info to help debug
+      return NextResponse.json({ 
+        error: 'Gemini API Error',
+        details: {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText
+        }
+      }, { status: response.status })
+    }
+
+    const data = await response.json()
+    console.log('✅ Gemini API response received:', JSON.stringify(data, null, 2))
+    
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+      console.error('❌ Unexpected AI response format:', data)
+      return NextResponse.json({ error: 'Invalid response from AI service', details: data }, { status: 500 })
+    }
+
+    const answer = data.candidates[0].content.parts[0].text
+    
+    console.log('✅ Conversational response generated successfully')
+
+    return NextResponse.json({ answer })
+
+  } catch (error) {
+    console.error('❌ Error in conversational AI:', error)
+    return NextResponse.json({ 
+      error: 'Internal server error', 
+      details: error.message,
+      stack: error.stack 
+    }, { status: 500 })
+  }
+}

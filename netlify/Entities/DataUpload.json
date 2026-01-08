@@ -1,0 +1,60 @@
+{
+    "name": "DataUpload",
+    "type": "object",
+    "properties": {
+      "file_name": {
+        "type": "string",
+        "description": "Name of the uploaded file"
+      },
+      "file_url": {
+        "type": "string",
+        "description": "URL of the uploaded file"
+      },
+      "file_type": {
+        "type": "string",
+        "enum": [
+          "csv",
+          "excel",
+          "pdf"
+        ],
+        "description": "Type of uploaded file"
+      },
+      "data_type": {
+        "type": "string",
+        "enum": [
+          "appointments",
+          "financial",
+          "patients",
+          "treatments",
+          "marketing"
+        ],
+        "description": "Type of data in the file"
+      },
+      "processed": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether the file has been processed"
+      },
+      "records_count": {
+        "type": "number",
+        "description": "Number of records processed from the file"
+      },
+      "processing_status": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "processing",
+          "completed",
+          "error"
+        ],
+        "default": "pending",
+        "description": "Processing status"
+      }
+    },
+    "required": [
+      "file_name",
+      "file_url",
+      "file_type",
+      "data_type"
+    ]
+  }

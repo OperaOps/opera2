@@ -1,0 +1,58 @@
+{
+    "name": "Appointment",
+    "type": "object",
+    "properties": {
+      "patient_name": {
+        "type": "string",
+        "description": "Name of the patient"
+      },
+      "appointment_type": {
+        "type": "string",
+        "enum": [
+          "consultation",
+          "treatment",
+          "follow_up",
+          "emergency"
+        ],
+        "description": "Type of appointment"
+      },
+      "date": {
+        "type": "string",
+        "format": "date",
+        "description": "Appointment date"
+      },
+      "time": {
+        "type": "string",
+        "description": "Appointment time"
+      },
+      "duration": {
+        "type": "number",
+        "description": "Duration in minutes"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "scheduled",
+          "completed",
+          "cancelled",
+          "no_show"
+        ],
+        "description": "Status of the appointment"
+      },
+      "provider": {
+        "type": "string",
+        "description": "Healthcare provider name"
+      },
+      "notes": {
+        "type": "string",
+        "description": "Additional notes"
+      }
+    },
+    "required": [
+      "patient_name",
+      "appointment_type",
+      "date",
+      "time",
+      "status"
+    ]
+  }
