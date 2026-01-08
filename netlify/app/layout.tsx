@@ -6,6 +6,11 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
   title: 'Opera AI - Your Digital COO',
   description: 'AI-powered dental practice management dashboard',
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
+  },
 }
 
 export default function RootLayout({
