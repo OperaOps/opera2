@@ -45,5 +45,19 @@ export interface RenderInput {
   parentMode?: boolean;
 }
 
-/** Singleton job store — shared across all route modules */
-export const jobStore = new Map<string, VideoJob>();
+/**
+ * Singleton job store — shared across all route modules.
+ * Uses globalThis to survive Next.js dev mode hot reloads and
+ * webpack module isolation between route handlers.
+ */
+const GLOBAL_KEY = "__patientVideoJobStore" as const;
+
+function getOrCreateJobStore(): Map<string, VideoJob> {
+  const g = globalThis as Record<string, unknown>;
+  if (!g[GLOBAL_KEY]) {
+    g[GLOBAL_KEY] = new Map<string, VideoJob>();
+  }
+  return g[GLOBAL_KEY] as Map<string, VideoJob>;
+}
+
+export const jobStore = getOrCreateJobStore();

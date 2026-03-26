@@ -19,6 +19,8 @@ function isPublicPath(pathname: string): boolean {
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api/patient-video") ||
+    pathname.startsWith("/patient-video") ||
     pathname.includes(".") // static files like .css, .js, .ico
   ) {
     return true;
