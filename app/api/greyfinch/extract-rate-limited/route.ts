@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from 'next/server'
 
 const API_URL = "https://connect-api.greyfinch.com/v1/graphql"

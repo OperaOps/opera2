@@ -20,7 +20,8 @@ import {
   Settings,
   Zap,
   LayoutGrid,
-  Home
+  Home,
+  Video
 } from "lucide-react";
 
 const navigationItems = [
@@ -31,7 +32,8 @@ const navigationItems = [
   { title: "Financial Ops", url: createPageUrl("FinancialOps"), icon: DollarSign, id: "finance" },
   { title: "Opportunities", url: createPageUrl("Opportunities"), icon: Lightbulb, id: "opportunities" },
   { title: "Compare", url: createPageUrl("Compare"), icon: Target, id: "compare" },
-  { title: "Data Input", url: createPageUrl("DataInput"), icon: Zap, id: "integrations" }
+  { title: "Data Input", url: createPageUrl("DataInput"), icon: Zap, id: "integrations" },
+  { title: "Patient Video", url: "/patient-video", icon: Video, id: "patient-video" }
 ];
 
 export default function CinematicSidebar() {

@@ -1,25 +1,42 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Lock, Mail } from "lucide-react";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setShowError(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        router.push("/patient-video");
+      } else {
+        setError(data.error || "Invalid credentials");
+      }
+    } catch {
+      setError("Something went wrong. Try again.");
+    } finally {
       setIsSubmitting(false);
-    }, 500);
+    }
   };
 
   return (
@@ -37,13 +54,13 @@ export default function SignInPage() {
             animate={{
               y: [0, -30, 0],
               opacity: [0.2, 0.8, 0.2],
-              scale: [1, 1.5, 1]
+              scale: [1, 1.5, 1],
             }}
             transition={{
               duration: 3 + Math.random() * 2,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: Math.random() * 2
+              delay: Math.random() * 2,
             }}
           />
         ))}
@@ -111,13 +128,13 @@ export default function SignInPage() {
             </div>
 
             {/* Error Message */}
-            {showError && (
+            {error && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-red-400 text-sm text-center"
               >
-                Incorrect
+                {error}
               </motion.div>
             )}
 
@@ -125,7 +142,10 @@ export default function SignInPage() {
             <motion.button
               type="submit"
               disabled={isSubmitting}
-              whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(168, 85, 247, 0.5)" }}
+              whileHover={{
+                scale: 1.02,
+                boxShadow: "0 0 30px rgba(168, 85, 247, 0.5)",
+              }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2 }}
               className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 rounded-lg text-white font-medium shadow-lg shadow-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -138,4 +158,3 @@ export default function SignInPage() {
     </div>
   );
 }
-

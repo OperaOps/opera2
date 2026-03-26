@@ -1,0 +1,28 @@
+{
+  "name": "opera-video-renderer",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render PatientVideo out/video.mp4",
+    "render:demo": "npx tsx render-demo.ts",
+    "build": "remotion bundle"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1015.0",
+    "@remotion/bundler": "4.0.242",
+    "@remotion/cli": "4.0.242",
+    "@remotion/renderer": "4.0.242",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "4.0.242",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@remotion/eslint-config": "4.0.242",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.5.0"
+  }
+}

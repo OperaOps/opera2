@@ -1,0 +1,20 @@
+[
+  {
+    "email": "anishsuvarna@berkeley.edu",
+    "passwordHash": "$2b$10$ZuxqAu1auncHjy/qRxWcBeB2cC.ECCMVv.79TBnPkXJxVhJkKOzkG",
+    "name": "Anish Suvarna",
+    "role": "admin"
+  },
+  {
+    "email": "rsdosi@stanford.edu",
+    "passwordHash": "$2b$10$9M4fnKZA7Vclyk4nT1.QleOp2FvRw50gkayg6cYoysqppaDKeU4Iq",
+    "name": "Ram Dosibhatla",
+    "role": "admin"
+  },
+  {
+    "email": "jake.zitterkopf@gmail.com",
+    "passwordHash": "$2b$10$ldX3ttm/AUhe7ADPOVWI9.Pkn49ciERjJQFIcBqUfFGBpxVffXSo.",
+    "name": "Jacob Zitterkopf",
+    "role": "user"
+  }
+]

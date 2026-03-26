@@ -1,0 +1,16 @@
+node_modules
+video-renderer/node_modules
+.next
+video-renderer/out
+video-renderer/.tmp
+*.mov
+*.mp4
+.env.local
+.git
+opera-demo-mvp
+netlify
+OperaDemoFinal.mov
+Screenshot*
+deploy-*.sh
+*.tar.gz
+.claude
