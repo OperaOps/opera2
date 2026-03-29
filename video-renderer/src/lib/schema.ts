@@ -30,6 +30,7 @@ export const TreatmentType = z.enum([
   "lingual_braces",
   "dentures",
   "retainer",
+  "full_mouth_rehab",
 ]);
 export type TreatmentType = z.infer<typeof TreatmentType>;
 
@@ -68,6 +69,8 @@ export const PatientVideoProps = z.object({
   }),
   captions: z.array(CaptionEntry).default([]),
   audioUrl: z.string().optional(),
+  /** Optional bed track under narration; public/ path or https URL. Defaults to audio/opera-bgm.m4a. */
+  bgmUrl: z.string().optional(),
   clinicBrand: z
     .object({
       logoUrl: z.string().optional(),
@@ -81,8 +84,8 @@ export type PatientVideoProps = z.infer<typeof PatientVideoProps>;
 export const DEFAULT_FPS = 20;
 export const VIDEO_WIDTH = 1920;
 export const VIDEO_HEIGHT = 1080;
-// Render scale: 0.667 = 1280x720 output (much faster, fine for phones/tablets)
-export const RENDER_SCALE = 2 / 3;
+// ~1152×648 @ 0.6 — fewer pixels than 2/3 for faster encode; override with REMOTION_RENDER_SCALE in env
+export const RENDER_SCALE = 0.6;
 
 // ---------------------------------------------------------------------------
 // Premium video types
@@ -97,7 +100,7 @@ export interface PremiumSceneScript {
   bullets?: string[];
 }
 
-export interface PremiumPatientVideoProps {
+export type PremiumPatientVideoProps = {
   patientName: string;
   doctorName: string;
   clinicName: string;
@@ -105,6 +108,8 @@ export interface PremiumPatientVideoProps {
   treatment: string;
   accentColor?: string;
   audioUrl?: string;
+  /** Instrumental bed; public/ path (staticFile) or https. Defaults to audio/opera-bgm.m4a. */
+  bgmUrl?: string;
   captions?: CaptionEntry[];
   scenes: {
     intro: PremiumSceneScript;
@@ -118,4 +123,4 @@ export interface PremiumPatientVideoProps {
   };
   beforePhotoUrl?: string;
   afterPhotoUrl?: string;
-}
+} & Record<string, unknown>;

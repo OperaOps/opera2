@@ -107,6 +107,10 @@ const DENTAL_TREATMENTS: { value: string; label: string }[] = [
   { value: "whitening", label: "Professional Whitening" },
   { value: "gum_treatment", label: "Gum Disease Treatment" },
   { value: "dentures", label: "Dentures" },
+  {
+    value: "full_mouth_rehab",
+    label: "Full Mouth Rehab (Extractions → Surgery/Implants → Crowns)",
+  },
 ];
 
 const ORTHODONTIC_TREATMENTS: { value: string; label: string }[] = [
@@ -125,6 +129,7 @@ const TREATMENT_OPTIONS: Record<Specialty, { value: string; label: string }[]> =
 };
 
 const TREATMENT_TO_DIAGNOSIS: Record<string, string> = {
+  full_mouth_rehab: "missing_tooth",
   crown: "cracked_tooth",
   filling: "cavity",
   root_canal: "cavity",
@@ -148,6 +153,11 @@ const CONTENT_MODES: { value: ContentMode; label: string; desc: string }[] = [
   { value: "template", label: "Template", desc: "Fastest" },
   { value: "template_ai", label: "Template + AI", desc: "Personalized" },
   { value: "full_ai", label: "Full AI Generation", desc: "Custom" },
+];
+
+const VIDEO_DEPTH_OPTIONS: { value: VideoMode; label: string; desc: string }[] = [
+  { value: "standard", label: "Standard", desc: "5 scenes — faster to generate" },
+  { value: "premium", label: "In-depth", desc: "8 scenes — deep dive, journey & aftercare" },
 ];
 
 const STEP_LABELS: Record<string, string> = {
@@ -360,7 +370,7 @@ export default function PatientVideoPage() {
   const [afterPhoto, setAfterPhoto] = useState<string | null>(null);
 
   // Video depth
-  const [videoMode, setVideoMode] = useState<VideoMode>("premium");
+  const [videoMode, setVideoMode] = useState<VideoMode>("standard");
 
   // Job state
   const [jobStatus, setJobStatus] = useState<JobStatus | null>(null);
@@ -371,12 +381,17 @@ export default function PatientVideoPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const MAX_POLL_FAILURES = 10;
-  const MAX_POLL_DURATION_MS = 11 * 60 * 1000; // 11 minutes (matches 10-min render timeout + buffer)
+  const MAX_POLL_DURATION_MS = 32 * 60 * 1000; // Above API worker timeout (30m) + buffer for FMR/premium
 
   // Reset treatment & appointment context when specialty changes
   useEffect(() => {
     const treatOpts = TREATMENT_OPTIONS[specialty];
-    if (treatOpts.length > 0) setTreatment(treatOpts[0].value);
+    const preferred = DEFAULT_TREATMENT_FOR_SPECIALTY[specialty];
+    const next =
+      treatOpts.find((o) => o.value === preferred)?.value ??
+      treatOpts[0]?.value ??
+      preferred;
+    setTreatment(next);
     const contextOpts = APPOINTMENT_CONTEXTS[specialty];
     if (contextOpts.length > 0) setAppointmentContext(contextOpts[0].value);
     setParentMode(false);
@@ -416,7 +431,7 @@ export default function PatientVideoPage() {
     pollFailCountRef.current = 0;
 
     pollRef.current = setInterval(async () => {
-      // Check max poll duration (6 minutes)
+      // Stop polling if the server is taking too long (aligned with API worker timeout)
       if (Date.now() - pollStartTimeRef.current > MAX_POLL_DURATION_MS) {
         if (pollRef.current) clearInterval(pollRef.current);
         pollStartTimeRef.current = 0;
@@ -426,7 +441,7 @@ export default function PatientVideoPage() {
                 ...prev,
                 status: "failed",
                 error:
-                  "Video generation timed out after 6 minutes. Please try again or contact support if the issue persists.",
+                  "Video generation is taking longer than expected. Please try again or contact support if this keeps happening.",
               }
             : null
         );
@@ -944,17 +959,34 @@ export default function PatientVideoPage() {
               </div>
             </CollapsibleSection>
 
-            {/* Video Depth — always premium */}
             <div className="space-y-3">
               <label className="text-sm font-medium text-purple-300/80 flex items-center gap-2 px-1">
                 <FileVideo className="w-4 h-4" />
-                Video Depth
+                Video depth
               </label>
-              <div className="p-4 rounded-2xl border border-purple-500/60 bg-purple-500/10">
-                <div>
-                  <h3 className="font-medium text-sm text-white">In-Depth Treatment Video</h3>
-                  <p className="text-[11px] text-gray-400 mt-1">Comprehensive 8-scene video with deep dive, journey &amp; aftercare</p>
-                </div>
+              <div className="grid grid-cols-2 gap-2">
+                {VIDEO_DEPTH_OPTIONS.map((opt) => (
+                  <motion.button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setVideoMode(opt.value)}
+                    whileTap={{ scale: 0.98 }}
+                    className={`text-left p-3 rounded-xl border transition-all ${
+                      videoMode === opt.value
+                        ? "border-purple-500/60 bg-purple-500/15 shadow-[0_0_20px_rgba(168,85,247,0.12)]"
+                        : "border-white/10 bg-white/[0.03] hover:border-purple-500/30"
+                    }`}
+                  >
+                    <p
+                      className={`text-xs font-medium ${
+                        videoMode === opt.value ? "text-white" : "text-white/60"
+                      }`}
+                    >
+                      {opt.label}
+                    </p>
+                    <p className="text-[10px] text-white/30 mt-0.5">{opt.desc}</p>
+                  </motion.button>
+                ))}
               </div>
             </div>
 
@@ -998,11 +1030,13 @@ export default function PatientVideoPage() {
                 <div className="aspect-video bg-black/40 relative flex items-center justify-center">
                   {jobStatus?.status === "completed" && jobStatus.videoUrl ? (
                     <video
+                      key={jobStatus.videoUrl}
                       ref={videoRef}
                       src={jobStatus.videoUrl}
                       controls
+                      playsInline
                       className="w-full h-full object-contain"
-                      autoPlay
+                      onError={(e) => console.error("[video] load error", e.currentTarget.error)}
                     />
                   ) : (
                     <div className="text-center space-y-4">
@@ -1017,7 +1051,7 @@ export default function PatientVideoPage() {
                         </p>
                         <p className="text-white/15 text-xs mt-1">
                           {isProcessing
-                            ? "This typically takes 30-60 seconds"
+                            ? "Premium and full-mouth videos often take several minutes — stay on this page"
                             : "Fill in the details and click Generate"}
                         </p>
                       </div>
@@ -1065,11 +1099,11 @@ export default function PatientVideoPage() {
                   <div className="flex items-center gap-4 text-xs text-white/30">
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      ~90-120 sec
+                      ~2–15 min (in-depth)
                     </span>
                     <span className="flex items-center gap-1">
                       <Volume2 className="w-3 h-3" />
-                      AI voiceover
+                      Voice + bed music
                     </span>
                     <span className="flex items-center gap-1">
                       <Play className="w-3 h-3" />
