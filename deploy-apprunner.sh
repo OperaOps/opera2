@@ -92,7 +92,7 @@ echo ""
 echo -e "${YELLOW}Step 2: Building Docker image (this takes 3-5 min first time)...${NC}"
 
 # Build for linux/amd64 (App Runner runs on x86)
-docker build --platform linux/amd64 -t "${ECR_REPO_NAME}:${IMAGE_TAG}" .
+docker build --no-cache --platform linux/amd64 -t "${ECR_REPO_NAME}:${IMAGE_TAG}" .
 
 echo -e "${GREEN}   ✅ Image built${NC}"
 
@@ -173,6 +173,9 @@ CLAUDE_KEY=$(grep "^CLAUDE_API_KEY=" "$ENV_FILE" | cut -d'=' -f2-)
 ELEVENLABS_KEY=$(grep "^ELEVENLABS_API_KEY=" "$ENV_FILE" | cut -d'=' -f2-)
 GREYFINCH_KEY=$(grep "^GREYFINCH_API_KEY=" "$ENV_FILE" | cut -d'=' -f2-)
 GREYFINCH_SECRET=$(grep "^GREYFINCH_API_SECRET=" "$ENV_FILE" | cut -d'=' -f2-)
+# Optional DynamoDB table for patient-video job state (multi-instance App Runner). Partition key: jobId (String).
+# aws dynamodb create-table --table-name opera-patient-video-jobs --attribute-definitions AttributeName=jobId,AttributeType=S --key-schema AttributeName=jobId,KeyType=HASH --billing-mode PAY_PER_REQUEST --region us-east-1
+PATIENT_VIDEO_JOBS_TABLE=$(grep "^PATIENT_VIDEO_JOBS_TABLE=" "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- | tr -d '\r' || echo "")
 
 if [ -z "$CLAUDE_KEY" ] || [ -z "$ELEVENLABS_KEY" ]; then
     echo -e "${RED}❌ Missing CLAUDE_API_KEY or ELEVENLABS_API_KEY in .env.local${NC}"
@@ -220,7 +223,9 @@ if [ -n "$EXISTING_SERVICE" ] && [ "$EXISTING_SERVICE" != "None" ]; then
                         \"AWS_ACCESS_KEY_ID\": \"${AWS_ACCESS_KEY_ID}\",
                         \"AWS_SECRET_ACCESS_KEY\": \"${AWS_SECRET_ACCESS_KEY}\",
                         \"REMOTION_CHROME_EXECUTABLE\": \"/usr/bin/chromium\",
-                        \"NODE_ENV\": \"production\"
+                        \"OPERA_BGM_PUBLIC_PATH\": \"audio/opera-bgm.m4a\",
+                        \"NODE_ENV\": \"production\",
+                        \"PATIENT_VIDEO_JOBS_TABLE\": \"${PATIENT_VIDEO_JOBS_TABLE}\"
                     }
                 }
             },
@@ -258,7 +263,9 @@ else
                         \"AWS_ACCESS_KEY_ID\": \"${AWS_ACCESS_KEY_ID}\",
                         \"AWS_SECRET_ACCESS_KEY\": \"${AWS_SECRET_ACCESS_KEY}\",
                         \"REMOTION_CHROME_EXECUTABLE\": \"/usr/bin/chromium\",
-                        \"NODE_ENV\": \"production\"
+                        \"OPERA_BGM_PUBLIC_PATH\": \"audio/opera-bgm.m4a\",
+                        \"NODE_ENV\": \"production\",
+                        \"PATIENT_VIDEO_JOBS_TABLE\": \"${PATIENT_VIDEO_JOBS_TABLE}\"
                     }
                 }
             },
@@ -286,30 +293,54 @@ else
     echo -e "${GREEN}   Service created!${NC}"
 fi
 
-# ============================================================
-# STEP 7: Wait for deployment and get URL
-# ============================================================
-echo ""
-echo -e "${YELLOW}Step 7: Waiting for deployment (usually 3-5 min)...${NC}"
+# ---------------------------------------------------------------------------
+# Wait for RUNNING, then force-deployment, then wait again.
+# start-deployment fails with InvalidRequestException if the service is still
+# OPERATION_IN_PROGRESS from update-service — that skip prevented :latest rollouts.
+# ---------------------------------------------------------------------------
+wait_apprunner_running() {
+    local phase="$1"
+    echo ""
+    echo -e "${YELLOW}Step 7 (${phase}): Waiting for App Runner RUNNING...${NC}"
+    local max=100
+    local i=0
+    while [ "$i" -lt "$max" ]; do
+        STATUS=$(aws apprunner describe-service \
+            --service-arn "${SERVICE_ARN}" \
+            --region "${AWS_REGION}" \
+            --query 'Service.Status' \
+            --output text)
 
-while true; do
-    STATUS=$(aws apprunner describe-service \
-        --service-arn "${SERVICE_ARN}" \
-        --region "${AWS_REGION}" \
-        --query 'Service.Status' \
-        --output text)
-
-    if [ "$STATUS" = "RUNNING" ]; then
-        break
-    elif [ "$STATUS" = "CREATE_FAILED" ] || [ "$STATUS" = "UPDATE_FAILED" ]; then
-        echo -e "${RED}❌ Deployment failed with status: ${STATUS}${NC}"
-        echo "   Check logs: aws apprunner list-operations --service-arn ${SERVICE_ARN} --region ${AWS_REGION}"
-        exit 1
-    else
+        if [ "$STATUS" = "RUNNING" ]; then
+            echo -e "${GREEN}   ${phase}: RUNNING${NC}"
+            return 0
+        elif [ "$STATUS" = "CREATE_FAILED" ] || [ "$STATUS" = "UPDATE_FAILED" ]; then
+            echo -e "${RED}❌ Deployment failed with status: ${STATUS}${NC}"
+            echo "   Check logs: aws apprunner list-operations --service-arn ${SERVICE_ARN} --region ${AWS_REGION}"
+            exit 1
+        fi
         echo "   Status: ${STATUS} — waiting..."
         sleep 15
-    fi
-done
+        i=$((i + 1))
+    done
+    echo -e "${RED}❌ Timeout waiting for RUNNING (${phase})${NC}"
+    exit 1
+}
+
+wait_apprunner_running "after update-service"
+
+echo ""
+echo -e "${YELLOW}Step 6b: Forcing new deployment (pull fresh :latest from ECR)...${NC}"
+if aws apprunner start-deployment \
+    --service-arn "${SERVICE_ARN}" \
+    --region "${AWS_REGION}" \
+    --output text --query 'OperationId'; then
+    echo -e "${GREEN}   start-deployment accepted${NC}"
+else
+    echo -e "${YELLOW}   start-deployment failed (continuing — update may already include new image)${NC}"
+fi
+
+wait_apprunner_running "after start-deployment"
 
 SERVICE_URL=$(aws apprunner describe-service \
     --service-arn "${SERVICE_ARN}" \
