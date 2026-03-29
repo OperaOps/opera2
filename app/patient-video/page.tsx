@@ -128,6 +128,12 @@ const TREATMENT_OPTIONS: Record<Specialty, { value: string; label: string }[]> =
   orthodontic: ORTHODONTIC_TREATMENTS,
 };
 
+/** When switching specialty, pick a sensible default (not first dropdown item). */
+const DEFAULT_TREATMENT_FOR_SPECIALTY: Record<Specialty, string> = {
+  dental: "crown",
+  orthodontic: "braces",
+};
+
 const TREATMENT_TO_DIAGNOSIS: Record<string, string> = {
   full_mouth_rehab: "missing_tooth",
   crown: "cracked_tooth",
