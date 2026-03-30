@@ -692,7 +692,9 @@ export async function renderPatientVideo(
   const envConc = process.env.REMOTION_RENDER_CONCURRENCY;
   const renderConcurrency = envConc
     ? Math.max(1, Math.min(8, parseInt(envConc, 10) || 2))
-    : Math.min(4, Math.max(1, cpuCount));
+    // Default to a conservative concurrency to avoid CPU/Chromium thrash
+    // (can massively increase render time on small App Runner instances).
+    : Math.min(2, Math.max(1, cpuCount));
   const renderScale = effectiveRenderScale();
   console.log(`[render-pipeline] Rendering with concurrency ${renderConcurrency} (${cpuCount} CPUs detected)`);
   console.log(
@@ -770,14 +772,16 @@ export async function renderPatientVideo(
     const s3Key = `videos/${outputFileName}`;
     const region = process.env.AWS_REGION || "us-east-1";
     const s3 = new S3Client({ region });
-    const fileBuffer = await fs.readFile(outputPath);
+    // Stream upload: avoids reading the entire MP4 into memory (faster + lower memory).
+    const fileSize = (await fs.stat(outputPath)).size;
     try {
       await s3.send(
         new PutObjectCommand({
           Bucket: s3Bucket,
           Key: s3Key,
-          Body: fileBuffer,
+          Body: createReadStream(outputPath),
           ContentType: "video/mp4",
+          ContentLength: fileSize,
         })
       );
     } catch (err) {
