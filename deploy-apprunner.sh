@@ -223,6 +223,7 @@ if [ -n "$EXISTING_SERVICE" ] && [ "$EXISTING_SERVICE" != "None" ]; then
                         \"AWS_ACCESS_KEY_ID\": \"${AWS_ACCESS_KEY_ID}\",
                         \"AWS_SECRET_ACCESS_KEY\": \"${AWS_SECRET_ACCESS_KEY}\",
                         \"REMOTION_CHROME_EXECUTABLE\": \"/usr/bin/chromium\",
+                        \"REMOTION_RENDER_SCALE\": \"0.45\",
                         \"OPERA_BGM_PUBLIC_PATH\": \"audio/opera-bgm.m4a\",
                         \"NODE_ENV\": \"production\",
                         \"PATIENT_VIDEO_JOBS_TABLE\": \"${PATIENT_VIDEO_JOBS_TABLE}\"
@@ -263,6 +264,7 @@ else
                         \"AWS_ACCESS_KEY_ID\": \"${AWS_ACCESS_KEY_ID}\",
                         \"AWS_SECRET_ACCESS_KEY\": \"${AWS_SECRET_ACCESS_KEY}\",
                         \"REMOTION_CHROME_EXECUTABLE\": \"/usr/bin/chromium\",
+                        \"REMOTION_RENDER_SCALE\": \"0.45\",
                         \"OPERA_BGM_PUBLIC_PATH\": \"audio/opera-bgm.m4a\",
                         \"NODE_ENV\": \"production\",
                         \"PATIENT_VIDEO_JOBS_TABLE\": \"${PATIENT_VIDEO_JOBS_TABLE}\"
