@@ -694,7 +694,7 @@ export async function renderPatientVideo(
     ? Math.max(1, Math.min(8, parseInt(envConc, 10) || 2))
     // Default to a conservative concurrency to avoid CPU/Chromium thrash
     // (can massively increase render time on small App Runner instances).
-    : Math.min(2, Math.max(1, cpuCount));
+    : 1;
   const renderScale = effectiveRenderScale();
   console.log(`[render-pipeline] Rendering with concurrency ${renderConcurrency} (${cpuCount} CPUs detected)`);
   console.log(
