@@ -16,5 +16,11 @@
     "passwordHash": "$2b$10$ldX3ttm/AUhe7ADPOVWI9.Pkn49ciERjJQFIcBqUfFGBpxVffXSo.",
     "name": "Jacob Zitterkopf",
     "role": "user"
+  },
+  {
+    "email": "venkatchalasani@gmail.com",
+    "passwordHash": "$2b$10$vH.DgJClikX8Igp06y651eVQa0DIOIZfb/Lua6i8AOgdKfAfxS26q",
+    "name": "Venkat Chalasani",
+    "role": "user"
   }
 ]
