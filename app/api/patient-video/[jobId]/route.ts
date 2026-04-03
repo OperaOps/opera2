@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { jobStore } from "../_lib/job-store";
+import { loadJob } from "../_lib/job-store";
 
 // ---------------------------------------------------------------------------
 // Route handler
@@ -17,7 +17,7 @@ export async function GET(
 ) {
   const { jobId } = params;
 
-  const job = jobStore.get(jobId);
+  const job = await loadJob(jobId);
   if (!job) {
     return NextResponse.json(
       { error: `Job not found: ${jobId}` },

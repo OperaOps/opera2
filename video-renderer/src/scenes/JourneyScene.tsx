@@ -10,6 +10,13 @@ import { Background } from "../components/Background";
 import { ClinicBranding } from "../components/ClinicBranding";
 import { SceneHeading, BulletList } from "../components/SceneHeading";
 import { COLORS } from "../lib/colors";
+import { DentalVideoClip } from "../components/DentalVideoClip";
+import { getDentalVideoClips } from "../lib/dental-video-assets";
+import { HealingOsseointegrationVisual } from "../components/dental/treatments/HealingOsseointegrationVisual";
+import { PremiumVisualFrame } from "../components/PremiumVisualFrame";
+import { getFocusSettleExplain } from "../lib/focus-settle-motion";
+import { HERO_VISUAL_HEIGHT, HERO_VISUAL_WIDTH } from "../lib/visual-layout";
+import { PremiumJourneyTextPanel } from "../components/PremiumJourneyTextPanel";
 
 /** Cyan/teal color for the Journey badge */
 const BADGE_COLOR = "#06b6d4";
@@ -26,26 +33,35 @@ export const JourneyScene: React.FC<{
   heading: string;
   bullets?: string[];
   milestones?: string[];
+  treatment?: string;
   clinicName: string;
   doctorName: string;
   durationFrames: number;
   accentColor?: string;
+  premiumJourneyStyle?: boolean;
 }> = ({
   heading,
   bullets = [],
   milestones = DEFAULT_MILESTONES,
+  treatment,
   clinicName,
   doctorName,
   durationFrames,
   accentColor = COLORS.purple,
+  premiumJourneyStyle = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Layout animations
-  const contentOpacity = interpolate(frame, [0, 12], [0, 1], {
-    extrapolateRight: "clamp",
-  });
+  // Journey can show dental video clips (e.g. implant placement for full_mouth_rehab)
+  const dentalVideoClips = treatment
+    ? getDentalVideoClips(treatment, "journey")
+    : undefined;
+
+  const hasVideoClips = !!(dentalVideoClips && dentalVideoClips.length > 0);
+  const isFmr = treatment === "full_mouth_rehab";
+  const useFse = premiumJourneyStyle && hasVideoClips;
+  const fse = getFocusSettleExplain(frame, fps, "left", useFse);
 
   const timelineScale = spring({
     frame: Math.max(0, frame - 8),
@@ -64,7 +80,7 @@ export const JourneyScene: React.FC<{
   // Progress along the timeline (0 to 1 over the scene)
   const timelineProgress = interpolate(
     frame,
-    [30, durationFrames - 40],
+    [30, Math.max(31, durationFrames - 40)],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
@@ -82,9 +98,39 @@ export const JourneyScene: React.FC<{
   const TIMELINE_Y = 620;
   const totalWidth = TIMELINE_RIGHT - TIMELINE_LEFT;
 
+  const hasFmrJourney = !!(isFmr && hasVideoClips);
+  const journeySplit =
+    hasFmrJourney && durationFrames > 40 ? Math.floor(durationFrames * 0.52) : Number.POSITIVE_INFINITY;
+  const journeyVideoOpacity = hasFmrJourney
+    ? interpolate(
+        frame,
+        [Math.max(0, journeySplit - 22), journeySplit],
+        [1, 0],
+        { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+      )
+    : 1;
+  const healingMomentOpacity = hasFmrJourney
+    ? interpolate(
+        frame,
+        [Math.max(0, journeySplit - 14), journeySplit + 14],
+        [0, 1],
+        { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+      )
+    : 0;
+  const healingProgress = hasFmrJourney
+    ? interpolate(
+        frame,
+        [journeySplit, Math.max(journeySplit + 1, durationFrames - 24)],
+        [0, 1],
+        { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+      )
+    : 0;
+
+  const journeyBgVariant = premiumJourneyStyle ? "journey" : "cool";
+
   return (
     <AbsoluteFill>
-      <Background accentColor={BADGE_COLOR} variant="cool" />
+      <Background accentColor={BADGE_COLOR} variant={journeyBgVariant} />
 
       {/* Minimal branding */}
       <ClinicBranding
@@ -94,6 +140,154 @@ export const JourneyScene: React.FC<{
         accentColor={accentColor}
       />
 
+      {/* Split layout (video | copy) matches Treatment / WhatToExpect — copy is vertically centered */}
+      {hasVideoClips ? (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "stretch",
+            opacity: fadeOut,
+            padding: "90px 72px 120px",
+            gap: 0,
+          }}
+        >
+          <div
+            style={{
+              flex: "0 0 55%",
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minWidth: 0,
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                width: HERO_VISUAL_WIDTH,
+                height: HERO_VISUAL_HEIGHT,
+                transform: useFse
+                  ? `translateX(${fse.translateXPercent}%) scale(${fse.scaleMul})`
+                  : undefined,
+                transformOrigin: "center center",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  opacity: journeyVideoOpacity,
+                }}
+              >
+                <DentalVideoClip
+                  clips={dentalVideoClips!}
+                  width={HERO_VISUAL_WIDTH}
+                  height={HERO_VISUAL_HEIGHT}
+                />
+              </div>
+              {hasFmrJourney && (
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    opacity: healingMomentOpacity,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <PremiumVisualFrame
+                    width={HERO_VISUAL_WIDTH}
+                    height={HERO_VISUAL_HEIGHT}
+                    borderRadius={20}
+                  >
+                    <div
+                      style={{
+                        padding: "10px 14px",
+                        height: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxSizing: "border-box",
+                      }}
+                    >
+                      <HealingOsseointegrationVisual progress={healingProgress} />
+                    </div>
+                  </PremiumVisualFrame>
+                </div>
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  "linear-gradient(105deg, transparent 0%, transparent 42%, rgba(0,0,0,0.55) 78%, rgba(0,0,0,0.88) 100%)",
+                pointerEvents: "none",
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              flex: "0 0 45%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "stretch",
+              minWidth: 0,
+              paddingLeft: 28,
+              paddingRight: 8,
+            }}
+          >
+            <PremiumJourneyTextPanel
+              accentBarColor={BADGE_COLOR}
+              opacity={fse.textColumnOpacity}
+            >
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 18,
+                  opacity: badgeGlow,
+                }}
+              >
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    background: BADGE_COLOR,
+                    boxShadow: `0 0 12px ${BADGE_COLOR}80`,
+                  }}
+                />
+                <span
+                  style={{
+                    color: BADGE_COLOR,
+                    fontSize: 15,
+                    fontWeight: 500,
+                    fontFamily: "system-ui, sans-serif",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Your Treatment Journey
+                </span>
+              </div>
+
+              <SceneHeading heading={heading} accentColor={accentColor} />
+
+              {bullets.length > 0 && (
+                <BulletList items={bullets} accentColor={accentColor} />
+              )}
+            </PremiumJourneyTextPanel>
+          </div>
+        </div>
+      ) : (
       <div
         style={{
           position: "absolute",
@@ -104,55 +298,102 @@ export const JourneyScene: React.FC<{
           padding: "90px 80px 120px",
         }}
       >
-        {/* Top section: Text content */}
         <div
           style={{
             flex: "0 0 auto",
-            opacity: contentOpacity,
             marginBottom: 40,
           }}
         >
-          {/* Journey badge */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              marginBottom: 20,
-              opacity: badgeGlow,
-            }}
-          >
-            <div
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 5,
-                background: BADGE_COLOR,
-                boxShadow: `0 0 12px ${BADGE_COLOR}80`,
-              }}
-            />
-            <span
-              style={{
-                color: BADGE_COLOR,
-                fontSize: 16,
-                fontWeight: 500,
-                fontFamily: "system-ui, sans-serif",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}
+          {premiumJourneyStyle ? (
+            <PremiumJourneyTextPanel
+              accentBarColor={BADGE_COLOR}
+              opacity={interpolate(frame, [0, 12], [0, 1], {
+                extrapolateRight: "clamp",
+              })}
             >
-              Your Treatment Journey
-            </span>
-          </div>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 18,
+                  opacity: badgeGlow,
+                }}
+              >
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    background: BADGE_COLOR,
+                    boxShadow: `0 0 12px ${BADGE_COLOR}80`,
+                  }}
+                />
+                <span
+                  style={{
+                    color: BADGE_COLOR,
+                    fontSize: 15,
+                    fontWeight: 500,
+                    fontFamily: "system-ui, sans-serif",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Your Treatment Journey
+                </span>
+              </div>
 
-          <SceneHeading heading={heading} accentColor={accentColor} />
+              <SceneHeading heading={heading} accentColor={accentColor} />
 
-          {bullets.length > 0 && (
-            <BulletList items={bullets} accentColor={accentColor} />
+              {bullets.length > 0 && (
+                <BulletList items={bullets} accentColor={accentColor} />
+              )}
+            </PremiumJourneyTextPanel>
+          ) : (
+            <>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 20,
+                  opacity: badgeGlow,
+                }}
+              >
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    background: BADGE_COLOR,
+                    boxShadow: `0 0 12px ${BADGE_COLOR}80`,
+                  }}
+                />
+                <span
+                  style={{
+                    color: BADGE_COLOR,
+                    fontSize: 16,
+                    fontWeight: 500,
+                    fontFamily: "system-ui, sans-serif",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Your Treatment Journey
+                </span>
+              </div>
+
+              <SceneHeading heading={heading} accentColor={accentColor} />
+
+              {bullets.length > 0 && (
+                <BulletList items={bullets} accentColor={accentColor} />
+              )}
+            </>
           )}
         </div>
 
-        {/* Timeline section */}
+        {/* Timeline section — only when no video clips */}
+        {!hasVideoClips && (
         <div
           style={{
             flex: 1,
@@ -303,7 +544,9 @@ export const JourneyScene: React.FC<{
             })}
           </svg>
         </div>
+        )}
       </div>
+      )}
     </AbsoluteFill>
   );
 };

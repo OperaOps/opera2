@@ -3,14 +3,16 @@ video-renderer/node_modules
 .next
 video-renderer/out
 video-renderer/.tmp
+# dental-videos/ MP4s are loaded from public S3 in code; dental-3d/ PNGs use staticFile() from bundle/public.
+# Do not exclude video-renderer/public/ assets needed at render time.
 *.mov
-*.mp4
+OperaDemoFinal.mov
 .env.local
 .git
 opera-demo-mvp
 netlify
-OperaDemoFinal.mov
 Screenshot*
 deploy-*.sh
 *.tar.gz
 .claude
+treatmenttests

@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "node:fs";
 import { stat } from "node:fs/promises";
-import { jobStore } from "../../_lib/job-store";
+import { loadJob } from "../../_lib/job-store";
 
 // ---------------------------------------------------------------------------
 // Route handler
@@ -19,7 +19,7 @@ export async function GET(
 ) {
   const { jobId } = params;
 
-  const job = jobStore.get(jobId);
+  const job = await loadJob(jobId);
   if (!job) {
     return NextResponse.json(
       { error: `Job not found: ${jobId}` },
@@ -27,7 +27,7 @@ export async function GET(
     );
   }
 
-  if (job.status !== "completed" || !job.videoPath) {
+  if (job.status !== "completed") {
     return NextResponse.json(
       {
         error:
@@ -43,7 +43,19 @@ export async function GET(
     );
   }
 
-  // Verify the file exists
+  // Prefer direct object URL so playback does not stream through App Runner
+  // (avoids ~120s upstream request timeouts on long MP4 responses).
+  if (job.videoUrl && /^https?:\/\//i.test(job.videoUrl)) {
+    return NextResponse.redirect(job.videoUrl, 302);
+  }
+
+  if (!job.videoPath) {
+    return NextResponse.json(
+      { error: "Video file not available (no local path or object URL)." },
+      { status: 500 }
+    );
+  }
+
   const videoPath = job.videoPath;
   let fileStats;
   try {

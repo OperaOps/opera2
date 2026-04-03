@@ -5,9 +5,21 @@ import {
   interpolate,
   spring,
   useVideoConfig,
+  Img,
+  staticFile,
 } from "remotion";
 import { Background } from "../components/Background";
 import { COLORS } from "../lib/colors";
+
+/** Smile stock photos used as background mosaic in CTA */
+const SMILE_PHOTOS = [
+  "stock/smile-after.jpg",
+  "stock/smile-after-2.jpg",
+  "stock/smile-closeup.jpg",
+  "stock/happy-dental-patient.jpg",
+  "stock/perfect-smile.jpg",
+  "stock/dental-patient.jpg",
+];
 
 export const CTAScene: React.FC<{
   clinicName: string;
@@ -54,10 +66,16 @@ export const CTAScene: React.FC<{
 
   const fadeOut = interpolate(
     frame,
-    [durationFrames - 20, durationFrames],
+    [Math.max(0, durationFrames - 20), Math.max(1, durationFrames)],
     [1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
+
+  // Background smile grid fade-in
+  const gridOpacity = interpolate(frame, [10, 40], [0, 0.08], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
 
   // Gentle glow pulse
   const glowPulse = interpolate(
@@ -69,6 +87,53 @@ export const CTAScene: React.FC<{
   return (
     <AbsoluteFill>
       <Background accentColor={accentColor} variant="warm" />
+
+      {/* Background smile mosaic — subtle, blurred */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateRows: "repeat(2, 1fr)",
+          gap: 0,
+          opacity: gridOpacity * fadeOut,
+          filter: "blur(3px) saturate(0.3)",
+        }}
+      >
+        {SMILE_PHOTOS.map((photo, i) => (
+          <div
+            key={i}
+            style={{
+              overflow: "hidden",
+              opacity: interpolate(
+                frame,
+                [15 + i * 4, 30 + i * 4],
+                [0, 1],
+                { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+              ),
+            }}
+          >
+            <Img
+              src={staticFile(photo)}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Dark overlay on top of smile grid */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "radial-gradient(ellipse at center, rgba(7,6,14,0.75) 0%, rgba(7,6,14,0.92) 100%)",
+        }}
+      />
 
       <div
         style={{

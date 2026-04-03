@@ -6,8 +6,70 @@
  * for patient education videos.
  */
 
-import { writeFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { writeFile, unlink } from "node:fs/promises";
 import type { GeneratedScript, PremiumGeneratedScript } from "./script-generator";
+
+const execFileAsync = promisify(execFile);
+
+/** True duration of an audio file (seconds). Requires ffprobe on PATH (Docker + local dev). */
+export async function probeAudioFileDurationSeconds(
+  audioPath: string
+): Promise<number> {
+  try {
+    const { stdout } = await execFileAsync("ffprobe", [
+      "-v",
+      "error",
+      "-show_entries",
+      "format=duration",
+      "-of",
+      "default=noprint_wrappers=1:nokey=1",
+      audioPath,
+    ]);
+    const v = parseFloat(String(stdout).trim());
+    return Number.isFinite(v) && v > 0 ? v : 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** Concatenate MP3 chunks with ffmpeg (stream copy). Writes to outputPath and removes chunks. */
+async function concatMp3ChunksWithFfmpeg(
+  chunkPaths: string[],
+  outputPath: string
+): Promise<void> {
+  if (chunkPaths.length === 0) {
+    throw new Error("concatMp3ChunksWithFfmpeg: no chunks");
+  }
+  if (chunkPaths.length === 1) {
+    const { copyFile } = await import("node:fs/promises");
+    await copyFile(chunkPaths[0], outputPath);
+    await unlink(chunkPaths[0]).catch(() => {});
+    return;
+  }
+  const listPath = outputPath.replace(/\.[^.]+$/, "") + "_concat.txt";
+  const body = chunkPaths
+    .map((p) => `file '${p.replace(/'/g, `'\\''`)}'`)
+    .join("\n");
+  await writeFile(listPath, body, "utf8");
+  await execFileAsync("ffmpeg", [
+    "-y",
+    "-f",
+    "concat",
+    "-safe",
+    "0",
+    "-i",
+    listPath,
+    "-c",
+    "copy",
+    outputPath,
+  ]);
+  await unlink(listPath).catch(() => {});
+  for (const c of chunkPaths) {
+    await unlink(c).catch(() => {});
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -39,7 +101,7 @@ const PAUSE_SECONDS = 0.5;
 const MAX_CHARS_PER_REQUEST = 5000;
 
 /** Pause marker inserted between scenes in the narration text. */
-const PAUSE_MARKER = "... ";
+const PAUSE_MARKER = ". ";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -306,17 +368,22 @@ export async function generateTTS(
       const audioBuffer = Buffer.from(audioBase64, "base64");
       await writeFile(outputPath, audioBuffer);
 
-      // Derive actual duration from the last character's end time
       const lastEndTime =
         alignment.character_end_times_seconds.length > 0
           ? alignment.character_end_times_seconds[
               alignment.character_end_times_seconds.length - 1
             ]
-          : estimateDurationFromText(text);
+          : 0;
+
+      // Alignment can be slightly shorter than the decoded MP3; always take max(ffprobe, alignment).
+      const probed = await probeAudioFileDurationSeconds(outputPath);
+      const combined =
+        Math.max(lastEndTime, probed > 0 ? probed : 0, estimateDurationFromText(text)) +
+        0.35;
 
       return {
         filePath: outputPath,
-        estimatedDurationSeconds: Math.round(lastEndTime * 10) / 10,
+        estimatedDurationSeconds: Math.round(combined * 10) / 10,
         alignment,
       };
     } catch (err) {
@@ -333,15 +400,20 @@ export async function generateTTS(
       );
       await writeFile(outputPath, Buffer.from(audioData));
 
+      const probed = await probeAudioFileDurationSeconds(outputPath);
+      const combined = Math.max(
+        probed > 0 ? probed : 0,
+        estimateDurationFromText(text)
+      );
+
       return {
         filePath: outputPath,
-        estimatedDurationSeconds: estimateDurationFromText(text),
+        estimatedDurationSeconds: Math.round(combined * 10) / 10,
       };
     }
   }
 
-  // Multiple chunks — save each with a numbered suffix.
-  // e.g., /tmp/narration.mp3 -> /tmp/narration_001.mp3, /tmp/narration_002.mp3
+  // Multiple chunks — synthesize each, then ffmpeg concat into outputPath (single file for Remotion).
   const ext = outputPath.match(/\.[^.]+$/)?.[0] || ".mp3";
   const basePath = outputPath.replace(/\.[^.]+$/, "");
   const chunkPaths: string[] = [];
@@ -360,24 +432,16 @@ export async function generateTTS(
     chunkPaths.push(chunkPath);
   }
 
-  // Write a manifest so the caller knows about all chunks
-  const manifestPath = `${basePath}_manifest.json`;
-  await writeFile(
-    manifestPath,
-    JSON.stringify(
-      {
-        chunks: chunkPaths,
-        totalChunks: chunkPaths.length,
-        note: "Concatenate these audio files in order to produce the final narration.",
-      },
-      null,
-      2
-    )
+  await concatMp3ChunksWithFfmpeg(chunkPaths, outputPath);
+  const probed = await probeAudioFileDurationSeconds(outputPath);
+  const combined = Math.max(
+    probed > 0 ? probed : 0,
+    estimateDurationFromText(text)
   );
 
   return {
-    filePath: chunkPaths[0],
-    estimatedDurationSeconds: estimateDurationFromText(text),
+    filePath: outputPath,
+    estimatedDurationSeconds: Math.round(combined * 10) / 10,
   };
 }
 

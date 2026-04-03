@@ -1,6 +1,11 @@
 import React from "react";
 import { Img } from "remotion";
 import { COLORS } from "../lib/colors";
+import { VisualStandardTreatment } from "./VisualStandardTreatment";
+import {
+  BEFORE_AFTER_HEIGHT,
+  BEFORE_AFTER_WIDTH,
+} from "../lib/visual-layout";
 
 interface BeforeAfterComparisonProps {
   beforePhotoUrl: string;
@@ -22,8 +27,8 @@ export const BeforeAfterComparison: React.FC<BeforeAfterComparisonProps> = ({
   // At progress=1, divider is at 0% (After fully shown).
   const dividerPercent = 100 - p * 100;
 
-  const containerWidth = 900;
-  const containerHeight = 560;
+  const containerWidth = BEFORE_AFTER_WIDTH;
+  const containerHeight = BEFORE_AFTER_HEIGHT;
 
   // After-side green glow opacity scales with reveal progress
   const afterGlowOpacity = p * 0.35;
@@ -36,7 +41,7 @@ export const BeforeAfterComparison: React.FC<BeforeAfterComparisonProps> = ({
         height: containerHeight,
         borderRadius: 20,
         overflow: "hidden",
-        boxShadow: `0 12px 60px rgba(0, 0, 0, 0.6), 0 0 80px ${COLORS.purpleGlow}`,
+        boxShadow: `0 10px 48px rgba(0, 0, 0, 0.45), 0 0 48px ${COLORS.purpleGlow}`,
       }}
     >
       {/* After image (base layer, revealed as divider sweeps left) */}
@@ -46,14 +51,16 @@ export const BeforeAfterComparison: React.FC<BeforeAfterComparisonProps> = ({
           inset: 0,
         }}
       >
-        <Img
-          src={afterPhotoUrl}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
+        <VisualStandardTreatment>
+          <Img
+            src={afterPhotoUrl}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </VisualStandardTreatment>
       </div>
 
       {/* Green glow overlay on the After (revealed) side */}
@@ -75,14 +82,16 @@ export const BeforeAfterComparison: React.FC<BeforeAfterComparisonProps> = ({
           clipPath: `inset(0 ${100 - dividerPercent}% 0 0)`,
         }}
       >
-        <Img
-          src={beforePhotoUrl}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
+        <VisualStandardTreatment>
+          <Img
+            src={beforePhotoUrl}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </VisualStandardTreatment>
       </div>
 
       {/* Divider line */}

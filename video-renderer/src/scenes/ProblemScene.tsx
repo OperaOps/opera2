@@ -14,7 +14,6 @@ import { COLORS } from "../lib/colors";
 import { getSceneVisualConfig } from "../lib/treatment-visuals";
 import type { DiagnosisType } from "../lib/schema";
 import type { TreatmentType } from "../lib/schema";
-
 // Lazy-load condition visuals
 import { CavityVisual } from "../components/dental/conditions/CavityVisual";
 import { CrowdingVisual } from "../components/dental/conditions/CrowdingVisual";
@@ -24,6 +23,16 @@ import { UnderbiteVisual } from "../components/dental/conditions/UnderbiteVisual
 import { GumDiseaseVisual } from "../components/dental/conditions/GumDiseaseVisual";
 import { MissingToothVisual } from "../components/dental/conditions/MissingToothVisual";
 import { CrackedToothVisual } from "../components/dental/conditions/CrackedToothVisual";
+import { DentalVideoClip } from "../components/DentalVideoClip";
+import { getDentalVideoClips } from "../lib/dental-video-assets";
+import {
+  HERO_VISUAL_HEIGHT,
+  HERO_VISUAL_MAX_STYLE,
+  HERO_VISUAL_WIDTH,
+} from "../lib/visual-layout";
+import { PremiumJourneyTextPanel } from "../components/PremiumJourneyTextPanel";
+import { PremiumFramedMedia } from "../components/PremiumFramedMedia";
+import { PremiumVisualFrame } from "../components/PremiumVisualFrame";
 
 const conditionComponents: Record<DiagnosisType, React.FC<{ progress: number }>> = {
   cavity: CavityVisual,
@@ -45,6 +54,7 @@ export const ProblemScene: React.FC<{
   doctorName: string;
   durationFrames: number;
   accentColor?: string;
+  premiumJourneyStyle?: boolean;
 }> = ({
   diagnosis,
   treatment,
@@ -54,11 +64,17 @@ export const ProblemScene: React.FC<{
   doctorName,
   durationFrames,
   accentColor = COLORS.purple,
+  premiumJourneyStyle = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
   const ConditionVisual = conditionComponents[diagnosis];
+
+  // Look up dental video clips for the problem scene
+  const dentalVideoClips = treatment
+    ? getDentalVideoClips(treatment, "problem")
+    : undefined;
 
   // Look up cinematic image config for this treatment
   const sceneVisual = treatment
@@ -69,7 +85,7 @@ export const ProblemScene: React.FC<{
   // Visual animation progress (0 to 1 over the scene)
   const visualProgress = interpolate(
     frame,
-    [20, durationFrames - 30],
+    [20, Math.max(21, durationFrames - 30)],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
@@ -102,7 +118,10 @@ export const ProblemScene: React.FC<{
 
   return (
     <AbsoluteFill>
-      <Background accentColor={COLORS.problemRed} variant="warm" />
+      <Background
+        accentColor={COLORS.problemRed}
+        variant={premiumJourneyStyle ? "journey" : "warm"}
+      />
 
       {/* Minimal branding */}
       <ClinicBranding
@@ -128,47 +147,93 @@ export const ProblemScene: React.FC<{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            opacity: contentOpacity,
-            paddingRight: 40,
+            paddingRight: 28,
+            minWidth: 0,
           }}
         >
-          {/* Problem badge */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              marginBottom: 20,
-              opacity: pulseOpacity + 0.4,
-            }}
-          >
-            <div
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 5,
-                background: COLORS.problemRed,
-                boxShadow: `0 0 12px ${COLORS.problemRed}80`,
-              }}
-            />
-            <span
-              style={{
-                color: COLORS.problemRed,
-                fontSize: 16,
-                fontWeight: 500,
-                fontFamily: "system-ui, sans-serif",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}
+          {premiumJourneyStyle ? (
+            <PremiumJourneyTextPanel
+              accentBarColor={COLORS.problemRed}
+              opacity={contentOpacity}
             >
-              What We Found
-            </span>
-          </div>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 18,
+                  opacity: pulseOpacity + 0.4,
+                }}
+              >
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    background: COLORS.problemRed,
+                    boxShadow: `0 0 12px ${COLORS.problemRed}80`,
+                  }}
+                />
+                <span
+                  style={{
+                    color: COLORS.problemRed,
+                    fontSize: 15,
+                    fontWeight: 500,
+                    fontFamily: "system-ui, sans-serif",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  What We Found
+                </span>
+              </div>
 
-          <SceneHeading heading={heading} accentColor={accentColor} />
+              <SceneHeading heading={heading} accentColor={accentColor} />
 
-          {bullets.length > 0 && (
-            <BulletList items={bullets} accentColor={accentColor} />
+              {bullets.length > 0 && (
+                <BulletList items={bullets} accentColor={accentColor} />
+              )}
+            </PremiumJourneyTextPanel>
+          ) : (
+            <div style={{ opacity: contentOpacity }}>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 20,
+                  opacity: pulseOpacity + 0.4,
+                }}
+              >
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    background: COLORS.problemRed,
+                    boxShadow: `0 0 12px ${COLORS.problemRed}80`,
+                  }}
+                />
+                <span
+                  style={{
+                    color: COLORS.problemRed,
+                    fontSize: 16,
+                    fontWeight: 500,
+                    fontFamily: "system-ui, sans-serif",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  What We Found
+                </span>
+              </div>
+
+              <SceneHeading heading={heading} accentColor={accentColor} />
+
+              {bullets.length > 0 && (
+                <BulletList items={bullets} accentColor={accentColor} />
+              )}
+            </div>
           )}
         </div>
 
@@ -182,23 +247,69 @@ export const ProblemScene: React.FC<{
             transform: `scale(${visualScale})`,
           }}
         >
-          {cinematicImageSrc && sceneVisual ? (
-            <CinematicImage
-              src={cinematicImageSrc}
-              effect={sceneVisual.effect}
-              progress={visualProgress}
-              width={650}
-              height={520}
+          {dentalVideoClips ? (
+            <DentalVideoClip
+              clips={dentalVideoClips}
+              width={HERO_VISUAL_WIDTH}
+              height={HERO_VISUAL_HEIGHT}
               borderRadius={24}
-              overlay={sceneVisual.overlay ?? "gradient-bottom"}
+              accentColor={COLORS.problemRed}
+              progress={visualProgress}
             />
+          ) : cinematicImageSrc && sceneVisual ? (
+            premiumJourneyStyle ? (
+              <PremiumFramedMedia
+                width={HERO_VISUAL_WIDTH}
+                height={HERO_VISUAL_HEIGHT}
+                borderRadius={24}
+              >
+                <CinematicImage
+                  src={cinematicImageSrc}
+                  effect={sceneVisual.effect}
+                  progress={visualProgress}
+                  width={HERO_VISUAL_WIDTH}
+                  height={HERO_VISUAL_HEIGHT}
+                  borderRadius={0}
+                  overlay={sceneVisual.overlay ?? "gradient-bottom"}
+                />
+              </PremiumFramedMedia>
+            ) : (
+              <CinematicImage
+                src={cinematicImageSrc}
+                effect={sceneVisual.effect}
+                progress={visualProgress}
+                width={HERO_VISUAL_WIDTH}
+                height={HERO_VISUAL_HEIGHT}
+                borderRadius={24}
+                overlay={sceneVisual.overlay ?? "gradient-bottom"}
+              />
+            )
+          ) : premiumJourneyStyle ? (
+            <PremiumVisualFrame
+              width={HERO_VISUAL_WIDTH}
+              height={HERO_VISUAL_HEIGHT}
+              borderRadius={24}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 28,
+                  boxSizing: "border-box",
+                }}
+              >
+                <ConditionVisual progress={visualProgress} />
+              </div>
+            </PremiumVisualFrame>
           ) : (
             <div
               style={{
                 width: "100%",
                 height: "100%",
-                maxWidth: 650,
-                maxHeight: 520,
+                ...HERO_VISUAL_MAX_STYLE,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -214,6 +325,7 @@ export const ProblemScene: React.FC<{
           )}
         </div>
       </div>
+
     </AbsoluteFill>
   );
 };

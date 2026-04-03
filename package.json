@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.758.0",
+    "@aws-sdk/lib-dynamodb": "^3.758.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@remotion/bundler": "^4.0.436",
     "@remotion/cli": "^4.0.436",

@@ -4,7 +4,7 @@ import { COLORS } from "../lib/colors";
 
 export const Background: React.FC<{
   accentColor?: string;
-  variant?: "default" | "warm" | "cool";
+  variant?: "default" | "warm" | "cool" | "journey";
 }> = ({ accentColor = COLORS.purple, variant = "default" }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
@@ -128,13 +128,15 @@ export const Background: React.FC<{
         ))}
       </svg>
 
-      {/* Subtle vignette */}
+      {/* Vignette — slightly stronger on "journey" for a more cinematic frame */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%)",
+            variant === "journey"
+              ? "radial-gradient(ellipse at 70% 30%, transparent 35%, rgba(0,0,0,0.55) 100%)"
+              : "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%)",
         }}
       />
 

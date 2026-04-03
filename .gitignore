@@ -67,4 +67,21 @@ practicedatatxt
 *greyfinch*.txt
 !recent-data-export/recent-practice-data-2024-2025.txt
 
+# Local / generated video & Remotion scratch (do not commit)
+video-renderer/out/
+video-renderer/.tmp/
+video-renderer/public/narration-*.mp3
+
+# Netlify build trees (not source)
+/netlify/
+
+# Heavy demo subtree (backend artifacts); ship separately or use LFS if needed
+/opera-demo-mvp/
+
+# Local test media / scratch at repo root
+/treatmenttests/
+/OperaDemoFinal.mov
+/opera.m4a
+/Screenshot*.png
+
 

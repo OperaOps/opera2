@@ -92,7 +92,7 @@ const configs: TreatmentVisualConfig[] = [
       overlay: "dark",
     },
     outcome: {
-      images: [D3.perfectResult],
+      images: [D3.perfectResult, STOCK.happyPatient],
       effect: "ken-burns-out",
       fallbackComponent: "HealthyToothVisual",
       overlay: "gradient-bottom",
@@ -126,7 +126,7 @@ const configs: TreatmentVisualConfig[] = [
       overlay: "dark",
     },
     outcome: {
-      images: [D3.perfectResult],
+      images: [D3.perfectResult, STOCK.smileAfter],
       effect: "ken-burns-out",
       fallbackComponent: "HealthyToothVisual",
       overlay: "gradient-bottom",
@@ -166,8 +166,8 @@ const configs: TreatmentVisualConfig[] = [
       overlay: "gradient-bottom",
     },
     deepDive: {
-      images: [D3.implantDecayed],
-      effect: "zoom-pulse",
+      images: [D3.veneerPrepDrill],
+      effect: "pan-left",
       fallbackComponent: "CavityVisual",
       overlay: "dark",
     },
@@ -194,7 +194,7 @@ const configs: TreatmentVisualConfig[] = [
       overlay: "dark",
     },
     outcome: {
-      images: [D3.perfectResult],
+      images: [D3.perfectResult, STOCK.smileAfter],
       effect: "ken-burns-out",
       fallbackComponent: "HealthyToothVisual",
       overlay: "gradient-bottom",
@@ -209,6 +209,45 @@ const configs: TreatmentVisualConfig[] = [
       images: [D3.perfectResult, STOCK.happyPatient],
       effect: "fade-zoom",
       fallbackComponent: "HealthyToothVisual",
+      overlay: "gradient-bottom",
+    },
+  },
+
+  {
+    treatmentId: "full_mouth_rehab",
+    // Stage 1: Severe decay / compromised dentition
+    problem: {
+      images: [D3.implantDecayed],
+      effect: "ken-burns-in",
+      fallbackComponent: "RootCanalVisual",
+      overlay: "dark",
+    },
+    // Stage 2: Extractions
+    treatment: {
+      images: [D3.toothExtraction],
+      effect: "pan-left",
+      fallbackComponent: "ImplantVisual",
+      overlay: "dark",
+    },
+    // Stage 6: Final outcome
+    outcome: {
+      images: [D3.perfectResult, D3.alignedModel],
+      effect: "ken-burns-out",
+      fallbackComponent: "HealthyToothVisual",
+      overlay: "gradient-bottom",
+    },
+    // Stage 3: Oral surgery / ridge augmentation
+    deepDive: {
+      images: [D3.implantScrewCrown],
+      effect: "zoom-pulse",
+      fallbackComponent: "RidgeAugmentationVisual",
+      overlay: "dark",
+    },
+    // Stage 5: Crown / full-arch restoration
+    whatToExpect: {
+      images: [D3.crownPlacement, STOCK.happyPatient],
+      effect: "fade-zoom",
+      fallbackComponent: "FullArchRestorationVisual",
       overlay: "gradient-bottom",
     },
   },
@@ -262,7 +301,7 @@ const configs: TreatmentVisualConfig[] = [
       overlay: "dark",
     },
     outcome: {
-      images: [D3.perfectResult],
+      images: [D3.perfectResult, STOCK.smileAfter],
       effect: "ken-burns-out",
       fallbackComponent: "HealthyToothVisual",
       overlay: "gradient-bottom",
@@ -296,7 +335,7 @@ const configs: TreatmentVisualConfig[] = [
       overlay: "dark",
     },
     outcome: {
-      images: [D3.perfectResult],
+      images: [D3.perfectResult, STOCK.smileAfter],
       effect: "ken-burns-out",
       fallbackComponent: "BrightSmileVisual",
       overlay: "gradient-bottom",
@@ -354,6 +393,12 @@ const configs: TreatmentVisualConfig[] = [
     problem: {
       images: [D3.veneerPrepDetail],
       effect: "ken-burns-in",
+      fallbackComponent: "GumDiseaseVisual",
+      overlay: "dark",
+    },
+    deepDive: {
+      images: [STOCK.smileCloseup],
+      effect: "zoom-pulse",
       fallbackComponent: "GumDiseaseVisual",
       overlay: "dark",
     },
@@ -489,7 +534,7 @@ const configs: TreatmentVisualConfig[] = [
       overlay: "dark",
     },
     outcome: {
-      images: [D3.alignedModel],
+      images: [D3.alignedModel, STOCK.smileAfter],
       effect: "ken-burns-out",
       fallbackComponent: "AlignedTeethVisual",
       overlay: "gradient-bottom",
@@ -607,7 +652,7 @@ const configs: TreatmentVisualConfig[] = [
       overlay: "dark",
     },
     outcome: {
-      images: [D3.perfectResult],
+      images: [D3.perfectResult, STOCK.smileAfter],
       effect: "ken-burns-out",
       fallbackComponent: "HealthyToothVisual",
       overlay: "gradient-bottom",

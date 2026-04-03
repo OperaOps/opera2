@@ -124,6 +124,16 @@ function effectiveRenderScale(): number {
   return DEFAULT_RENDER_SCALE;
 }
 
+/** H.264 CRF: lower = better quality (18–28 sensible). Env override for ops tuning without code changes. */
+function effectiveCrf(): number {
+  const raw = process.env.REMOTION_CRF?.trim();
+  if (raw) {
+    const n = Number(raw);
+    if (Number.isFinite(n)) return Math.min(28, Math.max(18, Math.round(n)));
+  }
+  return 23;
+}
+
 function remotionChromiumOptions(): ChromiumOptions {
   // Remotion 4 ChromiumOptions: no raw Chrome `args` — map flags to supported fields.
   return {
@@ -138,10 +148,24 @@ function remotionChromiumOptions(): ChromiumOptions {
 
 let cachedBundleUrl: string | null = null;
 
+/** True if we can create files in dir (needed for narration-*.mp3 into bundle/public). */
+async function isDirWritableForNewFiles(dir: string): Promise<boolean> {
+  try {
+    await fs.mkdir(dir, { recursive: true });
+    const probe = path.join(dir, `.w-${process.pid}-${Date.now()}`);
+    await fs.writeFile(probe, "1");
+    await fs.unlink(probe);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Returns a cached bundle URL or creates a new one.
  * Checks for pre-built bundle first (created at Docker build time via prebundle.ts).
- * Falls back to runtime bundling if not found.
+ * If prebuilt exists but bundle/public is not writable (misconfigured Docker), falls back to
+ * runtime bundling (output is under a writable temp path).
  */
 async function getOrCreateBundle(): Promise<string> {
   if (cachedBundleUrl) {
@@ -153,16 +177,24 @@ async function getOrCreateBundle(): Promise<string> {
     }
   }
 
-  // Check for pre-built bundle (Docker build time)
   const videoRendererRoot = path.resolve(__dirname, "../..");
   const preBundlePath = path.join(videoRendererRoot, ".remotion-bundle");
+  const preBundleIndex = path.join(preBundlePath, "index.html");
+  const bundlePublic = path.join(preBundlePath, "public");
+
   try {
-    await fs.access(path.join(preBundlePath, "index.html"));
-    process.stderr.write("[render-pipeline] Using pre-built Remotion bundle\n");
-    cachedBundleUrl = preBundlePath;
-    return cachedBundleUrl;
+    await fs.access(preBundleIndex);
+    const ok = await isDirWritableForNewFiles(bundlePublic);
+    if (ok) {
+      process.stderr.write("[render-pipeline] Using pre-built Remotion bundle\n");
+      cachedBundleUrl = preBundlePath;
+      return cachedBundleUrl;
+    }
+    process.stderr.write(
+      "[render-pipeline] Pre-built bundle exists but bundle/public is not writable; " +
+        "using runtime bundle (set chown on .remotion-bundle in Docker to use prebundle).\n"
+    );
   } catch {
-    // No pre-built bundle — bundle at runtime
     process.stderr.write("[render-pipeline] No pre-built bundle found, bundling at runtime...\n");
   }
 
@@ -171,6 +203,7 @@ async function getOrCreateBundle(): Promise<string> {
     entryPoint,
     webpackOverride: (config) => config,
   });
+  process.stderr.write(`[render-pipeline] Runtime bundle ready at ${cachedBundleUrl}\n`);
 
   return cachedBundleUrl;
 }
@@ -332,12 +365,10 @@ export async function renderPatientVideo(
 
   // Resolve directories
   const videoRendererRoot = path.resolve(__dirname, "../..");
-  const publicDir = path.join(videoRendererRoot, "public");
   const outputDir = path.join(videoRendererRoot, "out");
   const tmpDir = path.join(videoRendererRoot, ".tmp", `job-${Date.now()}`);
 
-  // Ensure directories exist
-  await fs.mkdir(publicDir, { recursive: true });
+  // Writable at runtime (Docker: opera owns .tmp/out; job assets stay in tmpDir, not root-owned public/).
   await fs.mkdir(outputDir, { recursive: true });
   await fs.mkdir(tmpDir, { recursive: true });
 
@@ -457,14 +488,12 @@ export async function renderPatientVideo(
       }
     }
 
-    // Copy to public/ so Remotion can access it via staticFile()
+    // Filename for staticFile() after we copy into bundle/public/ (see Step 5b). Keep bytes in tmpDir only —
+    // video-renderer/public is often root-owned in Docker and must not be required for writes.
     const audioPublicName = `narration-${Date.now()}.mp3`;
-    const audioPublicPath = path.join(publicDir, audioPublicName);
-    await fs.copyFile(audioTmpPath, audioPublicPath);
-
-    const probedPublic = await probeAudioFileDurationSeconds(audioPublicPath);
-    if (probedPublic > 0) {
-      realAudioDurationSeconds = Math.max(realAudioDurationSeconds, probedPublic + 0.15);
+    const probedTmp = await probeAudioFileDurationSeconds(audioTmpPath);
+    if (probedTmp > 0) {
+      realAudioDurationSeconds = Math.max(realAudioDurationSeconds, probedTmp + 0.15);
     }
 
     audioFileName = audioPublicName;
@@ -505,13 +534,13 @@ export async function renderPatientVideo(
 
   if (input.beforePhotoBase64) {
     const beforeName = `before-photo-${Date.now()}.jpg`;
-    const beforePath = path.join(publicDir, beforeName);
+    const beforePath = path.join(tmpDir, beforeName);
     await fs.writeFile(beforePath, Buffer.from(input.beforePhotoBase64, "base64"));
     beforePhotoFileName = beforeName;
   }
   if (input.afterPhotoBase64) {
     const afterName = `after-photo-${Date.now()}.jpg`;
-    const afterPath = path.join(publicDir, afterName);
+    const afterPath = path.join(tmpDir, afterName);
     await fs.writeFile(afterPath, Buffer.from(input.afterPhotoBase64, "base64"));
     afterPhotoFileName = afterName;
   }
@@ -561,9 +590,9 @@ export async function renderPatientVideo(
   // Ensure bundle public dir exists (should already from prebundle, but safety)
   await fs.mkdir(bundlePublicDir, { recursive: true }).catch(() => {});
 
-  // Copy audio into bundle/public/ so staticFile("narration-xxx.mp3") finds it
+  // Copy audio into bundle/public/ so staticFile("narration-xxx.mp3") finds it (source: per-job tmp only)
   if (audioFileName) {
-    const src = path.join(publicDir, audioFileName);
+    const src = path.join(tmpDir, "narration.mp3");
     const dest = path.join(bundlePublicDir, audioFileName);
     try {
       await fs.copyFile(src, dest);
@@ -585,7 +614,7 @@ export async function renderPatientVideo(
   for (const photoFile of [beforePhotoFileName, afterPhotoFileName]) {
     // Only copy user-uploaded photos (they start with "before-photo-" or "after-photo-")
     if (!photoFile || photoFile.startsWith("stock/")) continue;
-    const src = path.join(publicDir, photoFile);
+    const src = path.join(tmpDir, photoFile);
     const dest = path.join(bundlePublicDir, photoFile);
     try {
       await fs.mkdir(path.dirname(dest), { recursive: true });
@@ -696,9 +725,10 @@ export async function renderPatientVideo(
     // (can massively increase render time on small App Runner instances).
     : 1;
   const renderScale = effectiveRenderScale();
+  const crf = effectiveCrf();
   console.log(`[render-pipeline] Rendering with concurrency ${renderConcurrency} (${cpuCount} CPUs detected)`);
   console.log(
-    `[render-pipeline] Render scale: ${renderScale} → ${Math.round(VIDEO_WIDTH * renderScale)}x${Math.round(VIDEO_HEIGHT * renderScale)} @ ${DEFAULT_FPS}fps`
+    `[render-pipeline] Render scale: ${renderScale} → ${Math.round(VIDEO_WIDTH * renderScale)}x${Math.round(VIDEO_HEIGHT * renderScale)} @ ${DEFAULT_FPS}fps, crf=${crf}`
   );
 
   const isRetryableRenderError = (msg: string) =>
@@ -714,9 +744,10 @@ export async function renderPatientVideo(
       outputLocation: outputPath,
       inputProps: serializedInputProps,
       imageFormat: "jpeg",
-      jpegQuality: 68,
+      jpegQuality: 82,
       scale: renderScale,
-      crf: 32,
+      crf,
+      x264Preset: "faster",
       concurrency: renderConcurrency,
       timeoutInMilliseconds: REMOTION_RENDER_TIMEOUT_MS,
       chromiumOptions: remotionChromiumOptions(),
@@ -742,9 +773,10 @@ export async function renderPatientVideo(
         outputLocation: outputPath,
         inputProps: serializedInputProps,
         imageFormat: "jpeg",
-        jpegQuality: 65,
+        jpegQuality: 78,
         scale: renderScale,
-        crf: 32,
+        crf,
+        x264Preset: "faster",
         concurrency: 1,
         timeoutInMilliseconds: REMOTION_RENDER_TIMEOUT_MS,
         chromiumOptions: remotionChromiumOptions(),
@@ -816,21 +848,6 @@ export async function renderPatientVideo(
     for (const f of bundlePubFiles) {
       if (f.startsWith("narration-") && f !== audioFileName) {
         await fs.unlink(path.join(bundlePublicDir, f)).catch(() => {});
-      }
-    }
-  } catch {
-    // Non-critical
-  }
-
-  // Clean old audio from source public dir too
-  try {
-    const pubFiles = await fs.readdir(publicDir);
-    for (const f of pubFiles) {
-      if (f.startsWith("narration-") && f !== audioFileName) {
-        await fs.unlink(path.join(publicDir, f)).catch(() => {});
-      }
-      if ((f.startsWith("before-photo-") || f.startsWith("after-photo-")) && f !== beforePhotoFileName && f !== afterPhotoFileName) {
-        await fs.unlink(path.join(publicDir, f)).catch(() => {});
       }
     }
   } catch {

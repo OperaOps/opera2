@@ -18,6 +18,7 @@ import {
 } from "./treatment-scripts";
 
 import { getTreatment } from "./knowledge-base";
+import { spokenDoctorName } from "./doctor-format";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -283,7 +284,7 @@ Recommended treatment: ${input.treatment}${urgencyContext}${notesContext}${statu
 
 Remember:
 - Use "${firstName}" naturally in the narration (2-3 times total, not every sentence).
-- Reference "Dr. ${input.doctorName}" and "${input.clinicName}" to build trust.
+- Reference "${spokenDoctorName(input.doctorName)}" and "${input.clinicName}" to build trust (always say "Dr." before the doctor's name in narration).
 - Be specific to "${input.diagnosis}" and "${input.treatment}" — use your deep procedure knowledge to explain what was done and why.
 - Explain what happens if the condition is left untreated (educationally, not with fear).
 - Mention specific modern techniques and materials to build confidence.
@@ -522,7 +523,7 @@ export async function generateScript(
  */
 export function generateDemoScript(input: ScriptGenerationInput): GeneratedScript {
   const firstName = input.patientName.split(" ")[0];
-  const doctor = input.doctorName;
+  const docSpoken = spokenDoctorName(input.doctorName);
   const clinic = input.clinicName;
 
   const demoScripts: Record<
@@ -534,7 +535,7 @@ export function generateDemoScript(input: ScriptGenerationInput): GeneratedScrip
       title: `Your Treatment Plan at ${clinic}`,
       scenes: {
         intro: {
-          narration: `Hi ${firstName}, this is a quick message from Dr. ${doctor} and the team at ${clinic}. Thanks for coming in to see us today.`,
+          narration: `Hi ${firstName}, this is a quick message from ${docSpoken} and the team at ${clinic}. Thanks for coming in to see us today.`,
           durationSeconds: 7,
           heading: "A Message For You",
         },
@@ -549,7 +550,7 @@ export function generateDemoScript(input: ScriptGenerationInput): GeneratedScrip
           ],
         },
         treatment: {
-          narration: `Here's what your ${input.treatment} appointment will look like. First, we'll make sure you're completely comfortable — we use a gentle numbing technique so you won't feel a thing. Then Dr. ${doctor} will carefully remove only the affected area and restore your tooth with a durable, natural-looking ${input.treatment}. The whole visit typically takes under an hour, and most patients tell us it was much easier than they expected.`,
+          narration: `Here's what your ${input.treatment} appointment will look like. First, we'll make sure you're completely comfortable — we use a gentle numbing technique so you won't feel a thing. Then ${docSpoken} will carefully remove only the affected area and restore your tooth with a durable, natural-looking ${input.treatment}. The whole visit typically takes under an hour, and most patients tell us it was much easier than they expected.`,
           durationSeconds: 24,
           heading: `Your ${capitalize(input.treatment)} Treatment`,
           bullets: [
@@ -585,7 +586,7 @@ export function generateDemoScript(input: ScriptGenerationInput): GeneratedScrip
       title: `Your Smile Journey with ${clinic}`,
       scenes: {
         intro: {
-          narration: `Hi ${firstName}! Dr. ${doctor} and the team at ${clinic} put this together just for you — we're really excited to share your smile plan.`,
+          narration: `Hi ${firstName}! ${docSpoken} and the team at ${clinic} put this together just for you — we're really excited to share your smile plan.`,
           durationSeconds: 7,
           heading: "Your Smile Plan",
         },
@@ -600,14 +601,14 @@ export function generateDemoScript(input: ScriptGenerationInput): GeneratedScrip
           ],
         },
         treatment: {
-          narration: `Here's the exciting part — your ${input.treatment} plan. We'll use ${input.treatment} to gradually and gently guide your teeth into their ideal positions. The process is designed to fit into your life: comfortable to wear, easy to maintain, and with today's technology, more efficient than ever. Dr. ${doctor} will monitor your progress at each check-in, and you'll start seeing changes sooner than you think.`,
+          narration: `Here's the exciting part — your ${input.treatment} plan. We'll use ${input.treatment} to gradually and gently guide your teeth into their ideal positions. The process is designed to fit into your life: comfortable to wear, easy to maintain, and with today's technology, more efficient than ever. ${docSpoken} will monitor your progress at each check-in, and you'll start seeing changes sooner than you think.`,
           durationSeconds: 25,
           heading: `Your ${capitalize(input.treatment)} Journey`,
           bullets: [
             `${capitalize(input.treatment)} gently shift teeth into ideal alignment`,
             "Designed for comfort and everyday convenience",
             "Modern technology means faster, more predictable results",
-            "Regular check-ins with Dr. " + doctor + " to track progress",
+            `Regular check-ins with ${docSpoken} to track progress`,
           ],
         },
         outcome: {
@@ -636,7 +637,7 @@ export function generateDemoScript(input: ScriptGenerationInput): GeneratedScrip
       title: `Making Your Care Affordable at ${clinic}`,
       scenes: {
         intro: {
-          narration: `Hi ${firstName}, Dr. ${doctor} at ${clinic} wanted to make sure you have all the details about making your treatment work for your budget.`,
+          narration: `Hi ${firstName}, ${docSpoken} at ${clinic} wanted to make sure you have all the details about making your treatment work for your budget.`,
           durationSeconds: 7,
           heading: "Your Care, Your Budget",
         },
@@ -767,10 +768,34 @@ const PREMIUM_WORDS_PER_MINUTE = 155;
 // Premium prompt
 // ---------------------------------------------------------------------------
 
+const DENTAL_TREATMENTS = new Set([
+  "crown", "filling", "root_canal", "implant", "extraction",
+  "bridge", "whitening", "veneers", "gum_treatment", "dentures",
+  "inlay_onlay", "full_mouth", "full_mouth_rehab", "sleep_apnea",
+]);
+
+function isDentalTreatment(treatment?: string): boolean {
+  return !!treatment && DENTAL_TREATMENTS.has(treatment);
+}
+
 function buildPremiumSystemPrompt(treatment?: string): string {
   const knowledgeContext = treatment ? buildKnowledgeContext(treatment) : "";
+  const isDental = isDentalTreatment(treatment);
 
-  return `You are a world-class orthodontic patient communication specialist who writes premium, in-depth video scripts for orthodontic practices. Your scripts are narrated by a deep, authoritative male voice over cinematic motion-graphics videos that patients watch after a consultation.
+  const specialtyIntro = isDental
+    ? `You are a world-class dental patient communication specialist who writes premium, in-depth video scripts for dental practices. Your scripts are narrated by a warm, authoritative voice over cinematic motion-graphics videos that patients watch after a consultation.
+
+You have EXPERT-LEVEL dental knowledge. You understand:
+- Dental anatomy: pulp, dentin, enamel, cementum, periodontal ligament, alveolar bone
+- How decay, cracks, and infection progress inside a tooth and affect surrounding structures
+- Restorative dentistry: crowns, fillings, inlays, onlays — materials, bonding, fit, longevity
+- Endodontics: root canal anatomy, infection pathways, cleaning/shaping, obturation
+- Implantology: osseointegration, healing phases, abutments, implant crowns
+- Extraction: socket healing, bone grafting, why timing matters for replacement
+- Periodontics: gum disease stages, scaling and root planing, surgical options
+- Cosmetic dentistry: whitening chemistry, veneer preparation, composite bonding
+- Post-procedure care, recovery timelines, and long-term maintenance for each treatment type`
+    : `You are a world-class orthodontic patient communication specialist who writes premium, in-depth video scripts for orthodontic practices. Your scripts are narrated by a warm, authoritative voice over cinematic motion-graphics videos that patients watch after a consultation.
 
 You have EXPERT-LEVEL orthodontic knowledge. You understand:
 - Dental anatomy: roots, periodontal ligament, alveolar bone, enamel, dentin
@@ -781,14 +806,47 @@ You have EXPERT-LEVEL orthodontic knowledge. You understand:
 - Treatment planning: why certain approaches are chosen for certain malocclusions
 - Month-by-month treatment progression for common orthodontic cases
 - Retention phase: why retainers are critical, types of retainers, how long to wear them
-- Long-term outcomes: stability, relapse prevention, maintenance
+- Long-term outcomes: stability, relapse prevention, maintenance`;
+
+  const journeyGuidance = isDental
+    ? `- JOURNEY: Walk through what happens at each appointment, step by step. For single-visit treatments describe the appointment flow. For multi-visit treatments (crowns, implants) describe what happens at each visit and what to expect between visits. Make the process feel clear and manageable.`
+    : `- JOURNEY: Month-by-month timeline. What happens in the first few weeks, at 3 months, at 6 months, approaching completion. Set realistic expectations. Make the timeline feel manageable and exciting.`;
+
+  const whatToExpectGuidance = isDental
+    ? `- WHAT TO EXPECT: Post-procedure recovery. What sensations are normal (sensitivity, soreness, swelling). What to eat and avoid. When to call the office. Long-term maintenance and how to make the treatment last.`
+    : `- WHAT TO EXPECT: Retainers, follow-up care, what they need to do at home. Compliance tips. How to maintain their results long-term.`;
+
+  const isFmr = treatment === "full_mouth_rehab";
+  const durationTarget = isFmr
+    ? "totalDurationSeconds should sum to roughly 180-210 seconds of spoken content (full mouth rehab — flagship long form)"
+    : "totalDurationSeconds should sum to roughly 120-150 seconds (about 2-2.5 minutes — premium long form for every treatment type)";
+
+  const sceneWordHints = isFmr
+    ? `    "intro": { "narration": "<25-40 words>", "durationSeconds": <10-16>, "heading": "<3-6 word heading>" },
+    "problem": { "narration": "<85-120 words>", "durationSeconds": <33-48>, "heading": "<3-6 word heading>", "bullets": ["...", "...", "..."] },
+    "deepDive": { "narration": "<90-125 words>", "durationSeconds": <35-50>, "heading": "<3-6 word heading>", "bullets": ["...", "...", "..."] },
+    "treatment": { "narration": "<85-115 words>", "durationSeconds": <33-46>, "heading": "<3-6 word heading>", "bullets": ["...", "...", "...", "..."] },
+    "journey": { "narration": "<80-110 words>", "durationSeconds": <31-44>, "heading": "<3-6 word heading>", "bullets": ["...", "...", "..."] },
+    "outcome": { "narration": "<70-100 words>", "durationSeconds": <27-40>, "heading": "<3-6 word heading>", "bullets": ["...", "...", "..."] },
+    "whatToExpect": { "narration": "<70-100 words>", "durationSeconds": <27-40>, "heading": "<3-6 word heading>", "bullets": ["...", "...", "..."] },
+    "cta": { "narration": "<30-45 words>", "durationSeconds": <12-18>, "heading": "<3-6 word heading>" }`
+    : `    "intro": { "narration": "<22-35 words>", "durationSeconds": <9-14>, "heading": "<3-5 word heading>" },
+    "problem": { "narration": "<70-95 words>", "durationSeconds": <27-38>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
+    "deepDive": { "narration": "<75-105 words>", "durationSeconds": <29-42>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
+    "treatment": { "narration": "<80-110 words>", "durationSeconds": <31-44>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "...", "..."] },
+    "journey": { "narration": "<70-95 words>", "durationSeconds": <27-38>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
+    "outcome": { "narration": "<55-80 words>", "durationSeconds": <22-32>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
+    "whatToExpect": { "narration": "<55-80 words>", "durationSeconds": <22-32>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
+    "cta": { "narration": "<25-40 words>", "durationSeconds": <10-16>, "heading": "<3-5 word heading>" }`;
+
+  return `${specialtyIntro}
 
 CONTENT PHILOSOPHY FOR PREMIUM VIDEOS:
 - These are IN-DEPTH educational videos — patients want to truly UNDERSTAND their treatment
 - Go deeper than surface-level explanations. Explain the biology, the mechanics, the reasoning
 - Make complex concepts accessible with clear analogies
 - Patients who understand their treatment are more likely to commit and comply
-- This is a premium experience — the content should feel like a private consultation with the world's best orthodontist
+- This is a premium experience — the content should feel like a private consultation with the world's best specialist
 
 ABSOLUTE RULES:
 - Write in second person ("you") directly to the patient
@@ -805,34 +863,29 @@ OUTPUT FORMAT — return ONLY valid JSON matching this exact structure (no markd
   "videoType": "<dental|orthodontic|financial>",
   "title": "<short patient-friendly title, 8-12 words>",
   "scenes": {
-    "intro": { "narration": "<20-25 words>", "durationSeconds": <7-10>, "heading": "<3-5 word heading>" },
-    "problem": { "narration": "<45-60 words>", "durationSeconds": <17-23>, "heading": "<3-5 word heading>", "bullets": ["<bullet 1>", "<bullet 2>", "<bullet 3>"] },
-    "deepDive": { "narration": "<50-65 words>", "durationSeconds": <19-25>, "heading": "<3-5 word heading>", "bullets": ["<bullet 1>", "<bullet 2>", "<bullet 3>"] },
-    "treatment": { "narration": "<55-70 words>", "durationSeconds": <21-27>, "heading": "<3-5 word heading>", "bullets": ["<bullet 1>", "<bullet 2>", "<bullet 3>", "<bullet 4>"] },
-    "journey": { "narration": "<45-60 words>", "durationSeconds": <17-23>, "heading": "<3-5 word heading>", "bullets": ["<bullet 1>", "<bullet 2>", "<bullet 3>"] },
-    "outcome": { "narration": "<35-50 words>", "durationSeconds": <14-19>, "heading": "<3-5 word heading>", "bullets": ["<bullet 1>", "<bullet 2>", "<bullet 3>"] },
-    "whatToExpect": { "narration": "<35-50 words>", "durationSeconds": <14-19>, "heading": "<3-5 word heading>", "bullets": ["<bullet 1>", "<bullet 2>", "<bullet 3>"] },
-    "cta": { "narration": "<20-30 words>", "durationSeconds": <7-12>, "heading": "<3-5 word heading>" }
+${sceneWordHints}
   },
-  "totalDurationSeconds": <sum of all scene durations, target 90-120>,
+  "totalDurationSeconds": <sum of all scene durations — ${durationTarget}>,
   "disclaimer": "<standard medical disclaimer, 1 sentence>"
 }
 
 SCENE-BY-SCENE GUIDANCE:
 - INTRO: Warm, confident greeting. Acknowledge this is a detailed overview prepared personally for them.
 - PROBLEM: Explain what's going on with their specific condition. Use mirror-test language. Mention functional AND aesthetic impacts.
-- DEEP DIVE: This is the key differentiator. Explain WHY this condition matters anatomically. Discuss root pressure, bone changes, wear patterns, or gum recession risks. Use clear analogies (e.g., "Think of your jawbone like a foundation — when teeth are misaligned, the forces don't distribute evenly, like a building with uneven weight"). This scene should make the patient feel like they truly understand the science.
-- TREATMENT: Detailed explanation of the chosen treatment approach. Specific technology, materials, how it works biomechanically. Why this approach was specifically chosen for their condition.
-- JOURNEY: Month-by-month timeline. What happens in the first few weeks, at 3 months, at 6 months, approaching completion. Set realistic expectations. Make the timeline feel manageable and exciting.
+- DEEP DIVE: This is the key differentiator. Explain WHY this condition matters anatomically. Use clear analogies that make the science tangible and real.
+- TREATMENT: Detailed explanation of the chosen treatment approach. Specific technology, materials, how it works. Why this approach was specifically chosen for their condition.
+${journeyGuidance}
 - OUTCOME: The transformation — aesthetic, functional, health. Vivid and specific. Go beyond cosmetics to long-term health benefits.
-- WHAT TO EXPECT: Retainers, follow-up care, what they need to do at home. Compliance tips. How to maintain their results long-term.
-- CTA: Confident, warm close. Clear next step. Excitement about starting.` + (knowledgeContext ? "\n\n" + knowledgeContext : "");
+${whatToExpectGuidance}
+- CTA: Confident, warm close. Clear next step. Excitement about moving forward.` + (knowledgeContext ? "\n\n" + knowledgeContext : "");
 }
 
 function buildPremiumUserMessage(input: ScriptGenerationInput): string {
   const firstName = input.patientName.split(" ")[0];
+  const isDental = isDentalTreatment(input.treatment);
+  const isFmr = input.treatment === "full_mouth_rehab";
   const notesContext = input.treatmentNotes
-    ? `\nDoctor's clinical notes: "${input.treatmentNotes}"\nIMPORTANT: Interpret clinical shorthand using your orthodontic knowledge and translate into patient-friendly language.`
+    ? `\nDoctor's clinical notes: "${input.treatmentNotes}"\nIMPORTANT: Interpret clinical shorthand using your expert clinical knowledge and translate into patient-friendly language.`
     : "";
 
   const statusContext = input.patientStatus
@@ -844,25 +897,41 @@ function buildPremiumUserMessage(input: ScriptGenerationInput): string {
     : "";
 
   const concernsContext = input.concerns
-    ? `\nPatient concerns: ${input.concerns} — address these directly in the reassurance or treatment section.`
+    ? `\nPatient concerns: ${input.concerns} — address these directly in deep dive, treatment, or aftercare sections.`
     : "";
 
-  return `Generate a premium in-depth video script for this orthodontic patient:
+  const specialtyLine = isDental
+    ? "Generate a premium in-depth video script for this dental patient:"
+    : "Generate a premium in-depth video script for this orthodontic patient:";
+
+  const journeyHint = isDental
+    ? "The journey scene should walk through visits, healing phases, or timeline — whatever fits this treatment (single-visit vs multi-visit)."
+    : "The journey scene should provide a realistic month-by-month timeline.";
+
+  const aftercareHint = isDental
+    ? "The whatToExpect scene should cover recovery, home care, diet, sensitivity, when to call the office, and long-term maintenance."
+    : "The whatToExpect scene should cover retainers, care instructions, and maintenance.";
+
+  const durationHint = isFmr
+    ? "Total spoken narration should target roughly 3 to 3.5 minutes (about 180-210 seconds across all scenes). Each scene should feel substantial."
+    : "Total spoken narration should target roughly 2 to 2.5 minutes (about 120-150 seconds across all scenes). This is the standard premium length for every treatment — not a short teaser.";
+
+  return `${specialtyLine}
 
 Patient first name: ${firstName}
-Doctor: Dr. ${input.doctorName}
+Doctor: ${spokenDoctorName(input.doctorName)}
 Clinic: ${input.clinicName}
 Diagnosis: ${input.diagnosis}
 Recommended treatment: ${input.treatment}${notesContext}${statusContext}${goalContext}${concernsContext}
 
 Remember:
 - Use "${firstName}" naturally 3-4 times throughout.
-- Reference "Dr. ${input.doctorName}" and "${input.clinicName}" to build trust.
+- Reference "${spokenDoctorName(input.doctorName)}" and "${input.clinicName}" to build trust (always say "Dr." before the doctor's name in narration).
 - The deepDive scene should explain the anatomical/biological WHY behind the condition.
-- The journey scene should provide a realistic month-by-month timeline.
-- The whatToExpect scene should cover retainers, care instructions, and maintenance.
-- Total video should be 90-120 seconds.
-- Stay within the word limits for each scene.
+- ${journeyHint}
+- ${aftercareHint}
+- ${durationHint}
+- Stay within the word limits for each scene in the schema.
 - Return ONLY the JSON object.`;
 }
 
@@ -876,20 +945,33 @@ function estimatePremiumDuration(text: string): number {
 }
 
 function validateAndEnforcePremiumScript(
-  raw: PremiumGeneratedScript
+  raw: PremiumGeneratedScript,
+  treatment?: string
 ): PremiumGeneratedScript {
   const script = { ...raw };
+  const isFmr = treatment === "full_mouth_rehab";
 
-  const limits: Record<string, { min: number; max: number }> = {
-    intro: { min: 10, max: 25 },
-    problem: { min: 25, max: 45 },
-    deepDive: { min: 30, max: 50 },
-    treatment: { min: 30, max: 55 },
-    journey: { min: 25, max: 45 },
-    outcome: { min: 20, max: 40 },
-    whatToExpect: { min: 20, max: 40 },
-    cta: { min: 10, max: 25 },
-  };
+  const limits: Record<string, { min: number; max: number }> = isFmr
+    ? {
+        intro: { min: 8, max: 90 },
+        problem: { min: 20, max: 140 },
+        deepDive: { min: 20, max: 140 },
+        treatment: { min: 15, max: 120 },
+        journey: { min: 15, max: 120 },
+        outcome: { min: 15, max: 140 },
+        whatToExpect: { min: 15, max: 120 },
+        cta: { min: 8, max: 60 },
+      }
+    : {
+        intro: { min: 10, max: 25 },
+        problem: { min: 25, max: 45 },
+        deepDive: { min: 30, max: 50 },
+        treatment: { min: 30, max: 55 },
+        journey: { min: 25, max: 45 },
+        outcome: { min: 20, max: 40 },
+        whatToExpect: { min: 20, max: 40 },
+        cta: { min: 10, max: 25 },
+      };
 
   const sceneKeys = [
     "intro",
@@ -918,8 +1000,8 @@ function validateAndEnforcePremiumScript(
     totalDuration += scene.durationSeconds;
   }
 
-  // Enforce global cap: if total exceeds 110 seconds, scale all scenes proportionally
-  const MAX_TOTAL_SECONDS = 110;
+  // Global cap: standard premium ~2–2.5 min narration; FMR flagship ~3–3.5 min.
+  const MAX_TOTAL_SECONDS = isFmr ? 210 : 150;
   if (totalDuration > MAX_TOTAL_SECONDS) {
     const scaleFactor = MAX_TOTAL_SECONDS / totalDuration;
     let adjustedTotal = 0;
@@ -935,8 +1017,11 @@ function validateAndEnforcePremiumScript(
   script.totalDurationSeconds = totalDuration;
 
   if (!script.disclaimer) {
-    script.disclaimer =
-      "This video is for educational purposes only and does not replace professional orthodontic advice. Treatment outcomes vary by individual.";
+    script.disclaimer = isFmr
+      ? "This video is for educational purposes only and does not replace professional dental advice. Treatment plans and outcomes vary by individual."
+      : script.videoType === "orthodontic"
+        ? "This video is for educational purposes only and does not replace professional orthodontic advice. Treatment outcomes vary by individual."
+        : "This video is for educational purposes only and does not replace professional dental advice. Treatment outcomes vary by individual.";
   }
 
   return script;
@@ -947,10 +1032,8 @@ function validateAndEnforcePremiumScript(
 // ---------------------------------------------------------------------------
 
 /**
- * Generates a premium in-depth orthodontic video script using Claude.
- *
- * Premium scripts have 8 scenes including deepDive, journey, and whatToExpect,
- * targeting 90-120 seconds of content with deeper educational depth.
+ * Generates a premium 8-scene video script using Claude (dental or ortho prompt by treatment).
+ * Non–full-mouth-rehab premium targets ~2–2.5 minutes narration; FMR targets longer flagship length.
  */
 export async function generatePremiumScript(
   input: ScriptGenerationInput,
@@ -1055,22 +1138,157 @@ export async function generatePremiumScript(
     }
   }
 
-  return validateAndEnforcePremiumScript(parsed);
+  return validateAndEnforcePremiumScript(parsed, input.treatment);
 }
 
 // ---------------------------------------------------------------------------
 // Premium demo script (no API call)
 // ---------------------------------------------------------------------------
 
+function humanizeTreatmentId(treatment: string): string {
+  return treatment
+    .split("_")
+    .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
+    .join(" ");
+}
+
+/** Demo copy for any dental premium treatment (not FMR — that uses composeScript). */
+function buildDentalPremiumDemoScript(
+  input: ScriptGenerationInput
+): PremiumGeneratedScript {
+  const firstName = input.patientName.split(" ")[0];
+  const docSpoken = spokenDoctorName(input.doctorName);
+  const clinic = input.clinicName;
+  const tName = humanizeTreatmentId(input.treatment);
+  const dx =
+    input.diagnosis === "cavity"
+      ? "tooth decay"
+      : input.diagnosis === "gum_disease"
+        ? "gum disease"
+        : input.diagnosis.replace(/_/g, " ");
+
+  return {
+    videoType: "dental",
+    title: `Your personalized ${tName} overview — ${firstName}`,
+    scenes: {
+      intro: {
+        narration: `Hi ${firstName}, ${docSpoken} and the team at ${clinic} put together this detailed walkthrough so you can understand exactly what we discussed and what comes next. We want you to feel confident and informed before you make any decisions.`,
+        durationSeconds: 12,
+        heading: "Your personalized overview",
+      },
+      problem: {
+        narration: `During your exam, we talked about ${dx} and how it relates to ${tName}. In plain terms, this is your body's way of showing that something in the mouth needs attention — whether that's bacteria, stress on a tooth, or changes in the gums. When these issues aren't addressed, they tend to progress: what starts as a small concern often becomes a bigger procedure later. Understanding where you are today helps you see why acting now is usually simpler, more comfortable, and more predictable than waiting.`,
+        durationSeconds: 32,
+        heading: "What we found",
+        bullets: [
+          `Findings tied to your ${dx}`,
+          "Early care is usually simpler than delayed care",
+          "You'll know what we're protecting long-term",
+        ],
+      },
+      deepDive: {
+        narration: `${firstName}, here's why this matters beyond the mirror. Your mouth isn't isolated — inflammation, infection, or structural weakness in one tooth can affect neighboring teeth and sometimes your overall comfort. ${tName} is designed to remove the disease process or stabilize the tooth, then rebuild strength and function so you can chew comfortably and smile with confidence. When patients understand that connection, the plan feels less like an unexpected procedure and more like protecting an asset for years to come.`,
+        durationSeconds: 36,
+        heading: "Why treatment matters",
+        bullets: [
+          "Protects adjacent teeth and supporting structures",
+          "Restores comfort and predictable function",
+          "Supports long-term oral health",
+        ],
+      },
+      treatment: {
+        narration: `For you, ${docSpoken} recommends ${tName}. We'll walk you through each step in plain language: what we do to keep you comfortable, how we prepare the tooth or tissues, and how the final result is made to fit your bite naturally. Modern materials and techniques mean we can be precise and conservative where possible. You'll always know what's happening and why — our goal is zero surprises on the day of treatment.`,
+        durationSeconds: 34,
+        heading: `Your ${tName} plan`,
+        bullets: [
+          "Step-by-step explanation in patient-friendly terms",
+          "Comfort-forward approach throughout",
+          "Materials chosen for fit, function, and longevity",
+        ],
+      },
+      journey: {
+        narration: `Everyone's schedule looks a little different, ${firstName}, but your timeline will follow clear stages: planning, any preparatory visits if needed, the main treatment visit or visits, and then recovery with follow-up checks. If your care takes more than one appointment, we'll tell you exactly what happens at each one and what you should do between visits. You won't be guessing what's next — we'll coordinate it with you.`,
+        durationSeconds: 30,
+        heading: "Your visit timeline",
+        bullets: [
+          "Clear stages from planning to follow-up",
+          "Know what to expect between appointments",
+          "Team check-ins to keep you on track",
+        ],
+      },
+      outcome: {
+        narration: `When we're finished, the goal is a stable, comfortable result that looks natural in your smile and holds up to everyday chewing. ${firstName}, it's not just about aesthetics — it's about protecting the tooth or area long-term so you can move forward without recurring problems. Most patients tell us the clarity of the plan was what made them feel ready to say yes.`,
+        durationSeconds: 28,
+        heading: "Results you can expect",
+        bullets: [
+          "Natural look and comfortable function",
+          "Reduced risk of the problem returning",
+          "Confidence in your long-term plan",
+        ],
+      },
+      whatToExpect: {
+        narration: `After treatment, some sensitivity or soreness can be normal for a short time, and we'll give you specific instructions for eating, hygiene, and anything to watch for. If something doesn't feel right, call ${clinic} — we'd rather hear from you early. Longer term, regular hygiene visits and good home care are what make your result last; ${docSpoken}'s team will partner with you on that.`,
+        durationSeconds: 30,
+        heading: "After treatment",
+        bullets: [
+          "What to expect in the first days",
+          "When to reach out to the office",
+          "Simple habits that protect your result",
+        ],
+      },
+      cta: {
+        narration: `We're here when you're ready to take the next step, ${firstName}. Reach out to ${clinic} with any questions — we'd love to help you move forward with confidence.`,
+        durationSeconds: 14,
+        heading: "Next steps",
+      },
+    },
+    totalDurationSeconds: 0,
+    disclaimer:
+      "This video is for educational purposes only and does not replace professional dental advice. Treatment outcomes vary by individual.",
+  };
+}
+
 /**
- * Returns a high-quality hardcoded premium demo script for orthodontic cases.
- * Uses crowding + invisalign as the demo case with all 8 scenes.
+ * Returns a high-quality hardcoded premium demo script (orthodontic, dental, or FMR template).
  */
 export function generatePremiumDemoScript(
   input: ScriptGenerationInput
 ): PremiumGeneratedScript {
+  // Flagship full-mouth rehab: use the dedicated phased template (not generic ortho demo).
+  if (input.treatment === "full_mouth_rehab") {
+    const personalization: PersonalizationInput = {
+      patientName: input.patientName,
+      doctorName: input.doctorName,
+      clinicName: input.clinicName,
+      treatmentNotes: input.treatmentNotes,
+      parentMode: input.parentMode,
+      concerns: input.concerns,
+      financing: input.financing,
+    };
+    const composed = composeScript(
+      "full_mouth_rehab",
+      input.patientStatus ?? "undecided",
+      input.videoGoal ?? "educate",
+      personalization,
+      {
+        mode: "premium",
+        includeImportance: true,
+        includeExperience: true,
+        includeReassurance: true,
+      }
+    );
+    return composedToPremiumScript(composed, input);
+  }
+
+  if (isDentalTreatment(input.treatment)) {
+    return validateAndEnforcePremiumScript(
+      buildDentalPremiumDemoScript(input),
+      input.treatment
+    );
+  }
+
   const firstName = input.patientName.split(" ")[0];
-  const doctor = input.doctorName;
+  const docSpoken = spokenDoctorName(input.doctorName);
   const clinic = input.clinicName;
 
   const raw: PremiumGeneratedScript = {
@@ -1078,7 +1296,7 @@ export function generatePremiumDemoScript(
     title: `Your Complete Orthodontic Journey at ${clinic}`,
     scenes: {
       intro: {
-        narration: `Hi ${firstName}, Dr. ${doctor} and the team at ${clinic} prepared this detailed overview just for you. Let's walk through everything together.`,
+        narration: `Hi ${firstName}, ${docSpoken} and the team at ${clinic} prepared this detailed overview just for you. Let's walk through everything together.`,
         durationSeconds: 9,
         heading: "Your Personal Overview",
       },
@@ -1103,7 +1321,7 @@ export function generatePremiumDemoScript(
         ],
       },
       treatment: {
-        narration: `For your treatment, Dr. ${doctor} recommends ${input.treatment === "invisalign" ? "Invisalign clear aligners" : input.treatment}. These are custom-engineered using advanced 3D digital planning — each tray is precisely calibrated to apply gentle, controlled force that guides your teeth into their ideal positions. Small tooth-colored attachments may be placed on specific teeth to give the aligners extra grip for more complex movements. Each set of trays targets specific teeth, moving them in a carefully sequenced progression.`,
+        narration: `For your treatment, ${docSpoken} recommends ${input.treatment === "invisalign" ? "Invisalign clear aligners" : input.treatment}. These are custom-engineered using advanced 3D digital planning — each tray is precisely calibrated to apply gentle, controlled force that guides your teeth into their ideal positions. Small tooth-colored attachments may be placed on specific teeth to give the aligners extra grip for more complex movements. Each set of trays targets specific teeth, moving them in a carefully sequenced progression.`,
         durationSeconds: 28,
         heading: `Your ${capitalize(input.treatment)} Plan`,
         bullets: [
@@ -1134,7 +1352,7 @@ export function generatePremiumDemoScript(
         ],
       },
       whatToExpect: {
-        narration: `After treatment, you'll transition to retainers — these are essential for maintaining your results while the bone fully stabilizes around your teeth. Typically, you'll wear them full-time for the first few months, then transition to nighttime wear. Dr. ${doctor}'s team will schedule regular check-ins to make sure everything stays perfect.`,
+        narration: `After treatment, you'll transition to retainers — these are essential for maintaining your results while the bone fully stabilizes around your teeth. Typically, you'll wear them full-time for the first few months, then transition to nighttime wear. ${docSpoken}'s team will schedule regular check-ins to make sure everything stays perfect.`,
         durationSeconds: 20,
         heading: "Maintaining Your Results",
         bullets: [
@@ -1156,7 +1374,7 @@ export function generatePremiumDemoScript(
 
   // Run through the same validation as API-generated scripts to ensure
   // scene durations match narration word counts and totalDurationSeconds is accurate.
-  return validateAndEnforcePremiumScript(raw);
+  return validateAndEnforcePremiumScript(raw, input.treatment);
 }
 
 // ===========================================================================
@@ -1342,7 +1560,9 @@ function composedToPremiumScript(
   let deepDive: { narration: string; durationSeconds: number; heading: string; bullets: string[] };
   if (scenes.importance) {
     deepDive = sectionToScene(scenes.importance);
-    deepDive.heading = "Why This Matters";
+    if (input.treatment !== "full_mouth_rehab") {
+      deepDive.heading = "Why This Matters";
+    }
   } else {
     const deepDiveText = knowledge
       ? `Here is why addressing this matters. ${knowledge.untreatedConsequences.slice(0, 2).join(". ")}. Understanding this helps you see why ${input.treatment} is a smart investment in your long-term health.`
@@ -1364,7 +1584,9 @@ function composedToPremiumScript(
   let journey: { narration: string; durationSeconds: number; heading: string; bullets: string[] };
   if (scenes.experience) {
     journey = sectionToScene(scenes.experience);
-    journey.heading = "Your Treatment Timeline";
+    if (input.treatment !== "full_mouth_rehab") {
+      journey.heading = "Your Treatment Timeline";
+    }
   } else {
     const journeyText = knowledge
       ? `Here is what your journey looks like. ${knowledge.timelineEstimate} ${knowledge.recovery}`
@@ -1386,7 +1608,9 @@ function composedToPremiumScript(
   let whatToExpect: { narration: string; durationSeconds: number; heading: string; bullets: string[] };
   if (scenes.reassurance) {
     whatToExpect = sectionToScene(scenes.reassurance);
-    whatToExpect.heading = "What to Expect";
+    if (input.treatment !== "full_mouth_rehab") {
+      whatToExpect.heading = "What to Expect";
+    }
   } else {
     const expectText = knowledge
       ? `${knowledge.recovery} If you have any questions along the way, the team at ${input.clinicName} is always here to help.`
@@ -1433,14 +1657,17 @@ function composedToPremiumScript(
       ? "financial"
       : "dental";
 
-  return validateAndEnforcePremiumScript({
-    videoType,
-    title: `Your Complete ${capitalize(input.treatment)} Journey — ${firstName}`,
-    scenes: { intro, problem, deepDive, treatment, journey, outcome, whatToExpect, cta },
-    totalDurationSeconds,
-    disclaimer:
-      "This video is for educational purposes only and does not replace professional dental advice. Treatment outcomes vary by individual.",
-  });
+  return validateAndEnforcePremiumScript(
+    {
+      videoType,
+      title: `Your Complete ${capitalize(input.treatment)} Journey — ${firstName}`,
+      scenes: { intro, problem, deepDive, treatment, journey, outcome, whatToExpect, cta },
+      totalDurationSeconds,
+      disclaimer:
+        "This video is for educational purposes only and does not replace professional dental advice. Treatment outcomes vary by individual.",
+    },
+    input.treatment
+  );
 }
 
 // ===========================================================================
@@ -1475,7 +1702,7 @@ Rules:
 ${knowledge ? `\nTreatment knowledge to reference:\n${knowledge.description}\nBenefits: ${knowledge.benefits.join("; ")}\nCommon concerns: ${knowledge.commonConcerns.map((c) => `${c.concern}: ${c.response}`).join("; ")}` : ""}`;
 
   const userMessage = `Patient: ${input.patientName.split(" ")[0]}
-Doctor: Dr. ${input.doctorName}
+Doctor: ${spokenDoctorName(input.doctorName)}
 Clinic: ${input.clinicName}
 Treatment: ${input.treatment}
 Diagnosis: ${input.diagnosis}

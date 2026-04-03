@@ -1491,5 +1491,4 @@ export type {
   RealisticToothProps,
   DentalArchProps,
   OrthoApplianceProps,
-  ArchModifications,
 };

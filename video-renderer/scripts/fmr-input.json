@@ -1,0 +1,17 @@
+{
+  "patientName": "James",
+  "doctorName": "Martinez",
+  "clinicName": "Bright Smiles Dental",
+  "category": "dental",
+  "diagnosis": "missing_tooth",
+  "treatment": "full_mouth_rehab",
+  "mode": "premium",
+  "useDemo": true,
+  "specialty": "dental",
+  "videoGoal": "educate",
+  "patientStatus": "undecided",
+  "clinicBrand": {
+    "primaryColor": "#7c3aed",
+    "accentColor": "#a855f7"
+  }
+}

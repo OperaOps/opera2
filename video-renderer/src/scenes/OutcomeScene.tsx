@@ -16,6 +16,16 @@ import { getSceneVisualConfig } from "../lib/treatment-visuals";
 import { getStockPhotos } from "../lib/asset-packs";
 import type { TreatmentType } from "../lib/schema";
 import { BeforeAfterComparison } from "../components/BeforeAfterComparison";
+import { DentalVideoClip } from "../components/DentalVideoClip";
+import { getDentalVideoClips } from "../lib/dental-video-assets";
+import {
+  HERO_VISUAL_HEIGHT,
+  HERO_VISUAL_MAX_STYLE,
+  HERO_VISUAL_WIDTH,
+} from "../lib/visual-layout";
+import { PremiumJourneyTextPanel } from "../components/PremiumJourneyTextPanel";
+import { PremiumFramedMedia } from "../components/PremiumFramedMedia";
+import { PremiumVisualFrame } from "../components/PremiumVisualFrame";
 
 import { HealthyToothVisual } from "../components/dental/outcomes/HealthyToothVisual";
 import { AlignedTeethVisual } from "../components/dental/outcomes/AlignedTeethVisual";
@@ -55,6 +65,7 @@ export const OutcomeScene: React.FC<{
   accentColor?: string;
   beforePhotoUrl?: string;
   afterPhotoUrl?: string;
+  premiumJourneyStyle?: boolean;
 }> = ({
   treatment,
   heading,
@@ -65,11 +76,15 @@ export const OutcomeScene: React.FC<{
   accentColor = COLORS.purple,
   beforePhotoUrl,
   afterPhotoUrl,
+  premiumJourneyStyle = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
   const OutcomeVisual = getOutcomeComponent(treatment);
+
+  // Look up dental video clips for outcome
+  const dentalVideoClips = getDentalVideoClips(treatment, "outcome");
 
   // Look up cinematic image config for this treatment
   const sceneVisual = getSceneVisualConfig(treatment, "outcome");
@@ -84,7 +99,7 @@ export const OutcomeScene: React.FC<{
 
   const visualProgress = interpolate(
     frame,
-    [15, durationFrames - 20],
+    [15, Math.max(16, durationFrames - 20)],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
@@ -127,9 +142,59 @@ export const OutcomeScene: React.FC<{
     [0.3, 0.8]
   );
 
+  // Two-beat outcome: video clip first half → still images second half
+  // Applies to any treatment with both video clips and 2+ outcome images
+  const isFmrOutcome =
+    !!dentalVideoClips?.length &&
+    !!sceneVisual &&
+    sceneVisual.images.length >= 2;
+  const outcomeSplit =
+    isFmrOutcome && durationFrames > 50
+      ? Math.floor(durationFrames * 0.48)
+      : Number.POSITIVE_INFINITY;
+  const outcomeVideoOpacity = isFmrOutcome
+    ? interpolate(
+        frame,
+        [Math.max(0, outcomeSplit - 20), outcomeSplit],
+        [1, 0],
+        { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+      )
+    : 1;
+  const outcomeStillsOpacity = isFmrOutcome
+    ? interpolate(
+        frame,
+        [Math.max(0, outcomeSplit - 12), outcomeSplit + 12],
+        [0, 1],
+        { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+      )
+    : 0;
+  const stillProgress = isFmrOutcome
+    ? interpolate(
+        frame,
+        [outcomeSplit, Math.max(outcomeSplit + 1, durationFrames - 8)],
+        [0, 1],
+        { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+      )
+    : 0;
+  const stillImg0Opacity = isFmrOutcome
+    ? interpolate(stillProgress, [0, 0.45, 0.58], [1, 1, 0], {
+        extrapolateLeft: "clamp",
+        extrapolateRight: "clamp",
+      })
+    : 1;
+  const stillImg1Opacity = isFmrOutcome
+    ? interpolate(stillProgress, [0.4, 0.55, 1], [0, 1, 1], {
+        extrapolateLeft: "clamp",
+        extrapolateRight: "clamp",
+      })
+    : 0;
+
   return (
     <AbsoluteFill>
-      <Background accentColor={COLORS.healthyGreen} variant="cool" />
+      <Background
+        accentColor={COLORS.healthyGreen}
+        variant={premiumJourneyStyle ? "journey" : "cool"}
+      />
 
       <ClinicBranding
         clinicName={clinicName}
@@ -154,47 +219,93 @@ export const OutcomeScene: React.FC<{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            opacity: contentOpacity,
-            paddingRight: 40,
+            paddingRight: 28,
+            minWidth: 0,
           }}
         >
-          {/* Success badge */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              marginBottom: 20,
-              opacity: glowIntensity * 0.6 + 0.4,
-            }}
-          >
-            <div
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 5,
-                background: COLORS.healthyGreen,
-                boxShadow: `0 0 12px ${COLORS.healthyGreen}80`,
-              }}
-            />
-            <span
-              style={{
-                color: COLORS.healthyGreen,
-                fontSize: 16,
-                fontWeight: 500,
-                fontFamily: "system-ui, sans-serif",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}
+          {premiumJourneyStyle ? (
+            <PremiumJourneyTextPanel
+              accentBarColor={COLORS.healthyGreen}
+              opacity={contentOpacity}
             >
-              Expected Results
-            </span>
-          </div>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 18,
+                  opacity: glowIntensity * 0.6 + 0.4,
+                }}
+              >
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    background: COLORS.healthyGreen,
+                    boxShadow: `0 0 12px ${COLORS.healthyGreen}80`,
+                  }}
+                />
+                <span
+                  style={{
+                    color: COLORS.healthyGreen,
+                    fontSize: 15,
+                    fontWeight: 500,
+                    fontFamily: "system-ui, sans-serif",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Expected Results
+                </span>
+              </div>
 
-          <SceneHeading heading={heading} accentColor={accentColor} />
+              <SceneHeading heading={heading} accentColor={accentColor} />
 
-          {bullets.length > 0 && (
-            <BulletList items={bullets} accentColor={COLORS.healthyGreen} />
+              {bullets.length > 0 && (
+                <BulletList items={bullets} accentColor={COLORS.healthyGreen} />
+              )}
+            </PremiumJourneyTextPanel>
+          ) : (
+            <div style={{ opacity: contentOpacity }}>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 20,
+                  opacity: glowIntensity * 0.6 + 0.4,
+                }}
+              >
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    background: COLORS.healthyGreen,
+                    boxShadow: `0 0 12px ${COLORS.healthyGreen}80`,
+                  }}
+                />
+                <span
+                  style={{
+                    color: COLORS.healthyGreen,
+                    fontSize: 16,
+                    fontWeight: 500,
+                    fontFamily: "system-ui, sans-serif",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Expected Results
+                </span>
+              </div>
+
+              <SceneHeading heading={heading} accentColor={accentColor} />
+
+              {bullets.length > 0 && (
+                <BulletList items={bullets} accentColor={COLORS.healthyGreen} />
+              )}
+            </div>
           )}
         </div>
 
@@ -208,7 +319,121 @@ export const OutcomeScene: React.FC<{
             transform: `scale(${visualScale})`,
           }}
         >
-          {hasBeforeAfter ? (
+          {isFmrOutcome && sceneVisual ? (
+            <div
+              style={{
+                position: "relative",
+                width: HERO_VISUAL_WIDTH,
+                height: HERO_VISUAL_HEIGHT,
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  opacity: outcomeVideoOpacity,
+                }}
+              >
+                <DentalVideoClip
+                  clips={dentalVideoClips!}
+                  width={HERO_VISUAL_WIDTH}
+                  height={HERO_VISUAL_HEIGHT}
+                  borderRadius={24}
+                  accentColor={COLORS.healthyGreen}
+                  progress={visualProgress}
+                />
+              </div>
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  opacity: outcomeStillsOpacity,
+                  borderRadius: 24,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    opacity: stillImg0Opacity,
+                  }}
+                >
+                  {premiumJourneyStyle ? (
+                    <PremiumFramedMedia
+                      width={HERO_VISUAL_WIDTH}
+                      height={HERO_VISUAL_HEIGHT}
+                      borderRadius={24}
+                    >
+                      <CinematicImage
+                        src={sceneVisual.images[0]}
+                        effect={sceneVisual.effect}
+                        progress={stillProgress}
+                        width={HERO_VISUAL_WIDTH}
+                        height={HERO_VISUAL_HEIGHT}
+                        borderRadius={0}
+                        overlay={sceneVisual.overlay ?? "gradient-bottom"}
+                      />
+                    </PremiumFramedMedia>
+                  ) : (
+                    <CinematicImage
+                      src={sceneVisual.images[0]}
+                      effect={sceneVisual.effect}
+                      progress={stillProgress}
+                      width={HERO_VISUAL_WIDTH}
+                      height={HERO_VISUAL_HEIGHT}
+                      borderRadius={24}
+                      overlay={sceneVisual.overlay ?? "gradient-bottom"}
+                    />
+                  )}
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    opacity: stillImg1Opacity,
+                  }}
+                >
+                  {premiumJourneyStyle ? (
+                    <PremiumFramedMedia
+                      width={HERO_VISUAL_WIDTH}
+                      height={HERO_VISUAL_HEIGHT}
+                      borderRadius={24}
+                    >
+                      <CinematicImage
+                        src={sceneVisual.images[1]}
+                        effect="ken-burns-out"
+                        progress={stillProgress}
+                        width={HERO_VISUAL_WIDTH}
+                        height={HERO_VISUAL_HEIGHT}
+                        borderRadius={0}
+                        overlay={sceneVisual.overlay ?? "gradient-bottom"}
+                      />
+                    </PremiumFramedMedia>
+                  ) : (
+                    <CinematicImage
+                      src={sceneVisual.images[1]}
+                      effect="ken-burns-out"
+                      progress={stillProgress}
+                      width={HERO_VISUAL_WIDTH}
+                      height={HERO_VISUAL_HEIGHT}
+                      borderRadius={24}
+                      overlay={sceneVisual.overlay ?? "gradient-bottom"}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : dentalVideoClips ? (
+            <DentalVideoClip
+              clips={dentalVideoClips}
+              width={HERO_VISUAL_WIDTH}
+              height={HERO_VISUAL_HEIGHT}
+              borderRadius={24}
+              accentColor={COLORS.healthyGreen}
+              progress={visualProgress}
+            />
+          ) : hasBeforeAfter ? (
             /* Before/After comparison: best visual — always preferred when
                either patient photos or stock photos are available */
             <BeforeAfterComparison
@@ -225,24 +450,59 @@ export const OutcomeScene: React.FC<{
               progress={beforeAfterProgress}
             />
           ) : cinematicImageSrc && sceneVisual ? (
-            /* Cinematic image fallback when no before/after pair exists */
-            <CinematicImage
-              src={cinematicImageSrc}
-              effect={sceneVisual.effect}
-              progress={visualProgress}
-              width={650}
-              height={520}
+            premiumJourneyStyle ? (
+              <PremiumFramedMedia
+                width={HERO_VISUAL_WIDTH}
+                height={HERO_VISUAL_HEIGHT}
+                borderRadius={24}
+              >
+                <CinematicImage
+                  src={cinematicImageSrc}
+                  effect={sceneVisual.effect}
+                  progress={visualProgress}
+                  width={HERO_VISUAL_WIDTH}
+                  height={HERO_VISUAL_HEIGHT}
+                  borderRadius={0}
+                  overlay={sceneVisual.overlay ?? "gradient-bottom"}
+                />
+              </PremiumFramedMedia>
+            ) : (
+              <CinematicImage
+                src={cinematicImageSrc}
+                effect={sceneVisual.effect}
+                progress={visualProgress}
+                width={HERO_VISUAL_WIDTH}
+                height={HERO_VISUAL_HEIGHT}
+                borderRadius={24}
+                overlay={sceneVisual.overlay ?? "gradient-bottom"}
+              />
+            )
+          ) : premiumJourneyStyle ? (
+            <PremiumVisualFrame
+              width={HERO_VISUAL_WIDTH}
+              height={HERO_VISUAL_HEIGHT}
               borderRadius={24}
-              overlay={sceneVisual.overlay ?? "gradient-bottom"}
-            />
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 28,
+                  boxSizing: "border-box",
+                }}
+              >
+                <OutcomeVisual progress={visualProgress} />
+              </div>
+            </PremiumVisualFrame>
           ) : (
-            /* SVG fallback — original behavior */
             <div
               style={{
                 width: "100%",
                 height: "100%",
-                maxWidth: 650,
-                maxHeight: 520,
+                ...HERO_VISUAL_MAX_STYLE,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -258,6 +518,7 @@ export const OutcomeScene: React.FC<{
           )}
         </div>
       </div>
+
     </AbsoluteFill>
   );
 };

@@ -84,8 +84,8 @@ export type PatientVideoProps = z.infer<typeof PatientVideoProps>;
 export const DEFAULT_FPS = 20;
 export const VIDEO_WIDTH = 1920;
 export const VIDEO_HEIGHT = 1080;
-// ~1152×648 @ 0.6 — fewer pixels than 2/3 for faster encode; override with REMOTION_RENDER_SCALE in env
-export const RENDER_SCALE = 0.6;
+// ~1632×918 @ 0.85 — HD-ish output without full 1080p render cost; override REMOTION_RENDER_SCALE (0.25–1)
+export const RENDER_SCALE = 0.85;
 
 // ---------------------------------------------------------------------------
 // Premium video types

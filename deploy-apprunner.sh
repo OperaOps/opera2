@@ -18,7 +18,7 @@ AWS_REGION="us-east-1"
 APP_NAME="opera-ai"
 S3_VIDEO_BUCKET="opera-ai-videos"
 ECR_REPO_NAME="opera-ai"
-IMAGE_TAG="latest"
+IMAGE_TAG="latest"d
 
 # Colors for output
 RED='\033[0;31m'
@@ -91,8 +91,15 @@ fi
 echo ""
 echo -e "${YELLOW}Step 2: Building Docker image (this takes 3-5 min first time)...${NC}"
 
-# Build for linux/amd64 (App Runner runs on x86)
-docker build --no-cache --platform linux/amd64 -t "${ECR_REPO_NAME}:${IMAGE_TAG}" .
+# Build for linux/amd64 (App Runner runs on x86).
+# Use layer cache by default (faster, less stress on Docker). For a fully clean build:
+#   DOCKER_BUILD_NO_CACHE=1 ./deploy-apprunner.sh
+BUILD_ARGS=(--platform linux/amd64 -t "${ECR_REPO_NAME}:${IMAGE_TAG}" .)
+if [ -n "${DOCKER_BUILD_NO_CACHE}" ]; then
+    echo "   (DOCKER_BUILD_NO_CACHE set — building with --no-cache)"
+    BUILD_ARGS=(--no-cache "${BUILD_ARGS[@]}")
+fi
+docker build "${BUILD_ARGS[@]}"
 
 echo -e "${GREEN}   ✅ Image built${NC}"
 
@@ -223,7 +230,7 @@ if [ -n "$EXISTING_SERVICE" ] && [ "$EXISTING_SERVICE" != "None" ]; then
                         \"AWS_ACCESS_KEY_ID\": \"${AWS_ACCESS_KEY_ID}\",
                         \"AWS_SECRET_ACCESS_KEY\": \"${AWS_SECRET_ACCESS_KEY}\",
                         \"REMOTION_CHROME_EXECUTABLE\": \"/usr/bin/chromium\",
-                        \"REMOTION_RENDER_SCALE\": \"0.45\",
+                        \"REMOTION_RENDER_SCALE\": \"0.85\",
                         \"OPERA_BGM_PUBLIC_PATH\": \"audio/opera-bgm.m4a\",
                         \"NODE_ENV\": \"production\",
                         \"PATIENT_VIDEO_JOBS_TABLE\": \"${PATIENT_VIDEO_JOBS_TABLE}\"
@@ -264,7 +271,7 @@ else
                         \"AWS_ACCESS_KEY_ID\": \"${AWS_ACCESS_KEY_ID}\",
                         \"AWS_SECRET_ACCESS_KEY\": \"${AWS_SECRET_ACCESS_KEY}\",
                         \"REMOTION_CHROME_EXECUTABLE\": \"/usr/bin/chromium\",
-                        \"REMOTION_RENDER_SCALE\": \"0.45\",
+                        \"REMOTION_RENDER_SCALE\": \"0.85\",
                         \"OPERA_BGM_PUBLIC_PATH\": \"audio/opera-bgm.m4a\",
                         \"NODE_ENV\": \"production\",
                         \"PATIENT_VIDEO_JOBS_TABLE\": \"${PATIENT_VIDEO_JOBS_TABLE}\"

@@ -12,7 +12,12 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { jobStore, type VideoJob, type RenderInput } from "../_lib/job-store";
+import {
+  saveJob,
+  scheduleJobSave,
+  type VideoJob,
+  type RenderInput,
+} from "../_lib/job-store";
 
 // ---------------------------------------------------------------------------
 // Input validation
@@ -48,6 +53,7 @@ const VALID_TREATMENTS = new Set([
   "gum_treatment",
   "dentures",
   "full_mouth",
+  "full_mouth_rehab",
   "inlay_onlay",
   "sleep_apnea",
   "space_maintainer",
@@ -89,6 +95,7 @@ const TREATMENT_TO_DIAGNOSIS: Record<string, string> = {
   headgear: "overbite",
   sleep_apnea: "overbite",
   full_mouth: "cavity",
+  full_mouth_rehab: "missing_tooth",
   inlay_onlay: "cavity",
 };
 
@@ -171,6 +178,11 @@ function validateInput(body: unknown): { ok: true; data: RenderInput } | { ok: f
     };
   }
 
+  // Video depth: standard (5-scene) vs premium (8-scene) — must match /patient-video UI
+  let mode: RenderInput["mode"] = "premium";
+  if (b.mode === "standard") mode = "standard";
+  else if (b.mode === "premium") mode = "premium";
+
   return {
     ok: true,
     data: {
@@ -190,7 +202,7 @@ function validateInput(body: unknown): { ok: true; data: RenderInput } | { ok: f
         ? (b.clinicBrand as RenderInput["clinicBrand"])
         : undefined,
       useDemo: typeof b.useDemo === "boolean" ? b.useDemo : false,
-      mode: "premium" as const,
+      mode,
       beforePhotoBase64: typeof b.beforePhotoBase64 === "string" ? b.beforePhotoBase64 : undefined,
       afterPhotoBase64: typeof b.afterPhotoBase64 === "string" ? b.afterPhotoBase64 : undefined,
       // New structured fields
@@ -206,6 +218,7 @@ function validateInput(body: unknown): { ok: true; data: RenderInput } | { ok: f
       concerns: typeof b.concerns === "string" ? b.concerns : undefined,
       financing: typeof b.financing === "string" ? b.financing : undefined,
       parentMode: typeof b.parentMode === "boolean" ? b.parentMode : undefined,
+      bgmUrl: typeof b.bgmUrl === "string" && b.bgmUrl.trim() ? b.bgmUrl.trim() : undefined,
     },
   };
 }
@@ -215,9 +228,6 @@ function validateInput(body: unknown): { ok: true; data: RenderInput } | { ok: f
 // ---------------------------------------------------------------------------
 
 function runRenderInBackground(jobId: string, input: RenderInput): void {
-  const job = jobStore.get(jobId);
-  if (!job) return;
-
   // Write input to a temp file for the worker to read
   const inputPath = path.join(os.tmpdir(), `opera-video-${jobId}.json`);
   fs.writeFileSync(inputPath, JSON.stringify(input));
@@ -236,15 +246,19 @@ function runRenderInBackground(jobId: string, input: RenderInput): void {
     stdio: ["ignore", "pipe", "pipe"],
   });
 
-  // 10-minute timeout: premium 8-scene videos need more time for TTS + render
-  const RENDER_TIMEOUT_MS = 10 * 60 * 1000;
+  // Premium / full-mouth-rehab can exceed 10 min (Remotion + long audio). Keep
+  // this above render-pipeline's single-pass timeout and UI poll timeout.
+  const RENDER_TIMEOUT_MS = 30 * 60 * 1000;
   const renderTimeout = setTimeout(() => {
-    const current = jobStore.get(jobId);
-    if (current && current.status === "processing") {
-      current.status = "failed";
-      current.error = `Render timed out after ${RENDER_TIMEOUT_MS / 1000} seconds`;
-      console.error(`[render-worker ${jobId}] Killing child process due to timeout (${RENDER_TIMEOUT_MS / 1000}s)`);
-    }
+    scheduleJobSave(jobId, (current) => {
+      if (current.status === "processing") {
+        current.status = "failed";
+        current.error = `Render timed out after ${Math.round(RENDER_TIMEOUT_MS / 60000)} minutes`;
+        console.error(
+          `[render-worker ${jobId}] Killing child process due to timeout (${Math.round(RENDER_TIMEOUT_MS / 60000)} min)`
+        );
+      }
+    });
     child.kill("SIGKILL");
   }, RENDER_TIMEOUT_MS);
 
@@ -260,21 +274,25 @@ function runRenderInBackground(jobId: string, input: RenderInput): void {
       if (!line.trim()) continue;
       try {
         const msg = JSON.parse(line);
-        const current = jobStore.get(jobId);
-        if (!current) continue;
 
         if (msg.type === "progress") {
-          current.progress = msg.progress;
-          current.step = msg.step || "";
+          scheduleJobSave(jobId, (current) => {
+            current.progress = msg.progress;
+            current.step = msg.step || "";
+          });
         } else if (msg.type === "result") {
-          current.status = "completed";
-          current.progress = 1.0;
-          current.videoPath = msg.videoPath;
-          current.videoUrl = msg.videoUrl || null;
-          current.step = "complete";
+          scheduleJobSave(jobId, (current) => {
+            current.status = "completed";
+            current.progress = 1.0;
+            current.videoPath = msg.videoPath;
+            current.videoUrl = msg.videoUrl ?? null;
+            current.step = "complete";
+          });
         } else if (msg.type === "error") {
-          current.status = "failed";
-          current.error = msg.error;
+          scheduleJobSave(jobId, (current) => {
+            current.status = "failed";
+            current.error = msg.error;
+          });
         }
       } catch {
         // Non-JSON output, ignore
@@ -291,41 +309,38 @@ function runRenderInBackground(jobId: string, input: RenderInput): void {
   });
 
   child.on("close", (code) => {
-    // Clear the render timeout since the process has exited
     clearTimeout(renderTimeout);
 
-    // Clean up temp file
     try {
       fs.unlinkSync(inputPath);
     } catch {}
 
-    // Process any remaining buffered stdout
-    if (stdoutBuffer.trim()) {
-      try {
-        const msg = JSON.parse(stdoutBuffer.trim());
-        const current = jobStore.get(jobId);
-        if (current) {
+    const tail = stdoutBuffer.trim();
+    scheduleJobSave(jobId, (current) => {
+      if (tail) {
+        try {
+          const msg = JSON.parse(tail);
           if (msg.type === "result") {
             current.status = "completed";
             current.progress = 1.0;
             current.videoPath = msg.videoPath;
+            current.videoUrl = msg.videoUrl ?? null;
             current.step = "complete";
           } else if (msg.type === "error") {
             current.status = "failed";
             current.error = msg.error;
           }
+        } catch {
+          // ignore non-JSON tail
         }
-      } catch {}
-    }
-
-    // If worker exited with error and job isn't already marked
-    if (code !== 0) {
-      const current = jobStore.get(jobId);
-      if (current && current.status === "processing") {
-        current.status = "failed";
-        current.error = current.error || `Render worker exited with code ${code}`;
       }
-    }
+
+      if (code !== 0 && current.status === "processing") {
+        current.status = "failed";
+        current.error =
+          current.error || `Render worker exited with code ${code}`;
+      }
+    });
   });
 }
 
@@ -367,7 +382,7 @@ export async function POST(request: NextRequest) {
     input,
     contentMode: input.contentMode,
   };
-  jobStore.set(jobId, job);
+  await saveJob(jobId, job);
 
   // Start render in background via child process
   runRenderInBackground(jobId, input);

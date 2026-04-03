@@ -9,6 +9,8 @@
  * every section and patient status variant.
  */
 
+import { spokenDoctorName } from "./doctor-format";
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -153,25 +155,25 @@ register({
   explanation: {
     id: "crown-explanation",
     heading: "What Is a Crown?",
-    text: "A crown is a custom-made cap that fits over your tooth to restore its full strength and shape. Think of it like a protective helmet for a tooth that has been weakened by a large filling, a crack, or decay. Your crown will be made from durable, tooth-colored material so it looks and feels completely natural.",
+    text: "A crown is a custom cover that encases the tooth above the gum line, rebuilding strength and contour when a tooth is cracked, heavily filled, or root-canal treated. It protects remaining tooth structure (the \"ferrule\" effect) and distributes chewing forces. Most crowns today are layered porcelain or zirconia for strength and esthetics; {{doctorName}} selects material based on bite and visibility.",
     durationSeconds: 16,
     bullets: [
-      "Custom cap that covers the entire tooth",
-      "Restores strength to a weakened tooth",
-      "Made from tooth-colored material for a natural look",
+      "Full-coverage restoration for a compromised tooth",
+      "Protects walls of tooth from fracture and leakage",
+      "Porcelain or zirconia options matched to your bite",
     ],
   },
 
   process: {
     id: "crown-process",
     heading: "How It Works",
-    text: "{{doctorName}} will gently reshape the tooth to create space for the crown. A digital scan captures the exact dimensions, so your crown is made to fit perfectly. A comfortable temporary crown protects the tooth while your permanent one is crafted. At your follow-up visit, the permanent crown is placed and adjusted for a precise, comfortable bite.",
+    text: "{{doctorName}} reduces the outer enamel to create space for the crown, then records the shape with a digital scan or impression. A lab mills or presses your crown; you wear a temporary to protect the prep. At delivery, the fit is checked in contact and floss, then bonded or cemented with a final bite adjustment.",
     durationSeconds: 18,
     bullets: [
-      "Tooth is gently shaped to accept the crown",
-      "Digital scan ensures a precise fit",
-      "Temporary crown placed while permanent one is crafted",
-      "Final crown cemented at follow-up visit",
+      "Conservative prep preserves tooth structure",
+      "Digital scan or impression for accurate fit",
+      "Temporary protects sensitivity between visits",
+      "Final cementation + bite check for comfort",
     ],
   },
 
@@ -710,6 +712,162 @@ register({
       heading: "Enjoy Your Smile",
       text: "That is it, {{patientName}}. Your new tooth is in place and ready to go. Treat it just like a natural tooth, keep up your checkups at {{clinicName}}, and enjoy it for years to come.",
       durationSeconds: 8,
+    },
+  },
+});
+
+// ============================== FULL MOUTH REHAB (phased: extract → surgery/implants → crowns) ==============================
+register({
+  treatmentId: "full_mouth_rehab",
+  specialty: "dental",
+
+  intros: {
+    undecided: {
+      id: "fmr-intro-undecided",
+      heading: "Full Mouth Rehabilitation",
+      text: "{{patientName}}, {{doctorName}} at {{clinicName}} prepared this walkthrough for you — full mouth rehabilitation from severely compromised teeth to a fixed, natural-looking smile. One continuous journey. Clear phases. No guesswork.",
+      durationSeconds: 12,
+    },
+    hesitant: {
+      id: "fmr-intro-hesitant",
+      heading: "Full Mouth Rehabilitation",
+      text: "{{patientName}}, {{doctorName}} at {{clinicName}} wants you to understand what full mouth rehabilitation actually looks like — step by step, so it feels clear instead of overwhelming.",
+      durationSeconds: 8,
+    },
+    accepted: {
+      id: "fmr-intro-accepted",
+      heading: "Your Treatment Journey",
+      text: "{{patientName}}, {{doctorName}} at {{clinicName}} has prepared this overview of your full mouth rehabilitation journey, so you know exactly what each phase involves.",
+      durationSeconds: 8,
+    },
+    scheduled: {
+      id: "fmr-intro-scheduled",
+      heading: "Your Treatment Journey",
+      text: "{{patientName}}, your full mouth rehabilitation is taking shape. {{doctorName}} at {{clinicName}} prepared this so you understand how each phase builds toward your final result.",
+      durationSeconds: 8,
+    },
+    in_treatment: {
+      id: "fmr-intro-in-treatment",
+      heading: "Your Progress",
+      text: "{{patientName}}, you are making progress. {{doctorName}} at {{clinicName}} wants to recap what has been completed and what comes next in your rehabilitation journey.",
+      durationSeconds: 8,
+    },
+    post_treatment: {
+      id: "fmr-intro-post-treatment",
+      heading: "Your New Smile",
+      text: "{{patientName}}, your implant-supported teeth are in place. {{doctorName}} at {{clinicName}} wants you to know how to protect this investment for decades to come.",
+      durationSeconds: 8,
+    },
+  },
+
+  explanation: {
+    id: "fmr-explanation",
+    heading: "The Starting Point",
+    text: "When many teeth are failing at once, the problem is bigger than cosmetics. Chewing hurts. Infection can linger. Bone melts away where teeth are lost. {{doctorName}} is not proposing a quick patch. This is a full rebuild — staged so your general dentist and, when needed, an oral surgeon each do what they do best. The aim is simple: a bite you can trust, and a smile that looks like yours, only healthy.",
+    durationSeconds: 28,
+    bullets: [
+      "Failing teeth stress bone and comfort — not just appearance",
+      "Staged care: dentist and surgeon, one coordinated plan",
+      "Rebuild function first, aesthetics on that foundation",
+    ],
+  },
+
+  process: {
+    id: "fmr-process",
+    heading: "A Decisive Reset",
+    text: "The first step is to clear what cannot be saved. Extractions are deliberate — remove disease, keep every millimeter of ridge you can. That matters. Implants need height and width. From there, you are not starting over from zero. You are starting from a clean site.",
+    durationSeconds: 22,
+    bullets: [
+      "Remove hopeless teeth — preserve bone at the same time",
+      "Stop infection and collapse before rebuilding",
+      "Prepare sites that can accept implants later",
+    ],
+  },
+
+  importance: {
+    id: "fmr-importance",
+    heading: "Rebuilding the Foundation",
+    text: "From there, the work is often below the gum line. Where bone has shrunk, grafts rebuild ridge volume. A collagen membrane holds space while your own cells fill in. This guided regeneration is the difference between a case that lasts years and one that lasts decades. It is the foundation everything else sits on.",
+    durationSeconds: 26,
+    bullets: [
+      "Grafts replace lost ridge volume — not optional if bone is thin",
+      "Membrane directs healing where we need it",
+      "This phase protects the long-term result",
+    ],
+  },
+
+  outcome: {
+    id: "fmr-outcome",
+    heading: "Confidence Restored",
+    text: "The payoff is a full arch that fits your face — strong enough to eat without thinking, natural enough that people notice you, not the dentistry. You are not trading one headache for another. You are closing the loop: problem, foundation, rebuild, and finally a smile you do not have to worry about.",
+    durationSeconds: 24,
+    bullets: [
+      "Fixed teeth shaped for your bite and your look",
+      "Chewing comfort back where it belongs",
+      "Built to last — with maintenance, not anxiety",
+    ],
+  },
+
+  experience: {
+    id: "fmr-experience",
+    heading: "Precision Implant Placement",
+    text: "Once healing allows, titanium implants go in at planned positions — often placed by your surgeon, then restored by {{doctorName}}. They are your new roots. Over the following weeks and months, bone locks onto the implant surface. That fusion — osseointegration — is what makes this stable. Position and torque are chosen for force distribution, not for speed.",
+    durationSeconds: 26,
+    bullets: [
+      "Implants placed where biomechanics demand",
+      "Osseointegration: bone and titanium become one",
+      "Surgery and restoration stay in the same plan",
+    ],
+  },
+
+  reassurance: {
+    id: "fmr-reassurance",
+    heading: "The Final Restoration",
+    text: "The final phase focuses on teeth you see every day. Crowns or a full-arch prosthesis are milled and colored like enamel — contacts, shade, translucency. {{doctorName}} checks bite and speech before anything is fixed in place. This is precision reconstruction — not a generic tray — so the last step matches the investment you already made.",
+    durationSeconds: 24,
+    bullets: [
+      "Restorations matched to your anatomy, not a catalog photo",
+      "Bite and comfort verified before cementation",
+      "The visible finish matches the work underneath",
+    ],
+  },
+
+  outros: {
+    undecided: {
+      id: "fmr-outro-undecided",
+      heading: "Your Next Step",
+      text: "{{patientName}}, {{doctorName}} and the team at {{clinicName}} are ready when you are. Bring your questions — we will map the phases together.",
+      durationSeconds: 9,
+    },
+    hesitant: {
+      id: "fmr-outro-hesitant",
+      heading: "We Are Here",
+      text: "Take the time you need, {{patientName}}. When you are ready, {{clinicName}} will guide you through every phase with precision and care.",
+      durationSeconds: 7,
+    },
+    accepted: {
+      id: "fmr-outro-accepted",
+      heading: "Moving Forward",
+      text: "{{patientName}}, the path forward is clear. {{doctorName}} and the team at {{clinicName}} will be with you at every step.",
+      durationSeconds: 7,
+    },
+    scheduled: {
+      id: "fmr-outro-scheduled",
+      heading: "See You Soon",
+      text: "{{patientName}}, your treatment plan is in motion. {{clinicName}} is ready to begin building your new smile.",
+      durationSeconds: 7,
+    },
+    in_treatment: {
+      id: "fmr-outro-in-treatment",
+      heading: "Keep Going",
+      text: "{{patientName}}, you are on the right path. Follow {{doctorName}}'s guidance — every phase brings you closer to the final result.",
+      durationSeconds: 7,
+    },
+    post_treatment: {
+      id: "fmr-outro-post-treatment",
+      heading: "Enjoy Your Smile",
+      text: "{{patientName}}, your new smile is built to last. Regular visits to {{clinicName}} will keep it that way for decades.",
+      durationSeconds: 7,
     },
   },
 });
@@ -1318,6 +1476,157 @@ register({
       heading: "Shine On",
       text: "Enjoy your gorgeous bright smile, {{patientName}}. A touch-up every few months keeps results looking fresh. The team at {{clinicName}} is always here.",
       durationSeconds: 7,
+    },
+  },
+});
+
+// ============================== GUM TREATMENT ==============================
+register({
+  treatmentId: "gum_treatment",
+  specialty: "dental",
+
+  intros: {
+    undecided: {
+      id: "gum-intro-undecided",
+      heading: "Understanding Gum Health",
+      text: "{{patientName}}, {{doctorName}} at {{clinicName}} has prepared this video to explain what is happening with your gums and how treatment can restore them to health.",
+      durationSeconds: 8,
+    },
+    hesitant: {
+      id: "gum-intro-hesitant",
+      heading: "Your Gum Health",
+      text: "{{patientName}}, {{doctorName}} at {{clinicName}} wants you to understand your gum condition and see how straightforward treatment can be.",
+      durationSeconds: 8,
+    },
+    accepted: {
+      id: "gum-intro-accepted",
+      heading: "Your Treatment Plan",
+      text: "{{patientName}}, {{doctorName}} at {{clinicName}} is ready to begin restoring your gum health. Here is what the treatment involves.",
+      durationSeconds: 7,
+    },
+    scheduled: {
+      id: "gum-intro-scheduled",
+      heading: "Getting Started",
+      text: "{{patientName}}, your gum treatment is scheduled at {{clinicName}}. {{doctorName}} prepared this so you know what to expect.",
+      durationSeconds: 7,
+    },
+    in_treatment: {
+      id: "gum-intro-in-treatment",
+      heading: "Your Progress",
+      text: "{{patientName}}, your gum treatment is underway. {{doctorName}} at {{clinicName}} wants to show you how things are progressing.",
+      durationSeconds: 7,
+    },
+    post_treatment: {
+      id: "gum-intro-post-treatment",
+      heading: "Maintaining Results",
+      text: "{{patientName}}, your gum treatment is complete. {{doctorName}} at {{clinicName}} wants you to know how to maintain these results.",
+      durationSeconds: 7,
+    },
+  },
+
+  explanation: {
+    id: "gum-explanation",
+    heading: "What Is Gum Disease",
+    text: "Gum disease begins when plaque and tartar accumulate along the gum line, causing inflammation. Over time, the gums pull away from the teeth, creating pockets where bacteria thrive. Without treatment, this can lead to bone loss and eventually tooth loss. The good news — it is treatable at every stage.",
+    durationSeconds: 18,
+    bullets: [
+      "Bacteria cause inflammation along the gum line",
+      "Pockets form as gums recede from teeth",
+      "Early treatment prevents bone loss",
+    ],
+  },
+
+  process: {
+    id: "gum-process",
+    heading: "Deep Cleaning Treatment",
+    text: "Treatment starts with scaling and root planing — a thorough deep cleaning that removes tartar from below the gum line and smooths the root surfaces. This allows the gums to reattach to the teeth. In more advanced cases, {{doctorName}} may recommend surgical treatment to reduce pocket depth and restore tissue.",
+    durationSeconds: 18,
+    bullets: [
+      "Scaling removes tartar below the gum line",
+      "Root planing smooths root surfaces",
+      "Gums reattach to clean tooth surfaces",
+    ],
+  },
+
+  importance: {
+    id: "gum-importance",
+    heading: "Why This Matters",
+    text: "Gum disease is the leading cause of tooth loss in adults. The inflammation can also affect your overall health — research links it to heart disease, diabetes complications, and other systemic conditions. Treating it now protects both your teeth and your general health.",
+    durationSeconds: 14,
+    bullets: [
+      "Leading cause of adult tooth loss",
+      "Linked to cardiovascular and systemic health",
+      "Treatment now prevents serious complications",
+    ],
+  },
+
+  outcome: {
+    id: "gum-outcome",
+    heading: "Healthy Gums Again",
+    text: "After treatment, your gums will be firmer, pinker, and healthier. Pockets will shrink as tissues heal and reattach. With proper home care and regular maintenance visits, you can keep gum disease from returning.",
+    durationSeconds: 13,
+    bullets: [
+      "Gums heal and reattach to teeth",
+      "Reduced pocket depth and inflammation",
+      "Long-term health with proper maintenance",
+    ],
+  },
+
+  experience: {
+    id: "gum-experience",
+    heading: "What Treatment Feels Like",
+    text: "Deep cleaning is performed with local anesthesia so you are comfortable throughout. Most patients complete treatment in one to two visits. Mild sensitivity for a few days afterward is normal. {{clinicName}} will schedule follow-up visits to monitor your healing.",
+    durationSeconds: 14,
+    bullets: [
+      "Local anesthesia for comfort",
+      "One to two visits typically",
+      "Follow-up monitoring at regular intervals",
+    ],
+  },
+
+  reassurance: {
+    id: "gum-reassurance",
+    heading: "You Are in Good Hands",
+    text: "Millions of patients successfully treat gum disease every year. With {{doctorName}}'s expertise and your commitment to home care, your gums can return to full health.",
+    durationSeconds: 10,
+  },
+
+  outros: {
+    undecided: {
+      id: "gum-outro-undecided",
+      heading: "Ready When You Are",
+      text: "{{patientName}}, {{clinicName}} is here whenever you are ready to discuss next steps for your gum health.",
+      durationSeconds: 6,
+    },
+    hesitant: {
+      id: "gum-outro-hesitant",
+      heading: "We Are Here",
+      text: "{{patientName}}, take the time you need. {{doctorName}} at {{clinicName}} can answer any remaining questions.",
+      durationSeconds: 6,
+    },
+    accepted: {
+      id: "gum-outro-accepted",
+      heading: "Let Us Begin",
+      text: "{{patientName}}, the team at {{clinicName}} is ready to restore your gum health. We look forward to seeing you.",
+      durationSeconds: 6,
+    },
+    scheduled: {
+      id: "gum-outro-scheduled",
+      heading: "See You Soon",
+      text: "{{patientName}}, we will see you at your upcoming appointment. {{clinicName}} is ready.",
+      durationSeconds: 5,
+    },
+    in_treatment: {
+      id: "gum-outro-in-treatment",
+      heading: "Keep It Up",
+      text: "{{patientName}}, keep following {{doctorName}}'s home care instructions. Every day of good hygiene supports your healing.",
+      durationSeconds: 6,
+    },
+    post_treatment: {
+      id: "gum-outro-post-treatment",
+      heading: "Protect Your Health",
+      text: "{{patientName}}, your gums are healthy again. Regular visits to {{clinicName}} and daily flossing will keep them that way.",
+      durationSeconds: 6,
     },
   },
 });
@@ -2557,9 +2866,10 @@ export function personalize(
   input: PersonalizationInput
 ): string {
   const firstName = input.patientName.split(" ")[0];
+  const doctorSpoken = spokenDoctorName(input.doctorName);
   return text
     .replace(/\{\{patientName\}\}/g, firstName)
-    .replace(/\{\{doctorName\}\}/g, input.doctorName)
+    .replace(/\{\{doctorName\}\}/g, doctorSpoken)
     .replace(/\{\{clinicName\}\}/g, input.clinicName);
 }
 
@@ -2578,7 +2888,7 @@ export function generateNotesScene(
 ): ScriptSection {
   const firstName = personalization.patientName.split(" ")[0];
   const text =
-    `${personalization.doctorName} also wanted to share a personal note for you, ${firstName}. ` +
+    `${spokenDoctorName(personalization.doctorName)} also wanted to share a personal note for you, ${firstName}. ` +
     `Regarding your specific situation: ${notes}. ` +
     `If you have any questions about this, the team at ${personalization.clinicName} is always here to help.`;
 

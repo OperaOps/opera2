@@ -1,6 +1,14 @@
 import React from "react";
 import { Img, staticFile } from "remotion";
 import { interpolate } from "remotion";
+import { VisualStandardTreatment } from "./VisualStandardTreatment";
+import {
+  MOTION_KEN_BURNS_IN,
+  MOTION_KEN_BURNS_OUT,
+  MOTION_PAN_BASE_SCALE,
+  MOTION_PAN_TX_RANGE,
+} from "../lib/visual-standard";
+import { HERO_VISUAL_HEIGHT, HERO_VISUAL_WIDTH } from "../lib/visual-layout";
 
 type Effect =
   | "ken-burns-in"
@@ -58,15 +66,20 @@ function computeTransform(
 ): { scale: number; translateX: number; translateY: number } {
   switch (effect) {
     case "ken-burns-in": {
-      const scale = interpolate(progress, [0, 1], [1.0, 1.15], {
+      const scale = interpolate(
+        progress,
+        [0, 1],
+        [MOTION_KEN_BURNS_IN.scaleFrom, MOTION_KEN_BURNS_IN.scaleTo],
+        {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        }
+      );
+      const tx = interpolate(progress, [0, 1], [0, -2.5], {
         extrapolateLeft: "clamp",
         extrapolateRight: "clamp",
       });
-      const tx = interpolate(progress, [0, 1], [0, -3], {
-        extrapolateLeft: "clamp",
-        extrapolateRight: "clamp",
-      });
-      const ty = interpolate(progress, [0, 1], [0, -2], {
+      const ty = interpolate(progress, [0, 1], [0, -1.5], {
         extrapolateLeft: "clamp",
         extrapolateRight: "clamp",
       });
@@ -74,15 +87,20 @@ function computeTransform(
     }
 
     case "ken-burns-out": {
-      const scale = interpolate(progress, [0, 1], [1.15, 1.0], {
+      const scale = interpolate(
+        progress,
+        [0, 1],
+        [MOTION_KEN_BURNS_OUT.scaleFrom, MOTION_KEN_BURNS_OUT.scaleTo],
+        {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        }
+      );
+      const tx = interpolate(progress, [0, 1], [-2.5, 0], {
         extrapolateLeft: "clamp",
         extrapolateRight: "clamp",
       });
-      const tx = interpolate(progress, [0, 1], [-3, 0], {
-        extrapolateLeft: "clamp",
-        extrapolateRight: "clamp",
-      });
-      const ty = interpolate(progress, [0, 1], [-2, 0], {
+      const ty = interpolate(progress, [0, 1], [-1.5, 0], {
         extrapolateLeft: "clamp",
         extrapolateRight: "clamp",
       });
@@ -90,41 +108,40 @@ function computeTransform(
     }
 
     case "pan-left": {
-      const tx = interpolate(progress, [0, 1], [5, -5], {
+      const tx = interpolate(progress, [0, 1], [MOTION_PAN_TX_RANGE, -MOTION_PAN_TX_RANGE], {
         extrapolateLeft: "clamp",
         extrapolateRight: "clamp",
       });
-      return { scale: 1.1, translateX: tx, translateY: 0 };
+      return { scale: MOTION_PAN_BASE_SCALE, translateX: tx, translateY: 0 };
     }
 
     case "pan-right": {
-      const tx = interpolate(progress, [0, 1], [-5, 5], {
+      const tx = interpolate(progress, [0, 1], [-MOTION_PAN_TX_RANGE, MOTION_PAN_TX_RANGE], {
         extrapolateLeft: "clamp",
         extrapolateRight: "clamp",
       });
-      return { scale: 1.1, translateX: tx, translateY: 0 };
+      return { scale: MOTION_PAN_BASE_SCALE, translateX: tx, translateY: 0 };
     }
 
     case "zoom-pulse": {
-      // Gentle sine-like breathing: oscillate between 1.0 and 1.05
       const breath = interpolate(
         Math.sin(progress * Math.PI * 2),
         [-1, 1],
-        [1.0, 1.05]
+        [1.0, 1.035]
       );
       return { scale: breath, translateX: 0, translateY: 0 };
     }
 
     case "parallax": {
-      const tx = interpolate(progress, [0, 1], [-2, 2], {
+      const tx = interpolate(progress, [0, 1], [-1.5, 1.5], {
         extrapolateLeft: "clamp",
         extrapolateRight: "clamp",
       });
-      const ty = interpolate(progress, [0, 1], [1, -1], {
+      const ty = interpolate(progress, [0, 1], [0.8, -0.8], {
         extrapolateLeft: "clamp",
         extrapolateRight: "clamp",
       });
-      return { scale: 1.05, translateX: tx, translateY: ty };
+      return { scale: 1.04, translateX: tx, translateY: ty };
     }
 
     case "reveal-left": {
@@ -199,8 +216,8 @@ export const CinematicImage: React.FC<CinematicImageProps> = ({
   alt = "",
   effect = "ken-burns-in",
   progress,
-  width = 900,
-  height = 560,
+  width = HERO_VISUAL_WIDTH,
+  height = HERO_VISUAL_HEIGHT,
   borderRadius = 20,
   overlay = "gradient-bottom",
   overlayOpacity = 0.5,
@@ -230,13 +247,8 @@ export const CinematicImage: React.FC<CinematicImageProps> = ({
   const overlayStyle = buildOverlayStyle(overlay, overlayOpacity);
 
   // Resolve the file path — staticFile expects a path relative to public/
-  let resolvedSrc: string;
-  try {
-    resolvedSrc = staticFile(src);
-  } catch {
-    // If staticFile fails (e.g., path doesn't exist in dev), fall back to the raw src
-    resolvedSrc = src;
-  }
+  // Do NOT silently swallow errors — if the asset doesn't resolve, we need to know.
+  const resolvedSrc = src.startsWith("http") ? src : staticFile(src);
 
   return (
     <div
@@ -260,31 +272,35 @@ export const CinematicImage: React.FC<CinematicImageProps> = ({
         }}
       />
 
-      {/* Cinematic box shadow glow */}
+      {/* Cinematic box shadow — kept soft so it doesn’t read as a heavy “effect” */}
       <div
         style={{
           position: "absolute",
           inset: -2,
           borderRadius: borderRadius + 2,
           boxShadow:
-            "0 12px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(124, 58, 237, 0.08)",
+            "0 10px 48px rgba(0, 0, 0, 0.45), 0 0 28px rgba(124, 58, 237, 0.05)",
           pointerEvents: "none",
           zIndex: 0,
         }}
       />
 
-      <Img
-        src={resolvedSrc}
-        alt={alt}
-        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-        style={{
-          transform,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-        }}
-      />
+      <VisualStandardTreatment>
+        <Img
+          src={resolvedSrc}
+          alt={alt}
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = "none";
+          }}
+          style={{
+            transform,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+          }}
+        />
+      </VisualStandardTreatment>
 
       {/* Overlay */}
       {overlayStyle && <div style={overlayStyle} />}

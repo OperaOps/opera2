@@ -30,6 +30,8 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV REMOTION_CHROME_EXECUTABLE=/usr/bin/chromium
 # Chromium needs --no-sandbox when running as non-root in Docker
 ENV CHROMIUM_FLAGS="--no-sandbox --disable-gpu --disable-dev-shm-usage"
+# Default BGM under narration (override in App Runner if you ship a different file)
+ENV OPERA_BGM_PUBLIC_PATH=audio/opera-bgm.m4a
 
 WORKDIR /app
 
@@ -59,13 +61,30 @@ RUN mkdir -p video-renderer/out video-renderer/.tmp video-renderer/public
 # Pre-bundle Remotion project at build time (saves 90-120s on first render)
 RUN cd video-renderer && npx tsx prebundle.ts
 
-# Non-root user for security
-RUN groupadd -r opera && useradd -r -g opera -d /app -s /bin/bash opera
-# Give opera user write access to /tmp (Remotion creates bundles there)
-# and to the entire app directory
-RUN chown -R opera:opera /app && chmod 1777 /tmp
+# Non-root user for security.
+# IMPORTANT: Do NOT `chown -R` the full /app tree — it stresses Docker's overlayfs and has
+# caused BuildKit I/O errors on Docker Desktop. Scoped chown under video-renderer is fine.
+#
+# Render worker cwd is video-renderer/. Remotion resolves its download/cache dir to
+# video-renderer/node_modules/.remotion (see @remotion/renderer/.../get-download-destination.js),
+# and chmods native binaries under @remotion/*. Non-root cannot mkdir/chmod root-owned
+# node_modules → own the full video-renderer/node_modules for user opera.
+#
+# Also writable: out/, .tmp/, public/, .remotion-bundle/ (see render-pipeline).
+RUN groupadd -r opera && useradd -r -g opera -d /app -s /bin/bash opera \
+  && chown -R opera:opera \
+    /app/video-renderer/out \
+    /app/video-renderer/.tmp \
+    /app/video-renderer/public \
+    /app/video-renderer/.remotion-bundle \
+    /app/video-renderer/node_modules \
+  && if [ -d /app/video-renderer/node_modules/@remotion/compositor-linux-x64-gnu ]; then \
+       chmod 755 /app/video-renderer/node_modules/@remotion/compositor-linux-x64-gnu/remotion 2>/dev/null || true; \
+     fi \
+  && chmod 1777 /tmp
 USER opera
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# start.sh syncs dental-video assets from S3, then launches the server
+CMD ["/bin/bash", "/app/start.sh"]

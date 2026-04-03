@@ -1,5 +1,6 @@
 import React from "react";
 import { Sequence, Audio, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { DEFAULT_BGM_PUBLIC_PATH, standardBgmVolume } from "../lib/video-bgm";
 import type { PatientVideoProps } from "../lib/schema";
 import { DEFAULT_FPS } from "../lib/schema";
 import { secondsToFrames } from "../lib/timing";
@@ -25,6 +26,7 @@ export const PatientVideo: React.FC<PatientVideoProps> = (props) => {
     scenes,
     captions,
     audioUrl,
+    bgmUrl,
     clinicBrand,
   } = props;
 
@@ -54,9 +56,13 @@ export const PatientVideo: React.FC<PatientVideoProps> = (props) => {
   else if (frame >= treatmentStart) activeScene = 2;
   else if (frame >= problemStart) activeScene = 1;
 
+  const bedPath = bgmUrl ?? DEFAULT_BGM_PUBLIC_PATH;
+  const bedSrc = bedPath.startsWith("http") ? bedPath : staticFile(bedPath);
+  const bgmVolume = standardBgmVolume(frame, fps, compositionDuration);
+
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      {/* Audio track */}
+      {/* Narration — primary */}
       {audioUrl && (
         <Audio
           src={
@@ -66,6 +72,8 @@ export const PatientVideo: React.FC<PatientVideoProps> = (props) => {
           }
         />
       )}
+      {/* Instrumental bed — same default as premium (public/audio/opera-bgm.m4a) */}
+      <Audio src={bedSrc} volume={bgmVolume} loop />
 
       {/* Scene 1: Intro */}
       <Sequence from={introStart} durationInFrames={introDuration}>
@@ -73,6 +81,8 @@ export const PatientVideo: React.FC<PatientVideoProps> = (props) => {
           clinicName={clinicName}
           doctorName={doctorName}
           patientName={patientName}
+          heading={scenes.intro.heading}
+          durationFrames={introDuration}
           accentColor={accentColor}
         />
       </Sequence>

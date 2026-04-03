@@ -844,6 +844,80 @@ export const DENTAL_TREATMENTS: Record<string, TreatmentKnowledge> = {
       "Full mouth reconstruction is a significant investment. Many insurance plans cover individual components. We offer comprehensive financing options and can phase treatment to align with your budget.",
   },
 
+  full_mouth_rehab: {
+    id: "full_mouth_rehab",
+    specialty: "dental",
+    name: "full_mouth_rehab",
+    displayName: "Full Mouth Rehabilitation (Phased: Surgery + Implants + Crowns)",
+    description:
+      "A staged full-arch plan for patients who need failing teeth removed, the ridge prepared (often with bone grafting or sinus elevation), dental implants placed by a surgeon, then fixed implant crowns or bridges delivered by your restorative dentist. It coordinates oral surgery, periodontics, and general/restorative dentistry toward a stable, chews-like-natural smile.",
+    indications: [
+      "Multiple hopeless teeth from decay, fracture, or advanced periodontal disease",
+      "Terminal dentition where repair is no longer predictable",
+      "Need for ridge preservation or augmentation before implants",
+      "Desire for fixed teeth on implants rather than traditional dentures",
+    ],
+    benefits: [
+      "Predictable sequencing: health first, then foundation, then final teeth",
+      "Implant-supported fixed teeth restore chewing efficiency and confidence",
+      "Bone grafting and implants help maintain facial support over time",
+      "Phased financing and healing windows between stages",
+    ],
+    risks: [
+      "Multiple procedures and healing intervals (often months)",
+      "Temporary prostheses may be needed between phases",
+      "Smoking and uncontrolled diabetes can compromise healing",
+    ],
+    procedureSteps: [
+      "Comprehensive records: CBCT, photos, periodontal charting, and restorative work-up.",
+      "Phase 1 — extractions of non-restorable teeth; sometimes immediate bone grafting or ridge preservation.",
+      "Phase 2 — oral surgery: ridge augmentation, sinus lift, or guided implant placement as planned; healing per site.",
+      "Phase 3 — implants integrate (osseointegration); uncover and place healing abutments or impressions.",
+      "Phase 4 — restorative: screw- or cement-retained implant crowns/bridges; bite refinement and hygiene instruction.",
+    ],
+    recovery:
+      "Soft diet after surgery phases; soreness and swelling are common short-term. Osseointegration typically spans several months. Your team spaces visits so each phase heals before loading the final prosthesis.",
+    alternatives: [
+      "Removable complete dentures (faster, less invasive, less chewing efficiency)",
+      "Implant overdentures on fewer implants",
+      "Phased treatment addressing only one arch or one side at a time",
+    ],
+    commonConcerns: [
+      {
+        concern: "Why can't we do everything in one visit?",
+        response:
+          "Some steps require healing and bone maturation. Rushing can compromise implant success. The staged plan protects your investment.",
+      },
+      {
+        concern: "Will I be without teeth?",
+        response:
+          "Many plans include transitional dentures or temporary teeth so you are never fully without a smile during longer healing phases—your doctor will review what applies to you.",
+      },
+      {
+        concern: "Who does what?",
+        response:
+          "Often an oral surgeon or periodontist handles extractions, grafting, and implant placement; your restorative dentist designs and delivers the final crowns or bridges on the implants.",
+      },
+    ],
+    emotionalContext: {
+      hesitant:
+        "This is a major decision. The upside is a clear roadmap—each phase has a purpose, and you're not guessing what's next.",
+      deciding:
+        "You're choosing long-term function and aesthetics. Patients who finish this journey often say it was worth every step.",
+      accepted:
+        "You're in capable hands. Follow the post-op instructions between phases and communicate openly—we adjust the plan if healing dictates.",
+    },
+    untreatedConsequences: [
+      "Continued bone loss and infection around hopeless teeth",
+      "Progressive difficulty eating and speaking",
+      "Further collapse of bite vertical dimension and facial support",
+    ],
+    timelineEstimate:
+      "Often 9–18 months from extractions to final implant crowns, depending on grafting and integration; simpler cases may be shorter.",
+    costContext:
+      "Treatment spans surgical and restorative codes; insurance may cover portions of extractions and some restorative steps. Detailed estimates are given per phase.",
+  },
+
   dentures: {
     id: "dentures",
     specialty: "dental",

@@ -1,7 +1,14 @@
 import React from "react";
-import { Sequence, Audio, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import {
+  Sequence,
+  Audio,
+  staticFile,
+  useCurrentFrame,
+  useVideoConfig,
+  AbsoluteFill,
+} from "remotion";
 import { secondsToFrames } from "../lib/timing";
-import type { DiagnosisType, TreatmentType, CaptionEntry, PremiumPatientVideoProps } from "../lib/schema";
+import type { DiagnosisType, TreatmentType, PremiumPatientVideoProps } from "../lib/schema";
 import { IntroScene } from "../scenes/IntroScene";
 import { ProblemScene } from "../scenes/ProblemScene";
 import { DeepDiveScene } from "../scenes/DeepDiveScene";
@@ -12,7 +19,10 @@ import { WhatToExpectScene } from "../scenes/WhatToExpectScene";
 import { CTAScene } from "../scenes/CTAScene";
 import { Captions } from "../components/Captions";
 import { ProgressDots } from "../components/ProgressDots";
-
+import { CinematicBackdrop } from "../components/CinematicBackdrop";
+import { SceneEnterFade } from "../components/SceneEnterFade";
+import { premiumBgmVolume } from "../lib/premium-bgm";
+import { DEFAULT_BGM_PUBLIC_PATH } from "../lib/video-bgm";
 /** Uses the shared PremiumPatientVideoProps from schema.ts */
 
 const PREMIUM_SCENE_LABELS = [
@@ -39,6 +49,7 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
     scenes,
     captions = [],
     audioUrl,
+    bgmUrl,
     accentColor = "#7c3aed",
     beforePhotoUrl,
     afterPhotoUrl,
@@ -65,9 +76,8 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
   const whatToExpectStart = outcomeStart + outcomeDuration;
   const ctaStart = whatToExpectStart + whatToExpectDuration;
 
-  // Cap CTA extension to at most 2 extra seconds — prevents long dead air at end
-  const maxCTAExtension = baseCTADuration + secondsToFrames(2, fps);
-  const ctaDuration = Math.min(maxCTAExtension, Math.max(baseCTADuration, compositionDuration - ctaStart));
+  // CTA extends to fill remaining composition duration — ensures no black frames at end
+  const ctaDuration = Math.max(baseCTADuration, compositionDuration - ctaStart);
 
   // Determine active scene for progress dots
   let activeScene = 0;
@@ -79,9 +89,22 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
   else if (frame >= deepDiveStart) activeScene = 2;
   else if (frame >= problemStart) activeScene = 1;
 
+  const whatToExpectEndFrame = whatToExpectStart + whatToExpectDuration;
+  const bedPath = bgmUrl ?? DEFAULT_BGM_PUBLIC_PATH;
+  const bedSrc = bedPath.startsWith("http") ? bedPath : staticFile(bedPath);
+  const bgmVolume = premiumBgmVolume(frame, fps, {
+    journeyStartFrame: journeyStart,
+    outcomeStartFrame: outcomeStart,
+    whatToExpectEndFrame,
+    totalFrames: compositionDuration,
+  });
+
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      {/* Audio track */}
+    <AbsoluteFill style={{ backgroundColor: "#050508" }}>
+      <CinematicBackdrop accentColor={accentColor} />
+
+      <AbsoluteFill style={{ zIndex: 1 }}>
+      {/* Narration — primary */}
       {audioUrl && (
         <Audio
           src={
@@ -89,6 +112,8 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
           }
         />
       )}
+      {/* Instrumental bed — under voice (see premium-bgm); default public/audio/opera-bgm.m4a */}
+      <Audio src={bedSrc} volume={bgmVolume} loop />
 
       {/* Scene 1: Intro */}
       <Sequence from={introStart} durationInFrames={introDuration}>
@@ -96,6 +121,8 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
           clinicName={clinicName}
           doctorName={doctorName}
           patientName={patientName}
+          heading={scenes.intro.heading}
+          durationFrames={introDuration}
           accentColor={accentColor}
         />
       </Sequence>
@@ -111,6 +138,7 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
           doctorName={doctorName}
           durationFrames={problemDuration}
           accentColor={accentColor}
+          premiumJourneyStyle
         />
       </Sequence>
 
@@ -125,6 +153,7 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
           doctorName={doctorName}
           durationFrames={deepDiveDuration}
           accentColor={accentColor}
+          premiumJourneyStyle
         />
       </Sequence>
 
@@ -138,6 +167,7 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
           doctorName={doctorName}
           durationFrames={treatmentDuration}
           accentColor={accentColor}
+          premiumJourneyStyle
         />
       </Sequence>
 
@@ -146,10 +176,12 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
         <JourneyScene
           heading={scenes.journey.heading ?? "Your Treatment Journey"}
           bullets={scenes.journey.bullets}
+          treatment={treatment}
           clinicName={clinicName}
           doctorName={doctorName}
           durationFrames={journeyDuration}
           accentColor={accentColor}
+          premiumJourneyStyle
         />
       </Sequence>
 
@@ -165,6 +197,7 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
           accentColor={accentColor}
           beforePhotoUrl={beforePhotoUrl}
           afterPhotoUrl={afterPhotoUrl}
+          premiumJourneyStyle
         />
       </Sequence>
 
@@ -181,6 +214,7 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
           doctorName={doctorName}
           durationFrames={whatToExpectDuration}
           accentColor={accentColor}
+          premiumJourneyStyle
         />
       </Sequence>
 
@@ -207,6 +241,7 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
           sceneLabels={PREMIUM_SCENE_LABELS}
         />
       )}
-    </div>
+      </AbsoluteFill>
+    </AbsoluteFill>
   );
 };

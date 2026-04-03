@@ -1,10 +1,37 @@
 import React from "react";
 import { Composition } from "remotion";
+import type { CalculateMetadataFunction } from "remotion";
 import { PatientVideo } from "./compositions/PatientVideo";
 import { PremiumOrthoVideo } from "./compositions/PremiumOrthoVideo";
 import type { PatientVideoProps, PremiumPatientVideoProps } from "./lib/schema";
 import { DEFAULT_FPS, VIDEO_WIDTH, VIDEO_HEIGHT } from "./lib/schema";
 import { totalDurationFramesWithBuffer, secondsToFrames } from "./lib/timing";
+
+/**
+ * Dynamically calculate composition duration from input props.
+ * This avoids rendering blank frames when props have shorter scene durations
+ * than the hardcoded maximum.
+ */
+const calculatePremiumMetadata: CalculateMetadataFunction<PremiumPatientVideoProps> = ({
+  props,
+}) => {
+  const sceneDurations = [
+    props.scenes.intro.durationSeconds,
+    props.scenes.problem.durationSeconds,
+    props.scenes.deepDive.durationSeconds,
+    props.scenes.treatment.durationSeconds,
+    props.scenes.journey.durationSeconds,
+    props.scenes.outcome.durationSeconds,
+    props.scenes.whatToExpect.durationSeconds,
+    props.scenes.cta.durationSeconds,
+  ];
+  return {
+    durationInFrames: totalDurationFramesWithBuffer(sceneDurations),
+    fps: DEFAULT_FPS,
+    width: VIDEO_WIDTH,
+    height: VIDEO_HEIGHT,
+  };
+};
 
 const demoScenes = {
   intro: {
@@ -131,15 +158,15 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           ...defaultProps,
           patientName: "James",
-          doctorName: "Zitterkopf",
-          clinicName: "Zitterkopf Orthodontics",
+          doctorName: "Martinez",
+          clinicName: "Bright Smiles Dental",
           category: "orthodontic",
           diagnosis: "crowding",
           treatment: "invisalign",
           scenes: {
             intro: {
               id: "intro",
-              narration: "Hi James, this is a message from Dr. Zitterkopf at Zitterkopf Orthodontics.",
+              narration: "Hi James, this is a message from Dr. Martinez at Bright Smiles Dental.",
               durationSeconds: 8,
               heading: "Welcome",
             },
@@ -196,17 +223,18 @@ export const RemotionRoot: React.FC = () => {
         fps={DEFAULT_FPS}
         width={VIDEO_WIDTH}
         height={VIDEO_HEIGHT}
+        calculateMetadata={calculatePremiumMetadata}
         defaultProps={{
           patientName: "James",
-          doctorName: "Zitterkopf",
-          clinicName: "Zitterkopf Orthodontics",
+          doctorName: "Martinez",
+          clinicName: "Bright Smiles Dental",
           diagnosis: "crowding",
           treatment: "invisalign",
           accentColor: "#7c3aed",
           captions: [],
           scenes: {
             intro: {
-              narration: "Hi James, Dr. Zitterkopf and the team at Zitterkopf Orthodontics prepared this detailed overview just for you. Let's walk through everything together.",
+              narration: "Hi James, Dr. Martinez and the team at Bright Smiles Dental prepared this detailed overview just for you. Let's walk through everything together.",
               durationSeconds: 9,
               heading: "Your Personal Overview",
             },
@@ -231,7 +259,7 @@ export const RemotionRoot: React.FC = () => {
               ],
             },
             treatment: {
-              narration: "For your treatment, Dr. Zitterkopf recommends Invisalign clear aligners. These are custom-engineered using advanced 3D digital planning — each tray is precisely calibrated to apply gentle, controlled force that guides your teeth into their ideal positions. Small tooth-colored attachments may be placed for enhanced control.",
+              narration: "For your treatment, Dr. Martinez recommends Invisalign clear aligners. These are custom-engineered using advanced 3D digital planning — each tray is precisely calibrated to apply gentle, controlled force that guides your teeth into their ideal positions. Small tooth-colored attachments may be placed for enhanced control.",
               durationSeconds: 21,
               heading: "Your Invisalign Plan",
               bullets: [
@@ -262,7 +290,7 @@ export const RemotionRoot: React.FC = () => {
               ],
             },
             whatToExpect: {
-              narration: "After treatment, you'll transition to retainers — these are essential for maintaining your results while the bone fully stabilizes. Typically full-time for the first few months, then nighttime wear. Dr. Zitterkopf's team will monitor everything.",
+              narration: "After treatment, you'll transition to retainers — these are essential for maintaining your results while the bone fully stabilizes. Typically full-time for the first few months, then nighttime wear. Dr. Martinez's team will monitor everything.",
               durationSeconds: 16,
               heading: "Maintaining Your Results",
               bullets: [
@@ -272,7 +300,7 @@ export const RemotionRoot: React.FC = () => {
               ],
             },
             cta: {
-              narration: "We're genuinely excited to start this journey with you, James. Reach out to us at Zitterkopf Orthodontics whenever you're ready.",
+              narration: "We're genuinely excited to start this journey with you, James. Reach out to us at Bright Smiles Dental whenever you're ready.",
               durationSeconds: 9,
               heading: "Let's Get Started",
             },
