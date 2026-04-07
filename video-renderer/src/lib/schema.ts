@@ -81,11 +81,11 @@ export const PatientVideoProps = z.object({
 });
 export type PatientVideoProps = z.infer<typeof PatientVideoProps>;
 
-export const DEFAULT_FPS = 20;
+export const DEFAULT_FPS = 15;
 export const VIDEO_WIDTH = 1920;
 export const VIDEO_HEIGHT = 1080;
-// ~1632×918 @ 0.85 — HD-ish output without full 1080p render cost; override REMOTION_RENDER_SCALE (0.25–1)
-export const RENDER_SCALE = 0.85;
+// 1280×720 @ 0.667 — HD quality for patient videos; Lambda handles the render load
+export const RENDER_SCALE = 0.667;
 
 // ---------------------------------------------------------------------------
 // Premium video types

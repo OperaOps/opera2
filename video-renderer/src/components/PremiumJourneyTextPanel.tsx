@@ -23,8 +23,8 @@ export const PremiumJourneyTextPanel: React.FC<{
       maxWidth,
       alignSelf: "center",
       background: "rgba(0,0,0,0.46)",
-      backdropFilter: "blur(22px)",
-      WebkitBackdropFilter: "blur(22px)",
+      
+      
       borderRadius: 22,
       border: "1px solid rgba(255,255,255,0.11)",
       borderLeft: `4px solid ${accentBarColor}`,

@@ -41,7 +41,7 @@ export const BeforeAfterComparison: React.FC<BeforeAfterComparisonProps> = ({
         height: containerHeight,
         borderRadius: 20,
         overflow: "hidden",
-        boxShadow: `0 10px 48px rgba(0, 0, 0, 0.45), 0 0 48px ${COLORS.purpleGlow}`,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
       }}
     >
       {/* After image (base layer, revealed as divider sweeps left) */}
@@ -174,8 +174,8 @@ export const BeforeAfterComparison: React.FC<BeforeAfterComparisonProps> = ({
         <div
           style={{
             background: "rgba(0, 0, 0, 0.55)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            
+            
             borderRadius: 20,
             padding: "6px 18px",
             border: "1px solid rgba(255, 255, 255, 0.12)",
@@ -210,8 +210,8 @@ export const BeforeAfterComparison: React.FC<BeforeAfterComparisonProps> = ({
         <div
           style={{
             background: "rgba(0, 0, 0, 0.55)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            
+            
             borderRadius: 20,
             padding: "6px 18px",
             border: `1px solid rgba(16, 185, 129, ${0.15 + p * 0.25})`,

@@ -222,35 +222,53 @@ async function callElevenLabsTTS(
     ? { ...DEFAULT_VOICE_SETTINGS, ...voiceSettingsOverride }
     : DEFAULT_VOICE_SETTINGS;
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 60000);
-  let response: Response;
-  try {
-    response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "xi-api-key": apiKey,
-      },
-      body: JSON.stringify({
-        text,
-        model_id: DEFAULT_MODEL_ID,
-        voice_settings: voiceSettings,
-      }),
-      signal: controller.signal,
-    });
-  } finally {
-    clearTimeout(timeout);
-  }
+  const MAX_RETRIES = 3;
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 120000);
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "xi-api-key": apiKey,
+        },
+        body: JSON.stringify({
+          text,
+          model_id: DEFAULT_MODEL_ID,
+          voice_settings: voiceSettings,
+        }),
+        signal: controller.signal,
+      });
+    } catch (err) {
+      clearTimeout(timeout);
+      if (attempt < MAX_RETRIES - 1) {
+        console.warn(`[tts] Attempt ${attempt + 1} failed, retrying in ${(attempt + 1) * 2}s...`);
+        await new Promise((r) => setTimeout(r, (attempt + 1) * 2000));
+        continue;
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeout);
+    }
 
-  if (!response.ok) {
+    if (response.ok) {
+      return response.arrayBuffer();
+    }
+
     const errorBody = await response.text().catch(() => "unknown error");
+    if (response.status === 429 && attempt < MAX_RETRIES - 1) {
+      console.warn(`[tts] Rate limited, retrying in ${(attempt + 1) * 3}s...`);
+      await new Promise((r) => setTimeout(r, (attempt + 1) * 3000));
+      continue;
+    }
     throw new Error(
       `ElevenLabs TTS request failed (${response.status}): ${errorBody}`
     );
   }
 
-  return response.arrayBuffer();
+  throw new Error("ElevenLabs TTS: exhausted retries");
 }
 
 /**
@@ -270,7 +288,7 @@ async function callElevenLabsTTSWithTimestamps(
     : DEFAULT_VOICE_SETTINGS;
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 60000);
+  const timeout = setTimeout(() => controller.abort(), 120000);
   let response: Response;
   try {
     response = await fetch(url, {
@@ -413,24 +431,25 @@ export async function generateTTS(
     }
   }
 
-  // Multiple chunks — synthesize each, then ffmpeg concat into outputPath (single file for Remotion).
+  // Multiple chunks — synthesize in parallel, then ffmpeg concat into outputPath (single file for Remotion).
   const ext = outputPath.match(/\.[^.]+$/)?.[0] || ".mp3";
   const basePath = outputPath.replace(/\.[^.]+$/, "");
-  const chunkPaths: string[] = [];
 
-  for (let i = 0; i < chunks.length; i++) {
-    const chunkPath = `${basePath}_${String(i + 1).padStart(3, "0")}${ext}`;
+  const chunkPaths = chunks.map(
+    (_, i) => `${basePath}_${String(i + 1).padStart(3, "0")}${ext}`
+  );
 
-    const audioData = await callElevenLabsTTS(
-      chunks[i],
-      apiKey,
-      effectiveVoiceId,
-      voiceSettingsOverride
-    );
-    await writeFile(chunkPath, Buffer.from(audioData));
-
-    chunkPaths.push(chunkPath);
-  }
+  await Promise.all(
+    chunks.map(async (chunk, i) => {
+      const audioData = await callElevenLabsTTS(
+        chunk,
+        apiKey,
+        effectiveVoiceId,
+        voiceSettingsOverride
+      );
+      await writeFile(chunkPaths[i], Buffer.from(audioData));
+    })
+  );
 
   await concatMp3ChunksWithFfmpeg(chunkPaths, outputPath);
   const probed = await probeAudioFileDurationSeconds(outputPath);

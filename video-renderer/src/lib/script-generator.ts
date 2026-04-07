@@ -443,7 +443,7 @@ export async function generateScript(
   const userMessage = buildUserMessage(input);
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000);
+  const timeout = setTimeout(() => controller.abort(), 90000);
   let response: Response;
   try {
     response = await fetch(ANTHROPIC_ENDPOINT, {
@@ -1050,7 +1050,7 @@ export async function generatePremiumScript(
   const userMessage = buildPremiumUserMessage(input);
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000);
+  const timeout = setTimeout(() => controller.abort(), 90000);
   let response: Response;
   try {
     response = await fetch(ANTHROPIC_ENDPOINT, {
@@ -1718,7 +1718,7 @@ Enhance each scene's narration. Return JSON like:
 { "intro": "enhanced text...", "explanation": "enhanced text...", ... }`;
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000);
+  const timeout = setTimeout(() => controller.abort(), 90000);
   let response: Response;
   try {
     response = await fetch(ANTHROPIC_ENDPOINT, {

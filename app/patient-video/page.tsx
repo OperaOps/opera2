@@ -40,7 +40,7 @@ type Specialty = "dental" | "orthodontic";
 
 type ContentMode = "template" | "template_ai" | "full_ai";
 
-type VideoMode = "standard" | "premium";
+type VideoMode = "premium";
 
 type AppointmentContext = string;
 type PatientStatus = string;
@@ -162,7 +162,6 @@ const CONTENT_MODES: { value: ContentMode; label: string; desc: string }[] = [
 ];
 
 const VIDEO_DEPTH_OPTIONS: { value: VideoMode; label: string; desc: string }[] = [
-  { value: "standard", label: "Standard", desc: "5 scenes — faster to generate" },
   { value: "premium", label: "In-depth", desc: "8 scenes — deep dive, journey & aftercare" },
 ];
 
@@ -376,7 +375,7 @@ export default function PatientVideoPage() {
   const [afterPhoto, setAfterPhoto] = useState<string | null>(null);
 
   // Video depth
-  const [videoMode, setVideoMode] = useState<VideoMode>("standard");
+  const [videoMode, setVideoMode] = useState<VideoMode>("premium");
 
   // Job state
   const [jobStatus, setJobStatus] = useState<JobStatus | null>(null);
@@ -386,8 +385,8 @@ export default function PatientVideoPage() {
   const pollStartTimeRef = useRef<number>(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const MAX_POLL_FAILURES = 10;
-  const MAX_POLL_DURATION_MS = 32 * 60 * 1000; // Above API worker timeout (30m) + buffer for FMR/premium
+  const MAX_POLL_FAILURES = 40;
+  const MAX_POLL_DURATION_MS = 32 * 60 * 1000; // Above API worker timeout (30m) + buffer
 
   // Reset treatment & appointment context when specialty changes
   useEffect(() => {
@@ -496,7 +495,7 @@ export default function PatientVideoPage() {
           );
         }
       }
-    }, 1500);
+    }, 3000);
 
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
@@ -965,36 +964,6 @@ export default function PatientVideoPage() {
               </div>
             </CollapsibleSection>
 
-            <div className="space-y-3">
-              <label className="text-sm font-medium text-purple-300/80 flex items-center gap-2 px-1">
-                <FileVideo className="w-4 h-4" />
-                Video depth
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {VIDEO_DEPTH_OPTIONS.map((opt) => (
-                  <motion.button
-                    key={opt.value}
-                    type="button"
-                    onClick={() => setVideoMode(opt.value)}
-                    whileTap={{ scale: 0.98 }}
-                    className={`text-left p-3 rounded-xl border transition-all ${
-                      videoMode === opt.value
-                        ? "border-purple-500/60 bg-purple-500/15 shadow-[0_0_20px_rgba(168,85,247,0.12)]"
-                        : "border-white/10 bg-white/[0.03] hover:border-purple-500/30"
-                    }`}
-                  >
-                    <p
-                      className={`text-xs font-medium ${
-                        videoMode === opt.value ? "text-white" : "text-white/60"
-                      }`}
-                    >
-                      {opt.label}
-                    </p>
-                    <p className="text-[10px] text-white/30 mt-0.5">{opt.desc}</p>
-                  </motion.button>
-                ))}
-              </div>
-            </div>
 
             {/* Generate button */}
             <motion.button

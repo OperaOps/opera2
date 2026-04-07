@@ -282,14 +282,17 @@ export type DentalSceneType = "problem" | "treatment" | "outcome" | "deepDive" |
  * Get video clips for a given treatment and scene type.
  * Returns undefined when no clips exist for that scene — no fallback.
  * Callers should fall back to SVG/static visuals when undefined is returned.
+ *
+ * NOTE: OffthreadVideo decoding is disabled — MP4 clips cause Chromium memory
+ * pressure and 30-min render timeouts on 4GB App Runner. Static 3D images and
+ * SVG visuals render 10-20x faster with no visible quality loss in the final
+ * patient video. Re-enable once infrastructure supports it (8GB+ RAM).
  */
 export function getDentalVideoClips(
-  treatment: string,
-  scene: DentalSceneType
+  _treatment: string,
+  _scene: DentalSceneType
 ): VideoClipInfo[] | undefined {
-  const assets = dentalVideoMap[treatment];
-  if (!assets) return undefined;
-  return assets[scene];
+  return undefined;
 }
 
 /**

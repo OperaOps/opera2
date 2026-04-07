@@ -118,7 +118,7 @@ const SliderMode: React.FC<{
         borderRadius: 20,
         overflow: "hidden",
         opacity: containerOpacity,
-        boxShadow: `0 12px 60px rgba(0, 0, 0, 0.6), 0 0 80px ${COLORS.purpleGlow}`,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
       }}
     >
       {/* After image (base layer) */}
@@ -226,8 +226,8 @@ const SliderMode: React.FC<{
         <div
           style={{
             background: "rgba(0, 0, 0, 0.55)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            
+            
             borderRadius: 20,
             padding: "6px 18px",
             border: "1px solid rgba(255, 255, 255, 0.12)",
@@ -262,8 +262,8 @@ const SliderMode: React.FC<{
         <div
           style={{
             background: "rgba(0, 0, 0, 0.55)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            
+            
             borderRadius: 20,
             padding: "6px 18px",
             border: `1px solid rgba(16, 185, 129, ${0.15 + progress * 0.25})`,
@@ -349,7 +349,7 @@ const FadeMode: React.FC<{
         borderRadius: 20,
         overflow: "hidden",
         opacity: containerOpacity,
-        boxShadow: `0 12px 60px rgba(0, 0, 0, 0.6), 0 0 80px ${COLORS.purpleGlow}`,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
       }}
     >
       {/* Before image */}
@@ -391,8 +391,8 @@ const FadeMode: React.FC<{
         <div
           style={{
             background: "rgba(0, 0, 0, 0.55)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            
+            
             borderRadius: 20,
             padding: "6px 18px",
             border: "1px solid rgba(255, 255, 255, 0.12)",
@@ -427,8 +427,8 @@ const FadeMode: React.FC<{
         <div
           style={{
             background: "rgba(0, 0, 0, 0.55)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            
+            
             borderRadius: 20,
             padding: "6px 18px",
             border: `1px solid rgba(16, 185, 129, 0.35)`,
@@ -519,7 +519,7 @@ const SplitSideBySide: React.FC<{
         opacity: containerOpacity,
         display: "flex",
         gap,
-        boxShadow: `0 12px 60px rgba(0, 0, 0, 0.6), 0 0 80px ${COLORS.purpleGlow}`,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
       }}
     >
       {/* Before panel */}
@@ -554,8 +554,8 @@ const SplitSideBySide: React.FC<{
           <div
             style={{
               background: "rgba(0, 0, 0, 0.55)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
+              
+              
               borderRadius: 16,
               padding: "5px 14px",
               border: "1px solid rgba(255, 255, 255, 0.12)",
@@ -620,8 +620,8 @@ const SplitSideBySide: React.FC<{
           <div
             style={{
               background: "rgba(0, 0, 0, 0.55)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
+              
+              
               borderRadius: 16,
               padding: "5px 14px",
               border: `1px solid rgba(16, 185, 129, 0.35)`,

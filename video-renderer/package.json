@@ -9,9 +9,11 @@
     "build": "remotion bundle"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1015.0",
+    "@aws-sdk/client-s3": "^3.645.0",
+    "@aws-sdk/s3-request-presigner": "^3.1024.0",
     "@remotion/bundler": "4.0.242",
     "@remotion/cli": "4.0.242",
+    "@remotion/lambda": "^4.0.242",
     "@remotion/renderer": "4.0.242",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

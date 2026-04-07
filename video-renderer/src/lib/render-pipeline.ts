@@ -21,6 +21,7 @@ import {
   type ChromiumOptions,
 } from "@remotion/renderer";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import type { AwsRegion } from "@remotion/lambda";
 import {
   generateScript,
   generateDemoScript,
@@ -109,10 +110,10 @@ export type ProgressCallback = (step: string, progress: number) => void;
 // Cap offthread cache; Remotion 4.x no longer exposes a separate media cache knob here.
 // Do NOT pass --single-process: it destabilizes Chrome under parallel tabs + video decode.
 
-const REMOTION_OFFTHREAD_VIDEO_CACHE_BYTES = 256 * 1024 * 1024;
-const REMOTION_OFFTHREAD_VIDEO_CACHE_BYTES_RETRY = 128 * 1024 * 1024;
+const REMOTION_OFFTHREAD_VIDEO_CACHE_BYTES = 150 * 1024 * 1024;
+const REMOTION_OFFTHREAD_VIDEO_CACHE_BYTES_RETRY = 80 * 1024 * 1024;
 
-/** One Remotion encode pass; premium/FMR can run many minutes. Keep < API worker kill (30m). */
+/** One Remotion encode pass; keep generous so renders always complete. */
 const REMOTION_RENDER_TIMEOUT_MS = 28 * 60 * 1000;
 
 function effectiveRenderScale(): number {
@@ -361,7 +362,8 @@ export async function renderPatientVideo(
   onProgress?: ProgressCallback
 ): Promise<RenderJobResult> {
   const notify = onProgress ?? (() => {});
-  const isPremium = input.mode === "premium";
+  // All videos use premium 8-scene format
+  const isPremium = true;
 
   // Resolve directories
   const videoRendererRoot = path.resolve(__dirname, "../..");
@@ -396,6 +398,10 @@ export async function renderPatientVideo(
     financing: input.financing,
     parentMode: input.parentMode,
   };
+
+  // Debug: log Lambda env vars
+  process.stderr.write(`[render-pipeline] REMOTION_LAMBDA_FUNCTION_NAME=${process.env.REMOTION_LAMBDA_FUNCTION_NAME || "NOT SET"}\n`);
+  process.stderr.write(`[render-pipeline] REMOTION_LAMBDA_SERVE_URL=${process.env.REMOTION_LAMBDA_SERVE_URL ? "SET" : "NOT SET"}\n`);
 
   const apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
   const useSmartGeneration = input.contentMode && input.contentMode !== "full_ai";
@@ -566,11 +572,18 @@ export async function renderPatientVideo(
   notify("Captions generated", 0.45);
 
   // --------------------------------------------------
-  // Step 5: Bundle Remotion project
+  // Step 5: Bundle Remotion project (skip when Lambda is configured)
   // --------------------------------------------------
-  notify("Bundling Remotion project", 0.5);
-  const bundleUrl = await getOrCreateBundle();
-  notify("Bundle ready", 0.55);
+  const lambdaConfigured = true; // Always use Lambda — hardcoded config above
+  let bundleUrl = "";
+  if (lambdaConfigured) {
+    notify("Using Lambda render", 0.55);
+    console.log("[render-pipeline] Skipping local bundle — Lambda is configured");
+  } else {
+    notify("Bundling Remotion project", 0.5);
+    bundleUrl = await getOrCreateBundle();
+    notify("Bundle ready", 0.55);
+  }
 
   // --------------------------------------------------
   // Step 5b: Copy dynamic audio into bundle/public/.
@@ -585,10 +598,40 @@ export async function renderPatientVideo(
   // Only the per-render audio file (narration-xxx.mp3) needs to be copied here,
   // since it is generated at render time and isn't part of the Docker build.
   // --------------------------------------------------
-  const bundlePublicDir = path.join(bundleUrl, "public");
+  // For Lambda: upload audio to the Remotion Lambda bucket (Lambda has access to this bucket)
+  let lambdaAudioUrl: string | undefined;
+  if (lambdaConfigured && audioFileName) {
+    const audioSrc = path.join(tmpDir, "narration.mp3");
+    const audioKey = `audio/${audioFileName}`;
+    const lambdaBucket = "remotionlambda-useast1-k8w7zbbn0a";
+    try {
+      const audioData = await fs.readFile(audioSrc);
+      const s3 = new S3Client({ region: process.env.AWS_REGION || "us-east-1" });
+      await s3.send(new PutObjectCommand({
+        Bucket: lambdaBucket,
+        Key: audioKey,
+        Body: audioData,
+        ContentType: "audio/mpeg",
+      }));
+      // Generate presigned URL so Lambda workers can download the audio
+      const { getSignedUrl } = await import("@aws-sdk/s3-request-presigner");
+      const { GetObjectCommand } = await import("@aws-sdk/client-s3");
+      lambdaAudioUrl = await getSignedUrl(s3, new GetObjectCommand({
+        Bucket: lambdaBucket,
+        Key: audioKey,
+      }), { expiresIn: 3600 });
+      console.log(`[render-pipeline] Uploaded audio to S3 with presigned URL`);
+    } catch (err) {
+      console.error(`[render-pipeline] Failed to upload audio to S3:`, err);
+    }
+  }
+
+  const bundlePublicDir = lambdaConfigured ? tmpDir : path.join(bundleUrl, "public");
 
   // Ensure bundle public dir exists (should already from prebundle, but safety)
-  await fs.mkdir(bundlePublicDir, { recursive: true }).catch(() => {});
+  if (!lambdaConfigured) {
+    await fs.mkdir(bundlePublicDir, { recursive: true }).catch(() => {});
+  }
 
   // Copy audio into bundle/public/ so staticFile("narration-xxx.mp3") finds it (source: per-job tmp only)
   if (audioFileName) {
@@ -678,7 +721,7 @@ export async function renderPatientVideo(
   let durationInFrames: number;
   if (realAudioDurationSeconds) {
     // Pad past the MP3 end so the last sentence never gets clipped before the video ends.
-    const bufferSeconds = isLongForm ? 2.5 : 1.15;
+    const bufferSeconds = isLongForm ? 5 : 4;
     durationInFrames = secondsToFrames(realAudioDurationSeconds + bufferSeconds, DEFAULT_FPS);
     console.log(
       `[render-pipeline] Composition duration: ${durationInFrames} frames ` +
@@ -691,80 +734,144 @@ export async function renderPatientVideo(
   // Hard cap per treatment type. FMR is a longer multi-phase procedure (up to 3 min).
   // Other premium treatments cap at 150s (2.5 min). Standard caps at 80s.
   // FMR: headroom above ~210s script. Other premium: ~150s script + TTS buffer + end padding.
-  const MAX_DURATION_SECONDS = isPremium ? (isLongForm ? 220 : 180) : 80;
+  const MAX_DURATION_SECONDS = isPremium ? (isLongForm ? 300 : 240) : 120;
   const maxFrames = secondsToFrames(MAX_DURATION_SECONDS, DEFAULT_FPS);
   if (durationInFrames > maxFrames) {
     console.log(`[render-pipeline] Capping duration from ${durationInFrames} to ${maxFrames} frames (${MAX_DURATION_SECONDS}s max)`);
     durationInFrames = maxFrames;
   }
 
+  // For Lambda: override audioUrl with S3 URL so Lambda workers can fetch it
+  if (lambdaConfigured && lambdaAudioUrl) {
+    (inputProps as any).audioUrl = lambdaAudioUrl;
+  }
+
   const serializedInputProps = inputProps as Record<string, unknown>;
-
-  const composition = await selectComposition({
-    serveUrl: bundleUrl,
-    id: compositionId,
-    inputProps: serializedInputProps,
-    chromiumOptions: remotionChromiumOptions(),
-    offthreadVideoCacheSizeInBytes: REMOTION_OFFTHREAD_VIDEO_CACHE_BYTES,
-  });
-
-  // Override the duration to match the generated script (with audio buffer)
-  composition.durationInFrames = durationInFrames;
-  composition.fps = DEFAULT_FPS;
-  composition.width = VIDEO_WIDTH;
-  composition.height = VIDEO_HEIGHT;
 
   const outputFileName = `patient-video-${Date.now()}.mp4`;
   const outputPath = path.join(outputDir, outputFileName);
 
-  const cpuCount = (await import("node:os")).cpus().length;
-  const envConc = process.env.REMOTION_RENDER_CONCURRENCY;
-  const renderConcurrency = envConc
-    ? Math.max(1, Math.min(8, parseInt(envConc, 10) || 2))
-    // Default to a conservative concurrency to avoid CPU/Chromium thrash
-    // (can massively increase render time on small App Runner instances).
-    : 1;
-  const renderScale = effectiveRenderScale();
-  const crf = effectiveCrf();
-  console.log(`[render-pipeline] Rendering with concurrency ${renderConcurrency} (${cpuCount} CPUs detected)`);
-  console.log(
-    `[render-pipeline] Render scale: ${renderScale} → ${Math.round(VIDEO_WIDTH * renderScale)}x${Math.round(VIDEO_HEIGHT * renderScale)} @ ${DEFAULT_FPS}fps, crf=${crf}`
-  );
+  // Hardcoded Lambda config — env vars keep getting dropped by App Runner deployments
+  const lambdaFnName = process.env.REMOTION_LAMBDA_FUNCTION_NAME || "remotion-render-4-0-242-mem3008mb-disk2048mb-240sec";
+  const lambdaServeUrl = process.env.REMOTION_LAMBDA_SERVE_URL || "https://remotionlambda-useast1-k8w7zbbn0a.s3.us-east-1.amazonaws.com/sites/opera-patient-video/index.html";
+  const lambdaRegion = (process.env.REMOTION_LAMBDA_REGION || process.env.AWS_REGION || "us-east-1") as AwsRegion;
+  let useLambda = true; // Always use Lambda
+  process.stderr.write(`[render-pipeline] Lambda: fn=${lambdaFnName} region=${lambdaRegion}\n`);
 
-  const isRetryableRenderError = (msg: string) =>
-    /crashed|page crashed|Page closed|Target closed|ECONNRESET|SIGKILL|SIGABRT|out of memory|OOM|heap|Allocation failed/i.test(
-      msg
-    );
+  if (useLambda) {
+    // ---- Remotion Lambda: distributed render across many workers ----
+    try {
+      const { renderMediaOnLambda, getRenderProgress } = await import("@remotion/lambda");
+      process.stderr.write(`[render-pipeline] @remotion/lambda imported OK\n`);
 
-  try {
-    await renderMedia({
-      composition,
-      serveUrl: bundleUrl,
+      const renderScale = effectiveRenderScale();
+      const crf = effectiveCrf();
+      process.stderr.write(
+        `[render-pipeline] Lambda render: ${compositionId} @ ${DEFAULT_FPS}fps, scale=${renderScale}, crf=${crf}, frames=${durationInFrames}\n`
+      );
+
+      const { renderId, bucketName } = await renderMediaOnLambda({
+        functionName: lambdaFnName!,
+        serveUrl: lambdaServeUrl!,
+        region: lambdaRegion,
+      composition: compositionId,
       codec: "h264",
-      outputLocation: outputPath,
       inputProps: serializedInputProps,
       imageFormat: "jpeg",
-      jpegQuality: 82,
+      jpegQuality: 80,
       scale: renderScale,
       crf,
-      x264Preset: "faster",
-      concurrency: renderConcurrency,
-      timeoutInMilliseconds: REMOTION_RENDER_TIMEOUT_MS,
+      framesPerLambda: 20,
+      timeoutInMilliseconds: 240000,
+      overwrite: true,
+      outName: outputFileName,
+      durationInFrames,
+      fps: DEFAULT_FPS,
+    });
+
+    console.log(`[render-pipeline] Lambda render started: renderId=${renderId} bucket=${bucketName}`);
+
+    // Poll until done
+    let done = false;
+    while (!done) {
+      await new Promise((r) => setTimeout(r, 2000));
+      const progress = await getRenderProgress({
+        renderId,
+        bucketName,
+        functionName: lambdaFnName,
+        region: lambdaRegion,
+      });
+
+      if (progress.overallProgress !== null) {
+        notify("Rendering video", 0.65 + progress.overallProgress * 0.3);
+      }
+
+      if (progress.done) {
+        done = true;
+        if (progress.outputFile) {
+          // Download from S3 to local path for subsequent S3 upload step
+          const https = await import("node:https");
+          const fsSync = await import("node:fs");
+          const file = fsSync.createWriteStream(outputPath);
+          await new Promise<void>((resolve, reject) => {
+            https.get(progress.outputFile!, (res) => {
+              res.pipe(file);
+              file.on("finish", () => { file.close(); resolve(); });
+            }).on("error", reject);
+          });
+          console.log(`[render-pipeline] Lambda render complete, downloaded to ${outputPath}`);
+        }
+      }
+
+      if (progress.fatalErrorEncountered) {
+        throw new Error(`Lambda render failed: ${JSON.stringify(progress.errors)}`);
+      }
+    }
+    } catch (lambdaErr) {
+      process.stderr.write(`[render-pipeline] Lambda render FAILED: ${lambdaErr}\n`);
+      process.stderr.write(`[render-pipeline] Falling back to local render\n`);
+      useLambda = false;
+    }
+  }
+
+  if (!useLambda) {
+    // ---- Local Remotion render (fallback when Lambda not configured) ----
+    // Ensure we have a local bundle (may have been skipped when Lambda was expected)
+    if (!bundleUrl) {
+      notify("Bundling Remotion project", 0.5);
+      bundleUrl = await getOrCreateBundle();
+      notify("Bundle ready", 0.55);
+    }
+    const composition = await selectComposition({
+      serveUrl: bundleUrl,
+      id: compositionId,
+      inputProps: serializedInputProps,
       chromiumOptions: remotionChromiumOptions(),
       offthreadVideoCacheSizeInBytes: REMOTION_OFFTHREAD_VIDEO_CACHE_BYTES,
-      onProgress: ({ progress }) => {
-        notify("Rendering video", 0.65 + progress * 0.3);
-      },
     });
-  } catch (firstErr) {
-    const errMsg = firstErr instanceof Error ? firstErr.message : String(firstErr);
-    if (!isRetryableRenderError(errMsg)) {
-      console.error(`[render-pipeline] renderMedia failed:`, errMsg);
-      throw new Error(`Video rendering failed: ${errMsg}`);
-    }
-    process.stderr.write(
-      `[render-pipeline] Render failed (${errMsg.slice(0, 240)}); retrying with concurrency=1 and smaller media caches…\n`
+
+    composition.durationInFrames = durationInFrames;
+    composition.fps = DEFAULT_FPS;
+    composition.width = VIDEO_WIDTH;
+    composition.height = VIDEO_HEIGHT;
+
+    const cpuCount = (await import("node:os")).cpus().length;
+    const envConc = process.env.REMOTION_RENDER_CONCURRENCY;
+    const renderConcurrency = envConc
+      ? Math.max(1, Math.min(8, parseInt(envConc, 10) || 4))
+      : 4;
+    const renderScale = effectiveRenderScale();
+    const crf = effectiveCrf();
+    console.log(`[render-pipeline] Local render: concurrency=${renderConcurrency} (${cpuCount} CPUs)`);
+    console.log(
+      `[render-pipeline] Render scale: ${renderScale} → ${Math.round(VIDEO_WIDTH * renderScale)}x${Math.round(VIDEO_HEIGHT * renderScale)} @ ${DEFAULT_FPS}fps, crf=${crf}`
     );
+
+    const isRetryableRenderError = (msg: string) =>
+      /crashed|page crashed|Page closed|Target closed|ECONNRESET|SIGKILL|SIGABRT|out of memory|OOM|heap|Allocation failed/i.test(
+        msg
+      );
+
     try {
       await renderMedia({
         composition,
@@ -773,10 +880,38 @@ export async function renderPatientVideo(
         outputLocation: outputPath,
         inputProps: serializedInputProps,
         imageFormat: "jpeg",
-        jpegQuality: 78,
+        jpegQuality: 70,
         scale: renderScale,
         crf,
-        x264Preset: "faster",
+        x264Preset: "ultrafast",
+        concurrency: renderConcurrency,
+        timeoutInMilliseconds: REMOTION_RENDER_TIMEOUT_MS,
+        chromiumOptions: remotionChromiumOptions(),
+        offthreadVideoCacheSizeInBytes: REMOTION_OFFTHREAD_VIDEO_CACHE_BYTES,
+        onProgress: ({ progress }) => {
+          notify("Rendering video", 0.65 + progress * 0.3);
+        },
+      });
+    } catch (firstErr) {
+      const errMsg = firstErr instanceof Error ? firstErr.message : String(firstErr);
+      if (!isRetryableRenderError(errMsg)) {
+        console.error(`[render-pipeline] renderMedia failed:`, errMsg);
+        throw new Error(`Video rendering failed: ${errMsg}`);
+      }
+      process.stderr.write(
+        `[render-pipeline] Render failed (${errMsg.slice(0, 240)}); retrying with concurrency=1…\n`
+      );
+      await renderMedia({
+        composition,
+        serveUrl: bundleUrl,
+        codec: "h264",
+        outputLocation: outputPath,
+        inputProps: serializedInputProps,
+        imageFormat: "jpeg",
+        jpegQuality: 65,
+        scale: renderScale,
+        crf,
+        x264Preset: "ultrafast",
         concurrency: 1,
         timeoutInMilliseconds: REMOTION_RENDER_TIMEOUT_MS,
         chromiumOptions: remotionChromiumOptions(),
@@ -785,10 +920,6 @@ export async function renderPatientVideo(
           notify("Rendering video", 0.65 + progress * 0.3);
         },
       });
-    } catch (retryErr) {
-      const retryMsg = retryErr instanceof Error ? retryErr.message : String(retryErr);
-      console.error(`[render-pipeline] renderMedia failed after retry:`, retryMsg);
-      throw new Error(`Video rendering failed: ${retryMsg}`);
     }
   }
 

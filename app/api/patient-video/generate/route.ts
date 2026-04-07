@@ -178,10 +178,8 @@ function validateInput(body: unknown): { ok: true; data: RenderInput } | { ok: f
     };
   }
 
-  // Video depth: standard (5-scene) vs premium (8-scene) — must match /patient-video UI
-  let mode: RenderInput["mode"] = "premium";
-  if (b.mode === "standard") mode = "standard";
-  else if (b.mode === "premium") mode = "premium";
+  // All videos use premium 8-scene format
+  const mode: RenderInput["mode"] = "premium";
 
   return {
     ok: true,
@@ -246,8 +244,7 @@ function runRenderInBackground(jobId: string, input: RenderInput): void {
     stdio: ["ignore", "pipe", "pipe"],
   });
 
-  // Premium / full-mouth-rehab can exceed 10 min (Remotion + long audio). Keep
-  // this above render-pipeline's single-pass timeout and UI poll timeout.
+  // Hard kill timeout — keep generous so renders always complete.
   const RENDER_TIMEOUT_MS = 30 * 60 * 1000;
   const renderTimeout = setTimeout(() => {
     scheduleJobSave(jobId, (current) => {

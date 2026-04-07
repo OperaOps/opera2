@@ -54,7 +54,7 @@ export const Captions: React.FC<{
           opacity,
           transform: `translateY(${slideUp}px)`,
           background: "rgba(0, 0, 0, 0.65)",
-          backdropFilter: "blur(12px)",
+          
           borderRadius: 12,
           padding: "14px 32px",
           maxWidth: "75%",

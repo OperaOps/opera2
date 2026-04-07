@@ -193,8 +193,8 @@ export const ImageGrid: React.FC<ImageGridProps> = ({
                 <div
                   style={{
                     background: "rgba(0, 0, 0, 0.45)",
-                    backdropFilter: "blur(12px)",
-                    WebkitBackdropFilter: "blur(12px)",
+                    
+                    
                     borderRadius: 12,
                     padding: "6px 14px",
                     border: "1px solid rgba(255, 255, 255, 0.1)",

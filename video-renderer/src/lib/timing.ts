@@ -1,8 +1,8 @@
 import { DEFAULT_FPS } from "./schema";
 
-/** Convert seconds to frame count */
+/** Convert seconds to frame count — always rounds UP to avoid audio cutoff */
 export function secondsToFrames(seconds: number, fps = DEFAULT_FPS): number {
-  return Math.round(seconds * fps);
+  return Math.ceil(seconds * fps);
 }
 
 /** Convert frames to seconds */
@@ -37,7 +37,7 @@ export function calculateSceneFrames(
  * speech pacing, pauses, and trailing silence. 1 second is enough to
  * absorb this drift without introducing dead air at the end.
  */
-export const AUDIO_BUFFER_SECONDS = 1;
+export const AUDIO_BUFFER_SECONDS = 3;
 
 /** Total frames for all scenes */
 export function totalDurationFrames(

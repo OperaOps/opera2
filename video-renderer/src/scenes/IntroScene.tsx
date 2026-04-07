@@ -89,7 +89,7 @@ export const IntroScene: React.FC<{
           borderRadius: "50%",
           background: `radial-gradient(circle, ${accentColor}18 0%, transparent 70%)`,
           opacity: glowPulse,
-          filter: "blur(60px)",
+          filter: "none",
         }}
       />
       <div
@@ -102,7 +102,7 @@ export const IntroScene: React.FC<{
           borderRadius: "50%",
           background: `radial-gradient(circle, ${accentColor}12 0%, transparent 70%)`,
           opacity: glowPulse * 0.7,
-          filter: "blur(50px)",
+          filter: "none",
         }}
       />
 

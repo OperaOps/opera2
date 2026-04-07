@@ -59,7 +59,8 @@ RUN npm run build
 RUN mkdir -p video-renderer/out video-renderer/.tmp video-renderer/public
 
 # Pre-bundle Remotion project at build time (saves 90-120s on first render)
-RUN cd video-renderer && npx tsx prebundle.ts
+# Non-fatal: render pipeline falls back to runtime bundling if this fails
+RUN cd video-renderer && npx tsx prebundle.ts || echo "[prebundle] skipped — will bundle at runtime"
 
 # Non-root user for security.
 # IMPORTANT: Do NOT `chown -R` the full /app tree — it stresses Docker's overlayfs and has
@@ -72,6 +73,7 @@ RUN cd video-renderer && npx tsx prebundle.ts
 #
 # Also writable: out/, .tmp/, public/, .remotion-bundle/ (see render-pipeline).
 RUN groupadd -r opera && useradd -r -g opera -d /app -s /bin/bash opera \
+  && mkdir -p /app/video-renderer/.remotion-bundle \
   && chown -R opera:opera \
     /app/video-renderer/out \
     /app/video-renderer/.tmp \

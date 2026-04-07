@@ -98,7 +98,7 @@ export const CTAScene: React.FC<{
           gridTemplateRows: "repeat(2, 1fr)",
           gap: 0,
           opacity: gridOpacity * fadeOut,
-          filter: "blur(3px) saturate(0.3)",
+          filter: "none",
         }}
       >
         {SMILE_PHOTOS.map((photo, i) => (
