@@ -21,6 +21,10 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/patient-video") ||
     pathname.startsWith("/patient-video") ||
+    pathname.startsWith("/clinic") ||
+    pathname.startsWith("/patient") ||
+    pathname.startsWith("/api/clinic") ||
+    pathname.startsWith("/api/patient") ||
     pathname.includes(".") // static files like .css, .js, .ico
   ) {
     return true;

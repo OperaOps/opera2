@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Lock, Mail } from "lucide-react";
+import { ArrowLeft, Lock, Mail, Building2, User, ArrowRight } from "lucide-react";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -153,6 +153,77 @@ export default function SignInPage() {
               {isSubmitting ? "Logging in..." : "Login"}
             </motion.button>
           </form>
+
+          {/* Demo portal access */}
+          <div className="mt-8 pt-6 border-t border-purple-700/30">
+            <p className="text-xs uppercase tracking-wider text-purple-400/60 mb-4 text-center font-medium">
+              Or try the demo portals
+            </p>
+            <div className="space-y-3">
+              <Link href="/clinic/login">
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.2 }}
+                  className="group flex items-center justify-between p-4 bg-purple-600/5 hover:bg-purple-600/10 border border-purple-700/30 hover:border-purple-500/50 rounded-lg cursor-pointer transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-purple-600/20 border border-purple-500/30 flex items-center justify-center">
+                      <Building2 className="w-5 h-5 text-purple-300" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-white font-medium">
+                        Clinic Portal
+                      </p>
+                      <p className="text-xs text-purple-300/60 font-light">
+                        Generate and send patient videos
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                </motion.div>
+              </Link>
+
+              <Link href="/patient/login">
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.2 }}
+                  className="group flex items-center justify-between p-4 bg-purple-600/5 hover:bg-purple-600/10 border border-purple-700/30 hover:border-purple-500/50 rounded-lg cursor-pointer transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-purple-600/20 border border-purple-500/30 flex items-center justify-center">
+                      <User className="w-5 h-5 text-purple-300" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-white font-medium">
+                        Patient Portal
+                      </p>
+                      <p className="text-xs text-purple-300/60 font-light">
+                        View your treatment video
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                </motion.div>
+              </Link>
+            </div>
+
+            {/* Demo credentials */}
+            <div className="mt-5 p-3 bg-black/40 border border-purple-700/20 rounded-lg">
+              <p className="text-[10px] uppercase tracking-wider text-purple-400/60 mb-2 font-medium">
+                Demo credentials
+              </p>
+              <div className="space-y-1.5 text-[11px] text-purple-300/70 font-mono">
+                <div>
+                  <span className="text-purple-400/60">Clinic:</span>{" "}
+                  demo@smileortho.com / opera2024
+                </div>
+                <div>
+                  <span className="text-purple-400/60">Patient:</span>{" "}
+                  sarah.johnson@example.com / 1995-06-15 / 482917
+                </div>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>

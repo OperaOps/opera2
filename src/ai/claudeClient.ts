@@ -1,4 +1,4 @@
-const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY || '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';
+const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY || '';
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 
 export interface ClaudeMessage {

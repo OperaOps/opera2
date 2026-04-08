@@ -118,11 +118,21 @@ const REMOTION_RENDER_TIMEOUT_MS = 28 * 60 * 1000;
 
 function effectiveRenderScale(): number {
   const raw = process.env.REMOTION_RENDER_SCALE?.trim();
+  let scale = DEFAULT_RENDER_SCALE;
   if (raw) {
     const n = Number(raw);
-    if (Number.isFinite(n) && n >= 0.25 && n <= 1) return n;
+    if (Number.isFinite(n) && n >= 0.25 && n <= 1) scale = n;
   }
-  return DEFAULT_RENDER_SCALE;
+  // H264 requires both width and height to be even integers. Snap the scale
+  // up to the nearest value that produces even dimensions for 1920x1080,
+  // otherwise renders fail with: "trying to render a video with a H264 codec
+  // that has a width of N.NNpx, which is an uneven number".
+  const w = Math.round(VIDEO_WIDTH * scale);
+  const h = Math.round(VIDEO_HEIGHT * scale);
+  if (w % 2 === 0 && h % 2 === 0) return scale;
+  // Try the next even pair upward in 2px increments on width
+  const evenW = w + (w % 2);
+  return evenW / VIDEO_WIDTH;
 }
 
 /** H.264 CRF: lower = better quality (18–28 sensible). Env override for ops tuning without code changes. */
@@ -746,7 +756,7 @@ export async function renderPatientVideo(
     (inputProps as any).audioUrl = lambdaAudioUrl;
   }
 
-  const serializedInputProps = inputProps as Record<string, unknown>;
+  let serializedInputProps = inputProps as Record<string, unknown>;
 
   const outputFileName = `patient-video-${Date.now()}.mp4`;
   const outputPath = path.join(outputDir, outputFileName);
@@ -842,6 +852,44 @@ export async function renderPatientVideo(
       bundleUrl = await getOrCreateBundle();
       notify("Bundle ready", 0.55);
     }
+
+    // When falling back from Lambda, the audio file was put in tmpDir (not the
+    // bundle's public/), so copy it now so staticFile() can resolve it locally.
+    const localPublicDir = path.join(bundleUrl, "public");
+    await fs.mkdir(localPublicDir, { recursive: true }).catch(() => {});
+    if (audioFileName) {
+      const audioSrc = path.join(tmpDir, "narration.mp3");
+      const audioDest = path.join(localPublicDir, audioFileName);
+      try {
+        await fs.copyFile(audioSrc, audioDest);
+        process.stderr.write(
+          `[render-pipeline] Local fallback: copied audio to ${audioDest}\n`
+        );
+      } catch (err) {
+        throw new Error(
+          `[render-pipeline] Local fallback: failed to copy audio: ${err instanceof Error ? err.message : String(err)}`
+        );
+      }
+    }
+    // Also copy any user-uploaded before/after photos
+    for (const photoFile of [beforePhotoFileName, afterPhotoFileName]) {
+      if (!photoFile || photoFile.startsWith("stock/")) continue;
+      const src = path.join(tmpDir, photoFile);
+      const dest = path.join(localPublicDir, photoFile);
+      try {
+        await fs.mkdir(path.dirname(dest), { recursive: true });
+        await fs.copyFile(src, dest);
+      } catch {
+        // photos are optional, don't fail render
+      }
+    }
+    // If we set a Lambda-presigned audioUrl earlier, switch back to staticFile
+    // for the local render so the composition resolves narration locally.
+    if (lambdaAudioUrl && audioFileName) {
+      (inputProps as { audioUrl?: string }).audioUrl = audioFileName;
+      serializedInputProps = JSON.parse(JSON.stringify(inputProps));
+    }
+
     const composition = await selectComposition({
       serveUrl: bundleUrl,
       id: compositionId,
