@@ -81,37 +81,39 @@ export default function DentalNachosPage() {
             </div>
           </motion.div>
 
-          {/* Right Column — Book a Demo */}
+          {/* Right Column — Sample Video */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
           >
-            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-10 text-center">
-              <div className="w-14 h-14 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-6">
-                <Calendar className="w-7 h-7 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Book your demo</h3>
-              <p className="text-gray-500 text-sm mb-8 max-w-sm mx-auto">
-                See how Opera AI can help your practice in a quick 30-minute walkthrough — personalized to your clinic.
-              </p>
-              <a
-                href="https://calendly.com/anishsuvarna-berkeley/30min"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold text-sm transition-all shadow-sm"
-              >
-                <Calendar className="w-4 h-4" />
-                Schedule your demo
-                <ArrowRight className="w-4 h-4" />
-              </a>
-              <p className="text-xs text-gray-400 mt-6">
-                Or email us at{" "}
-                <a href="mailto:anish@getopera.ai" className="text-purple-600 font-medium hover:text-purple-500 transition-colors">
-                  anish@getopera.ai
-                </a>
-              </p>
+            <p className="text-sm font-semibold text-gray-900 mb-3">See it in action</p>
+            <div className="relative aspect-video bg-black border border-gray-200 rounded-2xl overflow-hidden">
+              <video
+                src="https://opera-ai-videos-075483.s3.amazonaws.com/videos/patient-video-1781629102055.mp4"
+                controls
+                playsInline
+                preload="metadata"
+                className="w-full h-full object-contain"
+              />
             </div>
+            <p className="text-xs text-gray-400 mt-3">A sample AI-generated patient education video — personalized for each patient&apos;s diagnosis and treatment plan.</p>
+            <a
+              href="https://calendly.com/anishsuvarna-berkeley/30min"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 w-full justify-center mt-6 px-8 py-3.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-semibold text-sm transition-all shadow-sm"
+            >
+              <Calendar className="w-4 h-4" />
+              Schedule your first meeting
+              <ArrowRight className="w-4 h-4" />
+            </a>
+            <p className="text-xs text-gray-400 mt-3 text-center">
+              Or reach out at{" "}
+              <a href="mailto:anish@getopera.ai" className="text-purple-600 font-medium hover:text-purple-500 transition-colors">
+                anish@getopera.ai
+              </a>
+            </p>
           </motion.div>
         </div>
       </div>
