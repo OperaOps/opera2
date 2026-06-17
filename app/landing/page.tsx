@@ -81,7 +81,7 @@ export default function LandingPage() {
                 Sign In
               </motion.button>
             </Link>
-            <Link href="/demo">
+            <Link href="https://calendly.com/anishsuvarna-berkeley/30min" target="_blank" rel="noopener noreferrer">
               <motion.button
                 whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168, 85, 247, 0.5)" }}
                 whileTap={{ scale: 0.95 }}
@@ -153,7 +153,7 @@ export default function LandingPage() {
               <p className="text-lg md:text-xl text-purple-100 leading-relaxed font-light">
                 The all-in-one AI-native platform for doctors that understands your clinic and drives impact.
               </p>
-              <Link href="/demo">
+              <Link href="https://calendly.com/anishsuvarna-berkeley/30min" target="_blank" rel="noopener noreferrer">
                 <motion.button
                   whileHover={{ scale: 1.02, boxShadow: "0 0 40px rgba(168, 85, 247, 0.6)" }}
                   whileTap={{ scale: 0.98 }}
@@ -463,7 +463,7 @@ export default function LandingPage() {
             <p className="text-3xl md:text-4xl lg:text-5xl text-purple-200/90 mb-12 mx-auto font-serif whitespace-nowrap">
               Let's see Opera AI in action.
             </p>
-            <Link href="/demo">
+            <Link href="https://calendly.com/anishsuvarna-berkeley/30min" target="_blank" rel="noopener noreferrer">
               <motion.button
                 whileHover={{ scale: 1.05, boxShadow: "0 0 50px rgba(168, 85, 247, 0.6)" }}
                 whileTap={{ scale: 0.95 }}
