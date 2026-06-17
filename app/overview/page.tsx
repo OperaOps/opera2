@@ -204,11 +204,7 @@ export default function OverviewPage() {
         {/* ===== Hero ===== */}
         <section className="mx-auto max-w-6xl px-6 pt-16 md:px-10 md:pt-24">
           <motion.div {...reveal}>
-            <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1.5 text-xs font-medium text-purple-300">
-              <Sparkles className="h-3.5 w-3.5" />
-              The digital COO for specialty healthcare
-            </div>
-            <h1 className="mt-7 max-w-4xl text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl">
+            <h1 className="max-w-4xl text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl">
               Opera AI is the digital COO for specialty{" "}
               <span className="bg-gradient-to-r from-purple-300 via-fuchsia-300 to-purple-400 bg-clip-text text-transparent">
                 dental and orthodontic practices.
