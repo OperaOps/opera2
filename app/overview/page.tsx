@@ -37,6 +37,28 @@ const NAV_SECTIONS = [
 ];
 
 function SideNav() {
+  const [active, setActive] = React.useState(NAV_SECTIONS[0].id);
+
+  React.useEffect(() => {
+    const ids = NAV_SECTIONS.map((s) => s.id);
+    const onScroll = () => {
+      const line = window.innerHeight * 0.4; // "you are here" threshold
+      let current = ids[0];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= line) current = id;
+      }
+      setActive(current);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
   return (
     <nav className="fixed left-8 top-1/2 z-30 hidden h-[78vh] -translate-y-1/2 xl:block">
       <div className="relative flex h-full flex-col justify-between py-2">
@@ -51,23 +73,45 @@ function SideNav() {
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {NAV_SECTIONS.map((s) => (
-          <a
-            key={s.id}
-            href={`#${s.id}`}
-            className="group relative flex items-center gap-4 pl-0"
-          >
-            {/* node */}
-            <span className="relative z-10 flex h-3 w-3 items-center justify-center">
-              <span className="absolute inset-0 rounded-full bg-purple-400/0 transition-all duration-300 group-hover:bg-purple-400/30 group-hover:blur-md group-hover:[box-shadow:0_0_16px_6px_rgba(168,85,247,0.6)]" />
-              <span className="h-2 w-2 rounded-full bg-gray-600 ring-1 ring-white/10 transition-all duration-300 group-hover:h-3 group-hover:w-3 group-hover:bg-purple-300 group-hover:ring-purple-300/60 group-hover:shadow-[0_0_12px_rgba(192,132,252,1)]" />
-            </span>
-            {/* label */}
-            <span className="-translate-x-1 text-[13px] font-medium uppercase tracking-[0.14em] text-gray-500 opacity-70 transition-all duration-300 group-hover:translate-x-0 group-hover:text-white group-hover:opacity-100 group-hover:[text-shadow:0_0_12px_rgba(168,85,247,0.8)]">
-              {s.label}
-            </span>
-          </a>
-        ))}
+        {NAV_SECTIONS.map((s) => {
+          const isActive = active === s.id;
+          return (
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              aria-current={isActive ? "true" : undefined}
+              className="group relative flex items-center gap-4 pl-0"
+            >
+              {/* node */}
+              <span className="relative z-10 flex h-3 w-3 items-center justify-center">
+                <span
+                  className={`absolute inset-0 rounded-full transition-all duration-300 group-hover:bg-purple-400/30 group-hover:blur-md group-hover:[box-shadow:0_0_16px_6px_rgba(168,85,247,0.6)] ${
+                    isActive
+                      ? "bg-purple-400/30 blur-md [box-shadow:0_0_16px_6px_rgba(168,85,247,0.6)]"
+                      : "bg-purple-400/0"
+                  }`}
+                />
+                <span
+                  className={`rounded-full ring-1 transition-all duration-300 group-hover:h-3 group-hover:w-3 group-hover:bg-purple-300 group-hover:ring-purple-300/60 group-hover:shadow-[0_0_12px_rgba(192,132,252,1)] ${
+                    isActive
+                      ? "h-3 w-3 bg-purple-300 ring-purple-300/60 shadow-[0_0_12px_rgba(192,132,252,1)]"
+                      : "h-2 w-2 bg-gray-600 ring-white/10"
+                  }`}
+                />
+              </span>
+              {/* label */}
+              <span
+                className={`text-[13px] font-medium uppercase tracking-[0.14em] transition-all duration-300 group-hover:translate-x-0 group-hover:text-white group-hover:opacity-100 group-hover:[text-shadow:0_0_12px_rgba(168,85,247,0.8)] ${
+                  isActive
+                    ? "translate-x-0 text-white opacity-100 [text-shadow:0_0_12px_rgba(168,85,247,0.8)]"
+                    : "-translate-x-1 text-gray-500 opacity-70"
+                }`}
+              >
+                {s.label}
+              </span>
+            </a>
+          );
+        })}
       </div>
     </nav>
   );
