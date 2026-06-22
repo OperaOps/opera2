@@ -8,16 +8,12 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
-import { spawn } from "node:child_process";
-import fs from "node:fs";
-import path from "node:path";
-import os from "node:os";
 import {
   saveJob,
-  scheduleJobSave,
   type VideoJob,
   type RenderInput,
 } from "../_lib/job-store";
+import { runRenderInBackground } from "@/lib/video/render";
 
 // ---------------------------------------------------------------------------
 // Input validation
@@ -169,15 +165,6 @@ function validateInput(body: unknown): { ok: true; data: RenderInput } | { ok: f
     };
   }
 
-  // Validate contentMode if provided
-  const validContentModes = new Set(["template", "template_ai", "full_ai"]);
-  if (b.contentMode && !validContentModes.has(b.contentMode as string)) {
-    return {
-      ok: false,
-      error: `contentMode must be one of: template, template_ai, full_ai`,
-    };
-  }
-
   // All videos use premium 8-scene format
   const mode: RenderInput["mode"] = "premium";
 
@@ -210,135 +197,16 @@ function validateInput(body: unknown): { ok: true; data: RenderInput } | { ok: f
       appointmentContext: typeof b.appointmentContext === "string" ? b.appointmentContext : undefined,
       patientStatus: typeof b.patientStatus === "string" ? b.patientStatus : undefined,
       videoGoal: typeof b.videoGoal === "string" ? b.videoGoal : undefined,
-      contentMode: validContentModes.has(b.contentMode as string)
-        ? (b.contentMode as RenderInput["contentMode"])
-        : undefined,
+      // Single fixed generation mode — template skeleton + AI personalization,
+      // with automatic full-AI fallback when no template exists. Any
+      // client-supplied contentMode is ignored.
+      contentMode: "template_ai",
       concerns: typeof b.concerns === "string" ? b.concerns : undefined,
       financing: typeof b.financing === "string" ? b.financing : undefined,
       parentMode: typeof b.parentMode === "boolean" ? b.parentMode : undefined,
       bgmUrl: typeof b.bgmUrl === "string" && b.bgmUrl.trim() ? b.bgmUrl.trim() : undefined,
     },
   };
-}
-
-// ---------------------------------------------------------------------------
-// Background render via child process
-// ---------------------------------------------------------------------------
-
-function runRenderInBackground(jobId: string, input: RenderInput): void {
-  // Write input to a temp file for the worker to read
-  const inputPath = path.join(os.tmpdir(), `opera-video-${jobId}.json`);
-  fs.writeFileSync(inputPath, JSON.stringify(input));
-
-  // Resolve paths
-  const projectRoot = process.cwd();
-  const videoRendererDir = path.join(projectRoot, "video-renderer");
-  const tsxBin = path.join(videoRendererDir, "node_modules", ".bin", "tsx");
-  const workerScript = path.join(videoRendererDir, "render-worker.ts");
-
-  // Spawn the render worker as a separate process
-  // This completely avoids webpack trying to bundle Remotion
-  const child = spawn(tsxBin, [workerScript, inputPath], {
-    cwd: videoRendererDir,
-    env: { ...process.env },
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-
-  // Hard kill timeout — keep generous so renders always complete.
-  const RENDER_TIMEOUT_MS = 30 * 60 * 1000;
-  const renderTimeout = setTimeout(() => {
-    scheduleJobSave(jobId, (current) => {
-      if (current.status === "processing") {
-        current.status = "failed";
-        current.error = `Render timed out after ${Math.round(RENDER_TIMEOUT_MS / 60000)} minutes`;
-        console.error(
-          `[render-worker ${jobId}] Killing child process due to timeout (${Math.round(RENDER_TIMEOUT_MS / 60000)} min)`
-        );
-      }
-    });
-    child.kill("SIGKILL");
-  }, RENDER_TIMEOUT_MS);
-
-  let stdoutBuffer = "";
-
-  child.stdout.on("data", (data: Buffer) => {
-    stdoutBuffer += data.toString();
-    const lines = stdoutBuffer.split("\n");
-    // Keep the last incomplete line in the buffer
-    stdoutBuffer = lines.pop() || "";
-
-    for (const line of lines) {
-      if (!line.trim()) continue;
-      try {
-        const msg = JSON.parse(line);
-
-        if (msg.type === "progress") {
-          scheduleJobSave(jobId, (current) => {
-            current.progress = msg.progress;
-            current.step = msg.step || "";
-          });
-        } else if (msg.type === "result") {
-          scheduleJobSave(jobId, (current) => {
-            current.status = "completed";
-            current.progress = 1.0;
-            current.videoPath = msg.videoPath;
-            current.videoUrl = msg.videoUrl ?? null;
-            current.step = "complete";
-          });
-        } else if (msg.type === "error") {
-          scheduleJobSave(jobId, (current) => {
-            current.status = "failed";
-            current.error = msg.error;
-          });
-        }
-      } catch {
-        // Non-JSON output, ignore
-      }
-    }
-  });
-
-  child.stderr.on("data", (data: Buffer) => {
-    // Log render worker stderr for debugging
-    const text = data.toString().trim();
-    if (text) {
-      console.error(`[render-worker ${jobId}] ${text}`);
-    }
-  });
-
-  child.on("close", (code) => {
-    clearTimeout(renderTimeout);
-
-    try {
-      fs.unlinkSync(inputPath);
-    } catch {}
-
-    const tail = stdoutBuffer.trim();
-    scheduleJobSave(jobId, (current) => {
-      if (tail) {
-        try {
-          const msg = JSON.parse(tail);
-          if (msg.type === "result") {
-            current.status = "completed";
-            current.progress = 1.0;
-            current.videoPath = msg.videoPath;
-            current.videoUrl = msg.videoUrl ?? null;
-            current.step = "complete";
-          } else if (msg.type === "error") {
-            current.status = "failed";
-            current.error = msg.error;
-          }
-        } catch {
-          // ignore non-JSON tail
-        }
-      }
-
-      if (code !== 0 && current.status === "processing") {
-        current.status = "failed";
-        current.error =
-          current.error || `Render worker exited with code ${code}`;
-      }
-    });
-  });
 }
 
 // ---------------------------------------------------------------------------

@@ -23,9 +23,7 @@ import {
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import type { AwsRegion } from "@remotion/lambda";
 import {
-  generateScript,
   generateDemoScript,
-  generatePremiumScript,
   generatePremiumDemoScript,
   generateScriptSmart,
   generatePremiumScriptSmart,
@@ -91,6 +89,9 @@ export interface RenderJobInput {
   parentMode?: boolean;
   /** Optional BGM path (public/ relative or https). Defaults to bundled opera-bgm in composition. */
   bgmUrl?: string;
+  logoUrl?: string;
+  phoneNumber?: string;
+  presetScript?: Record<string, unknown>;
 }
 
 export interface RenderJobResult {
@@ -116,6 +117,10 @@ const REMOTION_OFFTHREAD_VIDEO_CACHE_BYTES_RETRY = 80 * 1024 * 1024;
 /** One Remotion encode pass; keep generous so renders always complete. */
 const REMOTION_RENDER_TIMEOUT_MS = 28 * 60 * 1000;
 
+/**
+ * Returns a render scale that ALWAYS produces integer, even dimensions.
+ * Remotion passes scale * width/height to stitchFramesToVideo which requires integers.
+ */
 function effectiveRenderScale(): number {
   const raw = process.env.REMOTION_RENDER_SCALE?.trim();
   let scale = DEFAULT_RENDER_SCALE;
@@ -123,16 +128,14 @@ function effectiveRenderScale(): number {
     const n = Number(raw);
     if (Number.isFinite(n) && n >= 0.25 && n <= 1) scale = n;
   }
-  // H264 requires both width and height to be even integers. Snap the scale
-  // up to the nearest value that produces even dimensions for 1920x1080,
-  // otherwise renders fail with: "trying to render a video with a H264 codec
-  // that has a width of N.NNpx, which is an uneven number".
+  // Force the final pixel dimensions to be even integers
   const w = Math.round(VIDEO_WIDTH * scale);
   const h = Math.round(VIDEO_HEIGHT * scale);
-  if (w % 2 === 0 && h % 2 === 0) return scale;
-  // Try the next even pair upward in 2px increments on width
-  const evenW = w + (w % 2);
-  return evenW / VIDEO_WIDTH;
+  const evenW = w % 2 === 0 ? w : w + 1;
+  const evenH = h % 2 === 0 ? h : h + 1;
+  // Return the exact scale that produces these integer dimensions
+  // Use height-based scale since 1080 is the smaller dimension
+  return evenH / VIDEO_HEIGHT;
 }
 
 /** H.264 CRF: lower = better quality (18–28 sensible). Env override for ops tuning without code changes. */
@@ -304,7 +307,6 @@ function buildPremiumInputProps(
       intro: {
         narration: script.scenes.intro.narration,
         durationSeconds: script.scenes.intro.durationSeconds,
-        heading: script.scenes.intro.heading,
       },
       problem: {
         narration: script.scenes.problem.narration,
@@ -353,6 +355,8 @@ function buildPremiumInputProps(
     bgmUrl:
       input.bgmUrl ??
       (process.env.OPERA_BGM_PUBLIC_PATH?.trim() || undefined),
+    logoUrl: input.logoUrl ?? undefined,
+    phoneNumber: input.phoneNumber ?? undefined,
   };
 }
 
@@ -414,40 +418,31 @@ export async function renderPatientVideo(
   process.stderr.write(`[render-pipeline] REMOTION_LAMBDA_SERVE_URL=${process.env.REMOTION_LAMBDA_SERVE_URL ? "SET" : "NOT SET"}\n`);
 
   const apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
-  const useSmartGeneration = input.contentMode && input.contentMode !== "full_ai";
+
+  // Single generation mode: a clinically-vetted template skeleton personalized
+  // by AI ("template_ai"). generate*Smart() automatically falls back to full-AI
+  // generation when no template exists for the treatment.
+  const smartInput = { ...scriptInput, contentMode: "template_ai" as const };
 
   let script: GeneratedScript | undefined;
   let premiumScript: PremiumGeneratedScript | undefined;
 
   if (isPremium) {
-    if (input.useDemo) {
+    if (input.presetScript) {
+      premiumScript = input.presetScript as unknown as PremiumGeneratedScript;
+      process.stderr.write("[render-pipeline] Using preset script (skipping AI generation)\n");
+    } else if (input.useDemo) {
       premiumScript = generatePremiumDemoScript(scriptInput);
-    } else if (useSmartGeneration) {
-      // Use template-based generation (faster, no API key needed for "template" mode)
-      premiumScript = await generatePremiumScriptSmart(scriptInput, apiKey);
-      console.log(`[render-pipeline] Used smart premium generation (mode: ${input.contentMode})`);
     } else {
-      if (!apiKey) {
-        throw new Error(
-          "No API key found. Set CLAUDE_API_KEY or ANTHROPIC_API_KEY, or use useDemo: true."
-        );
-      }
-      premiumScript = await generatePremiumScript(scriptInput, apiKey);
+      premiumScript = await generatePremiumScriptSmart(smartInput, apiKey);
+      console.log("[render-pipeline] Generated premium script (template_ai + full-AI fallback)");
     }
   } else {
     if (input.useDemo) {
       script = generateDemoScript(scriptInput);
-    } else if (useSmartGeneration) {
-      // Use template-based generation
-      script = await generateScriptSmart(scriptInput, apiKey);
-      console.log(`[render-pipeline] Used smart generation (mode: ${input.contentMode})`);
     } else {
-      if (!apiKey) {
-        throw new Error(
-          "No API key found. Set CLAUDE_API_KEY or ANTHROPIC_API_KEY, or use useDemo: true."
-        );
-      }
-      script = await generateScript(scriptInput, apiKey);
+      script = await generateScriptSmart(smartInput, apiKey);
+      console.log("[render-pipeline] Generated script (template_ai + full-AI fallback)");
     }
   }
 
@@ -613,7 +608,7 @@ export async function renderPatientVideo(
   if (lambdaConfigured && audioFileName) {
     const audioSrc = path.join(tmpDir, "narration.mp3");
     const audioKey = `audio/${audioFileName}`;
-    const lambdaBucket = "remotionlambda-useast1-k8w7zbbn0a";
+    const lambdaBucket = "remotionlambda-useast1-zpvm5jjogw";
     try {
       const audioData = await fs.readFile(audioSrc);
       const s3 = new S3Client({ region: process.env.AWS_REGION || "us-east-1" });
@@ -697,6 +692,10 @@ export async function renderPatientVideo(
     inputProps = buildPremiumInputProps(input, ps, captions, audioFileName);
     (inputProps as PremiumPatientVideoProps).beforePhotoUrl = beforePhotoFileName;
     (inputProps as PremiumPatientVideoProps).afterPhotoUrl = afterPhotoFileName;
+    // Pass real audio duration so calculateMetadata in Root.tsx uses it (prevents cutoff)
+    if (realAudioDurationSeconds) {
+      (inputProps as any).realAudioDurationSeconds = realAudioDurationSeconds;
+    }
     sceneDurations = [
       ps.scenes.intro.durationSeconds,
       ps.scenes.problem.durationSeconds,
@@ -741,14 +740,16 @@ export async function renderPatientVideo(
     durationInFrames = totalDurationFramesWithBuffer(sceneDurations, DEFAULT_FPS);
   }
 
-  // Hard cap per treatment type. FMR is a longer multi-phase procedure (up to 3 min).
-  // Other premium treatments cap at 150s (2.5 min). Standard caps at 80s.
-  // FMR: headroom above ~210s script. Other premium: ~150s script + TTS buffer + end padding.
-  const MAX_DURATION_SECONDS = isPremium ? (isLongForm ? 300 : 240) : 120;
-  const maxFrames = secondsToFrames(MAX_DURATION_SECONDS, DEFAULT_FPS);
-  if (durationInFrames > maxFrames) {
-    console.log(`[render-pipeline] Capping duration from ${durationInFrames} to ${maxFrames} frames (${MAX_DURATION_SECONDS}s max)`);
-    durationInFrames = maxFrames;
+  // Safety cap — only applies when there's NO real audio measurement.
+  // When we have realAudioDurationSeconds, the video is already sized to audio + buffer,
+  // so we NEVER cap below that (which would cut off narration).
+  if (!realAudioDurationSeconds) {
+    const MAX_DURATION_SECONDS = isPremium ? (isLongForm ? 240 : 200) : 100;
+    const maxFrames = secondsToFrames(MAX_DURATION_SECONDS, DEFAULT_FPS);
+    if (durationInFrames > maxFrames) {
+      console.log(`[render-pipeline] Capping duration from ${durationInFrames} to ${maxFrames} frames (${MAX_DURATION_SECONDS}s max, no real audio)`);
+      durationInFrames = maxFrames;
+    }
   }
 
   // For Lambda: override audioUrl with S3 URL so Lambda workers can fetch it
@@ -763,7 +764,7 @@ export async function renderPatientVideo(
 
   // Hardcoded Lambda config — env vars keep getting dropped by App Runner deployments
   const lambdaFnName = process.env.REMOTION_LAMBDA_FUNCTION_NAME || "remotion-render-4-0-242-mem3008mb-disk2048mb-240sec";
-  const lambdaServeUrl = process.env.REMOTION_LAMBDA_SERVE_URL || "https://remotionlambda-useast1-k8w7zbbn0a.s3.us-east-1.amazonaws.com/sites/opera-patient-video/index.html";
+  const lambdaServeUrl = process.env.REMOTION_LAMBDA_SERVE_URL || "https://remotionlambda-useast1-zpvm5jjogw.s3.us-east-1.amazonaws.com/sites/opera-patient-video/index.html";
   const lambdaRegion = (process.env.REMOTION_LAMBDA_REGION || process.env.AWS_REGION || "us-east-1") as AwsRegion;
   let useLambda = true; // Always use Lambda
   process.stderr.write(`[render-pipeline] Lambda: fn=${lambdaFnName} region=${lambdaRegion}\n`);
@@ -791,7 +792,7 @@ export async function renderPatientVideo(
       jpegQuality: 80,
       scale: renderScale,
       crf,
-      framesPerLambda: 20,
+      framesPerLambda: 120,
       timeoutInMilliseconds: 240000,
       overwrite: true,
       outName: outputFileName,
@@ -838,9 +839,57 @@ export async function renderPatientVideo(
       }
     }
     } catch (lambdaErr) {
-      process.stderr.write(`[render-pipeline] Lambda render FAILED: ${lambdaErr}\n`);
-      process.stderr.write(`[render-pipeline] Falling back to local render\n`);
-      useLambda = false;
+      const errMsg = lambdaErr instanceof Error ? lambdaErr.message : String(lambdaErr);
+      process.stderr.write(`[render-pipeline] Lambda render attempt 1 FAILED: ${errMsg}\n`);
+      process.stderr.write(`[render-pipeline] Retrying Lambda render once...\n`);
+      try {
+        const { renderMediaOnLambda, getRenderProgress } = await import("@remotion/lambda");
+        const renderScale = effectiveRenderScale();
+        const crf = effectiveCrf();
+        const { renderId: retryRenderId, bucketName: retryBucket } = await renderMediaOnLambda({
+          functionName: lambdaFnName!,
+          serveUrl: lambdaServeUrl!,
+          region: lambdaRegion,
+          composition: compositionId,
+          codec: "h264",
+          inputProps: serializedInputProps,
+          imageFormat: "jpeg",
+          jpegQuality: 80,
+          scale: renderScale,
+          crf,
+          framesPerLambda: 150,
+          timeoutInMilliseconds: 240000,
+          overwrite: true,
+          outName: outputFileName,
+          durationInFrames,
+          fps: DEFAULT_FPS,
+        });
+        process.stderr.write(`[render-pipeline] Lambda retry started: renderId=${retryRenderId}\n`);
+        let retryDone = false;
+        while (!retryDone) {
+          await new Promise((r) => setTimeout(r, 2000));
+          const progress = await getRenderProgress({ renderId: retryRenderId, bucketName: retryBucket, functionName: lambdaFnName, region: lambdaRegion });
+          if (progress.overallProgress !== null) notify("Rendering video", 0.65 + progress.overallProgress * 0.3);
+          if (progress.done) {
+            retryDone = true;
+            if (progress.outputFile) {
+              const https = await import("node:https");
+              const fsSync = await import("node:fs");
+              const file = fsSync.createWriteStream(outputPath);
+              await new Promise<void>((resolve, reject) => {
+                https.get(progress.outputFile!, (res) => { res.pipe(file); file.on("finish", () => { file.close(); resolve(); }); }).on("error", reject);
+              });
+              console.log(`[render-pipeline] Lambda retry complete, downloaded to ${outputPath}`);
+            }
+          }
+          if (progress.fatalErrorEncountered) throw new Error(`Lambda retry failed: ${JSON.stringify(progress.errors)}`);
+        }
+      } catch (retryErr) {
+        const retryMsg = retryErr instanceof Error ? retryErr.message : String(retryErr);
+        process.stderr.write(`[render-pipeline] Lambda retry also FAILED: ${retryMsg}\n`);
+        process.stderr.write(`[render-pipeline] Falling back to local render\n`);
+        useLambda = false;
+      }
     }
   }
 
@@ -982,25 +1031,30 @@ export async function renderPatientVideo(
     notify("Uploading video", 0.97);
     const s3Key = `videos/${outputFileName}`;
     const region = process.env.AWS_REGION || "us-east-1";
-    const s3 = new S3Client({ region });
-    // Stream upload: avoids reading the entire MP4 into memory (faster + lower memory).
-    const fileSize = (await fs.stat(outputPath)).size;
-    try {
-      await s3.send(
-        new PutObjectCommand({
-          Bucket: s3Bucket,
-          Key: s3Key,
-          Body: createReadStream(outputPath),
-          ContentType: "video/mp4",
-          ContentLength: fileSize,
-        })
-      );
-    } catch (err) {
-      const detail = err instanceof Error ? err.message : String(err);
-      console.error("[render-pipeline] S3 upload failed:", detail);
-      throw new Error(
-        `Video upload failed (S3_VIDEO_BUCKET is set; fix IAM/credentials/bucket policy): ${detail}`
-      );
+    const s3 = new S3Client({ region, requestHandler: { requestTimeout: 120000 } as any });
+    const videoBuffer = await fs.readFile(outputPath);
+    const MAX_UPLOAD_RETRIES = 3;
+    for (let attempt = 0; attempt < MAX_UPLOAD_RETRIES; attempt++) {
+      try {
+        await s3.send(
+          new PutObjectCommand({
+            Bucket: s3Bucket,
+            Key: s3Key,
+            Body: videoBuffer,
+            ContentType: "video/mp4",
+          })
+        );
+        break;
+      } catch (err) {
+        const detail = err instanceof Error ? err.message : String(err);
+        if (attempt < MAX_UPLOAD_RETRIES - 1) {
+          process.stderr.write(`[render-pipeline] S3 upload attempt ${attempt + 1} failed: ${detail.slice(0, 100)}. Retrying...\n`);
+          await new Promise((r) => setTimeout(r, (attempt + 1) * 2000));
+        } else {
+          console.error("[render-pipeline] S3 upload failed after retries:", detail);
+          throw new Error(`Video upload failed: ${detail}`);
+        }
+      }
     }
     const s3Host =
       region === "us-east-1"
