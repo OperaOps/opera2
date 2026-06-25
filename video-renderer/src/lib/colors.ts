@@ -1,5 +1,11 @@
 export const COLORS = {
-  // Backgrounds
+  // Backgrounds — light theme
+  bgPrimary: "#ffffff",
+  bgSecondary: "#f8f9fa",
+  bgTertiary: "#f3f4f6",
+  bgSubtle: "#e5e7eb",
+
+  // Legacy dark (kept for any remaining references)
   bgDark: "#07060e",
   bgMid: "#0f0d1a",
   bgCard: "#161225",
@@ -11,11 +17,15 @@ export const COLORS = {
   purpleMuted: "#6d28d9",
   purpleGlow: "rgba(124, 58, 237, 0.35)",
 
-  // Text
-  textPrimary: "#ffffff",
-  textSecondary: "#c4b5fd",
-  textMuted: "#8b7fad",
-  textSubtle: "#6b6280",
+  // Text — light theme (dark text on light bg)
+  textPrimary: "#1a1a2e",
+  textSecondary: "#4b5563",
+  textMuted: "#9ca3af",
+  textSubtle: "#d1d5db",
+
+  // Borders
+  border: "#e5e7eb",
+  borderLight: "#f3f4f6",
 
   // Dental
   toothWhite: "#f0eef5",

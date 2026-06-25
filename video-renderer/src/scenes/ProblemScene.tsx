@@ -171,7 +171,7 @@ export const ProblemScene: React.FC<{
                     height: 10,
                     borderRadius: 5,
                     background: COLORS.problemRed,
-                    boxShadow: `0 0 12px ${COLORS.problemRed}80`,
+                    boxShadow: `0 0 6px ${COLORS.problemRed}40`,
                   }}
                 />
                 <span
@@ -211,7 +211,7 @@ export const ProblemScene: React.FC<{
                     height: 10,
                     borderRadius: 5,
                     background: COLORS.problemRed,
-                    boxShadow: `0 0 12px ${COLORS.problemRed}80`,
+                    boxShadow: `0 0 6px ${COLORS.problemRed}40`,
                   }}
                 />
                 <span
@@ -313,9 +313,9 @@ export const ProblemScene: React.FC<{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "rgba(0,0,0,0.2)",
+                background: "#f8f9fa",
                 borderRadius: 24,
-                border: "1px solid rgba(255,255,255,0.06)",
+                border: "1px solid #e5e7eb",
                 padding: 30,
                 overflow: "visible",
               }}

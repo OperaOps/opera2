@@ -203,7 +203,7 @@ export const DeepDiveScene: React.FC<{
                     height: 10,
                     borderRadius: 5,
                     background: BADGE_COLOR,
-                    boxShadow: `0 0 12px ${BADGE_COLOR}80`,
+                    boxShadow: `0 0 6px ${BADGE_COLOR}40`,
                   }}
                 />
                 <span
@@ -243,7 +243,7 @@ export const DeepDiveScene: React.FC<{
                     height: 10,
                     borderRadius: 5,
                     background: BADGE_COLOR,
-                    boxShadow: `0 0 12px ${BADGE_COLOR}80`,
+                    boxShadow: `0 0 6px ${BADGE_COLOR}40`,
                   }}
                 />
                 <span
@@ -421,9 +421,9 @@ export const DeepDiveScene: React.FC<{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "rgba(0,0,0,0.25)",
+                background: "#f8f9fa",
                 borderRadius: 24,
-                border: "1px solid rgba(255,255,255,0.06)",
+                border: "1px solid #e5e7eb",
                 padding: 24,
                 overflow: "visible",
               }}

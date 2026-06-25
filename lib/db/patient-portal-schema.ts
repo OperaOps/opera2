@@ -110,5 +110,18 @@ function initSchema(db: Database.Database) {
       q_additional_feedback TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS api_keys (
+      id TEXT PRIMARY KEY,
+      key_prefix TEXT NOT NULL,
+      key_hash TEXT NOT NULL UNIQUE,
+      org_name TEXT NOT NULL,
+      org_id TEXT,
+      rate_limit_per_minute INTEGER NOT NULL DEFAULT 10,
+      rate_limit_per_day INTEGER NOT NULL DEFAULT 500,
+      is_active BOOLEAN NOT NULL DEFAULT 1,
+      last_used_at DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 }

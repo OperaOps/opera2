@@ -25,8 +25,17 @@ const calculatePremiumMetadata: CalculateMetadataFunction<PremiumPatientVideoPro
     props.scenes.whatToExpect.durationSeconds,
     props.scenes.cta.durationSeconds,
   ];
+  const sceneFrames = totalDurationFramesWithBuffer(sceneDurations);
+
+  // If the render pipeline passed a real audio duration, use that as the source of truth.
+  // This ensures the video is ALWAYS long enough for the full narration.
+  const audioDur = (props as any).realAudioDurationSeconds;
+  const audioFrames = audioDur && audioDur > 0
+    ? secondsToFrames(audioDur + 4, DEFAULT_FPS)
+    : 0;
+
   return {
-    durationInFrames: totalDurationFramesWithBuffer(sceneDurations),
+    durationInFrames: Math.max(sceneFrames, audioFrames),
     fps: DEFAULT_FPS,
     width: VIDEO_WIDTH,
     height: VIDEO_HEIGHT,
@@ -157,9 +166,9 @@ export const RemotionRoot: React.FC = () => {
         height={VIDEO_HEIGHT}
         defaultProps={{
           ...defaultProps,
-          patientName: "James",
-          doctorName: "Martinez",
-          clinicName: "Bright Smiles Dental",
+          patientName: "James Wilson",
+          doctorName: "Zitterkopf",
+          clinicName: "Life Orthodontics",
           category: "orthodontic",
           diagnosis: "crowding",
           treatment: "invisalign",
@@ -225,18 +234,18 @@ export const RemotionRoot: React.FC = () => {
         height={VIDEO_HEIGHT}
         calculateMetadata={calculatePremiumMetadata}
         defaultProps={{
-          patientName: "James",
-          doctorName: "Martinez",
-          clinicName: "Bright Smiles Dental",
+          patientName: "James Wilson",
+          doctorName: "Zitterkopf",
+          clinicName: "Life Orthodontics",
           diagnosis: "crowding",
           treatment: "invisalign",
           accentColor: "#7c3aed",
+          phoneNumber: "+1 719-596-2477",
           captions: [],
           scenes: {
             intro: {
-              narration: "Hi James, Dr. Martinez and the team at Bright Smiles Dental prepared this detailed overview just for you. Let's walk through everything together.",
+              narration: "Hi James, Dr. Zitterkopf and the team at Life Orthodontics prepared this overview just for you.",
               durationSeconds: 9,
-              heading: "Your Personal Overview",
             },
             problem: {
               narration: "During your consultation, we identified crowding in your dental arch. You may have noticed that some of your teeth overlap or twist, making certain areas nearly impossible to clean properly. Over time, this misalignment puts uneven stress on your teeth and jaw.",
@@ -259,7 +268,7 @@ export const RemotionRoot: React.FC = () => {
               ],
             },
             treatment: {
-              narration: "For your treatment, Dr. Martinez recommends Invisalign clear aligners. These are custom-engineered using advanced 3D digital planning — each tray is precisely calibrated to apply gentle, controlled force that guides your teeth into their ideal positions. Small tooth-colored attachments may be placed for enhanced control.",
+              narration: "For your treatment, Dr. Zitterkopf recommends Invisalign clear aligners. These are custom-engineered using advanced 3D digital planning — each tray is precisely calibrated to apply gentle, controlled force that guides your teeth into their ideal positions. Small tooth-colored attachments may be placed for enhanced control.",
               durationSeconds: 21,
               heading: "Your Invisalign Plan",
               bullets: [
@@ -290,7 +299,7 @@ export const RemotionRoot: React.FC = () => {
               ],
             },
             whatToExpect: {
-              narration: "After treatment, you'll transition to retainers — these are essential for maintaining your results while the bone fully stabilizes. Typically full-time for the first few months, then nighttime wear. Dr. Martinez's team will monitor everything.",
+              narration: "After treatment, you'll transition to retainers — these are essential for maintaining your results while the bone fully stabilizes. Typically full-time for the first few months, then nighttime wear. Dr. Zitterkopf's team will monitor everything.",
               durationSeconds: 16,
               heading: "Maintaining Your Results",
               bullets: [
@@ -300,13 +309,14 @@ export const RemotionRoot: React.FC = () => {
               ],
             },
             cta: {
-              narration: "We're genuinely excited to start this journey with you, James. Reach out to us at Bright Smiles Dental whenever you're ready.",
+              narration: "We're genuinely excited to start this journey with you, James. Give us a call at Life Orthodontics whenever you're ready.",
               durationSeconds: 9,
               heading: "Let's Get Started",
             },
           },
           beforePhotoUrl: "stock/smile-closeup.jpg",
           afterPhotoUrl: "stock/smile-after-2.jpg",
+          logoUrl: undefined,
         } as PremiumPatientVideoProps}
         schema={undefined}
       />

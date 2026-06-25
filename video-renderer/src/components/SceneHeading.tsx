@@ -134,7 +134,7 @@ export const BulletList: React.FC<{
                 background: accentColor,
                 marginTop: 10,
                 flexShrink: 0,
-                boxShadow: `0 0 8px ${accentColor}50`,
+                boxShadow: `0 0 4px ${accentColor}30`,
               }}
             />
             <span
@@ -144,6 +144,8 @@ export const BulletList: React.FC<{
                 fontWeight: 300,
                 fontFamily: "system-ui, sans-serif",
                 lineHeight: 1.5,
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
               }}
             >
               {item}

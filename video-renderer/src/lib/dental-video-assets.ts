@@ -89,13 +89,18 @@ const dentalVideoMap: Record<string, TreatmentVideoAssets> = {
     outcome: [SHARED_OUTCOME],
   },
   veneers: {
+    problem: [
+      { src: `${LOCAL}/veneers/preparation.mp4`, durationSeconds: 11.5 },
+    ],
     treatment: [
-      { src: `${LOCAL}/veneers/step1.mp4`, durationSeconds: 20 },
+      { src: `${LOCAL}/veneers/placement.mp4`, durationSeconds: 28 },
     ],
     deepDive: [
-      { src: `${LOCAL}/veneers/step1.mp4`, durationSeconds: 20 },
+      { src: `${LOCAL}/veneers/bonding.mp4`, durationSeconds: 13 },
     ],
-    outcome: [SHARED_OUTCOME],
+    outcome: [
+      { src: `${LOCAL}/veneers/result.mp4`, durationSeconds: 11 },
+    ],
   },
   root_canal: {
     problem: [
@@ -175,7 +180,7 @@ const dentalVideoMap: Record<string, TreatmentVideoAssets> = {
       {
         src: `${LOCAL}/extraction/step1.mp4`,
         durationSeconds: 12.5,
-        crop: { right: 0.05 },
+        crop: { right: 0.12, bottom: 0.12 },
         trimStartSeconds: 0.12,
       },
     ],
@@ -189,13 +194,13 @@ const dentalVideoMap: Record<string, TreatmentVideoAssets> = {
       {
         src: `${LOCAL}/implant/step1.mp4`,
         durationSeconds: 19.4,
-        crop: { bottom: 0.08 },
+        crop: { bottom: 0.15, right: 0.12 },
         trimStartSeconds: 0.12,
       },
       {
         src: `${LOCAL}/implant/step2.mp4`,
         durationSeconds: 16.6,
-        crop: { bottom: 0.08 },
+        crop: { bottom: 0.15, right: 0.12 },
         trimStartSeconds: 0.12,
       },
     ],
@@ -282,17 +287,14 @@ export type DentalSceneType = "problem" | "treatment" | "outcome" | "deepDive" |
  * Get video clips for a given treatment and scene type.
  * Returns undefined when no clips exist for that scene — no fallback.
  * Callers should fall back to SVG/static visuals when undefined is returned.
- *
- * NOTE: OffthreadVideo decoding is disabled — MP4 clips cause Chromium memory
- * pressure and 30-min render timeouts on 4GB App Runner. Static 3D images and
- * SVG visuals render 10-20x faster with no visible quality loss in the final
- * patient video. Re-enable once infrastructure supports it (8GB+ RAM).
  */
 export function getDentalVideoClips(
-  _treatment: string,
-  _scene: DentalSceneType
+  treatment: string,
+  scene: DentalSceneType
 ): VideoClipInfo[] | undefined {
-  return undefined;
+  const assets = dentalVideoMap[treatment];
+  if (!assets) return undefined;
+  return assets[scene];
 }
 
 /**

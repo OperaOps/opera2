@@ -86,7 +86,7 @@ export interface GeneratedScript {
 // ---------------------------------------------------------------------------
 
 const ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
-const MODEL = "claude-sonnet-4-20250514";
+const MODEL = "claude-sonnet-4-6";
 const ANTHROPIC_VERSION = "2023-06-01";
 const WORDS_PER_MINUTE = 150;
 
@@ -328,19 +328,32 @@ function trimToWordLimit(text: string, maxWords: number): string {
   const words = text.split(/\s+/).filter(Boolean);
   if (words.length <= maxWords) return text;
 
-  // Cut to limit, try to end at a sentence boundary
+  // Cut to limit, then find the last REAL sentence boundary
   const trimmed = words.slice(0, maxWords);
   let result = trimmed.join(" ");
 
-  // If we cut mid-sentence, try to end cleanly
-  const lastPeriod = result.lastIndexOf(".");
-  const lastQuestion = result.lastIndexOf("?");
-  const lastExclamation = result.lastIndexOf("!");
-  const lastSentenceEnd = Math.max(lastPeriod, lastQuestion, lastExclamation);
+  // Find sentence boundaries, excluding abbreviations (Dr., Mr., Mrs., etc.)
+  // A real sentence end is: period/question/exclamation NOT preceded by a title abbreviation
+  const ABBREVS = /(?:Dr|Mr|Mrs|Ms|St|vs|Jr|Sr|Prof|Rev|Gen|Gov|Lt|Col|Sgt|Capt|Maj|etc|e\.g|i\.e|approx|avg|dept|est|govt|inc|max|min|no|vol)$/i;
 
-  if (lastSentenceEnd > result.length * 0.6) {
+  let lastSentenceEnd = -1;
+  for (let i = result.length - 1; i >= 0; i--) {
+    if (result[i] === "." || result[i] === "?" || result[i] === "!") {
+      // Check if this period belongs to an abbreviation
+      const before = result.substring(0, i);
+      const lastWord = before.split(/\s+/).pop() || "";
+      if (result[i] === "." && ABBREVS.test(lastWord)) continue;
+      lastSentenceEnd = i;
+      break;
+    }
+  }
+
+  if (lastSentenceEnd > 0) {
     result = result.substring(0, lastSentenceEnd + 1);
   }
+
+  // Safety: if we couldn't find a sentence end, add a period
+  if (!/[.!?]$/.test(result)) result += ".";
 
   return result;
 }
@@ -809,8 +822,8 @@ You have EXPERT-LEVEL orthodontic knowledge. You understand:
 - Long-term outcomes: stability, relapse prevention, maintenance`;
 
   const journeyGuidance = isDental
-    ? `- JOURNEY: Walk through what happens at each appointment, step by step. For single-visit treatments describe the appointment flow. For multi-visit treatments (crowns, implants) describe what happens at each visit and what to expect between visits. Make the process feel clear and manageable.`
-    : `- JOURNEY: Month-by-month timeline. What happens in the first few weeks, at 3 months, at 6 months, approaching completion. Set realistic expectations. Make the timeline feel manageable and exciting.`;
+    ? `- JOURNEY: Walk through what happens at each appointment, step by step. For single-visit treatments describe the appointment flow. For multi-visit treatments (crowns, implants) describe what happens at each visit and what to expect between visits. The BULLETS must be specific visit/phase milestones with timeframes (e.g. "Visit 1: Prep & impressions", "2-week wait: Lab fabrication", "Visit 2: Permanent placement"). NEVER use generic "Month 1, Month 3" labels.`
+    : `- JOURNEY: Create a TREATMENT-SPECIFIC timeline. Use the actual treatment duration discussed (braces = 18-24mo, Invisalign = 6-18mo, etc). The BULLETS must be specific phases with realistic timeframes (e.g. "Months 1-2: Leveling & alignment", "Months 3-5: Space closure & rotation", "Months 6-8: Bite correction", "Final months: Detail & finishing"). NEVER use generic "Month 1, Month 3, Month 6, Month 9, Month 12" — those are meaningless placeholders.`;
 
   const whatToExpectGuidance = isDental
     ? `- WHAT TO EXPECT: Post-procedure recovery. What sensations are normal (sensitivity, soreness, swelling). What to eat and avoid. When to call the office. Long-term maintenance and how to make the treatment last.`
@@ -819,7 +832,7 @@ You have EXPERT-LEVEL orthodontic knowledge. You understand:
   const isFmr = treatment === "full_mouth_rehab";
   const durationTarget = isFmr
     ? "totalDurationSeconds should sum to roughly 180-210 seconds of spoken content (full mouth rehab — flagship long form)"
-    : "totalDurationSeconds should sum to roughly 120-150 seconds (about 2-2.5 minutes — premium long form for every treatment type)";
+    : "totalDurationSeconds should sum to roughly 110-140 seconds (about 2 to 2.5 minutes — tight, punchy, every word earns its place). NEVER exceed 150 seconds.";
 
   const sceneWordHints = isFmr
     ? `    "intro": { "narration": "<25-40 words>", "durationSeconds": <10-16>, "heading": "<3-6 word heading>" },
@@ -830,33 +843,56 @@ You have EXPERT-LEVEL orthodontic knowledge. You understand:
     "outcome": { "narration": "<70-100 words>", "durationSeconds": <27-40>, "heading": "<3-6 word heading>", "bullets": ["...", "...", "..."] },
     "whatToExpect": { "narration": "<70-100 words>", "durationSeconds": <27-40>, "heading": "<3-6 word heading>", "bullets": ["...", "...", "..."] },
     "cta": { "narration": "<30-45 words>", "durationSeconds": <12-18>, "heading": "<3-6 word heading>" }`
-    : `    "intro": { "narration": "<22-35 words>", "durationSeconds": <9-14>, "heading": "<3-5 word heading>" },
-    "problem": { "narration": "<70-95 words>", "durationSeconds": <27-38>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
-    "deepDive": { "narration": "<75-105 words>", "durationSeconds": <29-42>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
-    "treatment": { "narration": "<80-110 words>", "durationSeconds": <31-44>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "...", "..."] },
-    "journey": { "narration": "<70-95 words>", "durationSeconds": <27-38>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
-    "outcome": { "narration": "<55-80 words>", "durationSeconds": <22-32>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
-    "whatToExpect": { "narration": "<55-80 words>", "durationSeconds": <22-32>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
+    : `    "intro": { "narration": "<20-30 words>", "durationSeconds": <8-12>, "heading": "<3-5 word heading>" },
+    "problem": { "narration": "<50-70 words>", "durationSeconds": <20-27>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
+    "deepDive": { "narration": "<50-70 words>", "durationSeconds": <20-27>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
+    "treatment": { "narration": "<55-75 words>", "durationSeconds": <22-29>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "...", "..."] },
+    "journey": { "narration": "<45-65 words>", "durationSeconds": <18-25>, "heading": "<3-5 word heading>", "bullets": ["<Phase 1 with timeframe>", "<Phase 2 with timeframe>", "<Phase 3 with timeframe>"] },
+    "outcome": { "narration": "<40-55 words>", "durationSeconds": <16-22>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
+    "whatToExpect": { "narration": "<40-55 words>", "durationSeconds": <16-22>, "heading": "<3-5 word heading>", "bullets": ["...", "...", "..."] },
     "cta": { "narration": "<25-40 words>", "durationSeconds": <10-16>, "heading": "<3-5 word heading>" }`;
 
   return `${specialtyIntro}
 
 CONTENT PHILOSOPHY FOR PREMIUM VIDEOS:
-- These are IN-DEPTH educational videos — patients want to truly UNDERSTAND their treatment
-- Go deeper than surface-level explanations. Explain the biology, the mechanics, the reasoning
-- Make complex concepts accessible with clear analogies
-- Patients who understand their treatment are more likely to commit and comply
-- This is a premium experience — the content should feel like a private consultation with the world's best specialist
+- CONCISE AND PUNCHY. Every word must earn its place. No filler, no over-explaining. Say it once, say it well, move on.
+- Sound like a doctor who KNOWS this person — not a textbook, not a script. Reference their life, their world, their situation.
+- Treatment explanation should be clear but brief. Don't over-detail every clinical step. Patients need to understand WHAT and WHY, not a medical lecture.
+- The magic is in the personal touches — referencing their life context makes them feel seen and builds trust.
+
+PERSONALIZATION APPROACH — PERSONAL LIFE FIRST, THEN CLINICAL:
+The #1 thing that makes these videos special is NOT detailed treatment info (any YouTube video has that). It's that the video feels like it was made by someone who KNOWS the patient as a person.
+
+Before writing, extract from the transcript:
+1. LIFE DETAILS: relationships (sister, girlfriend, mom), events (wedding, job), hobbies, occupation, embarrassing stories, what they've been putting off
+2. EMOTIONAL CONTEXT: why they came in NOW, their fears, their excitement, what they said in their own words
+3. KEY CLINICAL FACTS: 2-3 most important findings (not every measurement — just what matters)
+4. FINANCIAL SNAPSHOT: the bottom line numbers they care about
+
+Then write like a doctor who remembers the conversation — casually weaving in personal details:
+- "Your sister looked amazing after hers, and you're going to love yours too"
+- "Your girlfriend was right about the ice — the orthodontist is on her side"
+- "I know you almost didn't come in today, but you made the right call"
+- "Well before your August wedding, you'll have that smile ready for photos"
+- "At $270 out of pocket with your Guardian plan, this is very doable"
+
+Keep clinical detail LEAN. Don't explain every step of the procedure in granular detail. Hit the key points, explain why it matters for THEM, and move on. The goal is 2 to 2.5 minutes total, not a medical documentary.
 
 ABSOLUTE RULES:
 - Write in second person ("you") directly to the patient
-- Use the patient's FIRST NAME 3-4 times throughout (naturally, not forced)
+- Use the patient's FIRST NAME 3-4 times total (naturally, not forced)
 - Reference the doctor by name and clinic by name
+- INTRO must start with "Hi [first name]" — always greet them warmly
+- CTA must end with a warm forward-looking close like "We're looking forward to..." or "Can't wait to see you..." — never end abruptly
+- NEVER use decimal numbers in narration (no "0.3 mm", "0.5 mm", "point 3 millimeters"). TTS cannot read decimals properly. Use "less than half a millimeter" or "a tiny amount" or just skip the measurement. This applies to ALL numbers with decimal points anywhere in the script.
 - NO jargon without explanation
 - NO scare tactics — educational framing only
 - Pacing: ~155 words per minute
-- Be specific to the exact diagnosis and treatment
-- Sound like a brilliant, caring expert — authoritative yet warm
+- Be CONCISE — every sentence must earn its place. No filler, no redundancy.
+- Sound like a doctor who knows the patient personally — warm, confident, not clinical
+- Weave in personal life details throughout — not just in one scene. If they mentioned a sibling, a wedding, a job, a fear, a funny story — reference it again later naturally, like a doctor who remembers the conversation.
+- NEVER repeat the same sentence or idea across scenes
+- Total script should be 350-430 words. NOT more.
 
 OUTPUT FORMAT — return ONLY valid JSON matching this exact structure (no markdown, no explanation outside the JSON):
 {
@@ -869,23 +905,57 @@ ${sceneWordHints}
   "disclaimer": "<standard medical disclaimer, 1 sentence>"
 }
 
-SCENE-BY-SCENE GUIDANCE:
-- INTRO: Warm, confident greeting. Acknowledge this is a detailed overview prepared personally for them.
-- PROBLEM: Explain what's going on with their specific condition. Use mirror-test language. Mention functional AND aesthetic impacts.
-- DEEP DIVE: This is the key differentiator. Explain WHY this condition matters anatomically. Use clear analogies that make the science tangible and real.
-- TREATMENT: Detailed explanation of the chosen treatment approach. Specific technology, materials, how it works. Why this approach was specifically chosen for their condition.
+SCENE-BY-SCENE GUIDANCE — every scene MUST be saturated with patient-specific details:
+- INTRO: Reference something SPECIFIC from the conversation — not "after your visit" but "after talking about [specific thing they discussed]." Mention a personal detail to immediately signal this isn't a template. If they mentioned why they came in NOW (a wedding, pain, a family member's experience), reference it.
+- PROBLEM: Use the EXACT clinical findings from the consultation — measurements, tooth numbers, classifications, specific areas. Reference what the patient noticed themselves ("you mentioned that..." or "that [specific symptom] you described..."). Connect the clinical finding to their daily experience. Every sentence should contain something only THIS patient would recognize.
+- DEEP DIVE: Address their SPECIFIC fears and questions — if they asked "will it hurt?" or "will it look fake?", answer those exact concerns with science. If they told a story (chipped tooth at a party, pain keeping them up at night), reference it. Use analogies that connect to their life context.
+- TREATMENT: Explain why the doctor chose THIS approach for THEIR specific case — reference alternatives that were discussed and why this one fits THEM. Include specific details the doctor mentioned (materials, techniques, number of visits). If the patient asked about the process, echo their exact questions back naturally.
+- JOURNEY: Use the ACTUAL timeline the doctor discussed, not generic phases. Reference specific milestones that matter to the patient (e.g., "well before your August wedding" or "you'll be out of pain by tonight"). The bullets MUST be treatment-specific phase labels with timeframes.
 ${journeyGuidance}
-- OUTCOME: The transformation — aesthetic, functional, health. Vivid and specific. Go beyond cosmetics to long-term health benefits.
+- OUTCOME: Paint THEIR specific dream outcome — not "a beautiful smile" but the specific thing THEY want (confident wedding photos, eating without pain, not hiding their teeth in pictures, looking as good as their sister). Reference their exact motivations and goals from the conversation.
 ${whatToExpectGuidance}
-- CTA: Confident, warm close. Clear next step. Excitement about moving forward.` + (knowledgeContext ? "\n\n" + knowledgeContext : "");
+- CTA: Reference SPECIFIC financial details discussed (exact cost, insurance coverage amount, monthly payment amount, the plan they chose). Mention their eagerness level. Reference next steps that were actually discussed (specific appointment time, what happens next week). Make it feel like a continuation of the conversation, not a sales close.
+
+JOURNEY SCENE BULLETS FORMAT:
+The journey bullets appear as visual timeline milestones in the video. They MUST be formatted as treatment phases with timeframes:
+- Good: ["Weeks 1-3: Leveling & alignment", "Months 2-4: Space closure", "Months 5-6: Bite correction", "Final months: Detailing & finishing"]
+- Good: ["Visit 1: Preparation & impressions", "2-week wait: Lab fabrication", "Visit 2: Permanent placement"]
+- Bad: ["Month 1", "Month 3", "Month 6", "Month 9", "Month 12"] — too generic, no context
+- Bad: ["Initial phase", "Middle phase", "Final phase"] — too vague
+Use 3-5 milestones. Each milestone label should be SHORT (under 30 characters ideally) with a colon separating the timeframe from the description.` + (knowledgeContext ? "\n\n" + knowledgeContext : "");
 }
 
 function buildPremiumUserMessage(input: ScriptGenerationInput): string {
   const firstName = input.patientName.split(" ")[0];
   const isDental = isDentalTreatment(input.treatment);
   const isFmr = input.treatment === "full_mouth_rehab";
+  const hasScribeTranscript = input.treatmentNotes && input.treatmentNotes.length > 500;
   const notesContext = input.treatmentNotes
-    ? `\nDoctor's clinical notes: "${input.treatmentNotes}"\nIMPORTANT: Interpret clinical shorthand using your expert clinical knowledge and translate into patient-friendly language.`
+    ? hasScribeTranscript
+      ? `\n\n--- FULL CONSULTATION TRANSCRIPT ---\n${input.treatmentNotes}\n--- END TRANSCRIPT ---\n\nTHIS TRANSCRIPT IS EVERYTHING. READ IT CAREFULLY AND USE IT ALL.
+
+Before writing the script, mentally extract these from the transcript:
+- Every personal detail: why they came in, what they've been putting off, who influenced them (family, friends), upcoming life events, occupation, hobbies, embarrassing moments, emotional reactions
+- Every clinical detail: exact measurements, tooth numbers, bite classifications, specific findings, what the doctor showed them on X-rays/scans
+- Every financial detail: exact costs, insurance name and coverage amounts, payment plan chosen, monthly amounts
+- Every question the patient asked and what worried them
+- Every anecdote or story they told
+- The doctor's specific reasoning for this treatment over alternatives
+
+NOW — write EVERY sentence as if you were in the room during this conversation. The patient should watch this video and think "they literally remember everything we talked about."
+
+SCENE-BY-SCENE TRANSCRIPT INTEGRATION:
+- INTRO: Don't just say "after your visit." Reference the SPECIFIC thing that brought them in or a personal detail ("${firstName}, after talking about [specific thing from transcript]...")
+- PROBLEM: Quote their own words back to them. If they said "it bugs me" or "I can't sleep" — reference that exact experience. Use the doctor's exact clinical findings.
+- DEEP DIVE: Answer their specific questions from the conversation. If they asked "will it hurt?" or "does it damage enamel?" — address THOSE concerns with reassuring detail. Reference any stories they told.
+- TREATMENT: Echo the doctor's specific explanations. If the doctor described steps in detail, use those details. If alternatives were discussed, mention why this was the right choice for THEM.
+- JOURNEY: Use the EXACT timeline the doctor quoted. If they said "2 weeks for the lab" or "7 to 9 months" — use those numbers. If there's a life event deadline (wedding, job), reference it as a milestone.
+- OUTCOME: Reference their SPECIFIC dream. If they want wedding photos, say wedding photos. If they want to stop jaw clicking, say that. If their sister looked amazing, mention they'll look amazing too.
+- WHAT TO EXPECT: Address their specific worries. If they're nervous about pain, address pain. If they asked about aftercare, address aftercare with the doctor's specific instructions.
+- CTA: Include the EXACT financial numbers discussed — the specific cost, the insurance coverage amount, the monthly payment they agreed to, the specific next step (appointment time, when trays arrive, etc.).
+
+If you write even ONE generic sentence that could apply to any patient, you have failed.`
+      : `\nDoctor's clinical notes: "${input.treatmentNotes}"\nIMPORTANT: Interpret clinical shorthand using your expert clinical knowledge and translate into patient-friendly language. Weave these specific clinical details throughout EVERY scene of the video — not just one section.`
     : "";
 
   const statusContext = input.patientStatus
@@ -897,7 +967,7 @@ function buildPremiumUserMessage(input: ScriptGenerationInput): string {
     : "";
 
   const concernsContext = input.concerns
-    ? `\nPatient concerns: ${input.concerns} — address these directly in deep dive, treatment, or aftercare sections.`
+    ? `\nPatient concerns: ${input.concerns} — these concerns should be woven naturally throughout the ENTIRE video, not just addressed in one section. The patient should feel like every scene was written with their specific worries in mind.`
     : "";
 
   const specialtyLine = isDental
@@ -905,16 +975,20 @@ function buildPremiumUserMessage(input: ScriptGenerationInput): string {
     : "Generate a premium in-depth video script for this orthodontic patient:";
 
   const journeyHint = isDental
-    ? "The journey scene should walk through visits, healing phases, or timeline — whatever fits this treatment (single-visit vs multi-visit)."
-    : "The journey scene should provide a realistic month-by-month timeline.";
+    ? "The journey scene bullets MUST be specific visit/phase milestones for this treatment (e.g. 'Visit 1: Preparation', '2-week wait: Lab work', 'Visit 2: Placement'). NOT generic months."
+    : "The journey scene bullets MUST be specific treatment phases with realistic timeframes for this patient's case (e.g. 'Months 1-2: Leveling', 'Months 3-5: Space closure'). NOT generic 'Month 1, Month 3, Month 6'.";
 
   const aftercareHint = isDental
-    ? "The whatToExpect scene should cover recovery, home care, diet, sensitivity, when to call the office, and long-term maintenance."
-    : "The whatToExpect scene should cover retainers, care instructions, and maintenance.";
+    ? "The whatToExpect scene should cover recovery, home care, diet, sensitivity, when to call the office, and long-term maintenance — referencing any specific aftercare discussed in the consultation."
+    : "The whatToExpect scene should cover retainers, care instructions, and maintenance — referencing any specific compliance instructions from the consultation.";
 
   const durationHint = isFmr
     ? "Total spoken narration should target roughly 3 to 3.5 minutes (about 180-210 seconds across all scenes). Each scene should feel substantial."
-    : "Total spoken narration should target roughly 2 to 2.5 minutes (about 120-150 seconds across all scenes). This is the standard premium length for every treatment — not a short teaser.";
+    : "Total spoken narration MUST be 110-140 seconds (under 2.5 minutes). This is a TIGHT, PUNCHY video — not a lecture. Every word counts. If a sentence doesn't add something patient-specific or essential, cut it.";
+
+  const financialHint = hasScribeTranscript
+    ? "If the transcript includes ANY financial discussion (cost, insurance, payment plans, financing), you MUST include those specific details in the CTA scene. Patients need to see the exact numbers they discussed."
+    : "";
 
   return `${specialtyLine}
 
@@ -924,14 +998,29 @@ Clinic: ${input.clinicName}
 Diagnosis: ${input.diagnosis}
 Recommended treatment: ${input.treatment}${notesContext}${statusContext}${goalContext}${concernsContext}
 
-Remember:
-- Use "${firstName}" naturally 3-4 times throughout.
-- Reference "${spokenDoctorName(input.doctorName)}" and "${input.clinicName}" to build trust (always say "Dr." before the doctor's name in narration).
-- The deepDive scene should explain the anatomical/biological WHY behind the condition.
+PERSONALIZATION REQUIREMENTS — weave in PERSONAL LIFE, not just clinical facts:
+- INTRO: Reference why they came in or a personal detail (their sister, their wedding, their pain last night). One sentence, make it land.
+- PROBLEM: Brief clinical summary + tie it to THEIR experience ("that overlap you notice in photos", "the pain that kept you up"). Don't over-explain.
+- DEEP DIVE: Address their #1 concern or question from the conversation. Keep it concise — answer it, reassure them, move on.
+- TREATMENT: Why THIS approach for THEM specifically (1-2 sentences). Don't list every step — hit the highlights.
+- JOURNEY: Use the doctor's actual timeline. If there's a life deadline (wedding, etc.), reference it as a milestone.
+- OUTCOME: Their specific dream — wedding photos, looking like their sister, eating without pain, sleeping through the night. Make it vivid in 1-2 sentences.
+- WHAT TO EXPECT: Quick practical tips. Reference their specific worries (pain threshold, food restrictions, etc.).
+- CTA: Specific next step + key financial number (out-of-pocket amount, monthly payment). One confident close.
+${financialHint}
+
+GOLDEN RULE: Write like a doctor who KNOWS this person — casually reference their life, their stories, their relationships. Not clinical over-detail. Personal warmth + professional confidence.
+
+Additional rules:
+- Use "${firstName}" naturally 3-4 times throughout (not every scene — just where it feels natural)
+- Reference "${spokenDoctorName(input.doctorName)}" and "${input.clinicName}" to build trust
 - ${journeyHint}
 - ${aftercareHint}
 - ${durationHint}
-- Stay within the word limits for each scene in the schema.
+- Sound like a doctor who knows the patient personally — warm, casual, confident
+- Be CONCISE. If you can say it in 8 words, don't use 15. Cut filler words ruthlessly.
+- NEVER repeat the same idea across scenes
+- Stay WITHIN the word limits — these are hard limits, not suggestions
 - Return ONLY the JSON object.`;
 }
 
@@ -963,14 +1052,14 @@ function validateAndEnforcePremiumScript(
         cta: { min: 8, max: 60 },
       }
     : {
-        intro: { min: 10, max: 25 },
-        problem: { min: 25, max: 45 },
-        deepDive: { min: 30, max: 50 },
-        treatment: { min: 30, max: 55 },
-        journey: { min: 25, max: 45 },
-        outcome: { min: 20, max: 40 },
-        whatToExpect: { min: 20, max: 40 },
-        cta: { min: 10, max: 25 },
+        intro: { min: 5, max: 40 },
+        problem: { min: 10, max: 80 },
+        deepDive: { min: 10, max: 80 },
+        treatment: { min: 10, max: 85 },
+        journey: { min: 10, max: 75 },
+        outcome: { min: 10, max: 65 },
+        whatToExpect: { min: 10, max: 65 },
+        cta: { min: 5, max: 50 },
       };
 
   const sceneKeys = [
@@ -1000,7 +1089,7 @@ function validateAndEnforcePremiumScript(
     totalDuration += scene.durationSeconds;
   }
 
-  // Global cap: standard premium ~2–2.5 min narration; FMR flagship ~3–3.5 min.
+  // Global cap: ~3 min for standard premium, ~3.5 min for FMR.
   const MAX_TOTAL_SECONDS = isFmr ? 210 : 150;
   if (totalDuration > MAX_TOTAL_SECONDS) {
     const scaleFactor = MAX_TOTAL_SECONDS / totalDuration;
@@ -1012,6 +1101,40 @@ function validateAndEnforcePremiumScript(
     }
     totalDuration = adjustedTotal;
     console.log(`[script-generator] Scaled premium script from ${Math.round(totalDuration / scaleFactor)}s to ${totalDuration}s (cap: ${MAX_TOTAL_SECONDS}s)`);
+  }
+
+  // Deduplication: remove sentences that appear in more than one scene.
+  // This catches template overlap where outcome and whatToExpect share recovery lines.
+  const allSentences = new Map<string, string>(); // normalized sentence → first scene key
+  for (const key of sceneKeys) {
+    const scene = script.scenes[key] as PremiumSceneBlock;
+    // Split into sentences (avoid splitting on Dr., Mr., etc.)
+    const sentences = scene.narration.match(/[^.!?]+(?:[.!?]+|$)/g) || [];
+    const kept: string[] = [];
+    for (const raw of sentences) {
+      const s = raw.trim();
+      if (!s) continue;
+      // Normalize: lowercase, strip extra spaces for comparison
+      const norm = s.toLowerCase().replace(/\s+/g, " ").trim();
+      if (norm.length < 15) { kept.push(s); continue; } // skip very short fragments
+      if (allSentences.has(norm)) {
+        // Duplicate found — skip it in this scene
+        console.log(`[script-generator] Removed duplicate sentence from "${key}" (first in "${allSentences.get(norm)}"): "${s.slice(0, 60)}..."`);
+        continue;
+      }
+      allSentences.set(norm, key);
+      kept.push(s);
+    }
+    scene.narration = kept.join(" ").trim();
+    // Recalculate duration after dedup
+    const estimated = estimatePremiumDuration(scene.narration);
+    scene.durationSeconds = Math.ceil(estimated);
+  }
+
+  // Recalculate total after dedup
+  totalDuration = 0;
+  for (const key of sceneKeys) {
+    totalDuration += (script.scenes[key] as PremiumSceneBlock).durationSeconds;
   }
 
   script.totalDurationSeconds = totalDuration;
@@ -1062,8 +1185,8 @@ export async function generatePremiumScript(
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 3072,
-        temperature: 0.3,
+        max_tokens: 4096,
+        temperature: 0.4,
         system: systemPrompt,
         messages: [{ role: "user", content: userMessage }],
       }),
@@ -1577,8 +1700,21 @@ function composedToPremiumScript(
     };
   }
 
-  // --- treatment ← process ---
-  const treatment = sectionToScene(scenes.process);
+  // --- treatment ← process (if empty, synthesize from knowledge base) ---
+  let treatment: { narration: string; durationSeconds: number; heading: string; bullets: string[] };
+  if (scenes.process.text.trim()) {
+    treatment = sectionToScene(scenes.process);
+  } else {
+    const treatmentText = knowledge
+      ? `${knowledge.procedureSteps.slice(0, 3).join(". ")}. ${spokenDoctorName(input.doctorName)} and the team will guide you through every step.`
+      : `The procedure is straightforward, and ${spokenDoctorName(input.doctorName)} will make sure you are comfortable throughout. The team at ${input.clinicName} is here to support you.`;
+    treatment = {
+      narration: treatmentText,
+      durationSeconds: estimateDuration(treatmentText),
+      heading: scenes.process.heading || "Your Treatment",
+      bullets: knowledge ? knowledge.procedureSteps.slice(0, 3) : [],
+    };
+  }
 
   // --- journey ← experience (or synthesize from knowledge base) ---
   let journey: { narration: string; durationSeconds: number; heading: string; bullets: string[] };

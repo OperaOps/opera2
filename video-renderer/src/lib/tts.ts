@@ -97,11 +97,19 @@ const WORDS_PER_MINUTE = 150;
 /** Pause duration in seconds inserted between scenes. */
 const PAUSE_SECONDS = 0.5;
 
-/** Maximum characters per single API request before chunking. */
-const MAX_CHARS_PER_REQUEST = 5000;
+/** Maximum characters per single API request before chunking.
+ * ElevenLabs supports up to ~10000 chars. Premium 8-scene scripts are typically
+ * 3000-6000 chars. Keep this high to avoid chunking (which can cause audio glitches
+ * at chunk boundaries). */
+const MAX_CHARS_PER_REQUEST = 10000;
 
-/** Pause marker inserted between scenes in the narration text. */
-const PAUSE_MARKER = ". ";
+/**
+ * Pause marker between scenes. A single space lets ElevenLabs treat
+ * consecutive sentences naturally — the period at the end of each scene
+ * already produces a sentence-ending pause in speech. Ellipsis ("...")
+ * causes unnatural trailing-off so we avoid it.
+ */
+const PAUSE_MARKER = " ";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -157,7 +165,11 @@ export function buildNarrationText(scenes: GeneratedScript["scenes"]): string {
   ];
 
   return sceneOrder
-    .map((key) => scenes[key].narration.trim())
+    .map((key) => {
+      let text = scenes[key].narration.trim();
+      if (text && !/[.!?]$/.test(text)) text += ".";
+      return text;
+    })
     .filter(Boolean)
     .join(PAUSE_MARKER);
 }
@@ -184,11 +196,42 @@ function estimateDurationFromText(text: string): number {
 /**
  * Splits text into chunks at sentence boundaries, each under the
  * character limit for a single API call.
+ *
+ * Uses a smarter split that avoids breaking on abbreviations like "Dr.",
+ * "e.g.", "3.5mm", or "U.S." — only splits on sentence-ending punctuation
+ * followed by a space and an uppercase letter (or end of string).
  */
 function chunkText(text: string, maxChars: number): string[] {
   if (text.length <= maxChars) return [text];
 
-  const sentences = text.match(/[^.!?]+[.!?]+\s*/g) || [text];
+  // Split on sentence boundaries: period/question/exclamation followed by
+  // whitespace and an uppercase letter (start of new sentence).
+  // Keeps the punctuation + space with the preceding sentence.
+  const sentences: string[] = [];
+  let remaining = text;
+
+  // Match: sentence-ending punctuation followed by space + uppercase letter,
+  // but NOT after common abbreviations (Dr., Mr., Mrs., Ms., St., vs., etc.)
+  const sentenceEndRegex = /(?<!Dr|Mr|Mrs|Ms|St|vs|Jr|Sr|Prof|Rev|Gen|Gov|Sgt|Lt|Col|Cmdr|Capt|Maj|e\.g|i\.e|etc|approx)([.!?]["')]*)\s+(?=[A-Z])/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = sentenceEndRegex.exec(remaining)) !== null) {
+    const endPos = match.index + match[1].length;
+    sentences.push(remaining.slice(lastIndex, endPos + 1));
+    // Skip whitespace after the split
+    lastIndex = match.index + match[0].length - 1;
+    // The lookahead doesn't consume the uppercase letter, so adjust
+    lastIndex = endPos + 1;
+    while (lastIndex < remaining.length && remaining[lastIndex] === ' ') lastIndex++;
+  }
+
+  if (lastIndex < remaining.length) {
+    sentences.push(remaining.slice(lastIndex));
+  }
+
+  if (sentences.length === 0) return [text];
+
   const chunks: string[] = [];
   let current = "";
 
@@ -197,7 +240,7 @@ function chunkText(text: string, maxChars: number): string[] {
       chunks.push(current.trim());
       current = "";
     }
-    current += sentence;
+    current += (current ? " " : "") + sentence.trim();
   }
 
   if (current.trim().length > 0) {
@@ -205,6 +248,43 @@ function chunkText(text: string, maxChars: number): string[] {
   }
 
   return chunks;
+}
+
+// ---------------------------------------------------------------------------
+// TTS text sanitization — prevent audio glitches
+// ---------------------------------------------------------------------------
+
+function sanitizeForTTS(text: string): string {
+  return text
+    // "0.3mm" → "point three millimeters"
+    .replace(/(\d+)\.(\d+)\s*mm/g, (_, a, b) => {
+      const whole = a === "0" ? "" : `${a} and `;
+      return `${whole}point ${numberWord(b)} millimeters`;
+    })
+    // "0.3-0.5mm" → "point three to point five millimeters"
+    .replace(/(\d+)\.(\d+)\s*-\s*(\d+)\.(\d+)\s*mm/g, (_, a, b, c, d) => {
+      const left = a === "0" ? `point ${numberWord(b)}` : `${a} point ${numberWord(b)}`;
+      const right = c === "0" ? `point ${numberWord(d)}` : `${c} point ${numberWord(d)}`;
+      return `${left} to ${right} millimeters`;
+    })
+    // "#8" → "tooth number eight" (dental tooth numbers)
+    .replace(/#(\d{1,2})\b/g, (_, n) => `tooth number ${n}`)
+    // "A1C 6.8" → "A1C of six point eight"
+    .replace(/A1C\s+(\d+)\.(\d+)/g, (_, a, b) => `A1C of ${a} point ${b}`)
+    // "8.9%" → "eight point nine percent"
+    .replace(/(\d+)\.(\d+)%/g, (_, a, b) => `${a} point ${b} percent`)
+    // "$5,200" → "five thousand two hundred dollars" — leave as-is, TTS handles currency well
+    // Remove any remaining problematic patterns
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function numberWord(d: string): string {
+  const words: Record<string, string> = {
+    "0": "zero", "1": "one", "2": "two", "3": "three", "4": "four",
+    "5": "five", "6": "six", "7": "seven", "8": "eight", "9": "nine",
+  };
+  return d.split("").map(c => words[c] || c).join(" ");
 }
 
 // ---------------------------------------------------------------------------
@@ -366,6 +446,9 @@ export async function generateTTS(
     );
   }
 
+  // Sanitize text for TTS — convert patterns that cause audio glitches
+  text = sanitizeForTTS(text);
+
   const effectiveVoiceId = voiceId || DEFAULT_VOICE_ID;
   const isPremiumVoice = effectiveVoiceId === PREMIUM_VOICE_ID;
   const voiceSettingsOverride = isPremiumVoice
@@ -397,7 +480,7 @@ export async function generateTTS(
       const probed = await probeAudioFileDurationSeconds(outputPath);
       const combined =
         Math.max(lastEndTime, probed > 0 ? probed : 0, estimateDurationFromText(text)) +
-        0.35;
+        1.0;
 
       return {
         filePath: outputPath,
@@ -532,7 +615,12 @@ export function buildPremiumNarrationText(
   ];
 
   return sceneOrder
-    .map((key) => scenes[key].narration.trim())
+    .map((key) => {
+      let text = scenes[key].narration.trim();
+      // Ensure every scene ends with sentence-ending punctuation
+      if (text && !/[.!?]$/.test(text)) text += ".";
+      return text;
+    })
     .filter(Boolean)
     .join(PAUSE_MARKER);
 }

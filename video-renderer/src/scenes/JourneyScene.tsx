@@ -29,6 +29,16 @@ const DEFAULT_MILESTONES = [
   "Month 12",
 ];
 
+function shortenMilestone(label: string, total: number): string {
+  const colonIdx = label.indexOf(":");
+  if (colonIdx > 0 && colonIdx < 30) return label.slice(0, colonIdx).trim();
+  const dashIdx = label.indexOf(" — ");
+  if (dashIdx > 0 && dashIdx < 30) return label.slice(0, dashIdx).trim();
+  const maxLen = total <= 3 ? 30 : total <= 5 ? 24 : 18;
+  if (label.length > maxLen + 2) return label.slice(0, maxLen).trim() + "…";
+  return label;
+}
+
 export const JourneyScene: React.FC<{
   heading: string;
   bullets?: string[];
@@ -92,10 +102,12 @@ export const JourneyScene: React.FC<{
     [0.5, 0.9]
   );
 
-  // Timeline layout
-  const TIMELINE_LEFT = 100;
-  const TIMELINE_RIGHT = 1820;
-  const TIMELINE_Y = 620;
+  // Timeline layout — generous side margins so edge labels never clip.
+  // Edge labels are also anchored start/end (below) so they can never run
+  // off the canvas regardless of how long the milestone text is.
+  const TIMELINE_LEFT = 210;
+  const TIMELINE_RIGHT = 1710;
+  const TIMELINE_Y = 610;
   const totalWidth = TIMELINE_RIGHT - TIMELINE_LEFT;
 
   const hasFmrJourney = !!(isFmr && hasVideoClips);
@@ -225,7 +237,7 @@ export const JourneyScene: React.FC<{
                 position: "absolute",
                 inset: 0,
                 background:
-                  "linear-gradient(105deg, transparent 0%, transparent 42%, rgba(0,0,0,0.55) 78%, rgba(0,0,0,0.88) 100%)",
+                  "linear-gradient(105deg, transparent 0%, transparent 50%, rgba(255,255,255,0.6) 80%, rgba(255,255,255,0.85) 100%)",
                 pointerEvents: "none",
               }}
             />
@@ -239,8 +251,8 @@ export const JourneyScene: React.FC<{
               justifyContent: "center",
               alignItems: "stretch",
               minWidth: 0,
-              paddingLeft: 28,
-              paddingRight: 8,
+              paddingLeft: 24,
+              paddingRight: 16,
             }}
           >
             <PremiumJourneyTextPanel
@@ -262,7 +274,7 @@ export const JourneyScene: React.FC<{
                     height: 10,
                     borderRadius: 5,
                     background: BADGE_COLOR,
-                    boxShadow: `0 0 12px ${BADGE_COLOR}80`,
+                    boxShadow: `0 0 6px ${BADGE_COLOR}40`,
                   }}
                 />
                 <span
@@ -295,7 +307,7 @@ export const JourneyScene: React.FC<{
           display: "flex",
           flexDirection: "column",
           opacity: fadeOut,
-          padding: "90px 80px 120px",
+          padding: "90px 80px 60px",
         }}
       >
         <div
@@ -326,7 +338,7 @@ export const JourneyScene: React.FC<{
                     height: 10,
                     borderRadius: 5,
                     background: BADGE_COLOR,
-                    boxShadow: `0 0 12px ${BADGE_COLOR}80`,
+                    boxShadow: `0 0 6px ${BADGE_COLOR}40`,
                   }}
                 />
                 <span
@@ -366,7 +378,7 @@ export const JourneyScene: React.FC<{
                     height: 10,
                     borderRadius: 5,
                     background: BADGE_COLOR,
-                    boxShadow: `0 0 12px ${BADGE_COLOR}80`,
+                    boxShadow: `0 0 6px ${BADGE_COLOR}40`,
                   }}
                 />
                 <span
@@ -405,14 +417,14 @@ export const JourneyScene: React.FC<{
           }}
         >
           <svg
-            viewBox={`0 540 1920 200`}
-            style={{ width: "100%", height: 200 }}
+            viewBox={`0 520 1920 260`}
+            style={{ width: "100%", height: 240, overflow: "visible" }}
           >
             <defs>
               <linearGradient id="journeyTrackGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="rgba(255,255,255,0.06)" />
-                <stop offset="50%" stopColor="rgba(255,255,255,0.1)" />
-                <stop offset="100%" stopColor="rgba(255,255,255,0.06)" />
+                <stop offset="0%" stopColor="#e5e7eb" />
+                <stop offset="50%" stopColor="#d1d5db" />
+                <stop offset="100%" stopColor="#e5e7eb" />
               </linearGradient>
               <linearGradient id="journeyProgressGrad" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor={accentColor} />
@@ -469,6 +481,11 @@ export const JourneyScene: React.FC<{
             {milestones.map((label, i) => {
               const fraction = i / (milestones.length - 1);
               const cx = TIMELINE_LEFT + totalWidth * fraction;
+              // First/last labels anchor inward so they grow toward the center
+              // and can never clip off the left/right edge of the canvas.
+              const isFirst = i === 0;
+              const isLast = i === milestones.length - 1;
+              const labelAnchor = isFirst ? "start" : isLast ? "end" : "middle";
               const isLit = timelineProgress >= fraction;
               const justLit = timelineProgress >= fraction && timelineProgress < fraction + 0.08;
 
@@ -487,8 +504,8 @@ export const JourneyScene: React.FC<{
                     cx={cx}
                     cy={TIMELINE_Y}
                     r={14}
-                    fill={isLit ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.3)"}
-                    stroke={isLit ? BADGE_COLOR : "rgba(255,255,255,0.15)"}
+                    fill={isLit ? "#ffffff" : "#f3f4f6"}
+                    stroke={isLit ? BADGE_COLOR : "#d1d5db"}
                     strokeWidth={isLit ? 2 : 1}
                   />
 
@@ -497,7 +514,7 @@ export const JourneyScene: React.FC<{
                     cx={cx}
                     cy={TIMELINE_Y}
                     r={5}
-                    fill={isLit ? BADGE_COLOR : "rgba(255,255,255,0.2)"}
+                    fill={isLit ? BADGE_COLOR : "#d1d5db"}
                     opacity={isLit ? 1 : 0.6}
                   />
 
@@ -518,7 +535,7 @@ export const JourneyScene: React.FC<{
                     <path
                       d={`M${cx - 4},${TIMELINE_Y} L${cx - 1},${TIMELINE_Y + 3} L${cx + 4},${TIMELINE_Y - 3}`}
                       fill="none"
-                      stroke="white"
+                      stroke={BADGE_COLOR}
                       strokeWidth={1.5}
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -530,14 +547,14 @@ export const JourneyScene: React.FC<{
                   <text
                     x={cx}
                     y={TIMELINE_Y + 36}
-                    textAnchor="middle"
+                    textAnchor={labelAnchor}
                     fill={isLit ? COLORS.textPrimary : COLORS.textMuted}
-                    fontSize={16}
+                    fontSize={milestones.length <= 4 ? 16 : 14}
                     fontFamily="system-ui, sans-serif"
                     fontWeight={isLit ? 500 : 300}
                     letterSpacing="0.02em"
                   >
-                    {label}
+                    {shortenMilestone(label, milestones.length)}
                   </text>
                 </g>
               );

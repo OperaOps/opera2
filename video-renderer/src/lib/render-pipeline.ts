@@ -792,7 +792,8 @@ export async function renderPatientVideo(
       jpegQuality: 80,
       scale: renderScale,
       crf,
-      framesPerLambda: 120,
+      // Lower = more Lambda workers in parallel → faster wall-clock render.
+      framesPerLambda: 30,
       timeoutInMilliseconds: 240000,
       overwrite: true,
       outName: outputFileName,
@@ -857,7 +858,7 @@ export async function renderPatientVideo(
           jpegQuality: 80,
           scale: renderScale,
           crf,
-          framesPerLambda: 150,
+          framesPerLambda: 30,
           timeoutInMilliseconds: 240000,
           overwrite: true,
           outName: outputFileName,

@@ -43,21 +43,21 @@ export const ProgressDots: React.FC<{
                 background: isActive
                   ? accentColor
                   : isPast
-                    ? `${accentColor}80`
-                    : "rgba(255,255,255,0.15)",
+                    ? `${accentColor}60`
+                    : "#d1d5db",
                 transition: "width 0.3s ease, background 0.3s ease",
                 boxShadow: isActive
-                  ? `0 0 12px ${accentColor}60`
+                  ? `0 0 8px ${accentColor}40`
                   : "none",
               }}
             />
             {isActive && (
               <span
                 style={{
-                  color: COLORS.textMuted,
+                  color: COLORS.textSecondary,
                   fontSize: 12,
                   fontFamily: "system-ui, sans-serif",
-                  fontWeight: 400,
+                  fontWeight: 500,
                   marginLeft: 4,
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",

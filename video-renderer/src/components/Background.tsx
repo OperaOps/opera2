@@ -4,8 +4,8 @@ import { COLORS } from "../lib/colors";
 
 export const Background: React.FC<{
   accentColor?: string;
-  variant?: "default" | "warm" | "cool" | "journey";
-}> = ({ accentColor = COLORS.purple, variant = "default" }) => {
+  variant?: "default" | "warm" | "cool" | "journey" | "light";
+}> = ({ accentColor = COLORS.purple, variant = "light" }) => {
   const { width, height } = useVideoConfig();
 
   return (
@@ -19,42 +19,43 @@ export const Background: React.FC<{
         overflow: "hidden",
       }}
     >
-      {/* Base gradient */}
+      {/* Clean white base */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background: `linear-gradient(160deg, ${COLORS.bgDark} 0%, ${COLORS.bgMid} 40%, ${COLORS.bgCard} 100%)`,
+          background: COLORS.bgPrimary,
         }}
       />
 
-      {/* Static accent glow */}
+      {/* Very subtle accent radial — barely visible warmth */}
       <div
         style={{
           position: "absolute",
-          left: "30%",
-          top: "25%",
-          width: 500,
-          height: 500,
+          left: "40%",
+          top: "30%",
+          width: 800,
+          height: 800,
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${accentColor}14 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${accentColor}06 0%, transparent 70%)`,
           transform: "translate(-50%, -50%)",
         }}
       />
 
-      {/* Vignette */}
+      {/* Subtle bottom-right warmth */}
       <div
         style={{
           position: "absolute",
-          inset: 0,
-          background:
-            variant === "journey"
-              ? "radial-gradient(ellipse at 70% 30%, transparent 35%, rgba(0,0,0,0.55) 100%)"
-              : "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%)",
+          right: "10%",
+          bottom: "10%",
+          width: 500,
+          height: 500,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${accentColor}04 0%, transparent 70%)`,
         }}
       />
 
-      {/* Top subtle line accent */}
+      {/* Top accent line */}
       <div
         style={{
           position: "absolute",
@@ -62,7 +63,7 @@ export const Background: React.FC<{
           left: 0,
           right: 0,
           height: 2,
-          background: `linear-gradient(90deg, transparent, ${accentColor}33, transparent)`,
+          background: `linear-gradient(90deg, transparent, ${accentColor}20, transparent)`,
         }}
       />
     </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
+import { useCurrentFrame, interpolate, spring, useVideoConfig, Img, staticFile } from "remotion";
 import { COLORS } from "../lib/colors";
 
 export const ClinicBranding: React.FC<{
@@ -7,11 +7,13 @@ export const ClinicBranding: React.FC<{
   doctorName: string;
   accentColor?: string;
   variant?: "full" | "minimal";
+  logoUrl?: string;
 }> = ({
   clinicName,
   doctorName,
   accentColor = COLORS.purple,
   variant = "full",
+  logoUrl,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -33,6 +35,10 @@ export const ClinicBranding: React.FC<{
     extrapolateRight: "clamp",
   });
 
+  const logoSrc = logoUrl
+    ? (logoUrl.startsWith("http") ? logoUrl : staticFile(logoUrl))
+    : null;
+
   if (variant === "minimal") {
     return (
       <div
@@ -46,32 +52,44 @@ export const ClinicBranding: React.FC<{
           zIndex: 50,
         }}
       >
-        <div
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 8,
-            background: `linear-gradient(135deg, ${accentColor}, ${COLORS.purpleLight})`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            opacity: nameOpacity,
-          }}
-        >
-          <span
+        {logoSrc ? (
+          <Img
+            src={logoSrc}
             style={{
-              color: "white",
-              fontSize: 16,
-              fontWeight: 700,
-              fontFamily: "system-ui, sans-serif",
+              height: 36,
+              width: "auto",
+              objectFit: "contain",
+              opacity: nameOpacity,
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 8,
+              background: `linear-gradient(135deg, ${accentColor}, ${COLORS.purpleLight})`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: nameOpacity,
             }}
           >
-            {clinicName.charAt(0)}
-          </span>
-        </div>
+            <span
+              style={{
+                color: "white",
+                fontSize: 16,
+                fontWeight: 700,
+                fontFamily: "system-ui, sans-serif",
+              }}
+            >
+              {clinicName.charAt(0)}
+            </span>
+          </div>
+        )}
         <span
           style={{
-            color: COLORS.textMuted,
+            color: COLORS.textSecondary,
             fontSize: 18,
             fontFamily: "system-ui, sans-serif",
             fontWeight: 300,
@@ -93,33 +111,44 @@ export const ClinicBranding: React.FC<{
         gap: 20,
       }}
     >
-      {/* Logo mark */}
-      <div
-        style={{
-          transform: `scale(${logoScale})`,
-          width: 80,
-          height: 80,
-          borderRadius: 20,
-          background: `linear-gradient(135deg, ${accentColor}, ${COLORS.purpleLight})`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: `0 8px 40px ${accentColor}40`,
-        }}
-      >
-        <span
+      {logoSrc ? (
+        <Img
+          src={logoSrc}
           style={{
-            color: "white",
-            fontSize: 36,
-            fontWeight: 700,
-            fontFamily: "system-ui, sans-serif",
+            height: 160,
+            width: "auto",
+            maxWidth: 400,
+            objectFit: "contain",
+            transform: `scale(${logoScale})`,
+          }}
+        />
+      ) : (
+        <div
+          style={{
+            transform: `scale(${logoScale})`,
+            width: 80,
+            height: 80,
+            borderRadius: 20,
+            background: `linear-gradient(135deg, ${accentColor}, ${COLORS.purpleLight})`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: `0 8px 32px ${accentColor}20`,
           }}
         >
-          {clinicName.charAt(0)}
-        </span>
-      </div>
+          <span
+            style={{
+              color: "white",
+              fontSize: 36,
+              fontWeight: 700,
+              fontFamily: "system-ui, sans-serif",
+            }}
+          >
+            {clinicName.charAt(0)}
+          </span>
+        </div>
+      )}
 
-      {/* Clinic name */}
       <div
         style={{
           opacity: nameOpacity,
@@ -142,16 +171,14 @@ export const ClinicBranding: React.FC<{
         </h1>
       </div>
 
-      {/* Divider line */}
       <div
         style={{
           width: `${lineWidth}px`,
           height: 1,
-          background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
+          background: `linear-gradient(90deg, transparent, ${accentColor}80, transparent)`,
         }}
       />
 
-      {/* Doctor name */}
       <div
         style={{
           opacity: doctorOpacity,
@@ -169,7 +196,7 @@ export const ClinicBranding: React.FC<{
           }}
         >
           A message from{" "}
-          <span style={{ color: COLORS.purpleLight, fontWeight: 400 }}>
+          <span style={{ color: COLORS.purple, fontWeight: 400 }}>
             Dr. {doctorName}
           </span>
         </p>

@@ -53,6 +53,8 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
     accentColor = "#7c3aed",
     beforePhotoUrl,
     afterPhotoUrl,
+    logoUrl,
+    phoneNumber,
   } = props;
 
   // Calculate frame durations and offsets for each scene
@@ -100,7 +102,7 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
   });
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "#050508" }}>
+    <AbsoluteFill style={{ backgroundColor: "#ffffff" }}>
       <CinematicBackdrop accentColor={accentColor} />
 
       <AbsoluteFill style={{ zIndex: 1 }}>
@@ -124,6 +126,7 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
           heading={scenes.intro.heading}
           durationFrames={introDuration}
           accentColor={accentColor}
+          logoUrl={logoUrl}
         />
       </Sequence>
 
@@ -176,6 +179,7 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
         <JourneyScene
           heading={scenes.journey.heading ?? "Your Treatment Journey"}
           bullets={scenes.journey.bullets}
+          milestones={scenes.journey.bullets}
           treatment={treatment}
           clinicName={clinicName}
           doctorName={doctorName}
@@ -226,6 +230,8 @@ export const PremiumOrthoVideo: React.FC<PremiumPatientVideoProps> = (props) => 
           heading={scenes.cta.heading}
           accentColor={accentColor}
           durationFrames={ctaDuration}
+          logoUrl={logoUrl}
+          phoneNumber={phoneNumber}
         />
       </Sequence>
 

@@ -53,12 +53,13 @@ export const Captions: React.FC<{
         style={{
           opacity,
           transform: `translateY(${slideUp}px)`,
-          background: "rgba(0, 0, 0, 0.65)",
-          
+          background: "rgba(255, 255, 255, 0.92)",
+          backdropFilter: "blur(12px)",
           borderRadius: 12,
           padding: "14px 32px",
           maxWidth: "75%",
-          border: `1px solid rgba(255,255,255,0.08)`,
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 4px 16px rgba(0, 0, 0, 0.06)",
         }}
       >
         <span

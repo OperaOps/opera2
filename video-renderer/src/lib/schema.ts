@@ -84,8 +84,8 @@ export type PatientVideoProps = z.infer<typeof PatientVideoProps>;
 export const DEFAULT_FPS = 15;
 export const VIDEO_WIDTH = 1920;
 export const VIDEO_HEIGHT = 1080;
-// 1280×720 @ 0.667 — HD quality for patient videos; Lambda handles the render load
-export const RENDER_SCALE = 0.667;
+// 1280×720 — clean integers for H.264 encoding (both divisible by 2)
+export const RENDER_SCALE = 2 / 3;
 
 // ---------------------------------------------------------------------------
 // Premium video types
@@ -96,7 +96,7 @@ export type VideoMode = "standard" | "premium";
 export interface PremiumSceneScript {
   narration: string;
   durationSeconds: number;
-  heading: string;
+  heading?: string;
   bullets?: string[];
 }
 
@@ -123,4 +123,6 @@ export type PremiumPatientVideoProps = {
   };
   beforePhotoUrl?: string;
   afterPhotoUrl?: string;
+  logoUrl?: string;
+  phoneNumber?: string;
 } & Record<string, unknown>;

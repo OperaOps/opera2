@@ -29,6 +29,10 @@ export interface RenderInput {
   parentMode?: boolean;
   /** Optional BGM public path or URL (passed through to render pipeline). */
   bgmUrl?: string;
+  logoUrl?: string;
+  phoneNumber?: string;
+  /** Pre-written script JSON — bypasses AI generation when provided. */
+  presetScript?: Record<string, unknown>;
 }
 
 export interface VideoJob {

@@ -13,6 +13,7 @@ import {
   type VideoJob,
   type RenderInput,
 } from "../_lib/job-store";
+import { recordPatientVideo, patientKey } from "../_lib/patient-library";
 import { runRenderInBackground } from "@/lib/video/render";
 
 // ---------------------------------------------------------------------------
@@ -248,6 +249,24 @@ export async function POST(request: NextRequest) {
     contentMode: input.contentMode,
   };
   await saveJob(jobId, job);
+
+  // Index this video under the patient so the "Patient videos" view can list it.
+  // Keyed by xid when the launcher supplied one, else by the patient name.
+  const xid =
+    typeof (body as Record<string, unknown>).xid === "string"
+      ? ((body as Record<string, unknown>).xid as string).trim()
+      : "";
+  const key = patientKey(xid || input.patientName);
+  if (key) {
+    recordPatientVideo({
+      jobId,
+      key,
+      xid: xid || undefined,
+      patientName: input.patientName,
+      treatment: input.treatment,
+      createdAt: job.createdAt,
+    });
+  }
 
   // Start render in background via child process
   runRenderInBackground(jobId, input);

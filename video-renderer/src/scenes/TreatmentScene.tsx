@@ -221,9 +221,9 @@ export const TreatmentScene: React.FC<{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "rgba(0,0,0,0.2)",
+                background: "#f8f9fa",
                 borderRadius: 24,
-                border: "1px solid rgba(255,255,255,0.06)",
+                border: "1px solid #e5e7eb",
                 padding: 30,
                 overflow: "visible",
               }}
@@ -263,7 +263,7 @@ export const TreatmentScene: React.FC<{
                     height: 10,
                     borderRadius: 5,
                     background: COLORS.healthyTeal,
-                    boxShadow: `0 0 12px ${COLORS.healthyTeal}80`,
+                    boxShadow: `0 0 6px ${COLORS.healthyTeal}40`,
                   }}
                 />
                 <span
@@ -302,7 +302,7 @@ export const TreatmentScene: React.FC<{
                           background:
                             i <= activeStep
                               ? accentColor
-                              : "rgba(255,255,255,0.1)",
+                              : "#e5e7eb",
                           transition: "background 0.3s ease",
                         }}
                       />
@@ -328,7 +328,7 @@ export const TreatmentScene: React.FC<{
                     height: 10,
                     borderRadius: 5,
                     background: COLORS.healthyTeal,
-                    boxShadow: `0 0 12px ${COLORS.healthyTeal}80`,
+                    boxShadow: `0 0 6px ${COLORS.healthyTeal}40`,
                   }}
                 />
                 <span
@@ -367,7 +367,7 @@ export const TreatmentScene: React.FC<{
                           background:
                             i <= activeStep
                               ? accentColor
-                              : "rgba(255,255,255,0.1)",
+                              : "#e5e7eb",
                           transition: "background 0.3s ease",
                         }}
                       />
