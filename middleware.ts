@@ -22,6 +22,7 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/api/patient-video") ||
     pathname.startsWith("/patient-video") ||
     pathname.startsWith("/greyfinch-embed") ||
+    pathname.startsWith("/greyfinch-patient-videos") ||
     pathname.startsWith("/video-prototype") ||
     pathname.startsWith("/clinic") ||
     pathname.startsWith("/patient") ||
