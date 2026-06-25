@@ -72,10 +72,10 @@ export default function DentalPracticeMatchmakerPage() {
               <p className="text-sm text-gray-400">
                 Have questions? Reach out directly at{" "}
                 <a
-                  href="mailto:ram@getopera.ai"
+                  href="mailto:opera@getopera.ai"
                   className="text-[#134e6f] font-medium hover:text-[#0e3c57] transition-colors"
                 >
-                  ram@getopera.ai
+                  opera@getopera.ai
                 </a>
               </p>
             </div>
@@ -115,8 +115,8 @@ export default function DentalPracticeMatchmakerPage() {
 
             <p className="text-xs text-gray-400 mt-6 text-center">
               Or reach out at{" "}
-              <a href="mailto:ram@getopera.ai" className="text-[#134e6f] font-medium hover:text-[#0e3c57] transition-colors">
-                ram@getopera.ai
+              <a href="mailto:opera@getopera.ai" className="text-[#134e6f] font-medium hover:text-[#0e3c57] transition-colors">
+                opera@getopera.ai
               </a>
             </p>
           </motion.div>

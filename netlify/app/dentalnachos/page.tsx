@@ -72,10 +72,10 @@ export default function DentalNachosPage() {
               <p className="text-sm text-gray-400">
                 Have questions? Reach out directly at{" "}
                 <a
-                  href="mailto:anish@getopera.ai"
+                  href="mailto:opera@getopera.ai"
                   className="text-purple-600 font-medium hover:text-purple-500 transition-colors"
                 >
-                  anish@getopera.ai
+                  opera@getopera.ai
                 </a>
               </p>
             </div>
@@ -110,8 +110,8 @@ export default function DentalNachosPage() {
             </a>
             <p className="text-xs text-gray-400 mt-3 text-center">
               Or reach out at{" "}
-              <a href="mailto:anish@getopera.ai" className="text-purple-600 font-medium hover:text-purple-500 transition-colors">
-                anish@getopera.ai
+              <a href="mailto:opera@getopera.ai" className="text-purple-600 font-medium hover:text-purple-500 transition-colors">
+                opera@getopera.ai
               </a>
             </p>
           </motion.div>
