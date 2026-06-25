@@ -11,7 +11,7 @@ const JWT_SECRET = new TextEncoder().encode(
 );
 
 // Public routes that don't need auth
-const PUBLIC_PATHS = new Set(["/landing", "/signin", "/demo", "/api/auth/login", "/dentalnachos", "/overview"]);
+const PUBLIC_PATHS = new Set(["/landing", "/signin", "/demo", "/api/auth/login", "/dentalnachos", "/dpm", "/overview"]);
 
 function isPublicPath(pathname: string): boolean {
   if (PUBLIC_PATHS.has(pathname)) return true;
@@ -32,6 +32,7 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/api/v1/") ||
     pathname.startsWith("/docs") ||
     pathname.startsWith("/dentalnachos") ||
+    pathname.startsWith("/dpm") ||
     pathname.startsWith("/overview") ||
     pathname.startsWith("/landing-v2") ||
     pathname.startsWith("/docs-v2") ||
