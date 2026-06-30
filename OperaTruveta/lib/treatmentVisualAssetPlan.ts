@@ -1825,7 +1825,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'language-access-1',
     useCaseId: 'language-access',
     sceneNumber: 1,
-    recommendedFileName: 'blood-pressure-cuff-on-arm-still.jpg',
+    recommendedFileName: 'bp-cuff-on-arm.mp4',
     assetType: 'still-image',
     closeupLevel: 'close-up',
     visualDescription:
@@ -1852,6 +1852,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Gentle push-in; Spanish callouts fade in sequentially with a soft glow to support language access.',
     personalizationOverlay:
       'Carlos, esto es lo que pasa en su cita: el brazalete aprieta el brazo un momento. Rápido y sin dolor.',
+    voiceover:
+      'Carlos, esto es lo que pasa en su cita: un brazalete aprieta su brazo un momento. Es rápido y no duele.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1859,7 +1861,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'language-access-2',
     useCaseId: 'language-access',
     sceneNumber: 2,
-    recommendedFileName: 'bp-cuff-inflating-render.mp4',
+    recommendedFileName: 'bp-cuff-inflating.mp4',
     assetType: 'short-motion-video',
     closeupLevel: 'close-up',
     visualDescription:
@@ -1886,14 +1888,52 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'The cuff gently inflates and releases as Spanish callouts fade in to narrate the brief squeeze.',
     personalizationOverlay:
       'El brazalete aprieta solo unos segundos, Carlos, y luego se suelta. Eso es todo.',
+    voiceover:
+      'El brazalete se aprieta solo unos segundos, y luego se suelta. Eso es todo — nada incómodo.',
     priority: 'medium',
+    fallbackIfMissing: 'asset-slot-only',
+  },
+  {
+    assetId: 'language-access-2b',
+    useCaseId: 'language-access',
+    sceneNumber: 2,
+    recommendedFileName: 'beating-heart.mp4',
+    assetType: 'medical-render',
+    closeupLevel: 'macro',
+    visualDescription:
+      'A realistic 3D render of a steadily beating human heart — conveying that blood pressure is the force of each heartbeat.',
+    whatPatientLearns:
+      'Blood pressure is simply the force of your heart pumping blood with each steady beat.',
+    exactImageGenerationPrompt:
+      `Hyper-realistic 3D anatomical render of a human heart beating steadily in deep navy space, realistic cardiac muscle with surface vessels and a natural moist sheen, soft teal rim light, gentle particle bokeh. ${STYLE}. Calm, steady rhythm, believable like a premium medical visualization. Mood: reassuring, steady.`,
+    exactVideoGenerationPrompt:
+      `8-second slow orbit around a realistic human heart beating two or three calm, even beats in deep navy space, soft teal rim light, gentle bokeh. ${STYLE}. Steady, reassuring rhythm; never frantic.`,
+    stockSearchTerms: [
+      'beating heart 3d render realistic',
+      'human heart anatomy animation',
+      'heart pumping medical visualization',
+      'cardiac muscle beating render',
+      'realistic heart 3d teal',
+      'heartbeat anatomical animation',
+    ],
+    overlayLabels: [
+      { text: 'Su corazón', x: 50, y: 24 },
+      { text: 'Late con fuerza', x: 60, y: 66 },
+    ],
+    animationTreatment:
+      'Slow orbit around the steadily beating heart; Spanish callouts fade in with each calm beat.',
+    personalizationOverlay:
+      'Su presión es la fuerza de su corazón, Carlos — un latido fuerte y constante.',
+    voiceover:
+      'Su presión arterial es la fuerza con la que su corazón bombea la sangre — un latido fuerte y constante.',
+    priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
   {
     assetId: 'language-access-3',
     useCaseId: 'language-access',
     sceneNumber: 3,
-    recommendedFileName: 'artery-blood-flow-general-render.png',
+    recommendedFileName: 'artery-pulse-flow.mp4',
     assetType: 'medical-render',
     closeupLevel: 'medium',
     visualDescription:
@@ -1920,6 +1960,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Continuous gentle flow with soft pulse rhythm; Spanish callouts fade in tracing the vessel and the flow.',
     personalizationOverlay:
       'Así funciona su cuerpo, Carlos: la sangre fluye por sus vasos. Es algo normal y cotidiano.',
+    voiceover:
+      'Esa sangre fluye por sus arterias con cada latido. Es algo normal y cotidiano de su cuerpo.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1927,7 +1969,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'language-access-4',
     useCaseId: 'language-access',
     sceneNumber: 4,
-    recommendedFileName: 'home-bp-monitor-setup-still.jpg',
+    recommendedFileName: 'home-bp-monitor.mp4',
     assetType: 'still-image',
     closeupLevel: 'medium',
     visualDescription:
@@ -1953,6 +1995,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     animationTreatment:
       'Gentle pan with soft light bloom; Spanish callouts fade in to reinforce that home checking is easy.',
     personalizationOverlay:
+      'En casa puede revisarla con calma, Carlos. Es fácil, cómodo, y usted tiene el control.',
+    voiceover:
       'En casa puede revisarla con calma, Carlos. Es fácil, cómodo, y usted tiene el control.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
@@ -2029,7 +2073,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'language-access-7',
     useCaseId: 'language-access',
     sceneNumber: 7,
-    recommendedFileName: 'spanish-captioned-education-render.png',
+    recommendedFileName: 'spanish-education-phone.mp4',
     assetType: 'medical-render',
     closeupLevel: 'medium',
     visualDescription:
@@ -2056,6 +2100,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Education screen assembles, the Spanish caption bar slides in, and the language toggle glows gently.',
     personalizationOverlay:
       'Toda esta información está en español, Carlos — en palabras claras, en el idioma que mejor conoce.',
+    voiceover:
+      'Y toda esta información está aquí en español — en palabras claras, en el idioma que mejor conoce.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },

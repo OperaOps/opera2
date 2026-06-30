@@ -39,6 +39,15 @@ export const medicalAssetManifest: Record<string, string> = {
   'genomics-consent-5': '/medical-assets/genomics/identifiers-fading.mp4', // original identifiers (preferred over screen)
   'genomics-consent-7': '/medical-assets/genomics/secure-data-center.mp4', // realistic data center (preferred)
   // gc-6 (de-identified into database) remains a polished slot until generated.
+
+  // ── Blood pressure follow-up (Carlos, 55 — Spanish) — real ElevenLabs clips ──
+  'language-access-1': '/medical-assets/blood-pressure/bp-cuff-on-arm.mp4',
+  'language-access-2': '/medical-assets/blood-pressure/bp-cuff-inflating.mp4',
+  'language-access-2b': '/medical-assets/blood-pressure/beating-heart.mp4',
+  'language-access-3': '/medical-assets/blood-pressure/artery-pulse-flow.mp4',
+  'language-access-4': '/medical-assets/blood-pressure/home-bp-monitor.mp4',
+  'language-access-7': '/medical-assets/blood-pressure/spanish-education-phone.mp4',
+  // la-5 (son helping) and la-6 (clinician) remain polished slots — human scenes for stock.
 };
 
 /** Returns the public path for an uploaded asset, or undefined if it's still a slot. */
