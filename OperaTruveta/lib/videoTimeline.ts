@@ -22,6 +22,10 @@ import { hasCodedScene } from '@/components/treatment-visuals/coded';
 const CLINICAL_SEGMENT_SECONDS = 10;
 const TREATMENT_SEGMENT_SECONDS = 9;
 
+/** Use cases whose treatment clips play back-to-back (procedure walkthroughs), with the
+ * personalized UI scenes after the procedure rather than interleaved. */
+const CONTIGUOUS_TREATMENT_IDS = new Set<string>(['coronary-stent']);
+
 export type VideoSegment =
   | { kind: 'ui'; key: string; caption: string; durationSec: number; label: string; scene: StoryboardScene }
   | {
@@ -67,6 +71,14 @@ export function buildVideoTimeline(u: DemoUseCase): VideoSegment[] {
 
     const segs: VideoSegment[] = [];
     if (intro) segs.push(uiSeg(intro, 0));
+
+    // Procedure walkthroughs play their clips back-to-back as one continuous sequence,
+    // with the personalized UI scenes after — so the visual procedure isn't interrupted.
+    if (CONTIGUOUS_TREATMENT_IDS.has(u.id)) {
+      treatments.forEach((t, i) => segs.push(treatmentSeg(t, i)));
+      rest.forEach((s, i) => segs.push(uiSeg(s, i + 1)));
+      return segs;
+    }
 
     const maxLen = Math.max(treatments.length, rest.length);
     for (let i = 0; i < maxLen; i++) {
