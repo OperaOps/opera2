@@ -20,8 +20,10 @@ for every new video so the format is always polished, consistent, and nothing ov
   (e.g. *where → tool → enter → inside → find → treat → calm/close*).
 - **Loop-friendly:** slow, continuous motion that starts and ends on a similar frame, so an
   8s clip can loop under a longer narration beat without a jarring cut.
-- **No baked-in text:** clips carry no on-screen words, labels, logos, or readable PHI. All
-  text is added by the app.
+- **Readable text only:** prefer no baked-in words, but where text *does* belong in the shot
+  (a day label, a device screen, a sign), keep it SHORT (1–3 words), correctly spelled, and
+  sharply legible — never long paragraphs or fake gibberish (the model garbles those). No
+  logos, no readable PHI. The narration subtitle is always added by the app on top.
 
 ## 2. Files & wiring
 
