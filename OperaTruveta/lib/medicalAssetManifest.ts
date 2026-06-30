@@ -48,6 +48,23 @@ export const medicalAssetManifest: Record<string, string> = {
   'language-access-4': '/medical-assets/blood-pressure/home-bp-monitor.mp4',
   'language-access-7': '/medical-assets/blood-pressure/spanish-education-phone.mp4',
   // la-5 (son helping) and la-6 (clinician) remain polished slots — human scenes for stock.
+
+  // ── Medication journey (Linda, 59) — real ElevenLabs-generated clips ──
+  'medication-journey-1': '/medical-assets/medication/weekly-pill-organizer.mp4',
+  'medication-journey-2': '/medical-assets/medication/taking-pill-with-water.mp4',
+  'medication-journey-3': '/medical-assets/medication/pill-dissolving-bloodstream.mp4',
+  'medication-journey-3b': '/medical-assets/medication/medication-to-heart.mp4',
+  'medication-journey-4': '/medical-assets/medication/receptor-key-lock.mp4',
+  'medication-journey-7': '/medical-assets/medication/care-team-reminder.mp4',
+  // mj-5 (symptom tracking) and mj-6 (pharmacist) remain polished slots.
+
+  // ── Clinical trial education (Maria, 61) — real clips + one coded timeline ──
+  'clinical-trial-education-1': '/medical-assets/clinical-trials/coordinator-consultation.mp4',
+  'clinical-trial-education-2': '/medical-assets/clinical-trials/informed-consent-form.mp4',
+  'clinical-trial-education-3': '/medical-assets/clinical-trials/study-visit-room.mp4',
+  'clinical-trial-education-4': '/medical-assets/clinical-trials/study-sample-monitoring.mp4',
+  'clinical-trial-education-5': '/medical-assets/clinical-trials/patient-rights-choice.mp4',
+  // cte-6 (daughter helping) remains a slot; cte-7 (timeline) is a coded in-app scene.
 };
 
 /** Returns the public path for an uploaded asset, or undefined if it's still a slot. */

@@ -141,6 +141,7 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
                 personalizationNote={segment.personalizationNote}
                 language={useCase.patient.language}
                 progress={progress}
+                durationSec={sceneSeconds(segment.caption)}
               />
             ) : segment.kind === 'clinical' ? (
               <ClinicalSceneRenderer useCase={useCase} plan={segment.plan} />

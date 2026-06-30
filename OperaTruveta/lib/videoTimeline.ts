@@ -17,6 +17,7 @@ import type {
 import { clinicalVisualsFor } from '@/lib/clinicalVisuals';
 import { treatmentAssetsForUseCase } from '@/lib/treatmentVisualAssetPlan';
 import { hasMedicalAsset } from '@/lib/medicalAssetManifest';
+import { hasCodedScene } from '@/components/treatment-visuals/coded';
 
 const CLINICAL_SEGMENT_SECONDS = 10;
 const TREATMENT_SEGMENT_SECONDS = 9;
@@ -49,8 +50,10 @@ export function treatmentScenesForUseCase(u: DemoUseCase): TreatmentAssetEntry[]
 }
 
 export function buildVideoTimeline(u: DemoUseCase): VideoSegment[] {
-  // Only real, uploaded clips play in the video — never prompt-only slots.
-  const treatments = treatmentAssetsForUseCase(u.id).filter((t) => hasMedicalAsset(t.assetId));
+  // Only real, uploaded clips (or coded in-app scenes) play — never prompt-only slots.
+  const treatments = treatmentAssetsForUseCase(u.id).filter(
+    (t) => hasMedicalAsset(t.assetId) || hasCodedScene(t.assetId),
+  );
   const uiScenes = u.storyboard.filter((s) => !isClinicalScene(s));
 
   // Primary path: interleave personalized UI scenes with the real treatment clips.

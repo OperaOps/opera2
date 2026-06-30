@@ -623,7 +623,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'clinical-trial-education-1',
     useCaseId: 'clinical-trial-education',
     sceneNumber: 1,
-    recommendedFileName: 'study-coordinator-consultation.jpg',
+    recommendedFileName: 'coordinator-consultation.mp4',
     assetType: 'stock-video',
     closeupLevel: 'medium',
     visualDescription:
@@ -650,6 +650,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Slow push-in with soft warm grade; callouts fade in sequentially as the conversation settles.',
     personalizationOverlay:
       'Your daughter is welcome to sit right beside you, Maria — every question is encouraged.',
+    voiceover:
+      'Hi Maria. Today is just about learning — nothing to decide. A study coordinator sits with you and answers anything you ask.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -657,7 +659,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'clinical-trial-education-2',
     useCaseId: 'clinical-trial-education',
     sceneNumber: 2,
-    recommendedFileName: 'informed-consent-form-closeup-still.jpg',
+    recommendedFileName: 'informed-consent-form.mp4',
     assetType: 'still-image',
     closeupLevel: 'close-up',
     visualDescription:
@@ -684,6 +686,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Subtle dolly across the page as the heading sharpens; the "Your choice, always" caption fades in early to set a reassuring tone.',
     personalizationOverlay:
       'There is no pressure, Maria — you and your daughter can take this home and decide together.',
+    voiceover:
+      "You'd be given a consent form to read at your own pace. It explains everything, in plain language, before you decide a thing.",
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -691,7 +695,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'clinical-trial-education-3',
     useCaseId: 'clinical-trial-education',
     sceneNumber: 3,
-    recommendedFileName: 'study-visit-room-still.jpg',
+    recommendedFileName: 'study-visit-room.mp4',
     assetType: 'stock-video',
     closeupLevel: 'wide',
     visualDescription:
@@ -718,6 +722,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Gentle pan with soft light bloom; captions fade in to set a calm, organized tone.',
     personalizationOverlay:
       'It is a calm, comfortable space, Maria — nothing rushed, with time for your questions.',
+    voiceover:
+      'If you took part, visits would happen in a calm, comfortable room like this — nothing rushed, with time for questions.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -725,7 +731,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'clinical-trial-education-4',
     useCaseId: 'clinical-trial-education',
     sceneNumber: 4,
-    recommendedFileName: 'study-sample-monitoring-process-render.png',
+    recommendedFileName: 'study-sample-monitoring.mp4',
     assetType: 'medical-render',
     closeupLevel: 'close-up',
     visualDescription:
@@ -752,6 +758,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Slow push-in as indicator lights pulse gently; callouts fade in to convey careful, gentle measurement.',
     personalizationOverlay:
       'The checks are simple and gentle, Maria — small steps, carefully tracked at each visit.',
+    voiceover:
+      'Taking part usually means simple, gentle checks — a small sample, a little monitoring — carefully tracked at each visit.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -759,7 +767,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'clinical-trial-education-5',
     useCaseId: 'clinical-trial-education',
     sceneNumber: 5,
-    recommendedFileName: 'patient-rights-voluntary-choice-render.png',
+    recommendedFileName: 'patient-rights-choice.mp4',
     assetType: 'medical-render',
     closeupLevel: 'medium',
     visualDescription:
@@ -786,6 +794,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Card settles in then rights icons fade in one by one; the "Always voluntary" caption holds with a soft glow.',
     personalizationOverlay:
       'This is entirely your choice, Maria — you can ask anything, and you can change your mind anytime.',
+    voiceover:
+      "And it's entirely your choice, Maria. You can ask anything, take your time, and change your mind at any point.",
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -855,6 +865,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Milestone dots illuminate sequentially left-to-right; the connecting line draws between them as each label fades in.',
     personalizationOverlay:
       'So you can plan around your daughter’s help, Maria, here is the kind of schedule a study uses.',
+    voiceover:
+      "Here's the kind of journey a study follows — a few clear steps, from your first visit through to the final results.",
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1104,7 +1116,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'medication-journey-1',
     useCaseId: 'medication-journey',
     sceneNumber: 1,
-    recommendedFileName: 'weekly-pill-organizer-still.jpg',
+    recommendedFileName: 'weekly-pill-organizer.mp4',
     assetType: 'still-image',
     closeupLevel: 'close-up',
     visualDescription:
@@ -1131,6 +1143,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Slow push-in with soft shadow lift; the "simple daily routine" caption fades in to frame the habit positively.',
     personalizationOverlay:
       'A clear routine takes the guesswork out, Linda — so your new medication just becomes part of your day.',
+    voiceover:
+      "Staying on track is easier with a simple routine, Linda. A weekly organizer lays out each day, so you always know it's done.",
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1138,7 +1152,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'medication-journey-2',
     useCaseId: 'medication-journey',
     sceneNumber: 2,
-    recommendedFileName: 'pill-being-taken-with-water-still.jpg',
+    recommendedFileName: 'taking-pill-with-water.mp4',
     assetType: 'still-image',
     closeupLevel: 'close-up',
     visualDescription:
@@ -1165,6 +1179,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Slow push-in with soft light bloom; captions fade in to frame the act as an easy daily habit.',
     personalizationOverlay:
       'It is just one small moment in your day, Linda — usually nothing more than a glass of water.',
+    voiceover:
+      'When it is time, you take it with a glass of water — a small, steady habit that does a lot of good.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1172,7 +1188,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'medication-journey-3',
     useCaseId: 'medication-journey',
     sceneNumber: 3,
-    recommendedFileName: 'medication-through-body-general-render.png',
+    recommendedFileName: 'pill-dissolving-bloodstream.mp4',
     assetType: 'medical-render',
     closeupLevel: 'wide',
     visualDescription:
@@ -1199,14 +1215,52 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'The glowing dose travels along the path with a soft trailing light; captions fade in along the journey.',
     personalizationOverlay:
       'Here is the simple, general idea, Linda — and your care team can walk you through the specifics for you.',
+    voiceover:
+      "Once you swallow it, the pill gently dissolves and is absorbed into your bloodstream — that's where its work begins.",
     priority: 'medium',
+    fallbackIfMissing: 'asset-slot-only',
+  },
+  {
+    assetId: 'medication-journey-3b',
+    useCaseId: 'medication-journey',
+    sceneNumber: 3,
+    recommendedFileName: 'medication-to-heart.mp4',
+    assetType: 'medical-render',
+    closeupLevel: 'macro',
+    visualDescription:
+      'A realistic 3D heart with the medicine reaching it through the bloodstream — showing where a cardiac medication does its work.',
+    whatPatientLearns:
+      'The medicine travels through your blood to your heart, helping it work a little easier.',
+    exactImageGenerationPrompt:
+      `Hyper-realistic 3D anatomical render of a human heart beating steadily in deep navy space, a flowing bloodstream carrying soft glowing teal medicine particles arriving and gently perfusing the muscle, soft teal rim light. ${STYLE}. Calm, steady rhythm, believable like a premium medical visualization. Mood: reassuring, steady.`,
+    exactVideoGenerationPrompt:
+      `8-second slow orbit around a realistic beating human heart as a bloodstream of soft glowing teal medicine particles arrives and gently suffuses the muscle, the beat steadying. ${STYLE}. Reassuring, steady motion; never frantic.`,
+    stockSearchTerms: [
+      'medication reaching heart render',
+      'drug in bloodstream heart 3d',
+      'cardiac medication visualization',
+      'heart perfusion animation calm',
+      'medicine to heart concept render',
+      'beating heart bloodstream teal',
+    ],
+    overlayLabels: [
+      { text: 'Your heart', x: 50, y: 24 },
+      { text: 'Working easier', x: 60, y: 66 },
+    ],
+    animationTreatment:
+      'Slow orbit around the steadily beating heart as the medicine glow suffuses it; captions fade in calmly.',
+    personalizationOverlay:
+      'This is the general idea, Linda — your medication supports your heart, gently and steadily.',
+    voiceover:
+      'It travels with your blood to your heart, helping it beat more steadily and work a little easier.',
+    priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
   {
     assetId: 'medication-journey-4',
     useCaseId: 'medication-journey',
     sceneNumber: 4,
-    recommendedFileName: 'cell-receptor-general-macro-render.png',
+    recommendedFileName: 'receptor-key-lock.mp4',
     assetType: 'medical-render',
     closeupLevel: 'macro',
     visualDescription:
@@ -1233,6 +1287,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Slow macro drift as a soft key approaches a receptor; a calm pulse expands and the caption fades in.',
     personalizationOverlay:
       'This is just the general idea, Linda — the specifics for you are best explained by your care team.',
+    voiceover:
+      'Down at the level of your cells, the medicine fits into just the right spot — like a key in a lock — to do its job.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1308,7 +1364,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'medication-journey-7',
     useCaseId: 'medication-journey',
     sceneNumber: 7,
-    recommendedFileName: 'do-not-change-without-care-team-render.png',
+    recommendedFileName: 'care-team-reminder.mp4',
     assetType: 'medical-render',
     closeupLevel: 'medium',
     visualDescription:
@@ -1335,6 +1391,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Card settles in then shield and chat icons fade in; the "Talk to your care team first" caption holds with a soft glow.',
     personalizationOverlay:
       'If anything feels off, Linda, please talk with your care team before changing anything on your own.',
+    voiceover:
+      "And you're never on your own, Linda. If anything ever feels off, talk to your care team first — never change it alone.",
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
