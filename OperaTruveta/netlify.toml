@@ -19,3 +19,11 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# The app serves under /truvetademo (basePath). Send the bare root there so
+# operatruveta.netlify.app/ opens the demo instead of a 404.
+[[redirects]]
+  from = "/"
+  to = "/truvetademo"
+  status = 302
+  force = true
