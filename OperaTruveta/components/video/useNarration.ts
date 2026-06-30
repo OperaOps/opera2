@@ -105,9 +105,12 @@ export function useNarration() {
             });
             return;
           }
-          elevenAvailable = false;
+          // Only a 503 (no key configured) means there's no point retrying ElevenLabs.
+          // Any other status is transient — fall back for THIS line but keep retrying,
+          // so a one-off hiccup never permanently downgrades to the browser voice.
+          if (res.status === 503) elevenAvailable = false;
         } catch {
-          elevenAvailable = false;
+          // Network blip — fall back for this line only, keep ElevenLabs enabled.
           if (gen !== genRef.current) return;
         }
       }
