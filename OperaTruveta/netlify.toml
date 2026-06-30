@@ -1,0 +1,21 @@
+# Netlify config for the Opera × Truveta demo, deployed as its OWN Netlify site.
+# Create a new Netlify site from the OperaOps/opera2 repo with:
+#   Base directory:   OperaTruveta
+#   Build command:    npm run build
+#   Publish directory: .next   (relative to base)
+# Then add the secret env var ELEVENLABS_API_KEY in the Netlify UI for premium narration
+# (without it, narration falls back to the browser voice — still works).
+#
+# NEXT_PUBLIC_BASE_PATH below makes the app serve under /truvetademo so the main
+# getopera.ai site can proxy /truvetademo/* straight to this deploy.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NEXT_PUBLIC_BASE_PATH = "/truvetademo"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
