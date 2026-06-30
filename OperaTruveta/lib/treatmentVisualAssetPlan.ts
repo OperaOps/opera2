@@ -971,6 +971,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Slow push-in with soft shadow lift; the "Keep it simple" caption fades in to frame the routine positively.',
     personalizationOverlay:
       'A clear organizer takes the guesswork out, Robert — especially on the days you are on your own.',
+    voiceover:
+      'First, your medications. A simple organizer lays out each day, so nothing gets missed at home.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1005,6 +1007,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Slow tracking shot following the figure; captions fade in to encourage gentle, paced movement.',
     personalizationOverlay:
       'A short, easy walk is enough to start, Robert — go at the pace that feels right for you.',
+    voiceover:
+      'Gentle movement helps you heal. A short, easy walk is plenty to start — at whatever pace feels right.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1039,6 +1043,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Calendar days populate with checkmarks left-to-right; the medication-review card slides in last with a soft settle.',
     personalizationOverlay:
       'So nothing slips on a busy week, Robert, here is the simple rhythm of check-ins ahead.',
+    voiceover:
+      "And here's the simple plan for the week ahead, Robert — so nothing slips while you're recovering at home.",
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1107,6 +1113,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Portal screen assembles, then the message button glows and chat icons fade in to convey easy access.',
     personalizationOverlay:
       'If a question comes up alone at home, Robert, your care team is just one message away.',
+    voiceover:
+      'And if a question ever comes up at home, Robert, your care team is just one message away.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1429,6 +1437,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Soft rack-focus from blur to sharp; captions fade in calmly to keep the mood low-key and routine.',
     personalizationOverlay:
       'Waiting can feel uneasy, David — so first, here is the calm, ordinary path your sample takes.',
+    voiceover:
+      "Waiting on results can feel uneasy, David — so first, here's the calm, ordinary path your sample takes.",
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1497,6 +1507,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'The carousel rotates slowly as indicator lights pulse; callouts fade in to reinforce care and precision.',
     personalizationOverlay:
       'This is the careful, methodical part, David — nothing rushed, nothing left to chance.',
+    voiceover:
+      'At the lab, precise machines do the careful work — nothing rushed, and nothing left to chance.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1531,6 +1543,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Report rows assemble top-down with placeholder bars; the "Reviewed with your team" caption fades in last to anchor on care-team guidance.',
     personalizationOverlay:
       'Numbers can look intimidating, David — so this shows the layout only, and your team walks the meaning through with you.',
+    voiceover:
+      "A result can look intimidating, David — but it's just a simple layout, and your team walks through what it means with you.",
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1669,6 +1683,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Gentle pan with soft light bloom; warm captions fade in to set a reassuring tone.',
     personalizationOverlay:
       'Your partner is welcome to come along, Amina — here is the calm space waiting for you both.',
+    voiceover:
+      'Hi Amina. Your visits happen in a calm, welcoming room like this — and your partner is always welcome to join.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1703,6 +1719,40 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Slow push-in toward the console; the screen glow gently pulses while captions fade in sequentially.',
     personalizationOverlay:
       'For your first pregnancy, Amina, here is what an ultrasound device looks like — calm and gentle, with no needles.',
+    voiceover:
+      'An ultrasound is gentle and painless — no needles. This is simply the device the team uses to check in on things.',
+    priority: 'medium',
+    fallbackIfMissing: 'asset-slot-only',
+  },
+  {
+    assetId: 'prenatal-visit-prep-2b',
+    useCaseId: 'prenatal-visit-prep',
+    sceneNumber: 2,
+    recommendedFileName: 'fetal-doppler-device.mp4',
+    assetType: 'medical-render',
+    closeupLevel: 'close-up',
+    visualDescription:
+      'A close-up of a handheld fetal doppler device on a clean clinic surface — calm and gentle, device only.',
+    whatPatientLearns:
+      'A small handheld device lets the team gently listen in during your check-up.',
+    exactImageGenerationPrompt:
+      `Photorealistic premium close-up of a handheld fetal doppler device resting on a clean clinic surface, soft lighting with teal accents, device only. ${STYLE}. Calm, gentle, reassuring; no people.`,
+    exactVideoGenerationPrompt:
+      `8-second slow push-in on a handheld fetal doppler device on a clean clinic surface, soft highlights, teal accents. ${STYLE}. Calm, gentle motion; device only.`,
+    stockSearchTerms: [
+      'fetal doppler device closeup',
+      'prenatal heartbeat monitor',
+      'handheld doppler clinic',
+      'pregnancy doppler render',
+      'obstetric doppler device',
+      'fetal monitor handheld',
+    ],
+    overlayLabels: [{ text: 'A gentle check', x: 50, y: 24 }],
+    animationTreatment: 'Slow push-in with soft highlights on the device.',
+    personalizationOverlay:
+      'It is calm and gentle, Amina — a simple, painless part of your visit.',
+    voiceover:
+      'And this small handheld device lets the team gently listen in — a calm, simple part of your check-up.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1738,6 +1788,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Milestone dots illuminate left-to-right as the connecting line draws between them; labels fade in with each dot.',
     personalizationOverlay:
       'So you and your partner can plan together, Amina, here is the friendly rhythm of prenatal visits ahead.',
+    voiceover:
+      "And here's the friendly rhythm of visits ahead, Amina — so you and your partner can plan it all together.",
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -1772,6 +1824,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Check icons fade in sequentially along the line; the "A few simple checks" caption holds with a soft glow.',
     personalizationOverlay:
       'Each visit has just a few gentle checks, Amina — quick, simple, and nothing to worry about.',
+    voiceover:
+      'Each visit has just a few quick checks — your blood pressure, your weight, a simple measurement. Nothing to worry about.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2196,6 +2250,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Step rows assemble top-down as gentle icons fade in; the "A few simple steps" caption holds with a soft glow.',
     personalizationOverlay:
       'While you are caring for your mother, Elaine, here are the prep steps laid out simply, one at a time.',
+    voiceover:
+      'The prep is the part people worry about, Elaine — so here it is, laid out simply, one clear step at a time.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2231,6 +2287,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Milestone dots illuminate left-to-right as clear-liquid icons fade in above; the connecting line draws between them.',
     personalizationOverlay:
       'Here is the simple clear-liquids rhythm, Elaine — easy to follow even on a busy caregiving day.',
+    voiceover:
+      "Here's the simple rhythm of prep day, Elaine — clear liquids on a schedule, easy to follow even on a busy day.",
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2265,6 +2323,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Gentle pan with soft light bloom; captions fade in to encourage planning clear liquids ahead.',
     personalizationOverlay:
       'A little planning helps, Elaine — stock these clear liquids ahead so prep day stays simple.',
+    voiceover:
+      "The day before, you'll stick to clear liquids — water, broth, juice, tea. A little planning ahead makes it easy.",
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2299,6 +2359,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Slow establishing push-in; the "A calm arrival" caption fades in to set a reassuring tone.',
     personalizationOverlay:
       'When you arrive, Elaine, friendly staff are there to welcome you and guide every step.',
+    voiceover:
+      'When you arrive, friendly staff are right there to welcome you and walk you through every step.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2333,6 +2395,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Gentle pan with soft light bloom; captions fade in to set a calm, safe tone.',
     personalizationOverlay:
       'It is a calm, modern room, Elaine — you simply rest while your team takes care of everything.',
+    voiceover:
+      'The procedure happens in a calm, modern room — you simply rest while your team takes care of everything.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2367,6 +2431,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Gentle pan with soft light bloom; captions fade in to convey calm post-procedure rest.',
     personalizationOverlay:
       'Afterward you rest in a calm spot, Elaine — there is no rush to leave until you feel ready.',
+    voiceover:
+      'Afterward, you relax in a quiet recovery area — no rush to leave until you feel completely ready.',
     priority: 'low',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2401,6 +2467,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Route line draws toward the clinic as the car icon arrives; the "Plan a ride home" card fades in as a key reminder.',
     personalizationOverlay:
       'Since you may need to arrange coverage for your mother, Elaine, remember to plan a ride home that day.',
+    voiceover:
+      'Just remember to arrange a ride home that day, Elaine — someone to drive you while you take it easy.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2441,6 +2509,38 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     fallbackIfMissing: 'asset-slot-only',
   },
   {
+    assetId: 'caregiver-education-1b',
+    useCaseId: 'caregiver-education',
+    sceneNumber: 1,
+    recommendedFileName: 'caregiver-organizing-papers.mp4',
+    assetType: 'medical-render',
+    closeupLevel: 'close-up',
+    visualDescription:
+      "A caregiver's hands organizing care-plan papers on a clean table — calm and capable.",
+    whatPatientLearns:
+      'Keeping the care plan organized in one place makes every day easier.',
+    exactImageGenerationPrompt:
+      `Photorealistic warm close-up of an adult's hands squaring a small stack of care-plan papers on a clean empty table, soft daylight, teal accent, hands and papers only. ${STYLE}. Calm, capable, caring; no faces; no extra objects.`,
+    exactVideoGenerationPrompt:
+      `8-second slightly overhead close-up of hands neatly aligning care-plan papers on an empty table, one calm motion, slow push-in. ${STYLE}. No extra objects appearing; warm and capable.`,
+    stockSearchTerms: [
+      'caregiver organizing papers hands',
+      'sorting documents on table',
+      'care plan paperwork hands',
+      'organizing medical papers',
+      'caregiver documents desk',
+      'hands tidying papers',
+    ],
+    overlayLabels: [{ text: 'All in one place', x: 50, y: 22 }],
+    animationTreatment: 'Hands align the papers once; slow gentle push-in.',
+    personalizationOverlay:
+      'Keeping it organized in one place makes every day easier, Nina.',
+    voiceover:
+      'Helping your father means a lot, Nina. Keeping his care plan organized in one place makes every day easier.',
+    priority: 'high',
+    fallbackIfMissing: 'asset-slot-only',
+  },
+  {
     assetId: 'caregiver-education-2',
     useCaseId: 'caregiver-education',
     sceneNumber: 2,
@@ -2471,6 +2571,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Summary card assembles row by row as icons fade in; the title caption holds with a soft glow.',
     personalizationOverlay:
       'A clear summary keeps things easy, Nina — the key points for George, all in one place.',
+    voiceover:
+      "A clear summary keeps things easy, Nina — the key points from George's visit, all in one place.",
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2505,7 +2607,41 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'List card assembles row by row as pill icons fade in; the "A current med list" caption holds with a soft glow.',
     personalizationOverlay:
       'Keeping George’s list current makes everything easier, Nina — one simple, organized place.',
+    voiceover:
+      "And keeping George's medication list current makes everything simpler — one organized place to check.",
     priority: 'medium',
+    fallbackIfMissing: 'asset-slot-only',
+  },
+  {
+    assetId: 'caregiver-education-3b',
+    useCaseId: 'caregiver-education',
+    sceneNumber: 3,
+    recommendedFileName: 'caregiver-pill-organizer.mp4',
+    assetType: 'medical-render',
+    closeupLevel: 'close-up',
+    visualDescription:
+      "A caregiver's hands filling a weekly pill organizer on a clean table.",
+    whatPatientLearns:
+      'A weekly organizer takes the guesswork out of daily medications.',
+    exactImageGenerationPrompt:
+      `Photorealistic warm close-up of an adult's hands placing pills into a clean weekly pill organizer on an empty table, soft daylight, teal accent, hands and organizer only. ${STYLE}. Calm, organized, caring; no faces; no extra objects.`,
+    exactVideoGenerationPrompt:
+      `8-second slightly overhead close-up of hands filling a weekly pill organizer on an empty table, one calm motion, slow push-in. ${STYLE}. No extra objects appearing; calm and organized.`,
+    stockSearchTerms: [
+      'filling weekly pill organizer',
+      'hands medication organizer',
+      'caregiver pill box setup',
+      'organizing pills weekly',
+      'pill planner hands',
+      'medication organizer closeup',
+    ],
+    overlayLabels: [{ text: 'Set once', x: 50, y: 22 }],
+    animationTreatment: 'Hands place pills into a compartment; slow push-in.',
+    personalizationOverlay:
+      "A weekly organizer takes the guesswork out of George's medications, Nina.",
+    voiceover:
+      "A simple weekly organizer takes the guesswork out of George's medications — set it once, and you're covered.",
+    priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
   {
@@ -2678,6 +2814,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Route line draws from home to clinic; the "Clear and manageable" caption fades in supportively.',
     personalizationOverlay:
       'Getting there is part of the plan, Tasha — the route can be mapped out simply, with no stress.',
+    voiceover:
+      'Getting there is part of the plan, Tasha — your route to the clinic can be mapped out simply, with no stress.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2712,6 +2850,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Route line draws as transit icons glide along; the "A ride can be arranged" caption fades in supportively.',
     personalizationOverlay:
       'A ride can be arranged, Tasha — transit or rideshare, whatever works best for your day.',
+    voiceover:
+      'And a ride can be arranged — transit or rideshare, whatever works best for your day.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2780,6 +2920,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Message card slides in and the call button glows gently; the supportive caption holds with a soft glow.',
     personalizationOverlay:
       'You never have to sort it out alone, Tasha — your care navigator is one call or message away.',
+    voiceover:
+      'You never have to sort it out alone, Tasha. Your care navigator is one call or message away.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2848,6 +2990,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Slow push-in with a warm grade; the "You belong here" caption fades in first to set an affirming, judgment-free tone.',
     personalizationOverlay:
       'There is nothing to feel embarrassed about, Tasha — someone is here to welcome you, every step.',
+    voiceover:
+      "And when you arrive, someone is right there to welcome you — there's nothing to feel unsure about.",
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },

@@ -65,6 +65,39 @@ export const medicalAssetManifest: Record<string, string> = {
   'clinical-trial-education-4': '/medical-assets/clinical-trials/study-sample-monitoring.mp4',
   'clinical-trial-education-5': '/medical-assets/clinical-trials/patient-rights-choice.mp4',
   // cte-6 (daughter helping) remains a slot; cte-7 (timeline) is a coded in-app scene.
+
+  // ── Colonoscopy prep (Elaine, 58) — real clips + coded prep-day timeline (pp-2) ──
+  'procedure-prep-1': '/medical-assets/colonoscopy-prep/prep-instruction-sheet.mp4',
+  'procedure-prep-3': '/medical-assets/colonoscopy-prep/clear-liquids-counter.mp4',
+  'procedure-prep-4': '/medical-assets/colonoscopy-prep/procedure-center-arrival.mp4',
+  'procedure-prep-5': '/medical-assets/colonoscopy-prep/colonoscopy-suite.mp4',
+  'procedure-prep-6': '/medical-assets/colonoscopy-prep/recovery-area.mp4',
+  'procedure-prep-7': '/medical-assets/colonoscopy-prep/ride-pickup.mp4',
+
+  // ── Post-discharge recovery (Robert, 68) — real clips + coded follow-up plan (pd-5) ──
+  'post-discharge-recovery-3': '/medical-assets/discharge/medication-review.mp4',
+  'post-discharge-recovery-4': '/medical-assets/discharge/recovery-walk.mp4',
+  'post-discharge-recovery-7': '/medical-assets/discharge/care-team-phone-support.mp4',
+
+  // ── Prenatal visit prep (Amina, 31) — real clips + coded visit timeline (pn-3) ──
+  'prenatal-visit-prep-1': '/medical-assets/prenatal/prenatal-exam-room.mp4',
+  'prenatal-visit-prep-2': '/medical-assets/prenatal/ultrasound-machine.mp4',
+  'prenatal-visit-prep-2b': '/medical-assets/prenatal/fetal-doppler-device.mp4',
+  'prenatal-visit-prep-4': '/medical-assets/prenatal/routine-prenatal-checks.mp4',
+
+  // ── Lab result (David, 43) — real clips + coded result report (lab-4) ──
+  'lab-result-explanation-1': '/medical-assets/labs/lab-sample-tube.mp4',
+  'lab-result-explanation-3': '/medical-assets/labs/lab-analyzer-processing.mp4',
+
+  // ── Care navigation (Tasha, 39) — real clips ──
+  'health-equity-transport-1': '/medical-assets/care-navigation/route-to-clinic-map.mp4',
+  'health-equity-transport-2': '/medical-assets/care-navigation/transportation-support.mp4',
+  'health-equity-transport-4': '/medical-assets/care-navigation/care-navigator-message.mp4',
+  'health-equity-transport-6': '/medical-assets/care-navigation/clinic-arrival-exterior.mp4',
+
+  // ── Caregiver education (Nina/George, 74) — real clips + coded summary/meds (cg-2, cg-3) ──
+  'caregiver-education-1b': '/medical-assets/caregiver/caregiver-organizing-papers.mp4',
+  'caregiver-education-3b': '/medical-assets/caregiver/caregiver-pill-organizer.mp4',
 };
 
 /** Returns the public path for an uploaded asset, or undefined if it's still a slot. */
