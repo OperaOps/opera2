@@ -2787,7 +2787,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'genomics-consent-1',
     useCaseId: 'genomics-consent',
     sceneNumber: 1,
-    recommendedFileName: 'genomics-saliva-specimen-closeup-still.jpg',
+    recommendedFileName: 'genomics-saliva-kit.mp4',
     assetType: 'still-image',
     closeupLevel: 'close-up',
     visualDescription:
@@ -2814,6 +2814,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Gentle push-in with a soft shadow lift; captions fade in to reassure the sample is simple to give.',
     personalizationOverlay:
       'No needles in most cases, Henry — a genomic sample is often as simple as a sealed saliva kit.',
+    voiceover:
+      'It starts simply, Henry — a small saliva sample, often collected right at home. No needles, nothing invasive at all.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2821,7 +2823,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'genomics-consent-2',
     useCaseId: 'genomics-consent',
     sceneNumber: 2,
-    recommendedFileName: 'dna-double-helix-premium-render.png',
+    recommendedFileName: 'dna-double-helix.mp4',
     assetType: 'medical-render',
     closeupLevel: 'close-up',
     visualDescription:
@@ -2848,6 +2850,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Continuous slow helix rotation with soft particle drift; captions fade in gently as the strand turns.',
     personalizationOverlay:
       'Before anything else, Henry, here is simply what genomics studies — with your privacy front and center.',
+    voiceover:
+      'Inside that sample is your DNA — the unique instructions that make you, you. Researchers study it to understand health for everyone.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2855,7 +2859,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'genomics-consent-3',
     useCaseId: 'genomics-consent',
     sceneNumber: 3,
-    recommendedFileName: 'sequencing-data-flow-render.png',
+    recommendedFileName: 'dna-sequencing-lab.mp4',
     assetType: 'medical-render',
     closeupLevel: 'medium',
     visualDescription:
@@ -2882,6 +2886,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'DNA strand dissolves into a flowing data stream toward the panel; callouts fade in along the flow.',
     personalizationOverlay:
       'Here is how it works, Henry — the DNA is read and turned into data, all handled carefully.',
+    voiceover:
+      'In the lab, specialized machines read your DNA carefully and precisely, turning it into data that scientists can learn from.',
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2889,7 +2895,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'genomics-consent-4',
     useCaseId: 'genomics-consent',
     sceneNumber: 4,
-    recommendedFileName: 'genomics-consent-form-closeup-still.jpg',
+    recommendedFileName: 'genomics-consent-form.mp4',
     assetType: 'still-image',
     closeupLevel: 'close-up',
     visualDescription:
@@ -2916,6 +2922,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Subtle dolly across the page as the heading sharpens; the "Your choice, always" caption fades in early.',
     personalizationOverlay:
       'There is no pressure, Henry — the consent is yours to read carefully and decide on, entirely your choice.',
+    voiceover:
+      'Whether you take part is entirely your choice, Henry. You decide, you can ask anything, and you can change your mind at any time.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2923,7 +2931,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'genomics-consent-5',
     useCaseId: 'genomics-consent',
     sceneNumber: 5,
-    recommendedFileName: 'personal-identifiers-fading-render.png',
+    recommendedFileName: 'identifiers-fading.mp4',
     assetType: 'medical-render',
     closeupLevel: 'medium',
     visualDescription:
@@ -2950,6 +2958,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Redacted identifier bars dissolve and fade; the "Identifiers removed" caption holds with a soft glow.',
     personalizationOverlay:
       'Your privacy comes first, Henry — your identifying details are removed before anything is used.',
+    voiceover:
+      'Before any research, your name and personal details are removed — so your information helps discovery without ever identifying you.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
@@ -2991,7 +3001,7 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     assetId: 'genomics-consent-7',
     useCaseId: 'genomics-consent',
     sceneNumber: 7,
-    recommendedFileName: 'privacy-security-shield-render.png',
+    recommendedFileName: 'secure-data-center.mp4',
     assetType: 'medical-render',
     closeupLevel: 'medium',
     visualDescription:
@@ -3018,6 +3028,8 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
       'Shield forms around the data with a soft protective ring pulse; the "Protected" caption holds with a gentle glow.',
     personalizationOverlay:
       'Strong safeguards stay in place, Henry — your data is protected, every step of the way.',
+    voiceover:
+      'And your data is kept secure and protected — contributing to research that may help patients for years to come.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },

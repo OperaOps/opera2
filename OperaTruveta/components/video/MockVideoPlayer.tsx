@@ -21,8 +21,9 @@ function sceneSeconds(text: string): number {
 export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
   const segments = buildVideoTimeline(useCase);
   const [i, setI] = useState(0);
-  const [playing, setPlaying] = useState(true);
-  const [soundOn, setSoundOn] = useState(false);
+  const [started, setStarted] = useState(false); // false → show the play thumbnail
+  const [playing, setPlaying] = useState(false);
+  const [soundOn, setSoundOn] = useState(true); // narration is on by default once started
   const [progress, setProgress] = useState(0); // 0..1 within current segment
   const [showES, setShowES] = useState(useCase.patient.language.toLowerCase().includes('span'));
   const raf = useRef<number>();
@@ -33,10 +34,11 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
   const segment = segments[i];
 
   // Stable advance ref so a narration callback never fires on a stale index.
+  // No wrap — end-of-video is handled in the scene effect (the video stops, doesn't loop).
   const advance = useCallback(() => {
     setProgress(0);
-    setI((prev) => (prev + 1) % segments.length);
-  }, [segments.length]);
+    setI((prev) => prev + 1);
+  }, []);
   const advanceRef = useRef(advance);
   advanceRef.current = advance;
 
@@ -51,12 +53,19 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
     let mounted = true;
     let done = false;
     const durMs = sceneSeconds(segment.caption) * 1000;
+    const isLast = i >= segments.length - 1;
     start.current = performance.now();
 
     const finish = () => {
       if (done || !mounted) return;
       done = true;
-      advanceRef.current();
+      if (isLast) {
+        // End of the video — stop on the last frame, never loop back.
+        setProgress(1);
+        setPlaying(false);
+      } else {
+        advanceRef.current();
+      }
     };
 
     if (soundOn) speak(segment.caption, finish);
@@ -77,18 +86,28 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
       if (raf.current) cancelAnimationFrame(raf.current);
       stop();
     };
-  }, [playing, soundOn, i, segment.caption, speak, stop]);
+  }, [playing, soundOn, i, segment.caption, segments.length, speak, stop]);
 
   const go = (dir: number) => {
     setProgress(0);
-    setI((prev) => (prev + dir + segments.length) % segments.length);
+    setI((prev) => Math.min(segments.length - 1, Math.max(0, prev + dir)));
+    setPlaying(true);
   };
 
-  const enableSound = () => {
+  // The single play affordance: thumbnail → full playback with narration, from scene one.
+  const startPlayback = () => {
+    setI(0);
     setProgress(0);
-    setI(0); // start the narrated watch cleanly from scene one
     setSoundOn(true);
+    setStarted(true);
     setPlaying(true);
+  };
+
+  const atEnd = i >= segments.length - 1 && !playing && progress >= 1;
+
+  const togglePlay = () => {
+    if (!started || atEnd) return startPlayback();
+    setPlaying((p) => !p);
   };
 
   const overall = (i + progress) / segments.length;
@@ -132,18 +151,20 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
         </AnimatePresence>
 
         {/* One clean single-line subtitle, advanced in step with the narration */}
-        <SyncedSubtitle caption={segment.caption} progress={progress} />
+        {started && <SyncedSubtitle caption={segment.caption} progress={progress} />}
 
-        {/* Tap-to-enable-sound (browsers block autoplay audio until a gesture) */}
-        {!soundOn && (
+        {/* Plain thumbnail + play button before the video has been started */}
+        {!started && (
           <button
-            onClick={enableSound}
-            className="absolute inset-0 z-30 flex items-center justify-center bg-navy-950/30 backdrop-blur-[1px] transition-colors hover:bg-navy-950/40"
-            aria-label="Play with sound"
+            onClick={startPlayback}
+            className="group absolute inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-navy-900 via-navy-950 to-black"
+            aria-label="Play video"
           >
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-sm font-semibold text-navy-900 shadow-soft-lg ring-1 ring-black/5">
-              <Volume2 className="h-4 w-4" />
-              Play with narration
+            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 shadow-soft-lg ring-1 ring-black/5 transition-transform group-hover:scale-105">
+              <Play className="h-6 w-6 translate-x-0.5 text-navy-900" />
+            </span>
+            <span className="px-6 text-center text-sm font-medium text-white/70">
+              {useCase.title}
             </span>
           </button>
         )}
@@ -178,14 +199,14 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
             <Ctrl onClick={() => go(-1)} label="Previous">
               <SkipBack className="h-4 w-4" />
             </Ctrl>
-            <Ctrl onClick={() => setPlaying((p) => !p)} label={playing ? 'Pause' : 'Play'} primary>
+            <Ctrl onClick={togglePlay} label={playing ? 'Pause' : 'Play'} primary>
               {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 translate-x-px" />}
             </Ctrl>
             <Ctrl onClick={() => go(1)} label="Next">
               <SkipForward className="h-4 w-4" />
             </Ctrl>
             <button
-              onClick={() => (soundOn ? setSoundOn(false) : enableSound())}
+              onClick={() => setSoundOn((v) => !v)}
               className="ml-2 inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-medium text-white/60 transition-colors hover:bg-white/10 hover:text-white/90"
               aria-label={soundOn ? 'Mute narration' : 'Unmute narration'}
             >

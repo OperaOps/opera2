@@ -30,7 +30,7 @@ export function KenBurnsTreatmentImage({
   );
 }
 
-/** A short clinical motion clip, autoplaying muted on loop (treatment walkthroughs etc). */
+/** A short clinical motion clip — plays once, then holds (freezes on) its last frame. */
 export function TreatmentVideoAssetPlayer({ src, poster }: { src: string; poster?: string }) {
   return (
     <video
@@ -38,7 +38,6 @@ export function TreatmentVideoAssetPlayer({ src, poster }: { src: string; poster
       poster={poster}
       autoPlay
       muted
-      loop
       playsInline
       className="absolute inset-0 h-full w-full object-cover"
     />

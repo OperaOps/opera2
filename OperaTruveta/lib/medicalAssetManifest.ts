@@ -30,6 +30,15 @@ export const medicalAssetManifest: Record<string, string> = {
   'chronic-care-followup-6': '/medical-assets/diabetes-a1c/night-shift-kitchen.mp4',
   'chronic-care-followup-7': '/medical-assets/diabetes-a1c/writing-questions-note.mp4',
   // ccf-5 (clinician reviewing results) remains a polished slot until generated.
+
+  // ── Genomics & consent (Henry, 64) — real ElevenLabs-generated clips ──
+  'genomics-consent-1': '/medical-assets/genomics/genomics-saliva-kit.mp4',
+  'genomics-consent-2': '/medical-assets/genomics/dna-double-helix.mp4',
+  'genomics-consent-3': '/medical-assets/genomics/dna-sequencing-lab.mp4', // realistic lab (preferred)
+  'genomics-consent-4': '/medical-assets/genomics/genomics-consent-form.mp4',
+  'genomics-consent-5': '/medical-assets/genomics/identifiers-fading.mp4', // original identifiers (preferred over screen)
+  'genomics-consent-7': '/medical-assets/genomics/secure-data-center.mp4', // realistic data center (preferred)
+  // gc-6 (de-identified into database) remains a polished slot until generated.
 };
 
 /** Returns the public path for an uploaded asset, or undefined if it's still a slot. */
