@@ -106,6 +106,14 @@ export const medicalAssetManifest: Record<string, string> = {
   'coronary-stent-4': '/medical-assets/coronary-stent/balloon-inflating.mp4',
   'coronary-stent-5': '/medical-assets/coronary-stent/stentplacedandshown.mp4',
   'coronary-stent-6': '/medical-assets/coronary-stent/bloodflowthrustentandzoomoutbacktoheart.mp4',
+
+  // ── LASIK (Maya, 34) — real clips, a vision-correction treatment ──
+  'lasik-1': '/medical-assets/lasik/lasik-suite.mp4',
+  'lasik-2': '/medical-assets/lasik/lasik-docking.mp4',
+  'lasik-3': '/medical-assets/lasik/lasik-eye-closeup.mp4',
+  'lasik-4': '/medical-assets/lasik/lasik-flap-creation.mp4',
+  'lasik-5': '/medical-assets/lasik/lasik-laser-reshape.mp4',
+  'lasik-6': '/medical-assets/lasik/lasik-result-eye.mp4',
 };
 
 /** Returns the public path for an uploaded asset, or undefined if it's still a slot. */

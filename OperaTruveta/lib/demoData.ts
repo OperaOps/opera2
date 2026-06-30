@@ -2566,48 +2566,47 @@ const baseUseCases: DemoUseCase[] = [
 
   // 11 ────────────────────────────────────────────────────────────────────
   {
-    id: 'health-equity-transport',
-    category: 'Health Equity',
-    title: 'Planning Your Follow-Up Visit',
-    department: 'Population Health / Care Navigation',
+    id: 'lasik',
+    category: 'Vision Correction',
+    title: 'Understanding Your LASIK Procedure',
+    department: 'Ophthalmology',
     summary:
-      'Reassures Tasha that rescheduling is okay and that her care team can help coordinate transportation and childcare-friendly timing.',
+      'Walks Maya through exactly what happens during LASIK — calmly and visually — so the idea of a laser near her eye feels far less scary.',
     accent: 'blue',
     patient: {
-      name: 'Tasha',
-      age: 39,
+      name: 'Maya',
+      age: 34,
       pronouns: 'she/her',
       language: 'English',
       healthLiteracy: 'intermediate',
-      emotionalState: 'embarrassed',
+      emotionalState: 'anxious',
       lifeContext: {
-        occupation: 'Home health aide',
-        livingSituation: 'Single parent of two young kids',
-        schedule: 'Juggles work shifts and childcare with little backup',
-        preferences: ['No judgment', 'Practical help', 'Flexible options'],
+        occupation: 'Graphic designer',
+        livingSituation: 'Lives with her partner',
+        preferences: ['Knowing what to expect', 'Plain explanations', 'Calm reassurance'],
         notes:
-          'Has missed appointments due to childcare and transportation gaps; feels embarrassed about rescheduling.',
+          'Tired of glasses and contacts and considering LASIK, but the idea of a laser near her eye makes her nervous.',
       },
       concerns: [
         {
-          quote: "I feel embarrassed every time I have to reschedule again.",
+          quote: "The thought of a laser on my eye honestly freaks me out.",
           acknowledgedAs:
-            'Normalizing that life happens and that asking for help is welcome, not a failing.',
+            'Acknowledging the fear and showing how gentle, quick, and painless the procedure really is.',
         },
         {
-          quote: "Getting there with the kids and no ride is the hard part.",
+          quote: "I just want to know what it actually feels like.",
           acknowledgedAs:
-            'Explaining that the care team can help coordinate support like transportation and timing.',
+            'Walking through each step visually so there are no surprises on the day.',
         },
       ],
       goals: [
-        'Understand that rescheduling is okay',
-        'Know the care team can help coordinate support',
-        'Feel comfortable asking for help',
+        'Understand what LASIK involves',
+        'Feel calm about the procedure',
+        'Know what to expect on the day',
       ],
       barriers: [
-        'Transportation gaps to appointments',
-        'Childcare constraints as a single parent',
+        'Fear of a laser near the eye',
+        'Unfamiliar with the steps',
       ],
       synthetic: true,
     },
@@ -2636,28 +2635,28 @@ const baseUseCases: DemoUseCase[] = [
     },
     personalizationSignals: [
       {
-        label: 'Single parent of two',
-        value: 'Childcare constraints around appointments',
+        label: 'Nervous about a laser on the eye',
+        value: 'Anxious about the procedure',
         source: 'patient-provided',
-        appliedAs: 'Emphasizes childcare-friendly timing and support.',
+        appliedAs: 'Acknowledges the fear and shows how gentle it is.',
       },
       {
-        label: 'Transportation gaps',
-        value: 'Lacks reliable transportation',
+        label: 'Wants to know what it feels like',
+        value: 'Asked what the procedure feels like',
         source: 'patient-provided',
-        appliedAs: 'Highlights that navigators can help coordinate rides.',
+        appliedAs: 'Walks through each step visually, no surprises.',
       },
       {
-        label: 'Feels embarrassed rescheduling',
-        value: 'Embarrassment around missed visits',
+        label: 'Prefers plain language',
+        value: 'Values clear, jargon-free explanations',
         source: 'patient-provided',
-        appliedAs: 'Leads with warmth and zero judgment.',
+        appliedAs: 'Keeps the narration simple and calm.',
       },
       {
-        label: 'Care navigation available',
-        value: 'Navigators can help coordinate support',
+        label: 'Considering LASIK',
+        value: 'Tired of glasses and contacts',
         source: 'journey-context',
-        appliedAs: 'Centers the offer of practical help.',
+        appliedAs: 'Frames the education around her decision.',
       },
     ],
     script: {
@@ -2814,7 +2813,7 @@ const baseUseCases: DemoUseCase[] = [
         'This is supportive care-navigation education focused on access, not clinical content. It removes shame and points Tasha toward practical help she is entitled to ask for.',
     },
     outputs: ['video', 'portal', 'sms', 'email'],
-    estimatedRuntimeSec: 81,
+    estimatedRuntimeSec: 76,
   },
 
   // 12 ────────────────────────────────────────────────────────────────────

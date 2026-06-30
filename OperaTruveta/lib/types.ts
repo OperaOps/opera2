@@ -23,7 +23,8 @@ export type Department =
   | 'Caregiver Support / Primary Care'
   | 'Population Health / Care Navigation'
   | 'Research / Genomics Education'
-  | 'Cardiology / Interventional';
+  | 'Cardiology / Interventional'
+  | 'Ophthalmology';
 
 export type UseCaseCategory =
   | 'Preventive Screening'
@@ -38,7 +39,8 @@ export type UseCaseCategory =
   | 'Caregiver Support'
   | 'Health Equity'
   | 'Consent & Privacy'
-  | 'Cardiac Procedure';
+  | 'Cardiac Procedure'
+  | 'Vision Correction';
 
 export type HealthLiteracyLevel = 'basic' | 'intermediate' | 'advanced';
 

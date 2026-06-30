@@ -24,7 +24,7 @@ const TREATMENT_SEGMENT_SECONDS = 9;
 
 /** Use cases whose treatment clips play back-to-back (procedure walkthroughs), with the
  * personalized UI scenes after the procedure rather than interleaved. */
-const CONTIGUOUS_TREATMENT_IDS = new Set<string>(['coronary-stent']);
+const CONTIGUOUS_TREATMENT_IDS = new Set<string>(['coronary-stent', 'lasik']);
 
 export type VideoSegment =
   | { kind: 'ui'; key: string; caption: string; durationSec: number; label: string; scene: StoryboardScene }
