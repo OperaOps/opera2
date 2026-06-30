@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
+import { withBasePath } from '@/lib/basePath';
 
 /**
  * Narration controller for the patient-education player.
@@ -83,7 +84,7 @@ export function useNarration() {
 
       if (elevenAvailable !== false) {
         try {
-          const res = await fetch('/api/tts', {
+          const res = await fetch(withBasePath('/api/tts'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text }),

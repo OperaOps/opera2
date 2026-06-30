@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import { withBasePath } from '@/lib/basePath';
 
 /**
  * A still clinical image with a slow Ken Burns move (gentle zoom + drift), so a single
@@ -20,7 +21,7 @@ export function KenBurnsTreatmentImage({
 }) {
   return (
     <motion.img
-      src={src}
+      src={withBasePath(src)}
       alt={alt}
       className="absolute inset-0 h-full w-full object-cover"
       style={{ transformOrigin: `${focusX}% ${focusY}%` }}
@@ -57,8 +58,8 @@ export function TreatmentVideoAssetPlayer({
   return (
     <video
       ref={ref}
-      src={src}
-      poster={poster}
+      src={withBasePath(src)}
+      poster={poster ? withBasePath(poster) : poster}
       autoPlay
       muted
       playsInline
