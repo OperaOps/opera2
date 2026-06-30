@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: #fbfcfe;
+  color: #0f172a;
+}
+
+/* Calm, premium scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(22, 37, 63, 0.15);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(22, 37, 63, 0.28);
+  background-clip: content-box;
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-xl border border-slate-200/70 rounded-2xl shadow-soft;
+  }
+  .glass-card-dark {
+    @apply bg-navy-900/80 backdrop-blur-xl border border-white/10 rounded-2xl;
+  }
+  .text-gradient-teal {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-teal-600 via-teal-500 to-navy-600;
+  }
+  .text-gradient-navy {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-navy-900 via-navy-700 to-teal-700;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium;
+  }
+  .hairline {
+    @apply border-t border-slate-200/70;
+  }
+}
+
+/* Subtle grain/noise overlay for cinematic depth (used on dark panels) */
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

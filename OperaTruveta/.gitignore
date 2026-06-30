@@ -1,0 +1,17 @@
+# dependencies
+/node_modules
+
+# next.js build output
+/.next
+/out
+
+# local env (never commit secrets)
+.env*.local
+
+# generated TTS audio cache (regenerated on demand)
+/public/audio/tts-cache
+
+# misc
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
