@@ -98,6 +98,14 @@ export const medicalAssetManifest: Record<string, string> = {
   // ── Caregiver education (Nina/George, 74) — real clips + coded summary/meds (cg-2, cg-3) ──
   'caregiver-education-1b': '/medical-assets/caregiver/caregiver-organizing-papers.mp4',
   'caregiver-education-3b': '/medical-assets/caregiver/caregiver-pill-organizer.mp4',
+
+  // ── Coronary stent (Bruno, 61) — real clips, the hero treatment video ──
+  'coronary-stent-1': '/medical-assets/coronary-stent/heart-coronary-overview.mp4',
+  'coronary-stent-2': '/medical-assets/coronary-stent/artery-plaque-narrowing.mp4',
+  'coronary-stent-3': '/medical-assets/coronary-stent/catheter-advancing.mp4',
+  'coronary-stent-4': '/medical-assets/coronary-stent/balloon-inflating.mp4',
+  'coronary-stent-5': '/medical-assets/coronary-stent/stentplacedandshown.mp4',
+  'coronary-stent-6': '/medical-assets/coronary-stent/bloodflowthrustentandzoomoutbacktoheart.mp4',
 };
 
 /** Returns the public path for an uploaded asset, or undefined if it's still a slot. */

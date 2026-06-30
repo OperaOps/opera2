@@ -2312,53 +2312,48 @@ const baseUseCases: DemoUseCase[] = [
 
   // 10 ────────────────────────────────────────────────────────────────────
   {
-    id: 'caregiver-education',
-    category: 'Caregiver Support',
-    title: 'Helping Your Loved One Prepare for a Follow-Up',
-    department: 'Caregiver Support / Primary Care',
+    id: 'coronary-stent',
+    category: 'Cardiac Procedure',
+    title: 'Understanding Your Stent Procedure',
+    department: 'Cardiology / Interventional',
     summary:
-      'Speaks directly to Nina, the caregiver, equipping her to help her father George prepare and remember what matters.',
+      'Walks Bruno through exactly what happens during his coronary stent procedure — calmly and visually — so he feels informed and far less anxious going in.',
     accent: 'navy',
     patient: {
-      name: 'George',
-      age: 74,
+      name: 'Bruno',
+      age: 61,
       pronouns: 'he/him',
       language: 'English',
-      healthLiteracy: 'basic',
-      emotionalState: 'reassured-seeking',
+      healthLiteracy: 'intermediate',
+      emotionalState: 'anxious',
       lifeContext: {
-        occupation: 'Retired schoolteacher',
-        livingSituation: 'Lives near his daughter, who manages his appointments',
-        preferences: ['Calm pace', 'Familiar faces', 'Written notes'],
+        occupation: 'Recently retired contractor',
+        livingSituation: 'Lives with his wife',
+        preferences: ['Plain explanations', 'Knowing what to expect', 'A calm pace'],
         notes:
-          'Tends to forget details discussed during visits. His daughter Nina manages his appointments and follow-ups.',
+          'Was told he has a narrowed coronary artery and needs a stent. Nervous about having a procedure on his heart.',
       },
       concerns: [
         {
-          quote: "Dad forgets what was said as soon as we leave the office.",
+          quote: "Honestly, anything to do with my heart scares me.",
           acknowledgedAs:
-            'Giving Nina simple ways to capture and recall visit details together.',
+            'Acknowledging the fear and demystifying the procedure one calm step at a time.',
         },
         {
-          quote: "I want to help without taking over his decisions.",
+          quote: "I just want to know what they're actually going to do.",
           acknowledgedAs:
-            'Framing the caregiver role as support, with George’s voice kept central.',
+            'Showing him, visually, exactly what happens during the procedure.',
         },
       ],
       goals: [
-        'Help George remember and prepare for the visit',
-        'Bring organized questions to the follow-up',
-        'Support without overriding his autonomy',
+        'Understand what a stent procedure involves',
+        'Feel calmer and less anxious going in',
+        'Know what to ask his care team',
       ],
       barriers: [
-        'George forgets visit details quickly',
-        'Caregiver balance between helping and overstepping',
+        'Anxiety about a procedure on his heart',
+        'Unfamiliar medical terms',
       ],
-      caregiver: {
-        name: 'Nina',
-        relationship: 'Daughter',
-        involvement: 'Manages George’s appointments and follow-ups; is the primary audience for this asset.',
-      },
       synthetic: true,
     },
     clinicalContext: {
@@ -2386,28 +2381,28 @@ const baseUseCases: DemoUseCase[] = [
     },
     personalizationSignals: [
       {
-        label: 'Caregiver is primary audience',
-        value: 'Nina manages George’s appointments',
+        label: 'Anxious about a heart procedure',
+        value: 'Fearful of anything heart-related',
         source: 'patient-provided',
-        appliedAs: 'The narration speaks directly to Nina.',
+        appliedAs: 'Opens by acknowledging the fear and demystifies each step.',
       },
       {
-        label: 'George forgets details',
-        value: 'Loses visit information quickly',
+        label: 'Wants to know what happens',
+        value: 'Asked what they will actually do',
         source: 'patient-provided',
-        appliedAs: 'Offers simple capture-and-recall tactics.',
+        appliedAs: 'Shows the procedure visually, step by step.',
       },
       {
-        label: 'Help without taking over',
-        value: 'Nina wants to support, not override',
+        label: 'Prefers plain language',
+        value: 'Values clear, jargon-free explanations',
         source: 'patient-provided',
-        appliedAs: 'Keeps George’s voice and choices central.',
+        appliedAs: 'Keeps the narration simple and reassuring.',
       },
       {
-        label: 'Follow-up scheduled',
-        value: 'Upcoming follow-up visit',
+        label: 'Stent procedure scheduled',
+        value: 'Upcoming angioplasty',
         source: 'journey-context',
-        appliedAs: 'Times the guidance to pre-visit prep.',
+        appliedAs: 'Times the education to just before the procedure.',
       },
     ],
     script: {
@@ -2565,8 +2560,8 @@ const baseUseCases: DemoUseCase[] = [
       explanation:
         'This is caregiver education centered on Nina while preserving George’s autonomy. It improves preparation and recall without entering any clinical decision-making.',
     },
-    outputs: ['video', 'portal', 'sms', 'email', 'caregiver-summary'],
-    estimatedRuntimeSec: 79,
+    outputs: ['video', 'portal', 'sms', 'email'],
+    estimatedRuntimeSec: 78,
   },
 
   // 11 ────────────────────────────────────────────────────────────────────

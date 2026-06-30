@@ -22,7 +22,8 @@ export type Department =
   | 'Gastroenterology'
   | 'Caregiver Support / Primary Care'
   | 'Population Health / Care Navigation'
-  | 'Research / Genomics Education';
+  | 'Research / Genomics Education'
+  | 'Cardiology / Interventional';
 
 export type UseCaseCategory =
   | 'Preventive Screening'
@@ -36,7 +37,8 @@ export type UseCaseCategory =
   | 'Procedure Preparation'
   | 'Caregiver Support'
   | 'Health Equity'
-  | 'Consent & Privacy';
+  | 'Consent & Privacy'
+  | 'Cardiac Procedure';
 
 export type HealthLiteracyLevel = 'basic' | 'intermediate' | 'advanced';
 
