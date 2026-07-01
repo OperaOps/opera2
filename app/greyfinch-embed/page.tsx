@@ -13,6 +13,8 @@
  *                    &clinic_name=Opera%20Orthodontics&treatment=invisalign&xid=1d099
  *
  * All fields remain editable so it also works standalone for local testing.
+ *
+ * (Deploy trigger: 2026-07-01 — redeploy getopera.ai from current main.)
  */
 
 import React, { useCallback, useEffect, useRef, useState, Suspense } from "react";
