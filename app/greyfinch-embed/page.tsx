@@ -14,7 +14,7 @@
  *
  * All fields remain editable so it also works standalone for local testing.
  *
- * (Deploy trigger: 2026-07-01 — redeploy getopera.ai from current main.)
+ * (Deploy trigger: 2026-07-01b — full clean deploy after a canceled one.)
  */
 
 import React, { useCallback, useEffect, useRef, useState, Suspense } from "react";
