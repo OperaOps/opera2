@@ -114,6 +114,17 @@ export const medicalAssetManifest: Record<string, string> = {
   'lasik-4': '/medical-assets/lasik/lasik-flap-creation.mp4',
   'lasik-5': '/medical-assets/lasik/lasik-laser-reshape.mp4',
   'lasik-6': '/medical-assets/lasik/lasik-result-eye.mp4',
+
+  // ── Porcelain veneers (Jessica, 29) — real Seedance-generated clips, flagship cosmetic ──
+  'cosmetic-veneers-1': '/medical-assets/veneers/veneers-smile-overview.mp4',
+  'cosmetic-veneers-2': '/medical-assets/veneers/veneers-shell-reveal.mp4',
+  'cosmetic-veneers-3': '/medical-assets/veneers/veneers-shade-and-scan.mp4',
+  'cosmetic-veneers-4': '/medical-assets/veneers/veneers-minimal-prep.mp4',
+  'cosmetic-veneers-5': '/medical-assets/veneers/veneers-etch-and-bond.mp4',
+  'cosmetic-veneers-6': '/medical-assets/veneers/veneers-seat-first.mp4',
+  'cosmetic-veneers-7': '/medical-assets/veneers/veneers-seat-brighten.mp4',
+  'cosmetic-veneers-8': '/medical-assets/veneers/veneers-cure-bond.mp4',
+  'cosmetic-veneers-9': '/medical-assets/veneers/veneers-finished-smile.mp4',
 };
 
 /** Returns the public path for an uploaded asset, or undefined if it's still a slot. */

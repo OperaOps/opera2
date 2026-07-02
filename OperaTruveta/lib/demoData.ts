@@ -3067,6 +3067,194 @@ const baseUseCases: DemoUseCase[] = [
     outputs: ['video', 'portal', 'sms', 'email'],
     estimatedRuntimeSec: 82,
   },
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    id: 'cosmetic-veneers',
+    category: 'Cosmetic Dentistry',
+    title: 'Understanding Your Porcelain Veneers',
+    department: 'Cosmetic & Restorative Dentistry',
+    summary:
+      'Walks Jessica through exactly how her porcelain veneers come together — calmly and visually — so she knows just what to expect before her wedding.',
+    accent: 'teal',
+    patient: {
+      name: 'Jessica',
+      age: 29,
+      pronouns: 'she/her',
+      language: 'English',
+      healthLiteracy: 'intermediate',
+      emotionalState: 'hopeful',
+      lifeContext: {
+        occupation: 'Marketing manager',
+        livingSituation: 'Engaged, wedding in a few months',
+        preferences: ['Knowing what to expect', 'Plain explanations', 'A natural-looking result'],
+        notes:
+          'Getting veneers ahead of her wedding. Self-conscious about small gaps and uneven color in photos, and wants a bright but natural smile — nothing fake-looking.',
+      },
+      concerns: [
+        {
+          quote: "I want my smile brighter for the wedding, but I'm scared it'll look fake.",
+          acknowledgedAs:
+            'Reassuring her that veneers are wafer-thin and translucent, so the result looks natural — bright, but truly her own.',
+        },
+        {
+          quote: "Does it hurt, and how much of my real tooth do you take off?",
+          acknowledgedAs:
+            'Walking through each step visually and showing how conservative and gentle the preparation is.',
+        },
+      ],
+      goals: [
+        'Understand what getting veneers involves',
+        'Feel calm and confident about the process',
+        'Know the result will look bright but natural',
+      ],
+      barriers: [
+        'Worried about an artificial "fake-white" look',
+        'Unsure how much of the real tooth is affected',
+      ],
+      synthetic: true,
+    },
+    clinicalContext: {
+      trigger:
+        'Jessica had a smile consultation ahead of her wedding and chose to move forward with porcelain veneers on her upper front teeth.',
+      journeyStage: 'Pre-treatment / case acceptance',
+      careTeamContext:
+        'The team wants Jessica to walk in confident and relaxed, understanding each step and the natural-looking result.',
+      appointmentHistory: ['Smile consultation completed', 'Veneers treatment plan accepted'],
+    },
+    approvedContent: {
+      title: 'Porcelain Veneers — Patient Education Overview',
+      owner: 'Cosmetic & Restorative Dentistry (synthetic)',
+      summary:
+        'Plain-language walkthrough of how porcelain veneers are planned, prepared, bonded, and finished, and what to expect at each visit.',
+      version: 'v1.0',
+      lastReviewed: '2026-06-30',
+    },
+    evidenceTheme: {
+      theme:
+        'Patients who understand each step of a cosmetic procedure beforehand tend to feel more confident and satisfied with the experience.',
+      educationalRelevance:
+        'Used only to explain the veneers process and set expectations — never to promise a specific individual outcome.',
+      provenance:
+        'General patient-education best practice, summarized for education and reviewed by the care team.',
+    },
+    personalizationSignals: [
+      {
+        label: 'Wedding coming up',
+        value: 'Getting veneers ahead of her wedding',
+        source: 'journey-context',
+        appliedAs: 'Frames the whole video around feeling confident for the big day.',
+      },
+      {
+        label: 'Wants natural, not fake',
+        value: 'Nervous about a fake-white look',
+        source: 'patient-provided',
+        appliedAs: 'Emphasizes the thin, translucent, natural-looking result throughout.',
+      },
+      {
+        label: 'Self-conscious in photos',
+        value: 'Small gaps and uneven color bother her in photos',
+        source: 'patient-provided',
+        appliedAs: 'Opens by naming exactly what she wants to improve.',
+      },
+      {
+        label: 'Wants to know what to expect',
+        value: 'Asked whether it hurts and how much tooth is affected',
+        source: 'patient-provided',
+        appliedAs: 'Walks through each step visually, no surprises.',
+      },
+    ],
+    script: {
+      opening: 'Hi Jessica — congratulations again on the engagement! Let’s walk through exactly how your new veneers will come together, step by step.',
+      fullNarration:
+        'Hi Jessica — congratulations again on the engagement! Before the big day, let us walk through exactly how your new veneers will come together, step by step, so you know just what to expect. This is your smile today — lovely already, with just a couple of small gaps and a little unevenness in color. A veneer is a wafer-thin shell of porcelain, thinner than a fingernail, and light passes right through it just like natural enamel, so your smile looks completely real. First we match the exact shade and take a quick digital scan — no drills, just light. Next we gently prepare the front of each tooth, removing only a whisper-thin layer, and your own tooth stays tall and strong underneath. Then the surface is prepared so the veneer bonds securely, each veneer is placed and eased flush into position, and a soft blue light sets the bond in seconds. One by one, your smile turns brighter and more even — and there it is: bright, even, and completely your own.',
+      closing:
+        'And there it is, Jessica — your new smile: bright, even, and completely your own. We cannot wait for you to see it in the mirror on your big day.',
+      disclaimer: 'This video is educational and does not replace advice from your dental care team.',
+    },
+    storyboard: [
+      {
+        sceneTitle: 'Warm opening',
+        narration:
+          'Hi Jessica — congratulations again on the engagement! Before the big day, let us walk through exactly how your new veneers will come together, step by step, so you know just what to expect.',
+        onScreenText: 'Your new smile, step by step',
+        visualType: 'title-card',
+        motionDirection: 'Title fades up over a soft, warm motif',
+        transition: 'Cross-dissolve',
+        iconName: 'Sparkles',
+        lottieSearchKeyword: 'sparkle smile welcome',
+        customAnimationIdea: 'A soft sparkle settles beneath the patient name.',
+        backgroundStyle: 'Deep navy with teal accent glow',
+        safetyBoundary: 'Education only — sets expectations, no guarantees.',
+        personalizationReason: 'Opens warmly and names her wedding milestone.',
+        durationSec: 12,
+      },
+      {
+        sceneTitle: 'Warm close',
+        narration:
+          'And there it is, Jessica — your new smile: bright, even, and completely your own. We cannot wait for you to see it in the mirror on your big day. This video is educational and does not replace advice from your dental care team.',
+        onScreenText: 'Bright, even, and completely your own',
+        visualType: 'closing-card',
+        motionDirection: 'Gentle zoom-out; disclaimer eases in last',
+        transition: 'Fade-to-card',
+        iconName: 'HeartPulse',
+        lottieSearchKeyword: 'warm smile close',
+        customAnimationIdea: 'The card settles with a warm, steady glow.',
+        backgroundStyle: 'Deep navy with teal accent',
+        safetyBoundary: 'Educational disclaimer present.',
+        personalizationReason: 'Closes with warmth and her big-day framing.',
+        durationSec: 12,
+      },
+    ],
+    visualAssetPlan: {
+      palette: 'Deep navy with teal accents and warm neutral text',
+      keyVisuals: ['Smile today', 'Veneer shell', 'Shade & scan', 'Placement', 'Finished smile'],
+      titleCard: 'Warm smile motif on deep navy, elegant type',
+      iconStyle: 'Rounded line icons, teal accents',
+    },
+    motionPlan: {
+      pacing: 'calm and reassuring',
+      signatureTransition: 'Cross-dissolve with a soft settle',
+      motionNotes: 'Motion is smooth and premium; nothing clinical or cold.',
+      renderTargets: ['Remotion', 'Framer Motion', 'Lottie'],
+    },
+    cta: {
+      sms:
+        'Hi Jessica — here’s a quick walkthrough of exactly how your veneers will come together before the big day: [link]',
+      email: {
+        subject: 'Your veneers — a quick walkthrough before the big day',
+        body:
+          'Hi Jessica,\n\nHere’s a short, calm walkthrough of exactly how your porcelain veneers will come together, step by step — so you know just what to expect.\n\nWatch here: [link]\n\nWe can’t wait for you to see your new smile.',
+      },
+      portal:
+        'A short video walking through your veneers, step by step, is ready. It explains each visit and shows the natural-looking result.',
+    },
+    compliance: [
+      { label: 'No diagnosis', status: 'pass', detail: 'Explains an accepted treatment plan; no diagnosis.' },
+      { label: 'No treatment recommendation', status: 'pass', detail: 'Education on a chosen procedure only.' },
+      { label: 'No outcome guarantee', status: 'pass', detail: 'Sets expectations without promising a specific result.' },
+      { label: 'Educational disclaimer present', status: 'pass', detail: 'Disclaimer narrated and shown.' },
+      { label: 'Approved content only', status: 'pass', detail: 'Built from approved veneers education v1.0.' },
+      { label: 'Human review required', status: 'pass', detail: 'Reviewed by the dental team before send.' },
+    ],
+    safetyBoundary: {
+      doesNotDo: [
+        'Does not guarantee a specific cosmetic outcome',
+        'Does not give clinical advice',
+        'Does not pressure her to proceed',
+        'Does not diagnose',
+      ],
+      does: [
+        'Explains each step of the veneers process',
+        'Sets calm, realistic expectations',
+        'Emphasizes a natural-looking result',
+        'Reassures about comfort and conservative preparation',
+      ],
+      explanation:
+        'This is cosmetic patient education for a treatment Jessica has already chosen. It builds confidence by showing exactly what happens, and sets natural, realistic expectations for her big day.',
+    },
+    outputs: ['video', 'portal', 'sms', 'email'],
+    estimatedRuntimeSec: 108,
+  },
 ];
 
 /**

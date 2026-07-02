@@ -10,7 +10,7 @@ import { RevealGroup } from '@/components/motion';
 const GROUPS: { title: string; ids: string[] }[] = [
   {
     title: 'Treatments',
-    ids: ['preventive-screening', 'lasik', 'coronary-stent'],
+    ids: ['cosmetic-veneers', 'lasik', 'coronary-stent', 'preventive-screening'],
   },
   {
     title: 'Procedures & Conditions',
@@ -40,7 +40,7 @@ export default function DemoLibraryPage() {
     <div className="space-y-14">
       <SectionHeader
         eyebrow="Demo Library"
-        title="Twelve synthetic patients. Twelve personalized stories."
+        title="Thirteen synthetic patients. Thirteen personalized stories."
         description="Each demo is a personalized education asset generated from approved content and care-journey context. All patients are synthetic. Educational only — never clinical decision support."
       />
 

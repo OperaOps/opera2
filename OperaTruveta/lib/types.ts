@@ -24,7 +24,8 @@ export type Department =
   | 'Population Health / Care Navigation'
   | 'Research / Genomics Education'
   | 'Cardiology / Interventional'
-  | 'Ophthalmology';
+  | 'Ophthalmology'
+  | 'Cosmetic & Restorative Dentistry';
 
 export type UseCaseCategory =
   | 'Preventive Screening'
@@ -40,7 +41,8 @@ export type UseCaseCategory =
   | 'Health Equity'
   | 'Consent & Privacy'
   | 'Cardiac Procedure'
-  | 'Vision Correction';
+  | 'Vision Correction'
+  | 'Cosmetic Dentistry';
 
 export type HealthLiteracyLevel = 'basic' | 'intermediate' | 'advanced';
 

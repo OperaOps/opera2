@@ -9,6 +9,7 @@ import { ClinicalSceneRenderer } from '@/components/scenes/clinicalScenes';
 import { TreatmentVisualRenderer } from '@/components/treatment-visuals';
 import { buildVideoTimeline } from '@/lib/videoTimeline';
 import { cn, formatSeconds } from '@/lib/utils';
+import { withBasePath } from '@/lib/basePath';
 import { useNarration } from './useNarration';
 import { SyncedSubtitle } from './SyncedSubtitle';
 
@@ -28,6 +29,7 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
   const [showES, setShowES] = useState(useCase.patient.language.toLowerCase().includes('span'));
   const raf = useRef<number>();
   const start = useRef<number>(0);
+  const bgm = useRef<HTMLAudioElement | null>(null);
   const { speak, stop } = useNarration();
 
   const bilingual = /span|english \+/i.test(useCase.patient.language);
@@ -88,6 +90,19 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
     };
   }, [playing, soundOn, i, segment.caption, segments.length, speak, stop]);
 
+  // Subtle background music bed under the narration — same track and level (0.14) as the
+  // dental/ortho video pipeline. Follows play/pause and the narration mute toggle.
+  useEffect(() => {
+    const a = bgm.current;
+    if (!a) return;
+    a.volume = 0.14;
+    if (started && playing && soundOn) {
+      void a.play().catch(() => {});
+    } else {
+      a.pause();
+    }
+  }, [started, playing, soundOn]);
+
   const go = (dir: number) => {
     setProgress(0);
     setI((prev) => Math.min(segments.length - 1, Math.max(0, prev + dir)));
@@ -101,6 +116,7 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
     setSoundOn(true);
     setStarted(true);
     setPlaying(true);
+    if (bgm.current) bgm.current.currentTime = 0; // restart the music bed from the top
   };
 
   const atEnd = i >= segments.length - 1 && !playing && progress >= 1;
@@ -114,6 +130,9 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
 
   return (
     <div className="overflow-hidden rounded-3xl border border-slate-200/70 bg-navy-950 shadow-soft-lg">
+      {/* Subtle looping background music bed (played under the narration) */}
+      <audio ref={bgm} src={withBasePath('/audio/opera-bgm.m4a')} loop preload="auto" />
+
       {/* Top bar */}
       <div className="border-b border-white/5 px-4 py-3">
         <p className="truncate text-[11px] font-medium uppercase tracking-wide text-teal-300/80">
