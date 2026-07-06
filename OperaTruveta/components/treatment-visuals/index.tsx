@@ -53,10 +53,6 @@ export interface TreatmentSceneProps {
   progress?: number;
   /** Target scene length (s) — the clip is gently slowed to fill it, then freezes. */
   durationSec?: number;
-  /** 1-based position of this clip among the video's clip scenes (for the STEP eyebrow). */
-  sceneIndex?: number;
-  /** Total number of clip scenes in the video. */
-  sceneCount?: number;
 }
 
 /**
@@ -69,8 +65,6 @@ export function TreatmentVideoScene({
   durationSec,
   progress,
   personalizationNote,
-  sceneIndex,
-  sceneCount,
 }: TreatmentSceneProps) {
   const Coded = codedTreatmentScenes[entry.assetId];
   const src = getMedicalAsset(entry.assetId);
@@ -98,12 +92,7 @@ export function TreatmentVideoScene({
 
         {/* Right column — takeaway + personalization */}
         <div className="min-w-0 flex-1">
-          {sceneIndex != null && (
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-teal-700 sm:text-xs">
-              {`Scene ${String(sceneIndex).padStart(2, '0')}${sceneCount ? ` of ${String(sceneCount).padStart(2, '0')}` : ''}`}
-            </p>
-          )}
-          <p className="mt-2 text-sm font-semibold leading-snug text-navy-900 sm:text-lg lg:text-xl">
+          <p className="text-sm font-semibold leading-snug text-navy-900 sm:text-lg lg:text-xl">
             {entry.whatPatientLearns}
           </p>
           {personalizationNote && (

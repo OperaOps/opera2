@@ -35,10 +35,6 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
   const bilingual = /span|english \+/i.test(useCase.patient.language);
   const segment = segments[i];
 
-  // 1-based position of each treatment (clip) scene, for the "Scene N of M" eyebrow.
-  const clipKeys = segments.filter((s) => s.kind === 'treatment').map((s) => s.key);
-  const clipIndex = segment.kind === 'treatment' ? clipKeys.indexOf(segment.key) + 1 : 0;
-
   // Stable advance ref so a narration callback never fires on a stale index.
   // No wrap — end-of-video is handled in the scene effect (the video stops, doesn't loop).
   const advance = useCallback(() => {
@@ -165,8 +161,6 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
                 language={useCase.patient.language}
                 progress={progress}
                 durationSec={sceneSeconds(segment.caption)}
-                sceneIndex={clipIndex}
-                sceneCount={clipKeys.length}
               />
             ) : segment.kind === 'clinical' ? (
               <ClinicalSceneRenderer useCase={useCase} plan={segment.plan} />
