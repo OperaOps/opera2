@@ -25,7 +25,6 @@ const GROUPS: { title: string; ids: string[] }[] = [
     title: 'Care & Support',
     ids: [
       'clinical-trial-education',
-      'medication-journey',
       'lab-result-explanation',
       'post-discharge-recovery',
     ],
@@ -41,7 +40,7 @@ export function DemoLibrarySection() {
       <Reveal>
         <SectionHeader
           eyebrow="The Demos"
-          title="Thirteen synthetic patients. Thirteen personalized stories."
+          title="Twelve synthetic patients. Twelve personalized stories."
           description="Each demo is a personalized education asset generated from approved content and care-journey context. All patients are synthetic. Educational only — never clinical decision support."
         />
       </Reveal>

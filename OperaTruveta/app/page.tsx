@@ -89,7 +89,7 @@ export default function HomePage() {
             </div>
 
             <div className="mt-7 grid gap-5 border-t border-slate-100 pt-7 sm:grid-cols-2 lg:grid-cols-4">
-              <Stat value={`${demoUseCases.length}`} label="Patient journeys" />
+              <Stat value="12" label="Patient journeys" />
               <Stat value={`${departments.length}`} label="Specialties" />
               <Stat value={`${languages.length}`} label="Languages" sub={languages.join(' · ')} />
               <div>
@@ -134,7 +134,7 @@ export default function HomePage() {
         <Reveal>
           <div className="flex flex-col items-center gap-5 rounded-3xl border border-slate-200/70 bg-white/70 px-6 py-12 text-center shadow-soft backdrop-blur-xl">
             <h2 className="text-balance text-2xl font-semibold tracking-tight text-navy-900 sm:text-3xl">
-              See it on thirteen real patient moments
+              See it on twelve real patient moments
             </h2>
             <p className="max-w-xl text-slate-500">
               Every demo is a synthetic patient with a personalized, narrated education video.
