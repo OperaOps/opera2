@@ -66,17 +66,17 @@ const bgFor = (visualType: VisualType) => {
   switch (visualType) {
     case 'title-card':
     case 'closing-card':
-      return 'from-navy-800 via-navy-900 to-navy-950';
+      return 'from-white via-slate-50 to-slate-100';
     case 'lab-card':
     case 'comparison':
-      return 'from-sky-800 via-navy-900 to-navy-950';
+      return 'from-white via-sky-50/70 to-slate-100';
     case 'source-panel':
     case 'consent-panel':
-      return 'from-slate-700 via-navy-900 to-navy-950';
+      return 'from-white via-slate-50 to-slate-100';
     case 'map-route':
-      return 'from-teal-800 via-navy-900 to-navy-950';
+      return 'from-white via-teal-50/70 to-slate-100';
     default:
-      return 'from-teal-700 via-navy-900 to-navy-950';
+      return 'from-white via-teal-50/60 to-slate-100';
   }
 };
 
@@ -103,7 +103,7 @@ function SceneShell({
         className="pointer-events-none absolute inset-0 opacity-[0.05]"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)',
+            'linear-gradient(rgba(11,18,32,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(11,18,32,0.5) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
         }}
       />
@@ -124,7 +124,7 @@ function Eyebrow({ children, icon: Icon }: { children: React.ReactNode; icon?: L
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium text-teal-200 backdrop-blur"
+      className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-teal-700 backdrop-blur"
     >
       {Icon && <Icon className="h-3.5 w-3.5" />}
       {children}
@@ -139,7 +139,7 @@ function Headline({ text, className }: { text: string; className?: string }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, delay: 0.12, ease }}
       className={cn(
-        'mt-4 max-w-2xl text-balance text-2xl font-semibold leading-tight text-white sm:text-[2rem]',
+        'mt-4 max-w-2xl text-balance text-2xl font-semibold leading-tight text-navy-900 sm:text-[2rem]',
         className,
       )}
     >
@@ -185,7 +185,7 @@ export function PatientIntroScene({ useCase, scene }: SceneProps) {
         initial={{ opacity: 0, scale: 0.85 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.1, ease }}
-        className="mt-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-teal-200 ring-1 ring-white/15 backdrop-blur"
+        className="mt-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-teal-700 ring-1 ring-white/15 backdrop-blur"
       >
         <HeartPulse className="h-7 w-7" />
       </motion.span>
@@ -194,7 +194,7 @@ export function PatientIntroScene({ useCase, scene }: SceneProps) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="mt-3 max-w-md text-sm leading-relaxed text-white/60"
+        className="mt-3 max-w-md text-sm leading-relaxed text-slate-500"
       >
         A short, personal explanation from your care team.
       </motion.p>
@@ -205,7 +205,7 @@ export function PatientIntroScene({ useCase, scene }: SceneProps) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45 + i * 0.1 }}
-            className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-medium text-white/80"
+            className="rounded-full bg-white px-3 py-1 text-[11px] font-medium text-slate-600"
           >
             {t}
           </motion.span>
@@ -227,9 +227,9 @@ export function LabResultScene({ useCase, scene }: SceneProps) {
           <motion.div
             key={r}
             variants={listItem}
-            className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur"
+            className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 backdrop-blur"
           >
-            <span className="text-sm text-white/80">{r}</span>
+            <span className="text-sm text-slate-600">{r}</span>
             <motion.span
               initial={{ width: 0 }}
               animate={{ width: '38%' }}
@@ -270,7 +270,7 @@ export function ChecklistScene({ useCase, scene }: SceneProps) {
             >
               <CheckCircle2 className="h-4 w-4" />
             </motion.span>
-            <span className="text-sm text-white/85">{it}</span>
+            <span className="text-sm text-slate-700">{it}</span>
           </motion.li>
         ))}
       </motion.ul>
@@ -289,9 +289,9 @@ export function CalendarReminderScene({ useCase, scene }: SceneProps) {
           initial={{ opacity: 0, y: 14, rotate: -3 }}
           animate={{ opacity: 1, y: 0, rotate: -2 }}
           transition={{ ease }}
-          className="w-32 overflow-hidden rounded-2xl border border-white/15 bg-white shadow-2xl"
+          className="w-32 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
         >
-          <div className="bg-teal-500 py-1.5 text-center text-[11px] font-semibold uppercase tracking-wide text-white">
+          <div className="bg-teal-500 py-1.5 text-center text-[11px] font-semibold uppercase tracking-wide text-navy-900">
             Upcoming
           </div>
           <div className="grid grid-cols-7 gap-1 p-2.5">
@@ -303,7 +303,7 @@ export function CalendarReminderScene({ useCase, scene }: SceneProps) {
                 transition={{ delay: 0.4 + i * 0.01 }}
                 className={cn(
                   'flex h-3 w-3 items-center justify-center rounded-[3px] text-[6px]',
-                  i === 18 ? 'bg-teal-500 text-white' : 'bg-slate-100 text-slate-300',
+                  i === 18 ? 'bg-teal-500 text-navy-900' : 'bg-slate-100 text-slate-300',
                 )}
               >
                 {i === 18 ? '●' : ''}
@@ -319,7 +319,7 @@ export function CalendarReminderScene({ useCase, scene }: SceneProps) {
         >
           {['No rush — you choose the timing', 'Bring your questions', 'Talk options through with your team'].map(
             (t) => (
-              <p key={t} className="flex items-center gap-2 text-sm text-white/80">
+              <p key={t} className="flex items-center gap-2 text-sm text-slate-600">
                 <span className="h-1.5 w-1.5 rounded-full bg-teal-400" />
                 {t}
               </p>
@@ -342,7 +342,7 @@ export function ConsentEducationScene({ useCase, scene }: SceneProps) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, ease }}
-        className="mt-5 max-w-md rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
+        className="mt-5 max-w-md rounded-2xl border border-slate-200 bg-white p-4 backdrop-blur"
       >
         {lines.map((l, i) => (
           <motion.div
@@ -357,10 +357,10 @@ export function ConsentEducationScene({ useCase, scene }: SceneProps) {
               ],
             }}
             transition={{ delay: 0.5 + i * 0.5, duration: 1.4 }}
-            className="mb-2 flex items-center gap-2.5 rounded-xl bg-white/5 px-3 py-2.5 last:mb-0"
+            className="mb-2 flex items-center gap-2.5 rounded-xl bg-white px-3 py-2.5 last:mb-0"
           >
-            <CheckCircle2 className="h-4 w-4 text-teal-300" />
-            <span className="text-sm text-white/85">{l}</span>
+            <CheckCircle2 className="h-4 w-4 text-teal-700" />
+            <span className="text-sm text-slate-700">{l}</span>
           </motion.div>
         ))}
       </motion.div>
@@ -385,7 +385,7 @@ export function PrivacyDataScene({ useCase, scene }: SceneProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8 }}
-        className="mt-5 text-sm text-white/60"
+        className="mt-5 text-sm text-slate-500"
       >
         Identifying details are removed before data is ever used for research.
       </motion.p>
@@ -414,19 +414,19 @@ function Node({
       <span
         className={cn(
           'flex h-12 w-12 items-center justify-center rounded-xl ring-1 backdrop-blur',
-          tone === 'teal' ? 'bg-teal-400/20 text-teal-200 ring-teal-300/30' : 'bg-white/10 text-white ring-white/15',
+          tone === 'teal' ? 'bg-teal-400/20 text-teal-700 ring-teal-300/30' : 'bg-white text-navy-900 ring-white/15',
         )}
       >
         <Icon className="h-6 w-6" />
       </span>
-      <span className="text-[11px] font-medium text-white/70">{label}</span>
+      <span className="text-[11px] font-medium text-slate-500">{label}</span>
     </motion.div>
   );
 }
 
 function Flow({ delay }: { delay: number }) {
   return (
-    <div className="relative h-px w-10 overflow-hidden bg-white/15">
+    <div className="relative h-px w-10 overflow-hidden bg-white">
       <motion.span
         className="absolute inset-y-0 left-0 w-4 bg-teal-300"
         initial={{ x: '-100%' }}
@@ -477,8 +477,8 @@ function Bubble({
         className={cn(
           'max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed',
           side === 'right'
-            ? 'rounded-br-sm bg-teal-500 text-white'
-            : 'rounded-bl-sm bg-white/10 text-white/90 backdrop-blur',
+            ? 'rounded-br-sm bg-teal-500 text-navy-900'
+            : 'rounded-bl-sm bg-white text-slate-700 backdrop-blur',
         )}
       >
         {children}
@@ -507,15 +507,15 @@ export function CareJourneyScene({ useCase, scene }: SceneProps) {
               <span
                 className={cn(
                   'flex h-9 w-9 items-center justify-center rounded-full border-2',
-                  i <= 1 ? 'border-teal-400 bg-teal-400 text-navy-900' : 'border-white/30 text-white/50',
+                  i <= 1 ? 'border-teal-400 bg-teal-400 text-navy-900' : 'border-slate-300 text-slate-400',
                 )}
               >
                 {i <= 1 ? <CheckCircle2 className="h-4 w-4" /> : <span className="h-2 w-2 rounded-full bg-current" />}
               </span>
-              <span className="mt-2 w-20 text-center text-[11px] font-medium text-white/70">{s}</span>
+              <span className="mt-2 w-20 text-center text-[11px] font-medium text-slate-500">{s}</span>
             </motion.div>
             {i < stops.length - 1 && (
-              <div className="relative mx-1 h-px flex-1 bg-white/15">
+              <div className="relative mx-1 h-px flex-1 bg-white">
                 <motion.span
                   className="absolute inset-y-0 left-0 bg-teal-400"
                   initial={{ width: 0 }}
@@ -551,10 +551,10 @@ export function MedicationEducationScene({ useCase, scene }: SceneProps) {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 + i * 0.12, ease }}
-            className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3.5 py-3 backdrop-blur"
+            className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-3.5 py-3 backdrop-blur"
           >
-            <c.icon className="h-5 w-5 text-teal-300" />
-            <span className="text-sm text-white/85">{c.t}</span>
+            <c.icon className="h-5 w-5 text-teal-700" />
+            <span className="text-sm text-slate-700">{c.t}</span>
           </motion.div>
         ))}
       </div>
@@ -575,17 +575,17 @@ export function LanguageAccessScene({ useCase, scene }: SceneProps) {
           transition={{ delay: 0.4 }}
           className="rounded-xl border border-teal-300/30 bg-teal-400/10 px-4 py-3"
         >
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-teal-200">Español</p>
-          <p className="mt-1 text-sm text-white">Explicación clara y sencilla, con subtítulos grandes.</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-teal-700">Español</p>
+          <p className="mt-1 text-sm text-navy-900">Explicación clara y sencilla, con subtítulos grandes.</p>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, x: 12 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.8 }}
-          className="rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+          className="rounded-xl border border-slate-200 bg-white px-4 py-3"
         >
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-white/50">English caption</p>
-          <p className="mt-1 text-sm text-white/80">Clear, simple explanation with large captions.</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">English caption</p>
+          <p className="mt-1 text-sm text-slate-600">Clear, simple explanation with large captions.</p>
         </motion.div>
       </div>
     </SceneShell>
@@ -603,7 +603,7 @@ export function CaregiverSummaryScene({ useCase, scene }: SceneProps) {
         initial={{ opacity: 0, y: 18, rotate: -1.5 }}
         animate={{ opacity: 1, y: 0, rotate: -1 }}
         transition={{ delay: 0.3, ease }}
-        className="mt-5 max-w-sm rounded-2xl border border-white/15 bg-white p-4 text-navy-900 shadow-2xl"
+        className="mt-5 max-w-sm rounded-2xl border border-slate-200 bg-white p-4 text-navy-900 shadow-2xl"
       >
         <div className="flex items-center gap-2 border-b border-slate-100 pb-2.5">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-teal-700">
@@ -643,10 +643,10 @@ export function QuestionCardsScene({ useCase, scene }: SceneProps) {
           <motion.div
             key={q}
             variants={listItem}
-            className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur"
+            className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 backdrop-blur"
           >
-            <Quote className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" />
-            <span className="text-sm text-white/85">{q}</span>
+            <Quote className="mt-0.5 h-4 w-4 shrink-0 text-teal-700" />
+            <span className="text-sm text-slate-700">{q}</span>
           </motion.div>
         ))}
       </motion.div>
@@ -664,14 +664,14 @@ export function QuoteScene({ useCase, scene }: SceneProps) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ ease }}
       >
-        <Quote className="h-10 w-10 text-teal-300/60" />
+        <Quote className="h-10 w-10 text-teal-700/60" />
       </motion.div>
       <Headline text={concern ? `“${concern.quote}”` : scene.onScreenText} className="mt-3 text-xl italic sm:text-2xl" />
       <motion.p
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="mt-4 max-w-md text-sm leading-relaxed text-white/70"
+        className="mt-4 max-w-md text-sm leading-relaxed text-slate-500"
       >
         {concern ? concern.acknowledgedAs : scene.narration}
       </motion.p>
@@ -698,11 +698,11 @@ export function SourceTransparencyScene({ useCase, scene }: SceneProps) {
             animate={{ opacity: 1, rotateY: 0 }}
             transition={{ delay: 0.4 + i * 0.2, ease }}
             style={{ transformPerspective: 600 }}
-            className="rounded-xl border border-white/10 bg-white/5 p-3.5 backdrop-blur"
+            className="rounded-xl border border-slate-200 bg-white p-3.5 backdrop-blur"
           >
-            <c.icon className="h-5 w-5 text-teal-300" />
-            <p className="mt-2 text-[10px] font-semibold uppercase tracking-wide text-white/50">{c.label}</p>
-            <p className="mt-0.5 text-xs leading-snug text-white/85">{c.value}</p>
+            <c.icon className="h-5 w-5 text-teal-700" />
+            <p className="mt-2 text-[10px] font-semibold uppercase tracking-wide text-slate-400">{c.label}</p>
+            <p className="mt-0.5 text-xs leading-snug text-slate-700">{c.value}</p>
           </motion.div>
         ))}
       </div>
@@ -726,13 +726,13 @@ export function ComparisonScene({ useCase, scene }: SceneProps) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 + ci * 0.2, ease }}
-            className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
+            className="rounded-2xl border border-slate-200 bg-white p-4 backdrop-blur"
           >
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-teal-200">{col.t}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-teal-700">{col.t}</p>
             <ul className="mt-2.5 space-y-1.5">
               {col.items.map((it) => (
-                <li key={it} className="flex items-start gap-1.5 text-sm text-white/80">
-                  <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-teal-300" />
+                <li key={it} className="flex items-start gap-1.5 text-sm text-slate-600">
+                  <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-teal-700" />
                   {it}
                 </li>
               ))}
@@ -763,10 +763,10 @@ export function IconGridScene({ useCase, scene }: SceneProps) {
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.35 + i * 0.12, type: 'spring', stiffness: 300, damping: 18 }}
-            className="flex flex-col items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-3.5 text-center backdrop-blur"
+            className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white p-3.5 text-center backdrop-blur"
           >
-            <t.icon className="h-6 w-6 text-teal-300" />
-            <span className="text-xs font-medium text-white/80">{t.t}</span>
+            <t.icon className="h-6 w-6 text-teal-700" />
+            <span className="text-xs font-medium text-slate-600">{t.t}</span>
           </motion.div>
         ))}
       </div>
@@ -820,7 +820,7 @@ export function MapRouteScene({ useCase, scene }: SceneProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.7 }}
-        className="mt-2 text-sm text-white/70"
+        className="mt-2 text-sm text-slate-500"
       >
         Your care team can help coordinate the next step — it’s okay to ask.
       </motion.p>
@@ -838,7 +838,7 @@ export function SafetyDisclaimerScene({ useCase, scene }: SceneProps) {
         initial={{ opacity: 0, scale: 1.4, rotate: -8 }}
         animate={{ opacity: 1, scale: 1, rotate: -3 }}
         transition={{ delay: 0.5, type: 'spring', stiffness: 220, damping: 14 }}
-        className="mt-5 inline-flex items-center gap-2 rounded-xl border-2 border-teal-300/50 bg-teal-400/10 px-4 py-2.5 text-sm font-semibold text-teal-100"
+        className="mt-5 inline-flex items-center gap-2 rounded-xl border-2 border-teal-300/50 bg-teal-400/10 px-4 py-2.5 text-sm font-semibold text-teal-700"
       >
         <ShieldCheck className="h-5 w-5" />
         Educational only · Talk with your care team
@@ -847,7 +847,7 @@ export function SafetyDisclaimerScene({ useCase, scene }: SceneProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.9 }}
-        className="mt-4 max-w-lg text-sm leading-relaxed text-white/60"
+        className="mt-4 max-w-lg text-sm leading-relaxed text-slate-500"
       >
         {useCase.script.disclaimer}
       </motion.p>
@@ -865,12 +865,12 @@ export function CareContextScene({ useCase, scene }: SceneProps) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25, ease }}
-        className="mt-5 max-w-lg rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
+        className="mt-5 max-w-lg rounded-2xl border border-slate-200 bg-white p-4 backdrop-blur"
       >
-        <p className="text-sm leading-relaxed text-white/85">
+        <p className="text-sm leading-relaxed text-slate-700">
           {useCase.clinicalContext.careTeamContext}
         </p>
-        <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-teal-400/15 px-3 py-1 text-[11px] font-medium text-teal-100">
+        <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-teal-400/15 px-3 py-1 text-[11px] font-medium text-teal-700">
           <Clock className="h-3.5 w-3.5" />
           {useCase.clinicalContext.journeyStage}
         </div>
@@ -897,7 +897,7 @@ export function PlainEnglishEducationScene({ useCase, scene }: SceneProps) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="mt-4 max-w-lg text-sm leading-relaxed text-white/65"
+        className="mt-4 max-w-lg text-sm leading-relaxed text-slate-500"
       >
         One idea at a time — no jargon, no pressure.
       </motion.p>
@@ -924,12 +924,12 @@ export function ResearchJourneyScene({ useCase, scene }: SceneProps) {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 + i * 0.18, ease }}
-            className="flex flex-1 flex-col items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-2 py-3 text-center backdrop-blur"
+            className="flex flex-1 flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-3 text-center backdrop-blur"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-400/20 text-teal-200">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-400/20 text-teal-700">
               <s.icon className="h-4 w-4" />
             </span>
-            <span className="text-[11px] font-medium leading-tight text-white/80">{s.t}</span>
+            <span className="text-[11px] font-medium leading-tight text-slate-600">{s.t}</span>
           </motion.div>
         ))}
       </div>

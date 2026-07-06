@@ -53,36 +53,69 @@ export interface TreatmentSceneProps {
   progress?: number;
   /** Target scene length (s) — the clip is gently slowed to fill it, then freezes. */
   durationSec?: number;
+  /** 1-based position of this clip among the video's clip scenes (for the STEP eyebrow). */
+  sceneIndex?: number;
+  /** Total number of clip scenes in the video. */
+  sceneCount?: number;
 }
 
 /**
- * A full treatment scene: real asset (or polished slot) + callouts + caption +
- * personalization. Fills its parent (use inside a relative 16:9 container or the player).
+ * A treatment scene presented as a clean white slide (flagship format): the clip
+ * plays inside a framed panel on the left, with the scene's key takeaway and the
+ * patient-personalization note on the right. Never full-bleed.
  */
-export function TreatmentVideoScene({ entry, durationSec, progress }: TreatmentSceneProps) {
+export function TreatmentVideoScene({
+  entry,
+  durationSec,
+  progress,
+  personalizationNote,
+  sceneIndex,
+  sceneCount,
+}: TreatmentSceneProps) {
   const Coded = codedTreatmentScenes[entry.assetId];
   const src = getMedicalAsset(entry.assetId);
   const hasAsset = Boolean(src);
 
-  // In the player, only real clips (or coded scenes) ever reach here. The visual plays
-  // clean — no callouts, chips, or labels on top — with just a soft bottom scrim so the
-  // single-line subtitle (rendered by the player) stays legible.
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      {Coded ? (
-        <Coded progress={progress ?? 0} />
-      ) : hasAsset ? (
-        <MedicalAssetScene entry={entry} src={src!} durationSec={durationSec} />
-      ) : (
-        <TreatmentAssetSlot entry={entry} variant="frame" />
-      )}
+  const visual = Coded ? (
+    <Coded progress={progress ?? 0} />
+  ) : hasAsset ? (
+    <MedicalAssetScene entry={entry} src={src!} durationSec={durationSec} />
+  ) : (
+    <TreatmentAssetSlot entry={entry} variant="frame" />
+  );
 
-      {hasAsset && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/55 to-transparent"
-        />
-      )}
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-white">
+      <div className="flex h-full w-full items-center gap-[4%] px-[5%] pb-[10%] pt-[4%]">
+        {/* Framed clip panel — the visual never takes the whole screen */}
+        <div className="relative h-full w-[58%] shrink-0 overflow-hidden rounded-2xl border border-slate-900/10 bg-slate-100 shadow-[0_18px_44px_rgba(11,18,32,0.16)]">
+          <div className="absolute inset-0">{visual}</div>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-1/5 bg-gradient-to-t from-black/25 to-transparent"
+          />
+        </div>
+
+        {/* Right column — takeaway + personalization */}
+        <div className="min-w-0 flex-1">
+          {sceneIndex != null && (
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-teal-700 sm:text-xs">
+              {`Scene ${String(sceneIndex).padStart(2, '0')}${sceneCount ? ` of ${String(sceneCount).padStart(2, '0')}` : ''}`}
+            </p>
+          )}
+          <p className="mt-2 text-sm font-semibold leading-snug text-navy-900 sm:text-lg lg:text-xl">
+            {entry.whatPatientLearns}
+          </p>
+          {personalizationNote && (
+            <div className="mt-3 flex items-start gap-2.5 sm:mt-4">
+              <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-teal-500" />
+              <p className="text-xs leading-relaxed text-slate-500 sm:text-sm">
+                {personalizationNote}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

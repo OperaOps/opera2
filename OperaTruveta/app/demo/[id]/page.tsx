@@ -40,7 +40,7 @@ export default function DemoDetailPage({ params }: { params: { id: string } }) {
   return (
     <div className="space-y-10">
       <Link
-        href="/demo-library"
+        href="/#demos"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 transition-colors hover:text-navy-800"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -124,7 +124,7 @@ export default function DemoDetailPage({ params }: { params: { id: string } }) {
 
       <div className="flex justify-center pt-2">
         <Link
-          href="/demo-library"
+          href="/#demos"
           className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-navy-800 transition-all hover:border-teal-200 hover:bg-teal-50"
         >
           <ArrowLeft className="h-4 w-4" />

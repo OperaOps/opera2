@@ -59,7 +59,7 @@ export function Navbar() {
 
         <div className="hidden lg:block">
           <Link
-            href="/demo-library"
+            href="/#demos"
             className="inline-flex items-center gap-2 rounded-full bg-navy-900 px-4 py-2 text-sm font-medium text-white shadow-soft transition-all hover:bg-navy-800 hover:shadow-soft-lg"
           >
             View Demos

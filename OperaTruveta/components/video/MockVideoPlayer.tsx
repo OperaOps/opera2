@@ -35,6 +35,10 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
   const bilingual = /span|english \+/i.test(useCase.patient.language);
   const segment = segments[i];
 
+  // 1-based position of each treatment (clip) scene, for the "Scene N of M" eyebrow.
+  const clipKeys = segments.filter((s) => s.kind === 'treatment').map((s) => s.key);
+  const clipIndex = segment.kind === 'treatment' ? clipKeys.indexOf(segment.key) + 1 : 0;
+
   // Stable advance ref so a narration callback never fires on a stale index.
   // No wrap — end-of-video is handled in the scene effect (the video stops, doesn't loop).
   const advance = useCallback(() => {
@@ -129,20 +133,20 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
   const overall = (i + progress) / segments.length;
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-slate-200/70 bg-navy-950 shadow-soft-lg">
+    <div className="overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-soft-lg">
       {/* Subtle looping background music bed (played under the narration) */}
       <audio ref={bgm} src={withBasePath('/audio/opera-bgm.m4a')} loop preload="auto" />
 
       {/* Top bar */}
-      <div className="border-b border-white/5 px-4 py-3">
-        <p className="truncate text-[11px] font-medium uppercase tracking-wide text-teal-300/80">
+      <div className="border-b border-slate-100 px-4 py-3">
+        <p className="truncate text-[11px] font-medium uppercase tracking-wide text-teal-700/90">
           For {firstName(useCase)} · {useCase.department}
         </p>
-        <p className="truncate text-sm font-semibold text-white">{useCase.title}</p>
+        <p className="truncate text-sm font-semibold text-navy-900">{useCase.title}</p>
       </div>
 
       {/* Scene area */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-navy-950">
+      <div className="relative aspect-[16/9] w-full overflow-hidden bg-white">
         <AnimatePresence mode="wait">
           <motion.div
             key={i}
@@ -161,6 +165,8 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
                 language={useCase.patient.language}
                 progress={progress}
                 durationSec={sceneSeconds(segment.caption)}
+                sceneIndex={clipIndex}
+                sceneCount={clipKeys.length}
               />
             ) : segment.kind === 'clinical' ? (
               <ClinicalSceneRenderer useCase={useCase} plan={segment.plan} />
@@ -177,13 +183,13 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
         {!started && (
           <button
             onClick={startPlayback}
-            className="group absolute inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-navy-900 via-navy-950 to-black"
+            className="group absolute inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-white via-slate-50 to-teal-50/70"
             aria-label="Play video"
           >
-            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 shadow-soft-lg ring-1 ring-black/5 transition-transform group-hover:scale-105">
-              <Play className="h-6 w-6 translate-x-0.5 text-navy-900" />
+            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-navy-900 shadow-soft-lg ring-1 ring-black/5 transition-transform group-hover:scale-105">
+              <Play className="h-6 w-6 translate-x-0.5 text-white" />
             </span>
-            <span className="px-6 text-center text-sm font-medium text-white/70">
+            <span className="px-6 text-center text-sm font-medium text-slate-500">
               {useCase.title}
             </span>
           </button>
@@ -198,7 +204,7 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
             <button
               key={s.key}
               onClick={() => go(idx - i)}
-              className="group relative h-1.5 flex-1 overflow-hidden rounded-full bg-white/12"
+              className="group relative h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200"
               title={`${s.kind === 'clinical' ? 'Real-world · ' : ''}${s.label}`}
             >
               <span
@@ -227,12 +233,12 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
             </Ctrl>
             <button
               onClick={() => setSoundOn((v) => !v)}
-              className="ml-2 inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-medium text-white/60 transition-colors hover:bg-white/10 hover:text-white/90"
+              className="ml-2 inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-navy-900"
               aria-label={soundOn ? 'Mute narration' : 'Unmute narration'}
             >
               {soundOn ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
             </button>
-            <span className="flex items-center gap-1.5 text-[11px] text-white/50">
+            <span className="flex items-center gap-1.5 text-[11px] text-slate-400">
               {formatSeconds(Math.round(overall * useCase.estimatedRuntimeSec))} /{' '}
               {formatSeconds(useCase.estimatedRuntimeSec)}
             </span>
@@ -241,7 +247,7 @@ export function MockVideoPlayer({ useCase }: { useCase: DemoUseCase }) {
           {bilingual && (
             <button
               onClick={() => setShowES((v) => !v)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium text-white/80 transition-colors hover:bg-white/10"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-100"
             >
               <Languages className="h-3.5 w-3.5" />
               {showES ? 'Español' : 'English'}
@@ -271,8 +277,8 @@ function Ctrl({
       className={cn(
         'flex items-center justify-center rounded-full transition-all',
         primary
-          ? 'h-9 w-9 bg-white text-navy-900 hover:scale-105'
-          : 'h-8 w-8 text-white/70 hover:bg-white/10 hover:text-white',
+          ? 'h-9 w-9 bg-navy-900 text-white hover:scale-105'
+          : 'h-8 w-8 text-slate-500 hover:bg-slate-100 hover:text-navy-900',
       )}
     >
       {children}

@@ -42,7 +42,7 @@ export function SyncedSubtitle({ caption, progress }: { caption?: string; progre
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.22 }}
-          className="max-w-[92%] truncate rounded-md bg-black/55 px-3 py-1.5 text-center text-[13px] font-medium leading-snug text-white/95 shadow-sm backdrop-blur-sm sm:text-sm"
+          className="max-w-[92%] truncate rounded-md bg-slate-900/85 px-3 py-1.5 text-center text-[13px] font-medium leading-snug text-white/95 shadow-sm backdrop-blur-sm sm:text-sm"
         >
           {line}
         </motion.p>

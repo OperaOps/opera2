@@ -16,6 +16,7 @@ import { HeroSection } from '@/components/HeroSection';
 import { SectionHeader } from '@/components/SectionHeader';
 import { ValueCard } from '@/components/ValueCard';
 import { AnimatedGradientPanel } from '@/components/AnimatedGradientPanel';
+import { DemoLibrarySection } from '@/components/DemoLibrarySection';
 import { Reveal, RevealGroup } from '@/components/motion';
 import { demoUseCases } from '@/lib/demoData';
 
@@ -29,6 +30,9 @@ export default function HomePage() {
   return (
     <div className="space-y-24">
       <HeroSection />
+
+      {/* The demos — the first thing you reach when you scroll */}
+      <DemoLibrarySection />
 
       {/* What Opera adds — mission alignment */}
       <section>
@@ -130,16 +134,16 @@ export default function HomePage() {
         <Reveal>
           <div className="flex flex-col items-center gap-5 rounded-3xl border border-slate-200/70 bg-white/70 px-6 py-12 text-center shadow-soft backdrop-blur-xl">
             <h2 className="text-balance text-2xl font-semibold tracking-tight text-navy-900 sm:text-3xl">
-              See it on twelve real patient moments
+              See it on thirteen real patient moments
             </h2>
             <p className="max-w-xl text-slate-500">
               Every demo is a synthetic patient with a personalized, narrated education video.
             </p>
             <Link
-              href="/demo-library"
+              href="#demos"
               className="group inline-flex items-center gap-2 rounded-full bg-navy-900 px-6 py-3 text-sm font-medium text-white shadow-soft transition-all hover:bg-navy-800 hover:shadow-soft-lg"
             >
-              Open the demo library
+              Jump to the demos
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
