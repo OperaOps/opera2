@@ -14,7 +14,7 @@ import type { RenderInput } from "@/app/api/patient-video/_lib/job-types";
 
 const VALID_TREATMENTS = new Set([
   "crown", "filling", "root_canal", "implant", "extraction", "bridge",
-  "veneers", "whitening", "gum_treatment", "dentures", "full_mouth_rehab",
+  "veneers", "whitening", "gum_treatment", "full_mouth_rehab",
   "braces", "invisalign", "ceramic_braces", "lingual_braces", "expander",
   "retainer", "jaw_surgery",
 ]);

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "studio": "remotion studio",
-    "render": "remotion render PatientVideo out/video.mp4",
+    "render": "remotion render FlagshipVideo out/video.mp4",
     "render:demo": "npx tsx render-demo.ts",
     "build": "remotion bundle"
   },

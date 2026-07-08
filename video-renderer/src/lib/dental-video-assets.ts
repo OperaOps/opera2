@@ -28,7 +28,7 @@ export interface VideoClipInfo {
 
 export interface TreatmentVideoAssets {
   problem?: VideoClipInfo[];
-  treatment: VideoClipInfo[];
+  treatment?: VideoClipInfo[];
   outcome?: VideoClipInfo[];
   /** Premium scenes — used by PremiumOrthoVideo composition */
   deepDive?: VideoClipInfo[];
@@ -44,104 +44,119 @@ const SHARED_OUTCOME: VideoClipInfo = {
 
 const dentalVideoMap: Record<string, TreatmentVideoAssets> = {
   crown: {
-    treatment: [
-      { src: `${LOCAL}/crown/step1.mp4`, durationSeconds: 13.5 },
-      { src: `${LOCAL}/crown/step2.mp4`, durationSeconds: 9.1 },
+    problem: [
+      { src: `${LOCAL}/crown/problem.mp4`, durationSeconds: 8.0 },
     ],
-    // Deep dive uses step2 (prep detail) — different angle from treatment step1
     deepDive: [
       { src: `${LOCAL}/crown/step2.mp4`, durationSeconds: 9.1 },
+    ],
+    treatment: [
+      { src: `${LOCAL}/crown/step1.mp4`, durationSeconds: 13.5 },
     ],
     outcome: [
       { src: `${LOCAL}/crown/outcome.mp4`, durationSeconds: 9.0 },
     ],
   },
   filling: {
+    problem: [
+      { src: `${LOCAL}/filling/cavity.mp4`, durationSeconds: 8.0 },
+    ],
+    deepDive: [
+      { src: `${LOCAL}/filling/step2.mp4`, durationSeconds: 17.4 },
+    ],
     treatment: [
       { src: `${LOCAL}/filling/step1.mp4`, durationSeconds: 9.4 },
-      { src: `${LOCAL}/filling/step2.mp4`, durationSeconds: 17.4 },
     ],
-    // Deep dive uses step2 (composite placement) — different from step1 (cavity prep)
-    deepDive: [
-      { src: `${LOCAL}/filling/step2.mp4`, durationSeconds: 17.4 },
-    ],
-    outcome: [SHARED_OUTCOME],
-  },
-  implant: {
-    treatment: [
-      { src: `${LOCAL}/implant/step1.mp4`, durationSeconds: 19.4 },
-      { src: `${LOCAL}/implant/step2.mp4`, durationSeconds: 16.6 },
-    ],
-    // Deep dive uses step2 (implant screw + abutment detail)
-    deepDive: [
-      { src: `${LOCAL}/implant/step2.mp4`, durationSeconds: 16.6 },
-    ],
-    outcome: [SHARED_OUTCOME],
-  },
-  whitening: {
-    treatment: [
-      { src: `${LOCAL}/whitening/step1.mp4`, durationSeconds: 11.2 },
-      { src: `${LOCAL}/whitening/step2.mp4`, durationSeconds: 22.5 },
-    ],
-    deepDive: [
-      { src: `${LOCAL}/whitening/step2.mp4`, durationSeconds: 22.5 },
-    ],
-    outcome: [SHARED_OUTCOME],
-  },
-  veneers: {
-    problem: [
-      { src: `${LOCAL}/veneers/preparation.mp4`, durationSeconds: 11.5 },
-    ],
-    treatment: [
-      { src: `${LOCAL}/veneers/placement.mp4`, durationSeconds: 28 },
-    ],
-    deepDive: [
-      { src: `${LOCAL}/veneers/bonding.mp4`, durationSeconds: 13 },
+    whatToExpect: [
+      { src: `${LOCAL}/filling/cure.mp4`, durationSeconds: 8.0 },
     ],
     outcome: [
-      { src: `${LOCAL}/veneers/result.mp4`, durationSeconds: 11 },
+      { src: `${LOCAL}/braces/outcome.mp4`, durationSeconds: 8.0 },
+    ],
+  },
+  implant: {
+    deepDive: [
+      { src: `${LOCAL}/implant/step2.mp4`, durationSeconds: 16.6 },
+    ],
+    treatment: [
+      { src: `${LOCAL}/implant/step1.mp4`, durationSeconds: 19.4 },
+    ],
+    outcome: [
+      { src: `${LOCAL}/braces/outcome.mp4`, durationSeconds: 8.0 },
+    ],
+  },
+  whitening: {
+    deepDive: [
+      { src: `${LOCAL}/whitening/step2.mp4`, durationSeconds: 22.5 },
+    ],
+    treatment: [
+      { src: `${LOCAL}/whitening/step1.mp4`, durationSeconds: 11.2 },
+    ],
+    outcome: [
+      { src: `${LOCAL}/braces/outcome.mp4`, durationSeconds: 8.0 },
+    ],
+  },
+  // Veneers — full Seedance flagship set (navy/cyan style), one unique clip per beat.
+  veneers: {
+    problem: [
+      { src: `${LOCAL}/veneers/veneers-smile-overview.mp4`, durationSeconds: 8.0 },
+    ],
+    deepDive: [
+      { src: `${LOCAL}/veneers/veneers-shell-reveal.mp4`, durationSeconds: 8.0 },
+      { src: `${LOCAL}/veneers/veneers-shade-and-scan.mp4`, durationSeconds: 8.0 },
+    ],
+    treatment: [
+      { src: `${LOCAL}/veneers/veneers-minimal-prep.mp4`, durationSeconds: 8.0 },
+      { src: `${LOCAL}/veneers/veneers-etch-and-bond.mp4`, durationSeconds: 8.0 },
+      { src: `${LOCAL}/veneers/veneers-seat-first.mp4`, durationSeconds: 8.0 },
+    ],
+    journey: [
+      { src: `${LOCAL}/veneers/veneers-seat-brighten.mp4`, durationSeconds: 8.0 },
+    ],
+    whatToExpect: [
+      { src: `${LOCAL}/veneers/veneers-cure-bond.mp4`, durationSeconds: 8.0 },
+    ],
+    outcome: [
+      { src: `${LOCAL}/veneers/veneers-finished-smile.mp4`, durationSeconds: 4.3 },
     ],
   },
   root_canal: {
     problem: [
       { src: `${LOCAL}/root_canal/problem.mp4`, durationSeconds: 15.1 },
     ],
+    deepDive: [
+      { src: `${LOCAL}/root_canal/nerve.mp4`, durationSeconds: 8.0 },
+    ],
     treatment: [
       { src: `${LOCAL}/root_canal/treatment.mp4`, durationSeconds: 18 },
     ],
-    // Deep dive uses the problem clip (cross-section of infected tooth)
-    deepDive: [
-      { src: `${LOCAL}/root_canal/problem.mp4`, durationSeconds: 15.1 },
+    outcome: [
+      { src: `${LOCAL}/braces/outcome.mp4`, durationSeconds: 8.0 },
     ],
-    outcome: [SHARED_OUTCOME],
   },
   extraction: {
+    problem: [
+      { src: `${LOCAL}/crown/problem.mp4`, durationSeconds: 8.0 },
+    ],
     treatment: [
       { src: `${LOCAL}/extraction/step1.mp4`, durationSeconds: 12.5 },
     ],
-    deepDive: [
-      { src: `${LOCAL}/extraction/step1.mp4`, durationSeconds: 12.5 },
+    outcome: [
+      { src: `${LOCAL}/braces/outcome.mp4`, durationSeconds: 8.0 },
     ],
-    outcome: [SHARED_OUTCOME],
   },
   bridge: {
+    deepDive: [
+      { src: `${LOCAL}/bridge/unit.mp4`, durationSeconds: 8.0 },
+    ],
     treatment: [
       { src: `${LOCAL}/bridge/step1.mp4`, durationSeconds: 16.5 },
     ],
-    deepDive: [
-      { src: `${LOCAL}/bridge/step1.mp4`, durationSeconds: 16.5 },
+    outcome: [
+      { src: `${LOCAL}/braces/outcome.mp4`, durationSeconds: 8.0 },
     ],
-    outcome: [SHARED_OUTCOME],
   },
-  dentures: {
-    treatment: [
-      { src: `${LOCAL}/dentures/step1.mp4`, durationSeconds: 12.8 },
-    ],
-    deepDive: [
-      { src: `${LOCAL}/dentures/step1.mp4`, durationSeconds: 12.8 },
-    ],
-    outcome: [SHARED_OUTCOME],
-  },
+  // dentures: removed from the offered treatment list.
   gum_treatment: {
     problem: [
       { src: `${LOCAL}/gum_treatment/problem.mp4`, durationSeconds: 18.9 },
@@ -216,32 +231,55 @@ const dentalVideoMap: Record<string, TreatmentVideoAssets> = {
 
   // ── Orthodontic treatments ──────────────────────────────────
 
+  // Braces — full Veo set (clean 3D medical animation), one unique clip per beat.
   braces: {
-    treatment: [
-      { src: `${LOCAL}/braces/step1.mp4`, durationSeconds: 8.7 },
+    problem: [
+      { src: `${LOCAL}/braces/problem-v2.mp4`, durationSeconds: 8.0 },
     ],
     deepDive: [
-      { src: `${LOCAL}/braces/step1.mp4`, durationSeconds: 8.7 },
+      { src: `${LOCAL}/braces/deep-dive.mp4`, durationSeconds: 8.0 },
     ],
-    outcome: [SHARED_OUTCOME],
+    treatment: [
+      { src: `${LOCAL}/braces/treatment-v2.mp4`, durationSeconds: 8.0 },
+    ],
+    outcome: [
+      { src: `${LOCAL}/braces/outcome.mp4`, durationSeconds: 8.0 },
+    ],
   },
   invisalign: {
-    treatment: [
-      { src: `${LOCAL}/invisalign/step1.mp4`, durationSeconds: 22 },
+    problem: [
+      { src: `${LOCAL}/invisalign/problem.mp4`, durationSeconds: 8.0 },
     ],
     deepDive: [
-      { src: `${LOCAL}/invisalign/step1.mp4`, durationSeconds: 22 },
+      { src: `${LOCAL}/invisalign/tray.mp4`, durationSeconds: 8.0 },
     ],
-    outcome: [SHARED_OUTCOME],
+    treatment: [
+      { src: `${LOCAL}/invisalign/on-teeth.mp4`, durationSeconds: 7.3 },
+    ],
+    journey: [
+      { src: `${LOCAL}/invisalign/series.mp4`, durationSeconds: 7.0 },
+    ],
+    whatToExpect: [
+      { src: `${LOCAL}/invisalign/case.mp4`, durationSeconds: 8.0 },
+    ],
+    outcome: [
+      { src: `${LOCAL}/braces/outcome.mp4`, durationSeconds: 8.0 },
+    ],
   },
+  // Ceramic braces — comparison + smile clips, reuses braces problem/outcome beats.
   ceramic_braces: {
-    treatment: [
-      { src: `${LOCAL}/ceramic_braces/step1.mp4`, durationSeconds: 2.3 },
+    problem: [
+      { src: `${LOCAL}/braces/problem-v2.mp4`, durationSeconds: 8.0 },
     ],
     deepDive: [
-      { src: `${LOCAL}/ceramic_braces/step1.mp4`, durationSeconds: 2.3 },
+      { src: `${LOCAL}/ceramic_braces/comparison.mp4`, durationSeconds: 8.0 },
     ],
-    outcome: [SHARED_OUTCOME],
+    whatToExpect: [
+      { src: `${LOCAL}/ceramic_braces/smile.mp4`, durationSeconds: 8.0 },
+    ],
+    outcome: [
+      { src: `${LOCAL}/braces/outcome.mp4`, durationSeconds: 8.0 },
+    ],
   },
   lingual_braces: {
     treatment: [
@@ -252,23 +290,35 @@ const dentalVideoMap: Record<string, TreatmentVideoAssets> = {
     ],
     outcome: [SHARED_OUTCOME],
   },
+  // Palatal expander — full Veo set, narrow arch → device → in place → widened arch.
   expander: {
-    treatment: [
-      { src: `${LOCAL}/expander/step1.mp4`, durationSeconds: 9.6 },
+    problem: [
+      { src: `${LOCAL}/expander/narrow.mp4`, durationSeconds: 8.0 },
     ],
     deepDive: [
-      { src: `${LOCAL}/expander/step1.mp4`, durationSeconds: 9.6 },
+      { src: `${LOCAL}/expander/device.mp4`, durationSeconds: 8.0 },
     ],
-    outcome: [SHARED_OUTCOME],
+    treatment: [
+      { src: `${LOCAL}/expander/in-place.mp4`, durationSeconds: 8.0 },
+    ],
+    outcome: [
+      { src: `${LOCAL}/expander/wide.mp4`, durationSeconds: 8.0 },
+    ],
   },
+  // Retainer — problem beat shows the straight post-braces smile worth protecting.
   retainer: {
-    treatment: [
-      { src: `${LOCAL}/retainer/step1.mp4`, durationSeconds: 36.3 },
+    problem: [
+      { src: `${LOCAL}/braces/outcome.mp4`, durationSeconds: 8.0 },
     ],
     deepDive: [
-      { src: `${LOCAL}/retainer/step1.mp4`, durationSeconds: 36.3 },
+      { src: `${LOCAL}/retainer/hawley.mp4`, durationSeconds: 8.0 },
     ],
-    outcome: [SHARED_OUTCOME],
+    treatment: [
+      { src: `${LOCAL}/retainer/on-teeth.mp4`, durationSeconds: 8.0 },
+    ],
+    whatToExpect: [
+      { src: `${LOCAL}/retainer/morning.mp4`, durationSeconds: 8.0 },
+    ],
   },
   jaw_surgery: {
     treatment: [

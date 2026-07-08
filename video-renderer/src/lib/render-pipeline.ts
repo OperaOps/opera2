@@ -1,13 +1,12 @@
 /**
  * render-pipeline.ts
  *
- * Orchestrates the full patient video generation pipeline:
+ * Orchestrates the full patient video generation pipeline (flagship format):
  *   1. Generate script (Claude API or demo)
- *   2. Build narration text
- *   3. Generate TTS audio
- *   4. Generate captions
- *   5. Bundle Remotion project
- *   6. Render video via Remotion renderer
+ *   2. Build flagship segments (intro card → journey timeline → clips → warm close)
+ *   3. Generate per-segment TTS audio (each segment sized to its narration)
+ *   5. Bundle Remotion project / upload segment audio for Lambda
+ *   6. Render the FlagshipVideo composition
  *   7. Return final video path
  */
 
@@ -32,29 +31,23 @@ import {
   type PremiumGeneratedScript,
 } from "./script-generator";
 import {
-  buildNarrationText,
-  buildPremiumNarrationText,
   generateTTS,
   probeAudioFileDurationSeconds,
   PREMIUM_VOICE_ID,
-  type TTSAlignment,
 } from "./tts";
 import {
-  generateCaptions,
-  generatePremiumCaptions,
-  generateCaptionsFromAlignment,
-} from "./captions-generator";
-import {
-  DEFAULT_FPS,
   VIDEO_WIDTH,
   VIDEO_HEIGHT,
   RENDER_SCALE as DEFAULT_RENDER_SCALE,
-  type PatientVideoProps,
-  type PremiumPatientVideoProps,
-  type DiagnosisType,
-  type TreatmentType,
 } from "./schema";
-import { secondsToFrames, totalDurationFrames, totalDurationFramesWithBuffer } from "./timing";
+import {
+  buildFlagshipSegments,
+  estimateNarrationSeconds,
+  flagshipTotalSeconds,
+  FLAGSHIP_FPS,
+  FLAGSHIP_TEAL,
+  type FlagshipVideoProps,
+} from "./flagship";
 import { stripDoctorPrefix } from "./doctor-format";
 
 // ---------------------------------------------------------------------------
@@ -223,144 +216,6 @@ async function getOrCreateBundle(): Promise<string> {
 }
 
 // ---------------------------------------------------------------------------
-// Helper: build Remotion input props from script
-// ---------------------------------------------------------------------------
-
-function buildInputProps(
-  input: RenderJobInput,
-  script: GeneratedScript,
-  captions: { text: string; startFrame: number; endFrame: number }[],
-  audioFileName?: string
-): PatientVideoProps {
-  return {
-    patientName: input.patientName,
-    doctorName: stripDoctorPrefix(input.doctorName),
-    clinicName: input.clinicName,
-    category: input.category,
-    diagnosis: input.diagnosis as DiagnosisType,
-    treatment: input.treatment as TreatmentType,
-    scenes: {
-      intro: {
-        id: "intro",
-        narration: script.scenes.intro.narration,
-        durationSeconds: script.scenes.intro.durationSeconds,
-        heading: script.scenes.intro.heading,
-      },
-      problem: {
-        id: "problem",
-        narration: script.scenes.problem.narration,
-        durationSeconds: script.scenes.problem.durationSeconds,
-        heading: script.scenes.problem.heading,
-        bullets: script.scenes.problem.bullets,
-      },
-      treatment: {
-        id: "treatment",
-        narration: script.scenes.treatment.narration,
-        durationSeconds: script.scenes.treatment.durationSeconds,
-        heading: script.scenes.treatment.heading,
-        bullets: script.scenes.treatment.bullets,
-      },
-      outcome: {
-        id: "outcome",
-        narration: script.scenes.outcome.narration,
-        durationSeconds: script.scenes.outcome.durationSeconds,
-        heading: script.scenes.outcome.heading,
-        bullets: script.scenes.outcome.bullets,
-      },
-      cta: {
-        id: "cta",
-        narration: script.scenes.cta.narration,
-        durationSeconds: script.scenes.cta.durationSeconds,
-        heading: script.scenes.cta.heading,
-      },
-    },
-    captions,
-    audioUrl: audioFileName ?? undefined,
-    bgmUrl:
-      input.bgmUrl ??
-      (process.env.OPERA_BGM_PUBLIC_PATH?.trim() || undefined),
-    clinicBrand: {
-      primaryColor: input.clinicBrand?.primaryColor ?? "#7c3aed",
-      accentColor: input.clinicBrand?.accentColor ?? "#a855f7",
-    },
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Helper: build premium Remotion input props from premium script
-// ---------------------------------------------------------------------------
-
-function buildPremiumInputProps(
-  input: RenderJobInput,
-  script: PremiumGeneratedScript,
-  captions: { text: string; startFrame: number; endFrame: number }[],
-  audioFileName?: string
-): PremiumPatientVideoProps {
-  return {
-    patientName: input.patientName,
-    doctorName: stripDoctorPrefix(input.doctorName),
-    clinicName: input.clinicName,
-    diagnosis: input.diagnosis,
-    treatment: input.treatment,
-    accentColor: input.clinicBrand?.primaryColor ?? "#7c3aed",
-    scenes: {
-      intro: {
-        narration: script.scenes.intro.narration,
-        durationSeconds: script.scenes.intro.durationSeconds,
-      },
-      problem: {
-        narration: script.scenes.problem.narration,
-        durationSeconds: script.scenes.problem.durationSeconds,
-        heading: script.scenes.problem.heading,
-        bullets: script.scenes.problem.bullets,
-      },
-      deepDive: {
-        narration: script.scenes.deepDive.narration,
-        durationSeconds: script.scenes.deepDive.durationSeconds,
-        heading: script.scenes.deepDive.heading,
-        bullets: script.scenes.deepDive.bullets,
-      },
-      treatment: {
-        narration: script.scenes.treatment.narration,
-        durationSeconds: script.scenes.treatment.durationSeconds,
-        heading: script.scenes.treatment.heading,
-        bullets: script.scenes.treatment.bullets,
-      },
-      journey: {
-        narration: script.scenes.journey.narration,
-        durationSeconds: script.scenes.journey.durationSeconds,
-        heading: script.scenes.journey.heading,
-        bullets: script.scenes.journey.bullets,
-      },
-      outcome: {
-        narration: script.scenes.outcome.narration,
-        durationSeconds: script.scenes.outcome.durationSeconds,
-        heading: script.scenes.outcome.heading,
-        bullets: script.scenes.outcome.bullets,
-      },
-      whatToExpect: {
-        narration: script.scenes.whatToExpect.narration,
-        durationSeconds: script.scenes.whatToExpect.durationSeconds,
-        heading: script.scenes.whatToExpect.heading,
-        bullets: script.scenes.whatToExpect.bullets,
-      },
-      cta: {
-        narration: script.scenes.cta.narration,
-        durationSeconds: script.scenes.cta.durationSeconds,
-        heading: script.scenes.cta.heading,
-      },
-    },
-    captions,
-    audioUrl: audioFileName ?? undefined,
-    bgmUrl:
-      input.bgmUrl ??
-      (process.env.OPERA_BGM_PUBLIC_PATH?.trim() || undefined),
-    logoUrl: input.logoUrl ?? undefined,
-    phoneNumber: input.phoneNumber ?? undefined,
-  };
-}
-
-// ---------------------------------------------------------------------------
 // Main pipeline
 // ---------------------------------------------------------------------------
 
@@ -449,132 +304,56 @@ export async function renderPatientVideo(
   notify("Script generated", 0.15);
 
   // --------------------------------------------------
-  // Step 2: Build narration text
+  // Step 2: Build flagship segments (intro card → timeline → clips → warm close)
   // --------------------------------------------------
-  const narrationText = isPremium
-    ? buildPremiumNarrationText(premiumScript!.scenes)
-    : buildNarrationText(script!.scenes);
+  const segments = buildFlagshipSegments({
+    patientName: input.patientName,
+    doctorName: stripDoctorPrefix(input.doctorName),
+    clinicName: input.clinicName,
+    category: input.category,
+    treatment: input.treatment,
+    script: isPremium ? undefined : script,
+    premiumScript: isPremium ? premiumScript : undefined,
+  });
+  process.stderr.write(`[render-pipeline] Flagship segments: ${segments.length}\n`);
 
   // --------------------------------------------------
-  // Step 3: Generate TTS audio
+  // Step 3: Per-segment TTS — each segment is sized to its own narration audio,
+  // so cuts land exactly between spoken beats (the flagship format).
   // --------------------------------------------------
-  let audioFileName: string | undefined;
-  let ttsAlignment: TTSAlignment | undefined;
-  let realAudioDurationSeconds: number | undefined;
+  const jobId = Date.now();
+  const segmentAudio: { tmpPath: string; publicName: string }[] = [];
 
   const elevenLabsKey = process.env.ELEVENLABS_API_KEY;
   if (elevenLabsKey) {
     notify("Generating voiceover audio", 0.2);
-
-    const audioTmpPath = path.join(tmpDir, "narration.mp3");
-    const ttsResult = await generateTTS(
-      narrationText,
-      audioTmpPath,
-      elevenLabsKey,
-      isPremium ? PREMIUM_VOICE_ID : undefined
+    for (let i = 0; i < segments.length; i++) {
+      const seg = segments[i];
+      const tmpPath = path.join(tmpDir, `flagship-seg-${i}.mp3`);
+      await generateTTS(
+        seg.narration,
+        tmpPath,
+        elevenLabsKey,
+        isPremium ? PREMIUM_VOICE_ID : undefined
+      );
+      const probed = await probeAudioFileDurationSeconds(tmpPath);
+      seg.durationSeconds =
+        (probed > 0 ? probed : estimateNarrationSeconds(seg.narration)) + 0.45;
+      seg.audioFile = `flagship-${jobId}-${i}.mp3`;
+      segmentAudio.push({ tmpPath, publicName: seg.audioFile });
+      notify("Generating voiceover audio", 0.2 + ((i + 1) / segments.length) * 0.18);
+    }
+    process.stderr.write(
+      `[render-pipeline] Segment audio ready: ${segments
+        .map((s) => s.durationSeconds.toFixed(1))
+        .join("s, ")}s (total ${flagshipTotalSeconds(segments).toFixed(1)}s)\n`
     );
-
-    // Duration: TTS layer already merges alignment + ffprobe; we still refine with alignment coverage.
-    ttsAlignment = ttsResult.alignment;
-    realAudioDurationSeconds = ttsResult.estimatedDurationSeconds;
-
-    if (ttsAlignment && ttsAlignment.character_end_times_seconds.length > 0) {
-      const rawDuration =
-        ttsAlignment.character_end_times_seconds[
-          ttsAlignment.character_end_times_seconds.length - 1
-        ];
-      const alignedChars = ttsAlignment.characters.length;
-      const totalChars = narrationText.length;
-      const coverageRatio = alignedChars / totalChars;
-      if (coverageRatio >= 0.8) {
-        realAudioDurationSeconds = Math.max(rawDuration + 0.25, realAudioDurationSeconds);
-        console.log(
-          `[render-pipeline] Real audio duration: ${realAudioDurationSeconds.toFixed(1)}s (alignment coverage: ${Math.round(coverageRatio * 100)}%)`
-        );
-      } else {
-        console.warn(
-          `[render-pipeline] TTS alignment coverage too low (${Math.round(coverageRatio * 100)}% of ${totalChars} chars) — discarding alignment for captions.`
-        );
-        ttsAlignment = undefined;
-      }
-    }
-
-    // Filename for staticFile() after we copy into bundle/public/ (see Step 5b). Keep bytes in tmpDir only —
-    // video-renderer/public is often root-owned in Docker and must not be required for writes.
-    const audioPublicName = `narration-${Date.now()}.mp3`;
-    const probedTmp = await probeAudioFileDurationSeconds(audioTmpPath);
-    if (probedTmp > 0) {
-      realAudioDurationSeconds = Math.max(realAudioDurationSeconds, probedTmp + 0.15);
-    }
-
-    audioFileName = audioPublicName;
-    notify("Audio generated", 0.35);
   } else {
     console.warn(
       "[render-pipeline] ELEVENLABS_API_KEY not set — rendering without voiceover audio."
     );
-    notify("Skipping TTS (no API key)", 0.35);
+    notify("Skipping TTS (no API key)", 0.38);
   }
-
-  // --------------------------------------------------
-  // Step 3b: Save before/after photos to public/
-  // --------------------------------------------------
-
-  // Treatment-specific stock photo pairs — each treatment gets relevant imagery
-  const stockPhotoMap: Record<string, { before: string; after: string }> = {
-    // Ortho
-    braces:      { before: "stock/dental-exam-before.jpg", after: "stock/smile-after-2.jpg" },
-    invisalign:  { before: "stock/smile-closeup.jpg",      after: "stock/smile-after-2.jpg" },
-    // Restorative
-    crown:       { before: "stock/dental-checkup.jpg",     after: "stock/happy-dental-patient.jpg" },
-    filling:     { before: "stock/dental-checkup.jpg",     after: "stock/happy-dental-patient.jpg" },
-    root_canal:  { before: "stock/braces-before.jpg",      after: "stock/dental-tools-mouth.jpg" },
-    bridge:      { before: "stock/implant-model.jpg",      after: "stock/happy-dental-patient.jpg" },
-    // Surgical
-    implant:     { before: "stock/implant-model.jpg",      after: "stock/dental-patient.jpg" },
-    extraction:  { before: "stock/dental-restoration.jpg", after: "stock/dental-tools-mouth.jpg" },
-    // Cosmetic
-    whitening:   { before: "stock/whitening-procedure.jpg", after: "stock/smile-after-2.jpg" },
-    veneers:     { before: "stock/smile-closeup.jpg",       after: "stock/smile-after-2.jpg" },
-    full_mouth_rehab: { before: "stock/dental-restoration.jpg", after: "stock/perfect-smile.jpg" },
-  };
-
-  const stockPair = stockPhotoMap[input.treatment] || { before: "stock/dental-checkup.jpg", after: "stock/smile-after-2.jpg" };
-  let beforePhotoFileName = stockPair.before;
-  let afterPhotoFileName = stockPair.after;
-
-  if (input.beforePhotoBase64) {
-    const beforeName = `before-photo-${Date.now()}.jpg`;
-    const beforePath = path.join(tmpDir, beforeName);
-    await fs.writeFile(beforePath, Buffer.from(input.beforePhotoBase64, "base64"));
-    beforePhotoFileName = beforeName;
-  }
-  if (input.afterPhotoBase64) {
-    const afterName = `after-photo-${Date.now()}.jpg`;
-    const afterPath = path.join(tmpDir, afterName);
-    await fs.writeFile(afterPath, Buffer.from(input.afterPhotoBase64, "base64"));
-    afterPhotoFileName = afterName;
-  }
-
-  // --------------------------------------------------
-  // Step 4: Generate captions
-  // --------------------------------------------------
-  notify("Generating captions", 0.4);
-
-  let captions;
-  if (ttsAlignment) {
-    // Use real timing data from ElevenLabs — exact character-level alignment
-    captions = generateCaptionsFromAlignment(narrationText, ttsAlignment, DEFAULT_FPS);
-    console.log(`[render-pipeline] Generated ${captions.length} captions from real TTS alignment data`);
-  } else {
-    // Fall back to estimation-based approach
-    captions = isPremium
-      ? generatePremiumCaptions(premiumScript!.scenes, DEFAULT_FPS)
-      : generateCaptions(script!.scenes, DEFAULT_FPS);
-    console.log(`[render-pipeline] Generated ${captions.length} captions from word-count estimation (no alignment data)`);
-  }
-
-  notify("Captions generated", 0.45);
 
   // --------------------------------------------------
   // Step 5: Bundle Remotion project (skip when Lambda is configured)
@@ -600,34 +379,44 @@ export async function renderPatientVideo(
   // Static assets (dental-3d/, stock/) are already in bundleRoot/public/ because
   // bundle() copies the source public/ directory there at Docker build time.
   //
-  // Only the per-render audio file (narration-xxx.mp3) needs to be copied here,
+  // Only the per-render segment audio (flagship-*.mp3) needs to be copied here,
   // since it is generated at render time and isn't part of the Docker build.
   // --------------------------------------------------
-  // For Lambda: upload audio to the Remotion Lambda bucket (Lambda has access to this bucket)
-  let lambdaAudioUrl: string | undefined;
-  if (lambdaConfigured && audioFileName) {
-    const audioSrc = path.join(tmpDir, "narration.mp3");
-    const audioKey = `audio/${audioFileName}`;
+  // For Lambda: upload each segment's narration to the Remotion Lambda bucket and
+  // hand the composition presigned URLs (Lambda workers can't read our tmpDir).
+  if (lambdaConfigured && segmentAudio.length) {
     const lambdaBucket = "remotionlambda-useast1-zpvm5jjogw";
     try {
-      const audioData = await fs.readFile(audioSrc);
       const s3 = new S3Client({ region: process.env.AWS_REGION || "us-east-1" });
-      await s3.send(new PutObjectCommand({
-        Bucket: lambdaBucket,
-        Key: audioKey,
-        Body: audioData,
-        ContentType: "audio/mpeg",
-      }));
-      // Generate presigned URL so Lambda workers can download the audio
       const { getSignedUrl } = await import("@aws-sdk/s3-request-presigner");
       const { GetObjectCommand } = await import("@aws-sdk/client-s3");
-      lambdaAudioUrl = await getSignedUrl(s3, new GetObjectCommand({
-        Bucket: lambdaBucket,
-        Key: audioKey,
-      }), { expiresIn: 3600 });
-      console.log(`[render-pipeline] Uploaded audio to S3 with presigned URL`);
+      // duplicate @smithy/types trees make client/command nominally incompatible — safe cast
+      const presign = getSignedUrl as unknown as (
+        client: unknown,
+        command: unknown,
+        options: { expiresIn: number }
+      ) => Promise<string>;
+      for (let i = 0; i < segmentAudio.length; i++) {
+        const { tmpPath, publicName } = segmentAudio[i];
+        const audioKey = `audio/${publicName}`;
+        const audioData = await fs.readFile(tmpPath);
+        await s3.send(new PutObjectCommand({
+          Bucket: lambdaBucket,
+          Key: audioKey,
+          Body: audioData,
+          ContentType: "audio/mpeg",
+        }));
+        segments[i].audioUrl = await presign(
+          s3,
+          new GetObjectCommand({ Bucket: lambdaBucket, Key: audioKey }),
+          { expiresIn: 3600 }
+        );
+      }
+      console.log(
+        `[render-pipeline] Uploaded ${segmentAudio.length} segment audio files to S3 with presigned URLs`
+      );
     } catch (err) {
-      console.error(`[render-pipeline] Failed to upload audio to S3:`, err);
+      console.error(`[render-pipeline] Failed to upload segment audio to S3:`, err);
     }
   }
 
@@ -636,126 +425,57 @@ export async function renderPatientVideo(
   // Ensure bundle public dir exists (should already from prebundle, but safety)
   if (!lambdaConfigured) {
     await fs.mkdir(bundlePublicDir, { recursive: true }).catch(() => {});
-  }
 
-  // Copy audio into bundle/public/ so staticFile("narration-xxx.mp3") finds it (source: per-job tmp only)
-  if (audioFileName) {
-    const src = path.join(tmpDir, "narration.mp3");
-    const dest = path.join(bundlePublicDir, audioFileName);
-    try {
-      await fs.copyFile(src, dest);
-      process.stderr.write(`[render-pipeline] Copied audio to bundle/public/: ${audioFileName}\n`);
-    } catch (err) {
-      // Audio missing = no narration. Fail loudly so we know.
-      throw new Error(
-        `[render-pipeline] FATAL: Failed to copy audio to bundle/public/. ` +
-        `src=${src} dest=${dest} error=${err instanceof Error ? err.message : String(err)}`
+    // Copy segment audio into bundle/public/ so staticFile("flagship-xxx.mp3") resolves.
+    for (const { tmpPath, publicName } of segmentAudio) {
+      const dest = path.join(bundlePublicDir, publicName);
+      try {
+        await fs.copyFile(tmpPath, dest);
+      } catch (err) {
+        // Audio missing = no narration. Fail loudly so we know.
+        throw new Error(
+          `[render-pipeline] FATAL: Failed to copy segment audio to bundle/public/. ` +
+            `src=${tmpPath} dest=${dest} error=${err instanceof Error ? err.message : String(err)}`
+        );
+      }
+    }
+    if (segmentAudio.length) {
+      process.stderr.write(
+        `[render-pipeline] Copied ${segmentAudio.length} segment audio files to bundle/public/\n`
       );
     }
-  } else {
-    process.stderr.write("[render-pipeline] No audio file (TTS skipped or failed)\n");
   }
 
-  // Copy user-uploaded before/after photos into bundle/public/ (if provided)
-  // These use paths like "before-photo-xxx.jpg" (not stock/).
-  // Stock photos are already in bundle/public/stock/ from Docker build.
-  for (const photoFile of [beforePhotoFileName, afterPhotoFileName]) {
-    // Only copy user-uploaded photos (they start with "before-photo-" or "after-photo-")
-    if (!photoFile || photoFile.startsWith("stock/")) continue;
-    const src = path.join(tmpDir, photoFile);
-    const dest = path.join(bundlePublicDir, photoFile);
-    try {
-      await fs.mkdir(path.dirname(dest), { recursive: true });
-      await fs.copyFile(src, dest);
-      process.stderr.write(`[render-pipeline] Copied user photo to bundle/public/: ${photoFile}\n`);
-    } catch (err) {
-      console.error(`[render-pipeline] Failed to copy user photo: ${photoFile} — ${err instanceof Error ? err.message : String(err)}`);
-    }
-  }
-
-  // dental-3d/ and stock/ images: staticFile() from bundle/public (Docker build).
-  // Dental procedure MP4s: HTTPS URLs from dental-video-assets.ts (S3) — OffthreadVideo/ffmpeg need HTTP, not staticFile.
+  // Treatment clips + the opera-bgm bed live in bundle/public (Docker build) and
+  // resolve via staticFile() inside the FlagshipVideo composition.
 
   notify("Assets synced to bundle", 0.6);
 
   // --------------------------------------------------
-  // Step 6: Render video
+  // Step 6: Render video — always the FlagshipVideo composition
   // --------------------------------------------------
   notify("Rendering video", 0.65);
 
-  let inputProps: PatientVideoProps | PremiumPatientVideoProps;
-  let sceneDurations: number[];
-  let compositionId: string;
+  const inputProps: FlagshipVideoProps = {
+    patientName: input.patientName,
+    doctorName: stripDoctorPrefix(input.doctorName),
+    clinicName: input.clinicName,
+    accentColor: FLAGSHIP_TEAL,
+    bgmUrl: input.bgmUrl ?? (process.env.OPERA_BGM_PUBLIC_PATH?.trim() || undefined),
+    segments,
+  };
+  const compositionId = "FlagshipVideo";
+  process.stderr.write(
+    `[render-pipeline] Using composition=FlagshipVideo treatment=${input.treatment} diagnosis=${input.diagnosis} segments=${segments.length} audio=${segmentAudio.length}\n`
+  );
 
-  if (isPremium) {
-    const ps = premiumScript!;
-    inputProps = buildPremiumInputProps(input, ps, captions, audioFileName);
-    (inputProps as PremiumPatientVideoProps).beforePhotoUrl = beforePhotoFileName;
-    (inputProps as PremiumPatientVideoProps).afterPhotoUrl = afterPhotoFileName;
-    // Pass real audio duration so calculateMetadata in Root.tsx uses it (prevents cutoff)
-    if (realAudioDurationSeconds) {
-      (inputProps as any).realAudioDurationSeconds = realAudioDurationSeconds;
-    }
-    sceneDurations = [
-      ps.scenes.intro.durationSeconds,
-      ps.scenes.problem.durationSeconds,
-      ps.scenes.deepDive.durationSeconds,
-      ps.scenes.treatment.durationSeconds,
-      ps.scenes.journey.durationSeconds,
-      ps.scenes.outcome.durationSeconds,
-      ps.scenes.whatToExpect.durationSeconds,
-      ps.scenes.cta.durationSeconds,
-    ];
-    compositionId = "PremiumOrthoVideo";
-    process.stderr.write(`[render-pipeline] Using composition=PremiumOrthoVideo treatment=${input.treatment} diagnosis=${input.diagnosis} audioFile=${audioFileName ?? "NONE"}\n`);
-  } else {
-    const s = script!;
-    inputProps = buildInputProps(input, s, captions, audioFileName);
-    sceneDurations = [
-      s.scenes.intro.durationSeconds,
-      s.scenes.problem.durationSeconds,
-      s.scenes.treatment.durationSeconds,
-      s.scenes.outcome.durationSeconds,
-      s.scenes.cta.durationSeconds,
-    ];
-    compositionId = "PatientVideo";
-    process.stderr.write(`[render-pipeline] Using composition=PatientVideo treatment=${input.treatment} audioFile=${audioFileName ?? "NONE"}\n`);
-  }
-
-  const isLongForm = input.treatment === "full_mouth_rehab";
-
-  // Calculate composition duration.
-  // If we have real audio duration from the with-timestamps API, use that
-  // as the source of truth (+ buffer). Otherwise fall back to script estimates.
-  let durationInFrames: number;
-  if (realAudioDurationSeconds) {
-    // Pad past the MP3 end so the last sentence never gets clipped before the video ends.
-    const bufferSeconds = isLongForm ? 5 : 4;
-    durationInFrames = secondsToFrames(realAudioDurationSeconds + bufferSeconds, DEFAULT_FPS);
-    console.log(
-      `[render-pipeline] Composition duration: ${durationInFrames} frames ` +
-        `(from real audio: ${realAudioDurationSeconds.toFixed(1)}s + ${bufferSeconds}s buffer = ${(durationInFrames / DEFAULT_FPS).toFixed(1)}s)`
-    );
-  } else {
-    durationInFrames = totalDurationFramesWithBuffer(sceneDurations, DEFAULT_FPS);
-  }
-
-  // Safety cap — only applies when there's NO real audio measurement.
-  // When we have realAudioDurationSeconds, the video is already sized to audio + buffer,
-  // so we NEVER cap below that (which would cut off narration).
-  if (!realAudioDurationSeconds) {
-    const MAX_DURATION_SECONDS = isPremium ? (isLongForm ? 240 : 200) : 100;
-    const maxFrames = secondsToFrames(MAX_DURATION_SECONDS, DEFAULT_FPS);
-    if (durationInFrames > maxFrames) {
-      console.log(`[render-pipeline] Capping duration from ${durationInFrames} to ${maxFrames} frames (${MAX_DURATION_SECONDS}s max, no real audio)`);
-      durationInFrames = maxFrames;
-    }
-  }
-
-  // For Lambda: override audioUrl with S3 URL so Lambda workers can fetch it
-  if (lambdaConfigured && lambdaAudioUrl) {
-    (inputProps as any).audioUrl = lambdaAudioUrl;
-  }
+  // Composition duration: segments are sized to their real narration audio, so the
+  // total is exact — plus a half-second of headroom (matches calculateFlagshipMetadata).
+  const totalSeconds = flagshipTotalSeconds(segments) + 0.5;
+  const durationInFrames = Math.ceil(totalSeconds * FLAGSHIP_FPS);
+  console.log(
+    `[render-pipeline] Composition duration: ${durationInFrames} frames (${totalSeconds.toFixed(1)}s @ ${FLAGSHIP_FPS}fps)`
+  );
 
   let serializedInputProps = inputProps as Record<string, unknown>;
 
@@ -778,7 +498,7 @@ export async function renderPatientVideo(
       const renderScale = effectiveRenderScale();
       const crf = effectiveCrf();
       process.stderr.write(
-        `[render-pipeline] Lambda render: ${compositionId} @ ${DEFAULT_FPS}fps, scale=${renderScale}, crf=${crf}, frames=${durationInFrames}\n`
+        `[render-pipeline] Lambda render: ${compositionId} @ ${FLAGSHIP_FPS}fps, scale=${renderScale}, crf=${crf}, frames=${durationInFrames}\n`
       );
 
       const { renderId, bucketName } = await renderMediaOnLambda({
@@ -792,13 +512,12 @@ export async function renderPatientVideo(
       jpegQuality: 80,
       scale: renderScale,
       crf,
-      // Lower = more Lambda workers in parallel → faster wall-clock render.
-      framesPerLambda: 30,
+      // Clip-heavy compositions fail with too many workers concurrently decoding the
+      // same MP4s — 120 (retry 150) is the proven setting for video-clip scenes.
+      framesPerLambda: 120,
       timeoutInMilliseconds: 240000,
       overwrite: true,
       outName: outputFileName,
-      durationInFrames,
-      fps: DEFAULT_FPS,
     });
 
     console.log(`[render-pipeline] Lambda render started: renderId=${renderId} bucket=${bucketName}`);
@@ -858,12 +577,10 @@ export async function renderPatientVideo(
           jpegQuality: 80,
           scale: renderScale,
           crf,
-          framesPerLambda: 30,
+          framesPerLambda: 150,
           timeoutInMilliseconds: 240000,
           overwrite: true,
           outName: outputFileName,
-          durationInFrames,
-          fps: DEFAULT_FPS,
         });
         process.stderr.write(`[render-pipeline] Lambda retry started: renderId=${retryRenderId}\n`);
         let retryDone = false;
@@ -903,40 +620,35 @@ export async function renderPatientVideo(
       notify("Bundle ready", 0.55);
     }
 
-    // When falling back from Lambda, the audio file was put in tmpDir (not the
-    // bundle's public/), so copy it now so staticFile() can resolve it locally.
+    // When falling back from Lambda, segment audio was left in tmpDir (not the
+    // bundle's public/), so copy every segment mp3 so staticFile() resolves locally.
     const localPublicDir = path.join(bundleUrl, "public");
     await fs.mkdir(localPublicDir, { recursive: true }).catch(() => {});
-    if (audioFileName) {
-      const audioSrc = path.join(tmpDir, "narration.mp3");
-      const audioDest = path.join(localPublicDir, audioFileName);
+    for (const { tmpPath, publicName } of segmentAudio) {
+      const audioDest = path.join(localPublicDir, publicName);
       try {
-        await fs.copyFile(audioSrc, audioDest);
-        process.stderr.write(
-          `[render-pipeline] Local fallback: copied audio to ${audioDest}\n`
-        );
+        await fs.copyFile(tmpPath, audioDest);
       } catch (err) {
         throw new Error(
-          `[render-pipeline] Local fallback: failed to copy audio: ${err instanceof Error ? err.message : String(err)}`
+          `[render-pipeline] Local fallback: failed to copy segment audio: ${err instanceof Error ? err.message : String(err)}`
         );
       }
     }
-    // Also copy any user-uploaded before/after photos
-    for (const photoFile of [beforePhotoFileName, afterPhotoFileName]) {
-      if (!photoFile || photoFile.startsWith("stock/")) continue;
-      const src = path.join(tmpDir, photoFile);
-      const dest = path.join(localPublicDir, photoFile);
-      try {
-        await fs.mkdir(path.dirname(dest), { recursive: true });
-        await fs.copyFile(src, dest);
-      } catch {
-        // photos are optional, don't fail render
+    if (segmentAudio.length) {
+      process.stderr.write(
+        `[render-pipeline] Local fallback: copied ${segmentAudio.length} segment audio files\n`
+      );
+    }
+    // Presigned S3 URLs from the Lambda attempt may be set on segments — clear them
+    // so the composition resolves narration via staticFile() locally.
+    let clearedAny = false;
+    for (const seg of segments) {
+      if (seg.audioUrl) {
+        seg.audioUrl = undefined;
+        clearedAny = true;
       }
     }
-    // If we set a Lambda-presigned audioUrl earlier, switch back to staticFile
-    // for the local render so the composition resolves narration locally.
-    if (lambdaAudioUrl && audioFileName) {
-      (inputProps as { audioUrl?: string }).audioUrl = audioFileName;
+    if (clearedAny) {
       serializedInputProps = JSON.parse(JSON.stringify(inputProps));
     }
 
@@ -949,7 +661,7 @@ export async function renderPatientVideo(
     });
 
     composition.durationInFrames = durationInFrames;
-    composition.fps = DEFAULT_FPS;
+    composition.fps = FLAGSHIP_FPS;
     composition.width = VIDEO_WIDTH;
     composition.height = VIDEO_HEIGHT;
 
@@ -962,7 +674,7 @@ export async function renderPatientVideo(
     const crf = effectiveCrf();
     console.log(`[render-pipeline] Local render: concurrency=${renderConcurrency} (${cpuCount} CPUs)`);
     console.log(
-      `[render-pipeline] Render scale: ${renderScale} → ${Math.round(VIDEO_WIDTH * renderScale)}x${Math.round(VIDEO_HEIGHT * renderScale)} @ ${DEFAULT_FPS}fps, crf=${crf}`
+      `[render-pipeline] Render scale: ${renderScale} → ${Math.round(VIDEO_WIDTH * renderScale)}x${Math.round(VIDEO_HEIGHT * renderScale)} @ ${FLAGSHIP_FPS}fps, crf=${crf}`
     );
 
     const isRetryableRenderError = (msg: string) =>
@@ -1078,9 +790,13 @@ export async function renderPatientVideo(
 
   // Clean up old audio files from bundle/public/ (keep only current render's audio)
   try {
+    const currentAudio = new Set(segmentAudio.map((a) => a.publicName));
     const bundlePubFiles = await fs.readdir(bundlePublicDir);
     for (const f of bundlePubFiles) {
-      if (f.startsWith("narration-") && f !== audioFileName) {
+      if (
+        (f.startsWith("narration-") || f.startsWith("flagship-")) &&
+        !currentAudio.has(f)
+      ) {
         await fs.unlink(path.join(bundlePublicDir, f)).catch(() => {});
       }
     }
@@ -1104,7 +820,7 @@ export async function renderPatientVideo(
   // --------------------------------------------------
   // Return result
   // --------------------------------------------------
-  const durationSeconds = sceneDurations.reduce((a, b) => a + b, 0);
+  const durationSeconds = Math.round(flagshipTotalSeconds(segments));
 
   return {
     videoPath: outputPath,

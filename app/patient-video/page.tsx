@@ -92,7 +92,6 @@ const DENTAL_TREATMENTS = [
   { value: "veneers", label: "Porcelain Veneers" },
   { value: "whitening", label: "Professional Whitening" },
   { value: "gum_treatment", label: "Gum Disease Treatment" },
-  { value: "dentures", label: "Dentures" },
   { value: "full_mouth_rehab", label: "Full Mouth Rehab" },
 ];
 
