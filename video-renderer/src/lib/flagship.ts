@@ -179,27 +179,24 @@ function makeClipPicker(treatment: string) {
   }
   const outcomeSrcs = new Set(pool("outcome").map((c) => c.src));
   const used = new Set<string>();
-  let cycle = 0;
-  return (role: DentalSceneType): VideoClipInfo => {
+  /**
+   * Returns a FRESH (never-shown) clip for the beat, or undefined when the
+   * treatment has run out of unique footage — the caller then merges that
+   * beat's narration into the previous slide instead of repeating a clip.
+   * Outcome footage is the payoff and is never spent on a mid-story beat.
+   */
+  return (role: DentalSceneType): VideoClipInfo | undefined => {
     const fresh = (list: VideoClipInfo[]) => list.find((c) => !used.has(c.src));
-    // Outcome footage is the payoff — never spend it on a mid-story beat.
     const isMidBeat = role !== "outcome";
     const nonOutcome = (list: VideoClipInfo[]) =>
       isMidBeat ? list.filter((c) => !outcomeSrcs.has(c.src)) : list;
-    const midPool = nonOutcome(all);
     const pick =
       fresh(nonOutcome(pool(role))) ??
       fresh(nonOutcome(pool("treatment"))) ??
       fresh(nonOutcome(all)) ??
-      nonOutcome(pool(role))[0] ??
-      (isMidBeat && midPool.length
-        ? midPool[cycle++ % midPool.length]
-        : undefined) ??
-      fresh(pool(role)) ??
-      pool(role)[0] ??
-      all[cycle++ % Math.max(1, all.length)] ??
-      FALLBACK_CLIP;
-    used.add(pick.src);
+      (isMidBeat ? undefined : (fresh(pool(role)) ?? pool(role)[0])) ??
+      (used.size === 0 ? FALLBACK_CLIP : undefined);
+    if (pick) used.add(pick.src);
     return pick;
   };
 }
@@ -247,15 +244,45 @@ export function buildFlagshipSegments(input: FlagshipBeatInput): FlagshipSegment
     })
   );
 
+  type Beat = {
+    role: DentalSceneType;
+    narration: string;
+    heading?: string;
+    bullets?: string[];
+    freeze?: boolean;
+  };
+
+  // A beat with no FRESH clip never repeats footage — its narration merges into
+  // the previous slide instead (the slide simply runs longer). So a treatment
+  // with 4 unique clips renders 4 clean slides, not 6 with duplicates.
+  const pushBeats = (beats: Beat[]) => {
+    for (const b of beats) {
+      const clip = pickClip(b.role);
+      const last = clips[clips.length - 1] as FlagshipClipSegment | undefined;
+      if (!clip && last) {
+        last.narration = `${last.narration} ${b.narration}`;
+        last.durationSeconds = estimateNarrationSeconds(last.narration);
+        if (b.freeze) last.freeze = true;
+        continue;
+      }
+      clips.push(
+        seg({
+          kind: "clip",
+          clip: clip ?? FALLBACK_CLIP,
+          narration: b.narration,
+          heading: b.heading,
+          bullets: b.bullets,
+          stepNumber: clips.length + 1,
+          freeze: b.freeze,
+          durationSeconds: 0,
+        })
+      );
+    }
+  };
+
   if (input.premiumScript) {
     const s = input.premiumScript.scenes;
-    const beats: Array<{
-      role: DentalSceneType;
-      narration: string;
-      heading?: string;
-      bullets?: string[];
-      freeze?: boolean;
-    }> = [
+    pushBeats([
       { role: "problem", narration: s.problem.narration, heading: s.problem.heading, bullets: s.problem.bullets },
       { role: "deepDive", narration: s.deepDive.narration, heading: s.deepDive.heading, bullets: s.deepDive.bullets },
       { role: "treatment", narration: s.treatment.narration, heading: s.treatment.heading, bullets: s.treatment.bullets },
@@ -268,30 +295,10 @@ export function buildFlagshipSegments(input: FlagshipBeatInput): FlagshipSegment
         bullets: s.outcome.bullets,
         freeze: true,
       },
-    ];
-    beats.forEach((b, i) =>
-      clips.push(
-        seg({
-          kind: "clip",
-          clip: pickClip(b.role),
-          narration: b.narration,
-          heading: b.heading,
-          bullets: b.bullets,
-          stepNumber: i + 1,
-          freeze: b.freeze,
-          durationSeconds: 0,
-        })
-      )
-    );
+    ]);
   } else if (input.script) {
     const s = input.script.scenes;
-    const beats: Array<{
-      role: DentalSceneType;
-      narration: string;
-      heading?: string;
-      bullets?: string[];
-      freeze?: boolean;
-    }> = [
+    pushBeats([
       { role: "problem", narration: s.problem.narration, heading: s.problem.heading, bullets: s.problem.bullets },
       { role: "treatment", narration: s.treatment.narration, heading: s.treatment.heading, bullets: s.treatment.bullets },
       {
@@ -301,21 +308,7 @@ export function buildFlagshipSegments(input: FlagshipBeatInput): FlagshipSegment
         bullets: s.outcome.bullets,
         freeze: true,
       },
-    ];
-    beats.forEach((b, i) =>
-      clips.push(
-        seg({
-          kind: "clip",
-          clip: pickClip(b.role),
-          narration: b.narration,
-          heading: b.heading,
-          bullets: b.bullets,
-          stepNumber: i + 1,
-          freeze: b.freeze,
-          durationSeconds: 0,
-        })
-      )
-    );
+    ]);
   }
 
   return [...cards, ...clips];
