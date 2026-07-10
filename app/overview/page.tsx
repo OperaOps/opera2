@@ -9,18 +9,18 @@ import {
   ArrowRight,
   Sparkles,
   Activity,
-  MessageSquare,
-  Search,
   Layers,
   Video,
   Brain,
   HeartHandshake,
   Plane,
+  Database,
+  Stethoscope,
 } from "lucide-react";
 
 const CALENDLY =
   "https://calendly.com/anishsuvarna-berkeley/30min?back=1&month=2026-06";
-const VIDEO_SRC = "/videos/veneers-jessica.mp4";
+const VIDEO_SRC = "/videos/demo-veneers.mp4";
 const WEBSITE = "https://getopera.ai";
 
 const NAV_SECTIONS = [
@@ -117,7 +117,7 @@ function SideNav() {
   );
 }
 
-const FORWARDABLE_SUMMARY = `Opera AI is building the digital COO for specialty dental and orthodontic practices. Our core product today helps clinics close the gap between diagnosis and patient understanding by turning treatment notes, appointment context, and consult transcripts into short personalized patient videos. These videos help patients understand what was recommended, why it matters, and what to do next, which improves case acceptance and reduces unscheduled treatment. Over time, Opera becomes the intelligence layer on top of the practice stack through Opera Score, Ask Opera, and an opportunity engine that helps practices monitor performance across revenue, scheduling, retention, and referrals. Opera is currently working with 45 individual clinics, is collaborating with Greyfinch on orthodontic integrations as well as multi-location DSO dental groups, is advancing additional licensing and enterprise partnerships, and touches more than $420M in clinical revenue across enterprise relationships. The company is led by Anish Suvarna of UC Berkeley M.E.T. and Ram Dosibhatla of Stanford CS, and is backed by Joshua Browder, SV Angel, and Pareto Holdings.`;
+const FORWARDABLE_SUMMARY = `Opera AI is building the patient education layer for modern healthcare. Every day, patients leave appointments uncertain about what comes next — they forget what their provider explained, struggle to relay it to family, or turn to generic AI tools that know nothing about their actual diagnosis. Using a patient's real clinical context — diagnoses, imaging, treatment recommendations, and physician notes — Opera automatically generates a hyper-personalized video within seconds that patients can revisit at home and share with family. In the last six months, Opera has delivered 130,000+ personalized patient videos and recovered $2.5M+ in previously unscheduled treatment for clinics across the U.S., with zero additional staff and zero workflow changes. The platform is used by 75+ dental and orthodontic clinics, is partnered with Greyfinch, and recently entered a partnership with Truveta — the $1B+ healthcare data company backed by many of the nation's leading health systems. Opera is now expanding into primary care, specialty medicine, ophthalmology, and hospital systems. It is led by Anish Suvarna of UC Berkeley M.E.T. and Ram Dosibhatla of Stanford CS — best friends of 10+ years — and backed by Joshua Browder, SV Angel, and Pareto Holdings.`;
 
 // ---- small reusable building blocks -------------------------------------
 
@@ -205,18 +205,41 @@ export default function OverviewPage() {
         <section className="mx-auto max-w-6xl px-6 pt-16 md:px-10 md:pt-24">
           <motion.div {...reveal}>
             <h1 className="max-w-4xl text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl">
-              Opera AI is the digital COO for specialty{" "}
+              Opera AI is building the patient education layer for{" "}
               <span className="bg-gradient-to-r from-purple-300 via-fuchsia-300 to-purple-400 bg-clip-text text-transparent">
-                dental and orthodontic practices.
+                modern healthcare.
               </span>
             </h1>
             <p className="mt-7 max-w-2xl text-lg leading-relaxed text-gray-400">
-              Today, Opera helps clinics turn confusing treatment plans into
-              personalized patient videos that improve case acceptance and
-              reduce unscheduled treatment. Longer term, Opera is building the
-              intelligence layer above the practice stack, with Opera Score, Ask
-              Opera, and real time operational insights.
+              Using a patient&apos;s actual clinical context — diagnoses,
+              imaging, treatment recommendations, and physician notes — Opera
+              automatically generates a hyper-personalized video in seconds.
+              Patients finally understand what comes next, revisit it at home,
+              and share it with family.
             </p>
+
+            {/* punchy outcome band */}
+            <div className="mt-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-300">
+                In the last six months
+              </p>
+              <div className="mt-4 grid gap-px overflow-hidden rounded-2xl border border-purple-500/25 bg-white/[0.02] sm:grid-cols-3">
+                {[
+                  { stat: "130,000+", label: "personalized patient videos delivered" },
+                  { stat: "$2.5M+", label: "in unscheduled treatment recovered" },
+                  { stat: "Zero", label: "added staff or workflow changes" },
+                ].map((s, i) => (
+                  <div key={i} className="bg-white/[0.02] px-6 py-5">
+                    <div className="bg-gradient-to-r from-purple-200 to-fuchsia-300 bg-clip-text text-3xl font-semibold text-transparent md:text-4xl">
+                      {s.stat}
+                    </div>
+                    <p className="mt-1.5 text-sm leading-snug text-gray-400">
+                      {s.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <a
@@ -236,14 +259,10 @@ export default function OverviewPage() {
             </div>
 
             <p className="mt-6 max-w-2xl text-sm leading-relaxed text-gray-500">
-              Working with{" "}
-              <span className="text-gray-300">45 clinics</span>, collaborating
-              with <span className="text-gray-300">Greyfinch</span> on ortho
-              integrations and{" "}
-              <span className="text-gray-300">
-                multi-location DSO dental groups
-              </span>
-              , and backed by{" "}
+              Adopted by <span className="text-gray-300">75+ dental and
+              orthodontic clinics</span>, partnered with{" "}
+              <span className="text-gray-300">Greyfinch</span> and{" "}
+              <span className="text-gray-300">Truveta</span>, and backed by{" "}
               <span className="text-gray-300">
                 Joshua Browder, SV Angel, and Pareto Holdings.
               </span>
@@ -297,15 +316,13 @@ export default function OverviewPage() {
               </span>
             </h2>
             <p className="mt-6 max-w-3xl text-[15px] leading-relaxed text-gray-400">
-              Specialty dental and orthodontic practices run on fragmented
-              systems for scheduling, imaging, billing, treatment planning, and
-              patient communication. But the bigger problem is not just
-              operational fragmentation. It is the communication gap between what
-              the doctor recommends and what the patient actually understands.
-              Patients often do not reject treatment in the room. They leave
-              uncertain, overwhelmed, or unable to explain the plan later. That
-              shows up as lower case acceptance, delayed decisions, and large
-              amounts of unscheduled treatment.
+              Every day, patients leave appointments uncertain about what comes
+              next. They forget what their provider explained, struggle to
+              communicate it to the family members who help them decide, or turn
+              to generic internet searches and AI tools that know nothing about
+              their actual diagnosis. The result is delayed care, lower treatment
+              acceptance, poorer outcomes, and significant lost revenue. Opera
+              closes that gap.
             </p>
           </motion.div>
 
@@ -314,10 +331,10 @@ export default function OverviewPage() {
             className="mt-10 grid gap-4 sm:grid-cols-2"
           >
             {[
-              "Most clinics do not have a demand problem. They have a decision problem.",
-              "Patients rarely say no. They more often leave and do not decide.",
-              "Practices already have the context. They just are not turning it into patient clarity.",
-              "Owners still lack a unified view of practice performance and next best actions.",
+              "Patients forget most of what's explained in the room the moment they walk out.",
+              "They can't relay the plan to the spouse or family member who helps them decide.",
+              "So they turn to generic search and AI that know nothing about their real diagnosis.",
+              "The result: delayed care, lower acceptance, worse outcomes, and lost revenue.",
             ].map((t, i) => (
               <Card key={i} className="flex gap-4">
                 <span className="mt-0.5 font-mono text-sm text-purple-400">
@@ -332,19 +349,19 @@ export default function OverviewPage() {
         {/* ===== What We Do Today ===== */}
         <section id="product" className="mx-auto max-w-6xl scroll-mt-24 px-6 pt-24 md:px-10 md:pt-32">
           <motion.div {...reveal}>
-            <SectionLabel>What We Do Today</SectionLabel>
+            <SectionLabel>What We Do</SectionLabel>
             <h2 className="max-w-3xl text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
-              Our core product today:{" "}
-              <span className="text-purple-300">personalized patient videos</span>
+              A hyper-personalized patient video, generated in{" "}
+              <span className="text-purple-300">seconds</span>
             </h2>
             <p className="mt-6 max-w-3xl text-[15px] leading-relaxed text-gray-400">
-              Opera takes information the clinic already has, including
-              appointment type, treatment notes, patient concerns, and consult
-              transcripts, and turns it into a short personalized video that the
-              patient can actually understand. Instead of leaving the office with
-              a folder, a vague memory, or unanswered questions, the patient
-              leaves with a clear explanation they can rewatch, share, and act
-              on.
+              Opera reads a patient&apos;s actual clinical context — diagnoses,
+              imaging, treatment recommendations, and physician notes — and
+              automatically generates a video explanation tailored to them, in
+              seconds. Instead of leaving with a folder and a vague memory, the
+              patient leaves with something they can revisit at home, share with
+              family, and understand with confidence. No new hardware. No
+              workflow changes.
             </p>
           </motion.div>
 
@@ -352,18 +369,18 @@ export default function OverviewPage() {
             {[
               {
                 icon: HeartHandshake,
-                title: "Before the first consult",
-                body: "Welcoming videos that reduce anxiety and set expectations.",
+                title: "Before the visit",
+                body: "Warm, personalized videos that cut anxiety and set expectations before they arrive.",
               },
               {
                 icon: Video,
-                title: "After a consult",
-                body: "Personalized treatment explanation videos that improve case acceptance.",
+                title: "After the consult",
+                body: "A tailored explanation of the diagnosis and plan — the moment that turns yes into treatment.",
               },
               {
                 icon: Activity,
-                title: "Reactivation & follow up",
-                body: "Videos that help recover unscheduled treatment.",
+                title: "Follow-up & recovery",
+                body: "Reactivation videos that pull back previously unscheduled treatment.",
               },
             ].map((u, i) => (
               <Card key={i}>
@@ -385,12 +402,14 @@ export default function OverviewPage() {
             className="mt-4 rounded-2xl border border-purple-500/25 bg-purple-500/[0.06] p-6"
           >
             <p className="text-sm font-medium uppercase tracking-[0.15em] text-purple-300">
-              Why patients engage
+              Why it drives revenue
             </p>
             <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-gray-200">
-              Video is easier to absorb than paperwork, easier to revisit than a
-              verbal explanation, and easier to share with a spouse or family
-              member.
+              A patient who understands their plan is a patient who moves forward.
+              Better understanding means faster decisions, higher treatment
+              adherence, and improved outcomes — which is exactly how Opera has
+              recovered $2.5M+ in previously unscheduled treatment, without adding
+              a single hour of administrative burden.
             </p>
           </motion.div>
         </section>
@@ -408,23 +427,23 @@ export default function OverviewPage() {
             {[
               {
                 n: "1",
-                t: "Patient books or completes consult",
-                b: "The visit happens as it always does.",
+                t: "The visit happens as it always does",
+                b: "No new hardware, no workflow changes, no extra staff.",
               },
               {
                 n: "2",
-                t: "Opera ingests the context",
-                b: "Appointment context, treatment notes, and transcript details.",
+                t: "Opera reads the clinical context",
+                b: "Diagnoses, imaging, treatment recommendations, and physician notes.",
               },
               {
                 n: "3",
-                t: "Opera generates the video",
-                b: "A short, personalized patient explanation.",
+                t: "A personalized video is generated in seconds",
+                b: "Tailored to the patient's actual diagnosis and plan.",
               },
               {
                 n: "4",
-                t: "Patient moves forward",
-                b: "Better understanding, more trust, higher likelihood to say yes.",
+                t: "The patient understands and moves forward",
+                b: "Revisits at home, shares with family, and says yes with confidence.",
               },
             ].map((s, i) => (
               <div key={i} className="relative">
@@ -459,12 +478,12 @@ export default function OverviewPage() {
                 See what the patient sees
               </h2>
               <p className="mt-6 text-[15px] leading-relaxed text-gray-400">
-                In the sample demo, Opera takes a complex treatment plan and
-                turns it into a short, clear, narrated explanation a patient can
-                actually understand. The example walks a patient named Jessica
-                through a personalized veneers treatment plan. This is where
-                Opera is most powerful, the moment between diagnosis and
-                decision.
+                This is a real Opera video. It takes a patient named
+                Jessica&apos;s veneers plan and turns it into a short, narrated
+                explanation built entirely from her own clinical context —
+                walking her from diagnosis to a confident yes. Multiply this by
+                130,000 patients, and you have Opera. This is where it&apos;s
+                most powerful: the moment between diagnosis and decision.
               </p>
             </div>
 
@@ -523,43 +542,45 @@ export default function OverviewPage() {
         {/* ===== Long Term Vision ===== */}
         <section id="vision" className="mx-auto max-w-6xl scroll-mt-24 px-6 pt-24 md:px-10 md:pt-32">
           <motion.div {...reveal}>
-            <SectionLabel>Long Term Vision</SectionLabel>
+            <SectionLabel>Where This Goes</SectionLabel>
             <h2 className="max-w-3xl text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
-              Long term, Opera becomes the{" "}
+              From a wedge to the{" "}
               <span className="text-purple-300">
-                intelligence layer for the clinic
+                patient engagement layer across healthcare
               </span>
             </h2>
             <p className="mt-6 max-w-3xl text-[15px] leading-relaxed text-gray-400">
-              Personalized patient video is one of Opera&apos;s main product
-              offerings today, but the long term vision is much broader. Opera is
-              building the system that sits on top of the clinic&apos;s existing
-              tools and turns scattered data into a real time operational command
-              center.
+              Dental and orthodontics is the wedge. The vision is a future where
+              every patient — in any specialty — receives education generated
+              directly from their own clinical data. Opera is already expanding
+              from dental into primary care, specialty medicine, ophthalmology,
+              and hospital systems, and its partnership with Truveta positions it
+              to become the trusted patient engagement layer across all of
+              healthcare.
             </p>
           </motion.div>
 
           <motion.div {...reveal} className="mt-10 grid gap-4 sm:grid-cols-2">
             {[
               {
-                icon: Activity,
-                title: "Opera Score",
-                body: "A single measure of practice health built around revenue efficiency, treatment acceptance, patient retention, schedule utilization, and referral conversion.",
-              },
-              {
-                icon: MessageSquare,
-                title: "Ask Opera",
-                body: "A natural language interface that lets owners and teams query their practice data in plain English.",
-              },
-              {
-                icon: Search,
-                title: "Opportunity Engine",
-                body: "Automatically surfaces revenue leaks, missed follow ups, scheduling inefficiencies, and other operational opportunities.",
+                icon: Database,
+                title: "Truveta partnership",
+                body: "Partnered with Truveta — the $1B+ healthcare data company backed by many of the nation's leading health systems — working toward education generated directly from clinical data.",
               },
               {
                 icon: Layers,
-                title: "Practice Intelligence Layer",
-                body: "Connects the software practices already use and turns it into clear action.",
+                title: "Greyfinch & DSO groups",
+                body: "Embedded with Greyfinch across its orthodontic network and multi-location DSO dental groups.",
+              },
+              {
+                icon: Stethoscope,
+                title: "Expanding specialties",
+                body: "Extending from dental into primary care, specialty medicine, ophthalmology, and hospital systems.",
+              },
+              {
+                icon: HeartHandshake,
+                title: "The engagement layer",
+                body: "Becoming the trusted patient engagement layer that sits between every patient and their care.",
               },
             ].map((c, i) => (
               <Card key={i}>
@@ -583,7 +604,8 @@ export default function OverviewPage() {
                 Now
               </p>
               <p className="mt-3 text-lg font-medium text-white">
-                Personalized patient conversion and communication
+                Hyper-personalized patient education that lifts treatment
+                acceptance in dental &amp; ortho
               </p>
             </div>
             <div className="rounded-2xl border border-purple-500/30 bg-gradient-to-br from-purple-600/15 to-transparent p-6">
@@ -591,7 +613,7 @@ export default function OverviewPage() {
                 Future
               </p>
               <p className="mt-3 text-lg font-medium text-white">
-                Full operational intelligence platform for specialty practices
+                The trusted patient engagement layer across all of healthcare
               </p>
             </div>
           </motion.div>
@@ -602,22 +624,23 @@ export default function OverviewPage() {
           <motion.div {...reveal}>
             <SectionLabel>Traction</SectionLabel>
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-              Early traction and momentum
+              Six months. Real revenue.
             </h2>
             <p className="mt-6 max-w-3xl text-[15px] leading-relaxed text-gray-400">
-              Opera is already working with 45 individual clinics and generating
-              roughly $35K in monthly recurring revenue. Across enterprise
-              relationships, the company touches more than $420M in clinical
-              revenue.
+              In the last six months, Opera has delivered 130,000+ personalized
+              patient videos and recovered $2.5M+ in previously unscheduled
+              treatment for clinics across the U.S. — with zero additional staff
+              and zero workflow changes. It&apos;s live in 75+ dental and
+              orthodontic clinics and partnered with Greyfinch and Truveta.
             </p>
           </motion.div>
 
           <motion.div {...reveal} className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { stat: "45", label: "individual clinics" },
-              { stat: "$35K", label: "monthly recurring revenue" },
-              { stat: "$420M+", label: "clinical revenue touched across enterprise relationships" },
-              { stat: "3", label: "backers: Joshua Browder, SV Angel, Pareto Holdings" },
+              { stat: "130,000+", label: "personalized patient videos delivered" },
+              { stat: "$2.5M+", label: "in previously unscheduled treatment recovered" },
+              { stat: "75+", label: "dental & orthodontic clinics, plus a Greyfinch partnership" },
+              { stat: "$1B+", label: "Truveta partnership — the health-data company behind leading U.S. health systems" },
             ].map((s, i) => (
               <Card key={i}>
                 <div className="bg-gradient-to-r from-purple-300 to-fuchsia-300 bg-clip-text text-3xl font-semibold text-transparent">
@@ -639,8 +662,10 @@ export default function OverviewPage() {
               Built by operators and technical founders
             </h2>
             <p className="mt-6 max-w-3xl text-[15px] leading-relaxed text-gray-400">
-              Opera is being built at the intersection of clinical operations,
-              enterprise software, and applied AI.
+              Opera is built by two best friends of 10+ years — Ram Dosibhatla
+              (Stanford CS) and Anish Suvarna (UC Berkeley M.E.T.) — at the
+              intersection of clinical operations, enterprise software, and
+              applied AI.
             </p>
           </motion.div>
 
@@ -762,8 +787,7 @@ export default function OverviewPage() {
           </motion.div>
 
           <p className="mt-10 text-center text-xs text-gray-600">
-            Opera AI · The digital COO for specialty dental and orthodontic
-            practices
+            Opera AI · The patient education layer for modern healthcare
           </p>
         </section>
       </div>
