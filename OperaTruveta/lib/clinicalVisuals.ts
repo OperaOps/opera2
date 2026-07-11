@@ -262,63 +262,63 @@ export const clinicalVisualsById: Record<string, ClinicalVisualPlan[]> = {
   ],
 
   /* ----------------------------------------------------------------------- */
-  /* 4. post-discharge-recovery — recovery after hospital (Robert)          */
+  /* 4. acl-recovery — ACL reconstruction & knee rehab (Jake)                */
   /* ----------------------------------------------------------------------- */
-  'post-discharge-recovery': [
+  'acl-recovery': [
     {
       visualCategory: 'recovery-home-care',
       realWorldConceptShown:
-        'A calm home-recovery timeline: Day 1 → Week 1 → Follow-up, shown as gentle, manageable steps.',
+        'A calm three-phase rehab roadmap: Calm & Move -> Rebuild Strength -> Back to Sport, shown as gentle, earned milestones.',
       recommendedVisualStyle:
-        'Soft 2.5D timeline in a cozy home palette, navy/teal accents, rounded cards, warm light, large text.',
+        'Soft 2.5D phase timeline in navy/teal, rounded milestone cards, a small soccer ball on the final node, warm encouraging light.',
       safeVisualBoundary:
-        'Show reassuring milestones and rest cues only — never wounds, never graphic recovery, never alarming imagery.',
+        'Show phase purposes and milestones only — never dates, never wounds, never surgical imagery, never a promised return-to-play.',
       animationIdea:
-        'Three timeline cards (Day 1, Week 1, Follow-up) slide up in sequence with soft check-marks appearing as a glow passes through.',
+        'Three phase cards slide up in sequence and light as a soft glow travels the path; the last card reveals a small field icon.',
       staticFallback:
-        'A still frame of the three-step recovery timeline with gentle icons.',
+        'A still frame of the three-phase rehab roadmap with friendly icons.',
       assetSearchTerms: [
-        'home recovery timeline illustration',
-        'post discharge care plan infographic',
-        'rest and recover at home flat scene',
-        'recovery milestones calm vector',
+        'rehab phases timeline illustration',
+        'knee recovery roadmap infographic',
+        'phased training milestones vector',
+        'return to sport journey graphic',
       ],
       scenePlacement: 'after-intro',
       patientFriendlyExplanation:
-        'Recovery happens one step at a time — rest on Day 1, ease into Week 1, then your follow-up check-in.',
+        'Recovery moves in phases — calm the knee, rebuild the strength around it, then earn back running and cutting, one milestone at a time.',
       avoidShowing: [
-        'wounds',
-        'graphic recovery imagery',
-        'alarming red-flag depictions',
-        'distress or pain cues',
+        'wounds or surgical imagery',
+        'promised timelines or dates',
+        'pain or distress cues',
+        'risky exercise depictions',
       ],
     },
     {
       visualCategory: 'care-setting',
       realWorldConceptShown:
-        'A calm home setting with a clearly displayed "who to call" card — a phone and the care team within reach, especially helpful living alone.',
+        'A bright, calm physical-therapy studio with a friendly therapist nearby — the place where every phase is guided and checked.',
       recommendedVisualStyle:
-        'Warm 2.5D living room, soft lamp light, a tidy contact card and phone, navy/teal accents, comforting tone.',
+        'Warm 2.5D therapy studio, soft daylight, tidy equipment, navy/teal accents, an encouraging human presence.',
       safeVisualBoundary:
-        'Keep "call your team if…" as a calm, plain list — never a scary symptom illustration, never a frightening scenario.',
+        'Keep it supportive and routine — never painful exercises, never strain, never a patient struggling alone.',
       animationIdea:
-        'A cozy room fades in; a contact card gently lifts forward; a soft "call anytime if something feels off" line types in calmly.',
+        'The studio fades in; a therapy table and a friendly therapist figure ease forward; a soft "your PT guides each step" line types in calmly.',
       staticFallback:
-        'A still frame of the calm home with the contact card and phone in focus.',
+        'A still frame of the calm therapy studio with the therapist beside the table.',
       assetSearchTerms: [
-        'calm home living room illustration',
-        'who to call care contact card vector',
-        'support phone line health flat icon',
-        'recovering alone at home cozy scene',
+        'physical therapy studio illustration',
+        'physiotherapist patient friendly scene',
+        'rehab clinic calm interior vector',
+        'guided exercise support flat scene',
       ],
       scenePlacement: 'mid',
       patientFriendlyExplanation:
-        "You're not on your own — keep your care team's number close, and call anytime something doesn't feel right.",
+        "You never guess your way through this — your physical therapist guides each phase and clears every step forward with you.",
       avoidShowing: [
-        'wounds',
-        'graphic recovery imagery',
-        'alarming red-flag depictions',
-        'frightening emergency scenarios',
+        'painful exercise imagery',
+        'strain or distress',
+        'unsupervised risky training',
+        'clinical or surgical equipment',
       ],
     },
   ],

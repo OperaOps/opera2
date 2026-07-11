@@ -6,7 +6,6 @@ export const clinicalVisualKeyByUseCase: Record<string, ClinicalVisualKey> = {
   'chronic-care-followup': 'a1c',
   'language-access': 'blood-pressure',
   'clinical-trial-education': 'clinical-trial',
-  'post-discharge-recovery': 'discharge-recovery',
   'medication-journey': 'medication-journey',
   'lab-result-explanation': 'lab-process',
   'prenatal-visit-prep': 'prenatal',

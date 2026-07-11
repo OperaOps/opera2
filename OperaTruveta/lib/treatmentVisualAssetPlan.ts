@@ -18,7 +18,7 @@ export const assetFolderByUseCase: Record<string, string> = {
   'preventive-screening': 'colon-screening',
   'chronic-care-followup': 'diabetes-a1c',
   'clinical-trial-education': 'clinical-trials',
-  'post-discharge-recovery': 'discharge',
+  'acl-recovery': 'acl-knee',
   'medication-journey': 'medication',
   'lab-result-explanation': 'labs',
   'prenatal-visit-prep': 'prenatal',
@@ -874,250 +874,220 @@ export const treatmentVisualAssetPlan: TreatmentAssetEntry[] = [
     fallbackIfMissing: 'asset-slot-only',
   },
 
-  /* ============================ 4. post-discharge-recovery ================== */
+  /* ============================ 4. acl-recovery ============================= */
   {
-    assetId: 'post-discharge-recovery-1',
-    useCaseId: 'post-discharge-recovery',
+    assetId: 'acl-recovery-1',
+    useCaseId: 'acl-recovery',
     sceneNumber: 1,
-    recommendedFileName: 'hospital-discharge-moment-still.jpg',
-    assetType: 'stock-video',
+    recommendedFileName: 'knee-anatomy-acl.mp4',
+    assetType: 'medical-render',
     closeupLevel: 'medium',
     visualDescription:
-      'A warm scene of a patient being kindly walked out at a bright hospital entrance by a friendly staff member — a calm, hopeful hand-off home.',
+      'A clean 3D render of the knee joint slowly orbiting, with the ACL glowing softly in the center — the “where” of the whole story.',
     whatPatientLearns:
-      'Leaving the hospital is a planned, supported moment — you are not sent off without a plan.',
+      'The ACL is the small central ligament that keeps the knee steady — the one that tore and was surgically rebuilt.',
     exactImageGenerationPrompt:
-      `Warm, photorealistic scene of an older patient being kindly walked toward a bright modern hospital entrance by a friendly staff member, soft daylight through glass doors, relaxed and caring body language, calm teal accents and gentle greenery. ${STYLE}. Medium composition, hopeful and human, no medical equipment foregrounded, no distress. Mood: supported, hopeful, calm hand-off.`,
+      `Clean 3D medical-education render of a human knee joint as a smooth stylized anatomical model — femur above, tibia below, patella rendered slightly translucent so the joint center is visible — with the ACL ligament running diagonally through the center, highlighted by a soft teal glow while all other anatomy stays natural tone. ${STYLE}. Medium composition, knee centered with generous negative space. Mood: clear, calm, demystifying.`,
     exactVideoGenerationPrompt:
-      `7-second gentle scene of a patient being kindly walked toward a bright hospital entrance by a friendly staff member, soft daylight, warm and calm. ${STYLE}. Slow, hopeful, human motion; no medical equipment; supported tone.`,
+      'Clean 3D medical-education animation of a human knee joint, a smooth stylized anatomical model floating in soft studio light — femur above, tibia below, the kneecap rendered slightly translucent so the center of the joint stays visible. In the very center, the ACL ligament runs diagonally between the two bones and carries a soft teal highlight glow while every other structure keeps its natural bone-and-tissue color. The camera orbits slowly and smoothly around the knee across the full 8 seconds, ending near its starting angle for a seamless loop. Deep navy background, calm empty space at the top and bottom of the frame for captions. Premium, reassuring patient-education aesthetic. No text, no logos.',
     stockSearchTerms: [
-      'patient discharge hospital entrance',
-      'leaving hospital with staff warm',
-      'hospital exit doors daylight',
-      'patient going home from hospital',
-      'discharge moment caring staff',
-      'hospital entrance hopeful scene',
+      'knee joint anatomy 3d render',
+      'ACL ligament medical illustration',
+      'knee anatomy animation education',
+      'anterior cruciate ligament 3d model',
+      'knee joint rotating render',
+      'orthopedic patient education knee',
     ],
     overlayLabels: [
-      { text: 'A planned hand-off', x: 50, y: 18 },
-      { text: 'Supported, not rushed', x: 60, y: 72 },
+      { text: 'Your ACL', x: 52, y: 44 },
+      { text: 'The knee’s stabilizer', x: 62, y: 70 },
     ],
     animationTreatment:
-      'Slow push-in with a warm grade; callouts fade in to convey a calm, planned departure.',
+      'Slow orbit around the knee; the ACL glow pulses once as its label fades in.',
     personalizationOverlay:
-      'You live on your own during the week, Robert — leaving is a planned, supported step, not a goodbye.',
+      'This is the ligament that held every cut and turn on the field, Jake — right in the center of the knee.',
+    voiceover:
+      "Hi Jake — this is your knee, and right in the center is the ACL, the ligament that keeps it steady. When you planted and twisted, it tore — so your surgeon rebuilt it.",
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
   {
-    assetId: 'post-discharge-recovery-2',
-    useCaseId: 'post-discharge-recovery',
-    sceneNumber: 2,
-    recommendedFileName: 'patient-home-reviewing-instructions.jpg',
-    assetType: 'stock-video',
-    closeupLevel: 'medium',
-    visualDescription:
-      'A calm scene of a patient at home in a sunlit chair, comfortably reading a simple discharge instruction sheet — relaxed and in control.',
-    whatPatientLearns:
-      'Your discharge instructions are simple to follow at home — take them step by step.',
-    exactImageGenerationPrompt:
-      `Calm, photorealistic scene of an older patient seated comfortably in a sunlit armchair at home, relaxed, reading a simple printed instruction sheet (no readable text), a glass of water nearby, warm wood tones with calm teal accents. ${STYLE}. Medium composition, peaceful and in-control, no medical equipment, no distress. Mood: calm, capable, at-home comfort.`,
-    exactVideoGenerationPrompt:
-      `6-second slow push-in on a patient comfortably reading instructions in a sunlit home armchair, gentle daylight. ${STYLE}. Soft, calm, reassuring motion; no medical equipment; at-home comfort.`,
-    stockSearchTerms: [
-      'patient reading instructions home',
-      'senior reading paper armchair sunlight',
-      'discharge instructions at home',
-      'older adult reading document home',
-      'home recovery reading calm',
-      'patient reviewing care plan home',
-    ],
-    overlayLabels: [
-      { text: 'Step by step', x: 50, y: 18 },
-      { text: 'Simple to follow', x: 62, y: 72 },
-    ],
-    animationTreatment:
-      'Slow push-in with soft light bloom; captions fade in to reassure the steps are simple.',
-    personalizationOverlay:
-      'On quiet weekdays at home, Robert, you can take these steps at your own pace.',
-    priority: 'medium',
-    fallbackIfMissing: 'asset-slot-only',
-  },
-  {
-    assetId: 'post-discharge-recovery-3',
-    useCaseId: 'post-discharge-recovery',
-    sceneNumber: 3,
-    recommendedFileName: 'medication-review-closeup-still.jpg',
-    assetType: 'still-image',
+    assetId: 'acl-recovery-4',
+    useCaseId: 'acl-recovery',
+    sceneNumber: 4,
+    recommendedFileName: 'graft-healing.mp4',
+    assetType: 'medical-render',
     closeupLevel: 'close-up',
     visualDescription:
-      'A clean close-up still of a tidy weekly pill organizer beside neutral, unlabeled medication bottles on a soft surface — calm and organized.',
+      'A quiet render of the new graft anchored along the old ACL’s path as the body makes it its own — the invisible healing that explains why early rehab is gentle.',
     whatPatientLearns:
-      'A simple medication review keeps your routine clear after you get home.',
+      'The body slowly grows into the graft over months — the reason the early phases are gentle on purpose.',
     exactImageGenerationPrompt:
-      `Clean close-up still of a tidy seven-day pill organizer with clearly divided compartments beside two neutral, label-free amber medication bottles on a soft matte surface with calm teal accent light, a glass of water softly out of focus behind. ${STYLE}. Close-up composition, premium product photography, shallow depth of field, organized and reassuring. Mood: routine, manageable. No brand names, no readable labels, no dosing text.`,
+      `Clean 3D medical-education macro render along the new ACL graft inside a stylized knee model, fine soft strands of new tissue weaving into the graft with a gentle warm-to-natural glow, a subtle teal rim light. ${STYLE}. Close-up composition. Mood: quiet, patient, hopeful.`,
     exactVideoGenerationPrompt:
-      `5-second slow push-in on a tidy weekly pill organizer beside neutral medication bottles, gentle parallax, calm teal accent light. ${STYLE}. Soft, organized, reassuring motion; no readable labels or dosing.`,
+      'Clean 3D medical-education macro animation, the camera gliding very slowly along the new ACL graft inside a stylized knee model. A gentle warm glow travels along the graft as fine, soft strands of new tissue weave into it, showing the body slowly making the graft its own. The motion is quiet and continuous, almost meditative — one slow lateral camera drift across the full 8 seconds, ending close to the starting frame for a seamless loop. Natural tissue tones with a subtle teal rim light only as an accent, deep navy background, calm empty space at the top and bottom for captions. Reassuring, premium patient-education aesthetic. No text.',
     stockSearchTerms: [
-      'weekly pill organizer close up',
-      'medication bottles clean product photo',
-      'pill box routine soft lighting',
-      'medication review at home',
-      'prescription bottles neutral studio',
-      'pill dispenser weekly schedule',
+      'ligament healing animation macro',
+      'tissue integration 3d medical',
+      'graft healing knee illustration',
+      'cellular healing animation calm',
+      'ligament remodeling education video',
+      'tissue regeneration render',
     ],
     overlayLabels: [
-      { text: 'Keep it simple', x: 50, y: 18 },
-      { text: 'Weekly organizer', x: 34, y: 70 },
+      { text: 'Healing in progress', x: 50, y: 40 },
+      { text: 'Months of quiet work', x: 62, y: 72 },
     ],
     animationTreatment:
-      'Slow push-in with soft shadow lift; the "Keep it simple" caption fades in to frame the routine positively.',
+      'A soft glow travels the graft as tissue strands weave in; labels fade in gently.',
     personalizationOverlay:
-      'A clear organizer takes the guesswork out, Robert — especially on the days you are on your own.',
+      'This is why the early weeks feel slow, Jake — the graft is literally becoming part of you.',
     voiceover:
-      'First, your medications. A simple organizer lays out each day, so nothing gets missed at home.',
+      'In surgery, a strong new graft was anchored along the exact path of your old ACL. Over the coming months, your body grows into it and makes it living tissue.',
     priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
   {
-    assetId: 'post-discharge-recovery-4',
-    useCaseId: 'post-discharge-recovery',
-    sceneNumber: 4,
-    recommendedFileName: 'gentle-recovery-mobility-render.png',
-    assetType: 'medical-render',
-    closeupLevel: 'wide',
-    visualDescription:
-      'A gentle, non-graphic concept render of a calm figure taking a slow, easy walk along a soft sunlit path — conveying light movement during recovery, no wounds.',
-    whatPatientLearns:
-      'Gentle movement, at your own pace, is a calm part of recovering at home.',
-    exactImageGenerationPrompt:
-      `Gentle, non-graphic conceptual render of a calm, simplified figure taking a slow, easy walk along a soft sunlit garden path, warm light blended with calm teal accents, friendly and stylized rather than detailed. ${STYLE}. Wide composition, peaceful sense of gentle movement, soft ground shadow, generous negative space. Mood: hopeful, easy, restorative. Absolutely no wounds, no medical detail, no distress.`,
-    exactVideoGenerationPrompt:
-      `6-second slow tracking shot following a calm figure taking a gentle, easy walk along a soft sunlit path, warm light blending with teal. ${STYLE}. Smooth, hopeful, restful motion; no wounds; no medical detail.`,
-    stockSearchTerms: [
-      'gentle recovery walk concept',
-      'easy mobility recovery illustration',
-      'walking garden path calm render',
-      'light movement recovery graphic',
-      'recovery at own pace concept',
-      'gentle exercise recovery visual',
-    ],
-    overlayLabels: [
-      { text: 'Gentle movement', x: 50, y: 20 },
-      { text: 'At your own pace', x: 62, y: 72 },
-    ],
-    animationTreatment:
-      'Slow tracking shot following the figure; captions fade in to encourage gentle, paced movement.',
-    personalizationOverlay:
-      'A short, easy walk is enough to start, Robert — go at the pace that feels right for you.',
-    voiceover:
-      'Gentle movement helps you heal. A short, easy walk is plenty to start — at whatever pace feels right.',
-    priority: 'medium',
-    fallbackIfMissing: 'asset-slot-only',
-  },
-  {
-    assetId: 'post-discharge-recovery-5',
-    useCaseId: 'post-discharge-recovery',
+    assetId: 'acl-recovery-5',
+    useCaseId: 'acl-recovery',
     sceneNumber: 5,
-    recommendedFileName: 'followup-appointment-calendar-render.png',
-    assetType: 'medical-render',
-    closeupLevel: 'medium',
-    visualDescription:
-      'A clean infographic render of a weekly calendar with gentle checkmarks for follow-up reminders and a soft medication-review note — organized and unintimidating.',
-    whatPatientLearns:
-      'A simple calendar of follow-ups and a medication review keep recovery on track.',
-    exactImageGenerationPrompt:
-      `Clean conceptual infographic render of a friendly weekly calendar grid on deep navy, a few days marked with soft glowing teal checkmarks and gentle icons (pill organizer, phone call, calendar), one soft "medication review" note card floating beside it. ${STYLE}. Medium composition, premium UI-infographic style, organized and calm, generous spacing. Mood: manageable, supportive. No specific drug names, no dosing instructions.`,
-    exactVideoGenerationPrompt:
-      `6-second animated calendar where soft checkmarks and gentle reminder icons appear on a few days one by one, a "medication review" note card sliding in, calm teal glow on deep navy. ${STYLE}. Orderly, reassuring motion; no specific medication or dosing detail.`,
-    stockSearchTerms: [
-      'weekly calendar reminders infographic',
-      'follow up appointment calendar render',
-      'recovery checklist ui concept',
-      'health reminders calendar animation',
-      'care plan calendar illustration',
-      'medication review schedule graphic',
-    ],
-    overlayLabels: [
-      { text: 'Follow-up reminders', x: 30, y: 24 },
-      { text: 'Medication review', x: 72, y: 62 },
-    ],
-    animationTreatment:
-      'Calendar days populate with checkmarks left-to-right; the medication-review card slides in last with a soft settle.',
-    personalizationOverlay:
-      'So nothing slips on a busy week, Robert, here is the simple rhythm of check-ins ahead.',
-    voiceover:
-      "And here's the simple plan for the week ahead, Robert — so nothing slips while you're recovering at home.",
-    priority: 'medium',
-    fallbackIfMissing: 'asset-slot-only',
-  },
-  {
-    assetId: 'post-discharge-recovery-6',
-    useCaseId: 'post-discharge-recovery',
-    sceneNumber: 6,
-    recommendedFileName: 'caregiver-check-in-home.jpg',
+    recommendedFileName: 'phase1-gentle-motion.mp4',
     assetType: 'stock-video',
     closeupLevel: 'medium',
     visualDescription:
-      'A warm scene of an adult son checking in on his father at home, sitting together comfortably — caring and reassuring.',
+      'A calm physical-therapy scene: a therapist guides the knee through one slow, gentle bend — phase one made visible.',
     whatPatientLearns:
-      'A regular check-in from someone you trust adds an extra layer of support at home.',
+      'Phase one is calming the knee and restoring gentle motion — slow is the plan, not a setback.',
     exactImageGenerationPrompt:
-      `Warm, photorealistic scene of an adult son sitting comfortably beside his older father in a sunlit living room, checking in with a caring smile, relaxed body language, warm wood tones with calm teal accents. ${STYLE}. Medium two-shot composition, tender and human, no medical equipment. Mood: caring, supportive, reassuring.`,
+      `Warm, photorealistic scene in a bright physical therapy studio: a man in his late twenties on a padded therapy table while a friendly therapist supports his knee and guides one gentle bend, soft daylight, clean modern equipment softly out of focus, a single subtle teal accent. ${STYLE}. Medium composition. Mood: careful, comfortable, encouraging.`,
     exactVideoGenerationPrompt:
-      `6-second gentle push-in on an adult son checking in on his older father at home, soft daylight, caring nods. ${STYLE}. Slow, warm, human motion; no medical equipment; supportive tone.`,
+      'Cinematic photorealistic scene in a bright, calm physical therapy studio. A man in his late twenties lies back on a padded therapy table while a friendly physical therapist supports his knee with both hands and guides it through one slow, gentle bend and straighten. The movement is smooth, careful, and unhurried — clearly early recovery, completely comfortable. Soft daylight, clean modern equipment softly out of focus, one subtle teal accent in the studio design. One continuous medium shot on a slow, gimbal-smooth push-in, ending near the opening framing for a seamless loop. Calm empty space at the top and bottom of the frame for captions. Warm, encouraging, premium medical-education tone.',
     stockSearchTerms: [
-      'adult son visiting elderly father',
-      'family check in home recovery',
-      'caregiver visiting senior parent',
-      'son helping older father home',
-      'family support recovery warm',
-      'adult child elderly parent home',
+      'knee physical therapy range of motion',
+      'physiotherapist knee rehabilitation table',
+      'ACL rehab early phase therapy',
+      'knee bending exercise therapist',
+      'physical therapy clinic calm daylight',
+      'post surgery knee mobility session',
     ],
     overlayLabels: [
-      { text: 'An extra layer of support', x: 50, y: 20 },
-      { text: 'Someone you trust', x: 62, y: 72 },
+      { text: 'Phase 1 — calm & move', x: 50, y: 18 },
+      { text: 'Gentle on purpose', x: 62, y: 74 },
     ],
     animationTreatment:
-      'Slow push-in with a warm grade; callouts fade in to affirm the value of a trusted check-in.',
+      'Slow push-in on the guided knee bend; the phase label fades in at the top.',
     personalizationOverlay:
-      'Your son visits on weekends, Robert — a simple check-in like this adds real support.',
-    priority: 'low',
+      'Twice a week with your therapist, Jake — this careful start is what makes the later phases possible.',
+    voiceover:
+      'Phase one is about calming the knee and waking it up — gentle bending, straightening, and easy muscle work. Going slow here is the plan, not a setback.',
+    priority: 'high',
     fallbackIfMissing: 'asset-slot-only',
   },
   {
-    assetId: 'post-discharge-recovery-7',
-    useCaseId: 'post-discharge-recovery',
-    sceneNumber: 7,
-    recommendedFileName: 'care-team-phone-portal-support-render.png',
-    assetType: 'medical-render',
+    assetId: 'acl-recovery-6',
+    useCaseId: 'acl-recovery',
+    sceneNumber: 6,
+    recommendedFileName: 'phase2-strength.mp4',
+    assetType: 'stock-video',
     closeupLevel: 'medium',
     visualDescription:
-      'A clean concept render of a friendly phone and patient-portal screen with a soft "Message your care team" button — conveying easy access to help.',
+      'A rehab-gym scene: a slow, controlled leg press with the therapist alongside — strength returning, safely.',
     whatPatientLearns:
-      'Help is one message or call away — your care team is reachable if you have questions.',
+      'Phase two rebuilds the muscle around the knee — strong legs protect the maturing graft.',
     exactImageGenerationPrompt:
-      `Clean conceptual render on deep navy of a friendly smartphone showing a simple patient-portal screen with a soft glowing teal "Message your care team" button and gentle chat and phone icons, generous negative space. ${STYLE}. Medium composition, premium UI mockup aesthetic, calm and reassuring. Mood: supported, accessible. No readable PHI, no real names, no clinical claims.`,
+      `Photorealistic scene in a modern rehabilitation gym: a man in his late twenties performing a slow, controlled leg press on a clean rehab machine, his physical therapist beside him with an encouraging nod, soft natural light, tidy equipment, one subtle teal accent. ${STYLE}. Medium-wide composition. Mood: steady, confident, safe effort.`,
     exactVideoGenerationPrompt:
-      `6-second animation where a phone-portal screen assembles and a "Message your care team" button gently glows, soft chat and phone icons fading in, calm teal glow on deep navy. ${STYLE}. Smooth, reassuring motion; no readable PHI; accessible tone.`,
+      'Cinematic photorealistic scene in a modern rehabilitation gym. A man in his late twenties performs a slow, controlled leg press on a clean rehab machine, his physical therapist standing beside him with an encouraging nod. His effort looks steady and confident, each repetition smooth and deliberate — strength work, not strain. Soft natural light, tidy modern equipment, one subtle teal accent color in the space. One continuous medium-wide shot with a very slow lateral dolly, beginning and ending on a similar composition for a seamless loop. Calm empty space at the top and bottom of the frame for captions. Motivating, safe, premium patient-education feel.',
     stockSearchTerms: [
-      'patient portal phone app concept',
-      'message care team ui render',
-      'telehealth phone support graphic',
-      'healthcare app interface clean',
-      'contact care team illustration',
-      'patient portal mockup render',
+      'leg press rehabilitation gym',
+      'knee strength training physical therapy',
+      'ACL rehab strength phase',
+      'physiotherapy leg exercise machine',
+      'rehab gym trainer encouragement',
+      'controlled strength exercise knee',
     ],
     overlayLabels: [
-      { text: 'Help is one message away', x: 50, y: 20 },
-      { text: 'Reach your care team', x: 60, y: 72 },
+      { text: 'Phase 2 — rebuild strength', x: 50, y: 18 },
+      { text: 'Muscle protects the graft', x: 62, y: 74 },
     ],
     animationTreatment:
-      'Portal screen assembles, then the message button glows and chat icons fade in to convey easy access.',
+      'Slow lateral dolly past the press; the phase label fades in at the top.',
     personalizationOverlay:
-      'If a question comes up alone at home, Robert, your care team is just one message away.',
+      'This is the phase your Sunday-league legs come back, Jake — strength first, sport next.',
     voiceover:
-      'And if a question ever comes up at home, Robert, your care team is just one message away.',
+      'Phase two rebuilds the muscle around your knee — presses, squats, and balance work. Strong legs are what protect the new ligament while it keeps maturing.',
+    priority: 'high',
+    fallbackIfMissing: 'asset-slot-only',
+  },
+  {
+    assetId: 'acl-recovery-7',
+    useCaseId: 'acl-recovery',
+    sceneNumber: 7,
+    recommendedFileName: 'phase3-return-to-sport.mp4',
+    assetType: 'stock-video',
+    closeupLevel: 'wide',
+    visualDescription:
+      'An athletic but measured scene: light jogging through agility cones under a therapist’s eye — sport movement returning milestone by milestone.',
+    whatPatientLearns:
+      'Phase three restores athletic movement step by step — the care team clears each milestone.',
+    exactImageGenerationPrompt:
+      `Photorealistic scene on an indoor sports court in soft morning light: a man in his late twenties in athletic gear with a small knee sleeve jogging smoothly through a line of low agility cones, a physical therapist watching from the side with a stopwatch, one teal accent in the cones. ${STYLE}. Wide composition. Mood: confident but measured, uplifting.`,
+    exactVideoGenerationPrompt:
+      'Cinematic photorealistic scene on an indoor sports court in soft morning light. A man in his late twenties, wearing athletic gear and a small knee sleeve, jogs smoothly through a line of low agility cones — light and controlled — while a physical therapist watches from the side with a stopwatch and an approving expression. The movement reads as confident but measured: athletic training, not competition. One continuous tracking shot gliding alongside him at jogging pace, framed wide with calm empty space at the top and bottom of the frame, ending on a composition close to the start for a seamless loop. A single teal accent color in the cones. Uplifting, premium medical-education tone. No visible logos.',
+    stockSearchTerms: [
+      'agility cones jogging training',
+      'return to sport testing physical therapy',
+      'athlete knee sleeve running drills',
+      'sports rehabilitation court training',
+      'controlled running drill therapist',
+      'ACL return to play training',
+    ],
+    overlayLabels: [
+      { text: 'Phase 3 — back to sport', x: 50, y: 16 },
+      { text: 'Milestones, not dates', x: 62, y: 76 },
+    ],
+    animationTreatment:
+      'Tracking shot alongside the drill; the milestone label fades in at the top.',
+    personalizationOverlay:
+      'Cutting and jumping come back here, Jake — each step cleared by your care team, not the calendar.',
+    voiceover:
+      "Phase three brings the athlete back — jogging first, then cutting and jumping, one milestone at a time. Your care team clears each step when your knee shows it's ready.",
+    priority: 'high',
+    fallbackIfMissing: 'asset-slot-only',
+  },
+  {
+    assetId: 'acl-recovery-8',
+    useCaseId: 'acl-recovery',
+    sceneNumber: 8,
+    recommendedFileName: 'back-on-the-field.mp4',
+    assetType: 'stock-video',
+    closeupLevel: 'wide',
+    visualDescription:
+      'The warm close: lacing up cleats at golden hour and stepping onto the field — the image that keeps the whole plan worth it.',
+    whatPatientLearns:
+      'The phases lead somewhere real — a steady, supported return to the field.',
+    exactImageGenerationPrompt:
+      `Photorealistic golden-hour scene on a green soccer field: a man in his late twenties lacing up cleats on a bench, a ball beside him, warm low sunlight and soft flare, hopeful and unhurried. ${STYLE}. Wide composition. Mood: warm, resolved, earned.`,
+    exactVideoGenerationPrompt:
+      'Cinematic photorealistic scene at golden hour on a green soccer field. A man in his late twenties sits on a bench lacing up his cleats, then rises and walks a few relaxed steps onto the grass, a ball under his arm and a small confident smile as he looks across the open field. Warm low sunlight, soft lens flare, unhurried and hopeful. One continuous slow tracking shot from behind and beside him, ending on him standing tall facing the field, framed with generous calm space at the top and bottom of the frame for captions. No visible team logos or readable text. Warm, resolved, cinematic patient-education closing tone.',
+    stockSearchTerms: [
+      'soccer player lacing cleats golden hour',
+      'athlete walking onto field sunset',
+      'return to soccer field cinematic',
+      'sports comeback golden light',
+      'soccer field evening warm',
+      'athlete confident return training',
+    ],
+    overlayLabels: [
+      { text: 'The road back', x: 50, y: 16 },
+      { text: 'One phase at a time', x: 62, y: 76 },
+    ],
+    animationTreatment:
+      'Slow tracking shot onto the field; the closing label fades in last and holds.',
+    personalizationOverlay:
+      'This is where the plan points, Jake — back on the grass, with the knee ready underneath you.',
+    voiceover:
+      "And that's the road back, Jake — steady phases, each with a purpose. Your surgeon and your therapist will walk every one of them with you, all the way to kickoff.",
     priority: 'medium',
     fallbackIfMissing: 'asset-slot-only',
   },

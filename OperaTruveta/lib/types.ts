@@ -25,6 +25,7 @@ export type Department =
   | 'Research / Genomics Education'
   | 'Cardiology / Interventional'
   | 'Ophthalmology'
+  | 'Orthopedics / Sports Medicine'
   | 'Cosmetic & Restorative Dentistry';
 
 export type UseCaseCategory =
@@ -42,6 +43,7 @@ export type UseCaseCategory =
   | 'Consent & Privacy'
   | 'Cardiac Procedure'
   | 'Vision Correction'
+  | 'Surgical Recovery'
   | 'Cosmetic Dentistry';
 
 export type HealthLiteracyLevel = 'basic' | 'intermediate' | 'advanced';

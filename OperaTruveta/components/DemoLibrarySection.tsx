@@ -26,7 +26,7 @@ const GROUPS: { title: string; ids: string[] }[] = [
     ids: [
       'clinical-trial-education',
       'lab-result-explanation',
-      'post-discharge-recovery',
+      'acl-recovery',
     ],
   },
 ];

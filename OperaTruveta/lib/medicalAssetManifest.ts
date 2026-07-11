@@ -74,10 +74,14 @@ export const medicalAssetManifest: Record<string, string> = {
   'procedure-prep-6': '/medical-assets/colonoscopy-prep/recovery-area.mp4',
   'procedure-prep-7': '/medical-assets/colonoscopy-prep/ride-pickup.mp4',
 
-  // ── Post-discharge recovery (Robert, 68) — real clips + coded follow-up plan (pd-5) ──
-  'post-discharge-recovery-3': '/medical-assets/discharge/medication-review.mp4',
-  'post-discharge-recovery-4': '/medical-assets/discharge/recovery-walk.mp4',
-  'post-discharge-recovery-7': '/medical-assets/discharge/care-team-phone-support.mp4',
+  // ── ACL recovery (Jake, 27) — real ElevenLabs-generated clips ──
+  // The tear (2) and reconstruction (3) beats were skipped; clips 1 and 4 carry the story across.
+  'acl-recovery-1': '/medical-assets/acl-knee/knee-anatomy-acl.mp4',
+  'acl-recovery-4': '/medical-assets/acl-knee/graft-healing.mp4',
+  'acl-recovery-5': '/medical-assets/acl-knee/phase1-gentle-motion.mp4',
+  'acl-recovery-6': '/medical-assets/acl-knee/phase2-strength.mp4',
+  'acl-recovery-7': '/medical-assets/acl-knee/phase3-return-to-sport.mp4',
+  'acl-recovery-8': '/medical-assets/acl-knee/back-on-the-field.mp4',
 
   // ── Prenatal visit prep (Amina, 31) — real clips + coded visit timeline (pn-3) ──
   'prenatal-visit-prep-1': '/medical-assets/prenatal/prenatal-exam-room.mp4',

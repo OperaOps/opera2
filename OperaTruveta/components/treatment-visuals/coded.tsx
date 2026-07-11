@@ -251,14 +251,6 @@ export const codedTreatmentScenes: Record<string, (props: CodedSceneProps) => JS
       ]}
     />
   ),
-  'post-discharge-recovery-5': (p) => (
-    <ChecklistCard
-      {...p}
-      eyebrow="Your follow-up plan"
-      title="The week ahead"
-      items={['Take medications as scheduled', 'Gentle daily walks', 'Follow-up visit booked', 'Message your team with questions']}
-    />
-  ),
   'lab-result-explanation-4': (p) => (
     <ResultReport {...p} eyebrow="What a result looks like" title="Your results" rows={['Panel A', 'Panel B', 'Panel C']} />
   ),
