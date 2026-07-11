@@ -495,44 +495,20 @@ export default function OverviewPage() {
                 playsInline
                 preload="metadata"
                 onPlay={() => setVideoStarted(true)}
-                className="absolute inset-0 h-full w-full bg-[#0a0a0f] object-contain"
+                poster="/videos/demo-veneers-poster.jpg"
+                className="absolute inset-0 h-full w-full bg-white object-contain"
               />
 
-              {/* cinematic purple thumbnail overlay */}
+              {/* thumbnail = the video's first frame, with a simple play button */}
               {!videoStarted && (
                 <button
                   onClick={playVideo}
                   aria-label="Play demo video"
-                  className="group absolute inset-0 z-10 flex flex-col items-center justify-center overflow-hidden"
+                  className="group absolute inset-0 z-10 flex items-center justify-center"
                 >
-                  {/* layered purple gradient backdrop */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#1a0b2e] via-[#0f0820] to-black" />
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(168,85,247,0.45),transparent_60%)]" />
-                  <div className="absolute -bottom-16 left-1/2 h-48 w-72 -translate-x-1/2 rounded-full bg-fuchsia-600/30 blur-3xl" />
-                  {/* subtle grid sheen */}
-                  <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.5)_1px,transparent_1px)] [background-size:36px_36px]" />
-
-                  <div className="relative flex flex-col items-center">
-                    {/* glowing play button */}
-                    <span className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/30 backdrop-blur-md transition-transform duration-300 group-hover:scale-110">
-                      <span className="absolute inset-0 animate-ping rounded-full bg-purple-500/30" />
-                      <span className="absolute -inset-3 rounded-full bg-purple-500/20 blur-xl" />
-                      <Play className="relative ml-1 h-8 w-8 fill-white text-white drop-shadow-[0_0_8px_rgba(168,85,247,0.9)]" />
-                    </span>
-                    <p className="mt-6 text-base font-medium text-white drop-shadow">
-                      Jessica&apos;s Veneers Plan
-                    </p>
-                    <p className="mt-1 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-purple-300">
-                      <Sparkles className="h-3.5 w-3.5" /> Personalized patient video
-                    </p>
-                  </div>
-
-                  {/* player chrome dots */}
-                  <div className="absolute left-4 top-4 flex gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/25" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/25" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/25" />
-                  </div>
+                  <span className="relative flex h-20 w-20 items-center justify-center rounded-full bg-black/60 ring-1 ring-white/40 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                    <Play className="relative ml-1 h-8 w-8 fill-white text-white" />
+                  </span>
                 </button>
               )}
             </div>
