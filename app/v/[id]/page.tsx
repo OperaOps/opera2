@@ -6,7 +6,7 @@
 
 import { notFound } from "next/navigation";
 import { getShareContext, suggestedQuestions } from "@/lib/patient-share";
-import { AskOpera } from "@/components/patient/AskOpera";
+import { AskOpera } from "@/Components/patient/AskOpera";
 
 export const dynamic = "force-dynamic";
 
