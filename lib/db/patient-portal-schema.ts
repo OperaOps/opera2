@@ -4,6 +4,8 @@
  */
 
 import Database from "better-sqlite3";
+import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const DB_PATH = path.join(process.cwd(), "data", "opera_local.db");
@@ -12,10 +14,23 @@ let _db: Database.Database | null = null;
 
 export function getDb(): Database.Database {
   if (!_db) {
-    _db = new Database(DB_PATH);
-    _db.pragma("journal_mode = WAL");
-    _db.pragma("foreign_keys = ON");
-    initSchema(_db);
+    try {
+      _db = new Database(DB_PATH);
+      _db.pragma("journal_mode = WAL");
+      _db.pragma("foreign_keys = ON");
+      initSchema(_db);
+    } catch {
+      // Serverless (Netlify/Lambda): the deploy filesystem is read-only, so
+      // copy the bundled DB to the instance's writable tmp dir. Writes persist
+      // only for the life of the instance — fine for the demo portal; real
+      // clinic accounts move to Dynamo.
+      const tmpPath = path.join(os.tmpdir(), "opera_local.db");
+      if (!fs.existsSync(tmpPath)) fs.copyFileSync(DB_PATH, tmpPath);
+      _db = new Database(tmpPath);
+      _db.pragma("journal_mode = MEMORY");
+      _db.pragma("foreign_keys = ON");
+      initSchema(_db);
+    }
   }
   return _db;
 }

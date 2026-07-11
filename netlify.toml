@@ -1,0 +1,3 @@
+# Build settings live in the Netlify UI; this only augments the functions bundle.
+[functions]
+  included_files = ["data/opera_local.db"]
