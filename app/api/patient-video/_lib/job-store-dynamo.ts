@@ -6,6 +6,7 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
+  ScanCommand,
   GetCommand,
   PutCommand,
 } from "@aws-sdk/lib-dynamodb";
@@ -17,8 +18,18 @@ let docClient: DynamoDBDocumentClient | null = null;
 
 function getDoc(): DynamoDBDocumentClient {
   if (!docClient) {
-    const region = process.env.AWS_REGION || "us-east-1";
-    docClient = DynamoDBDocumentClient.from(new DynamoDBClient({ region }), {
+    const region =
+      process.env.OPERA_AWS_REGION || process.env.AWS_REGION || "us-east-1";
+    // Netlify reserves the standard AWS_* names; hosts without an IAM role
+    // pass scoped credentials via OPERA_AWS_* (same pattern as clinic-store).
+    const accessKeyId = process.env.OPERA_AWS_ACCESS_KEY_ID?.trim();
+    const secretAccessKey = process.env.OPERA_AWS_SECRET_ACCESS_KEY?.trim();
+    const client = new DynamoDBClient(
+      accessKeyId && secretAccessKey
+        ? { region, credentials: { accessKeyId, secretAccessKey } }
+        : { region }
+    );
+    docClient = DynamoDBDocumentClient.from(client, {
       marshallOptions: { removeUndefinedValues: true },
     });
   }
@@ -71,4 +82,15 @@ export async function dynamoPutJob(jobId: string, job: VideoJob): Promise<void> 
       },
     })
   );
+}
+
+/** List recent jobs (newest first). Scan is fine at this table's size. */
+export async function dynamoListJobs(limit = 100): Promise<Array<VideoJob & { jobId: string }>> {
+  const r = await getDoc().send(new ScanCommand({ TableName: TABLE }));
+  const jobs = (r.Items ?? []).map((item) => ({
+    ...itemToJob(item as Record<string, unknown>),
+    jobId: (item as Record<string, unknown>).jobId as string,
+  }));
+  jobs.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
+  return jobs.slice(0, limit);
 }

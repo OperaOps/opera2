@@ -6,6 +6,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db/patient-portal-schema";
 import { verifyClinicToken } from "@/lib/auth/clinic-auth";
+import {
+  dynamoListJobs,
+  isDynamoJobStoreEnabled,
+} from "@/app/api/patient-video/_lib/job-store-dynamo";
 
 function generateAccessCode(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -54,13 +58,64 @@ export async function GET(request: NextRequest) {
     .prepare(`SELECT COUNT(*) as count FROM patient_accounts ${whereClause}`)
     .get(...countParams) as { count: number };
 
+  // Merge in patients who exist only as Generate Video pipeline jobs, so the
+  // list reflects everything the clinic has actually generated.
+  let merged = patients as Record<string, unknown>[];
+  let mergedTotal = total.count;
+  if (isDynamoJobStoreEnabled()) {
+    try {
+      const jobs = await dynamoListJobs(200);
+      const known = new Set(
+        merged.map((p) =>
+          `${String(p.first_name || "").toLowerCase()} ${String(p.last_name || "").toLowerCase()}`.trim()
+        )
+      );
+      const byPatient = new Map<string, (typeof jobs)[number]>();
+      for (const job of jobs) {
+        const name = String(job.input?.patientName || "").trim();
+        if (!name) continue;
+        if (search && !name.toLowerCase().includes(search.toLowerCase())) continue;
+        if (!byPatient.has(name.toLowerCase())) byPatient.set(name.toLowerCase(), job);
+      }
+      for (const [nameKey, job] of byPatient) {
+        if (known.has(nameKey)) continue;
+        const [first, ...rest] = String(job.input.patientName).trim().split(/\s+/);
+        merged.push({
+          id: job.jobId,
+          first_name: first,
+          last_name: rest.join(" ") || null,
+          email: null,
+          date_of_birth: null,
+          phone: null,
+          treatment_type: job.input.treatment || "treatment",
+          consulting_provider: job.input.doctorName || null,
+          consultation_date: null,
+          video_url: job.videoUrl,
+          video_title: null,
+          video_watched: 0,
+          video_watched_at: null,
+          survey_completed: 0,
+          survey_completed_at: null,
+          created_at: new Date(job.createdAt).toISOString(),
+        });
+        mergedTotal++;
+      }
+      merged.sort(
+        (a, b) =>
+          new Date(String(b.created_at)).getTime() - new Date(String(a.created_at)).getTime()
+      );
+    } catch (err) {
+      console.error("[clinic/patients] job store read failed", err);
+    }
+  }
+
   return NextResponse.json({
-    patients,
+    patients: merged,
     pagination: {
       page,
       limit,
-      total: total.count,
-      totalPages: Math.ceil(total.count / limit),
+      total: mergedTotal,
+      totalPages: Math.ceil(mergedTotal / limit),
     },
   });
 }

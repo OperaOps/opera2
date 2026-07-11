@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
   }
 
-  const ctx = getShareContext(id);
+  const ctx = await getShareContext(id);
   if (!ctx) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
   const history = (body.history ?? []).slice(-6); // short memory, keeps answers fast

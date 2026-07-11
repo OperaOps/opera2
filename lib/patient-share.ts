@@ -7,6 +7,10 @@
  */
 
 import { getDb } from "@/lib/db/patient-portal-schema";
+import {
+  dynamoGetJob,
+  isDynamoJobStoreEnabled,
+} from "@/app/api/patient-video/_lib/job-store-dynamo";
 
 export interface ShareContext {
   id: string;
@@ -70,8 +74,42 @@ const DEMO_CONTEXT: ShareContext = {
   isDemo: true,
 };
 
-export function getShareContext(id: string): ShareContext | null {
+export async function getShareContext(id: string): Promise<ShareContext | null> {
   if (id === "demo") return DEMO_CONTEXT;
+
+  // Generated-video jobs (the pipeline's Dynamo store) — every video produced
+  // by Generate Video gets a patient page at /v/{jobId} with the Ask Opera bar.
+  if (isDynamoJobStoreEnabled() && /^[0-9a-f-]{36}$/.test(id)) {
+    try {
+      const job = await dynamoGetJob(id);
+      if (job?.status === "completed" && job.videoUrl) {
+        const input = job.input ?? ({} as Record<string, string>);
+        const patientName = (input.patientName || "there").trim();
+        const [firstName, ...rest] = patientName.split(/\s+/);
+        const treatment = input.treatment || "treatment";
+        const notes = [
+          input.treatmentNotes && `Treatment notes: ${input.treatmentNotes}`,
+          input.concerns && `Patient concerns: ${input.concerns}`,
+          input.patientStatus && `Patient status: ${input.patientStatus}`,
+        ]
+          .filter(Boolean)
+          .join(" ");
+        return {
+          id,
+          videoUrl: job.videoUrl,
+          videoTitle: `Your ${treatment.replace(/_/g, " ")} video, ${firstName}`,
+          patientFirstName: firstName,
+          patientLastName: rest.join(" ") || undefined,
+          clinicName: input.clinicName || "your clinic",
+          provider: input.doctorName || undefined,
+          treatmentType: treatment,
+          providerNotes: notes || undefined,
+        };
+      }
+    } catch {
+      /* job store unavailable — fall through to the portal DB */
+    }
+  }
 
   try {
     const db = getDb();

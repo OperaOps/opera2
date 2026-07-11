@@ -628,6 +628,7 @@ function PreviewScreen({
   embedded?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
   const isSuccess = jobStatus.status === "completed" && jobStatus.videoUrl;
   const isFailed = jobStatus.status === "failed";
 
@@ -646,11 +647,13 @@ function PreviewScreen({
                 <CheckCircle2 className="w-7 h-7 text-green-600" />
               </div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-1">Your Video is Ready</h2>
-              <p className="text-sm text-gray-500">Preview it below, then download or share.</p>
+              <p className="text-sm text-gray-500">
+                Send the patient link — their video plus Ask Opera, ready for questions.
+              </p>
             </div>
 
             {/* Video player */}
-            <div className="bg-black rounded-2xl overflow-hidden shadow-2xl shadow-black/10 mb-8">
+            <div className="bg-black rounded-2xl overflow-hidden shadow-2xl shadow-black/10 mb-6">
               <video
                 ref={videoRef}
                 src={jobStatus.videoUrl}
@@ -660,14 +663,48 @@ function PreviewScreen({
               />
             </div>
 
+            {/* Patient link — the thing clinics actually send */}
+            <div className="mb-6 rounded-2xl border border-purple-200 bg-purple-50/60 px-5 py-4">
+              <p className="text-[12px] font-semibold uppercase tracking-wider text-purple-700 mb-2">
+                Patient link
+              </p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 truncate rounded-lg border border-purple-100 bg-white px-3 py-2 text-[13px] text-gray-700">
+                  {typeof window !== "undefined" ? `${window.location.origin}/v/${jobStatus.jobId}` : `/v/${jobStatus.jobId}`}
+                </code>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${window.location.origin}/v/${jobStatus.jobId}`);
+                    setLinkCopied(true);
+                    setTimeout(() => setLinkCopied(false), 2000);
+                  }}
+                  className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-purple-600 text-white rounded-lg text-[13px] font-medium hover:bg-purple-500 transition-colors"
+                >
+                  {linkCopied ? "Copied!" : "Copy link"}
+                </button>
+              </div>
+              <p className="mt-2 text-[12px] text-gray-500">
+                The patient sees their video with the Ask Opera bar underneath — they can ask
+                questions about their treatment right on the page.
+              </p>
+            </div>
+
             {/* Actions */}
             <div className="flex items-center justify-center gap-3">
               <a
-                href={jobStatus.videoUrl}
-                download
+                href={`/v/${jobStatus.jobId}`}
+                target="_blank"
+                rel="noopener"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl text-sm font-medium hover:bg-purple-700 active:scale-[0.98] transition-all shadow-lg shadow-purple-600/20"
               >
-                <Download className="w-4 h-4" /> Download Video
+                <Sparkles className="w-4 h-4" /> Open Patient Page
+              </a>
+              <a
+                href={jobStatus.videoUrl}
+                download
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-xl text-sm font-medium border border-gray-200 hover:border-purple-200 hover:bg-purple-50/30 active:scale-[0.98] transition-all"
+              >
+                <Download className="w-4 h-4" /> Download
               </a>
               <button
                 onClick={onNewVideo}

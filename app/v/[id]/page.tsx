@@ -10,8 +10,8 @@ import { AskOpera } from "@/Components/patient/AskOpera";
 
 export const dynamic = "force-dynamic";
 
-export default function PatientSharePage({ params }: { params: { id: string } }) {
-  const ctx = getShareContext(params.id);
+export default async function PatientSharePage({ params }: { params: { id: string } }) {
+  const ctx = await getShareContext(params.id);
   if (!ctx) notFound();
 
   const treatmentLabel = ctx.treatmentType.replace(/_/g, " ");
