@@ -7,6 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { proxyToRenderer } from "@/lib/video/upstream-proxy";
 import crypto from "node:crypto";
 import {
   saveJob,
@@ -217,6 +218,9 @@ function validateInput(body: unknown): { ok: true; data: RenderInput } | { ok: f
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
+  const proxied = await proxyToRenderer(request, "/api/patient-video/generate");
+  if (proxied) return proxied;
+
   let body: unknown;
   try {
     body = await request.json();

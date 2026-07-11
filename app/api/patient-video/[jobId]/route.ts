@@ -5,6 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { proxyToRenderer } from "@/lib/video/upstream-proxy";
 import { loadJob } from "../_lib/job-store";
 
 // ---------------------------------------------------------------------------
@@ -16,6 +17,9 @@ export async function GET(
   { params }: { params: { jobId: string } }
 ) {
   const { jobId } = params;
+
+  const proxied = await proxyToRenderer(_request, `/api/patient-video/${jobId}`);
+  if (proxied) return proxied;
 
   const job = await loadJob(jobId);
   if (!job) {

@@ -13,10 +13,14 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { proxyToRenderer } from "@/lib/video/upstream-proxy";
 import { attachVideoResource } from "../_lib/greyfinch";
 import { authorizeVideoRequest } from "@/lib/connect/auth";
 
 export async function POST(request: NextRequest) {
+  const proxied = await proxyToRenderer(request, "/api/patient-video/record-resource");
+  if (proxied) return proxied;
+
   let body: Record<string, unknown>;
   try {
     body = (await request.json()) as Record<string, unknown>;

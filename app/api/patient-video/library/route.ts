@@ -6,11 +6,15 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { proxyToRenderer } from "@/lib/video/upstream-proxy";
 import { getPatientVideos, patientKey } from "../_lib/patient-library";
 import { loadJob } from "../_lib/job-store";
 import { authorizeVideoRequest } from "@/lib/connect/auth";
 
 export async function GET(request: NextRequest) {
+  const proxied = await proxyToRenderer(request, "/api/patient-video/library");
+  if (proxied) return proxied;
+
   const auth = await authorizeVideoRequest(request);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error, code: auth.code }, { status: auth.status });

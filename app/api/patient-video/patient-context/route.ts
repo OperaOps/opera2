@@ -8,10 +8,14 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { proxyToRenderer } from "@/lib/video/upstream-proxy";
 import { connectionToken, getPatientContext, ORG_XID } from "../_lib/greyfinch";
 import { authorizeVideoRequest } from "@/lib/connect/auth";
 
 export async function GET(request: NextRequest) {
+  const proxied = await proxyToRenderer(request, "/api/patient-video/patient-context");
+  if (proxied) return proxied;
+
   const sp = request.nextUrl.searchParams;
   const name = sp.get("patient_name")?.trim() || sp.get("patientName")?.trim() || "";
   const empty = { notesBox: "", txPlanBox: "" };

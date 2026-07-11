@@ -20,6 +20,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { proxyToRenderer } from "@/lib/video/upstream-proxy";
 import { gql, connectionToken, findPatient, ORG_XID } from "../_lib/greyfinch";
 import { authorizeVideoRequest } from "@/lib/connect/auth";
 
@@ -57,6 +58,9 @@ function fillTemplate(tpl: string, vars: { name: string; clinic: string; url: st
 }
 
 export async function POST(request: NextRequest) {
+  const proxied = await proxyToRenderer(request, "/api/patient-video/send-sms");
+  if (proxied) return proxied;
+
   let body: Record<string, unknown>;
   try {
     body = (await request.json()) as Record<string, unknown>;
