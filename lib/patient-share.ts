@@ -20,6 +20,15 @@ export interface ShareContext {
   treatmentType: string;
   providerNotes?: string;
   consultationDate?: string;
+  /** Office contact details — the assistant hands these out verbatim. */
+  clinicContact?: {
+    phone: string;
+    email?: string;
+    address?: string;
+    hours?: string;
+  };
+  /** Clinic knowledge base (insurance plans, financing, policies) fed to the assistant. */
+  knowledgeBase?: string;
   isDemo?: boolean;
 }
 
@@ -39,6 +48,25 @@ const DEMO_CONTEXT: ShareContext = {
     "about how much enamel is removed (minimal-prep approach, whisper-thin reduction only). " +
     "Plan: shade match + digital scan, prep visit, temporaries ~2 weeks, seat finals ~1 month out. " +
     "$10,800 total on a 12-month plan. Night guard recommended (clenches when stressed).",
+  clinicContact: {
+    phone: "(415) 555-0142",
+    email: "hello@luminousdental.com",
+    address: "2210 Fillmore Street, San Francisco, CA 94115",
+    hours: "Mon–Fri 8am–5pm, Sat 9am–1pm",
+  },
+  knowledgeBase:
+    "INSURANCE PLANS ACCEPTED: Delta Dental PPO, MetLife PDP Plus, Cigna Total DPPO, Aetna PPO, " +
+    "Guardian PPO, and United Healthcare Dental. Out-of-network claims are filed as a courtesy for any PPO plan. " +
+    "COVERAGE FOR VENEERS: most plans classify veneers as cosmetic, which is typically not covered. When veneers " +
+    "restore damaged, chipped, or structurally compromised teeth, plans sometimes cover a portion as a 'major " +
+    "restorative' benefit (usually 50% after deductible, subject to the plan's annual maximum, commonly $1,500–$2,000). " +
+    "The office runs a free benefits check before any treatment — patients just need their member ID. " +
+    "Pre-treatment estimates take 2–3 weeks with most carriers. " +
+    "FINANCING: 12-month in-house plan at 0% interest (Jessica is already set up on this), CareCredit 6/12/18-month " +
+    "options, and 5% courtesy discount for paid-in-full treatment. HSA/FSA cards accepted. " +
+    "APPOINTMENTS: book by phone or text to the office number; the schedule fills ~2 weeks out. 48-hour notice for " +
+    "reschedules. Free parking behind the building off Clay Street. " +
+    "AFTER-HOURS: for urgent dental issues, call the office line and press 1 for the on-call doctor.",
   isDemo: true,
 };
 

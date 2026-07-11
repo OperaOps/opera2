@@ -23,6 +23,7 @@ import {
 interface Exchange {
   q: string;
   a: string;
+  followUps?: string[];
 }
 
 export function AskOpera({
@@ -52,7 +53,8 @@ export function AskOpera({
     // small delay lets the pending card mount before we scroll to it
     setTimeout(() => answersRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), 80);
     try {
-      const history = exchanges.flatMap((e) => [
+      // exchanges are stored newest-first for display; the model needs them oldest-first
+      const history = [...exchanges].reverse().flatMap((e) => [
         { role: "user" as const, content: e.q },
         { role: "assistant" as const, content: e.a },
       ]);
@@ -65,11 +67,12 @@ export function AskOpera({
       const a: string = res.ok && data.answer
         ? data.answer
         : `I couldn't answer that just now — the team at ${clinicName} is always happy to help if it's urgent.`;
-      setExchanges((prev) => [...prev, { q, a }]);
+      const followUps: string[] = res.ok && Array.isArray(data.followUps) ? data.followUps : [];
+      setExchanges((prev) => [{ q, a, followUps }, ...prev]);
     } catch {
       setExchanges((prev) => [
-        ...prev,
         { q, a: `I couldn't answer that just now — please try again in a moment.` },
+        ...prev,
       ]);
     } finally {
       setPending(null);
@@ -174,27 +177,13 @@ export function AskOpera({
         ))}
       </div>
 
-      {/* Inline answers — calm cards, not a chat log */}
+      {/* Inline answers — calm cards, newest on top */}
       <div ref={answersRef} className="mt-6 space-y-3">
         <AnimatePresence initial={false}>
-          {exchanges.map((e, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="rounded-2xl border border-purple-100 bg-purple-50/50 px-5 py-4"
-            >
-              <p className="text-[12.5px] font-semibold text-purple-800">{e.q}</p>
-              <p className="mt-1.5 whitespace-pre-line text-[14.5px] leading-relaxed text-gray-700">
-                {e.a}
-              </p>
-            </motion.div>
-          ))}
           {pending && (
             <motion.div
               key="pending"
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               className="rounded-2xl border border-purple-100 bg-purple-50/50 px-5 py-4"
             >
@@ -205,6 +194,34 @@ export function AskOpera({
               </p>
             </motion.div>
           )}
+          {exchanges.map((e, i) => (
+            <motion.div
+              key={exchanges.length - i}
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="rounded-2xl border border-purple-100 bg-purple-50/50 px-5 py-4"
+            >
+              <p className="text-[12.5px] font-semibold text-purple-800">{e.q}</p>
+              <p className="mt-1.5 whitespace-pre-line text-[14.5px] leading-relaxed text-gray-700">
+                {e.a}
+              </p>
+              {e.followUps && e.followUps.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {e.followUps.map((f) => (
+                    <button
+                      key={f}
+                      onClick={() => ask(f)}
+                      disabled={!!pending}
+                      className="rounded-full border border-purple-200 bg-white px-3 py-1 text-[12px] text-purple-700 transition-colors hover:border-purple-400 hover:bg-purple-50 disabled:opacity-50"
+                    >
+                      {f}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          ))}
         </AnimatePresence>
       </div>
 
