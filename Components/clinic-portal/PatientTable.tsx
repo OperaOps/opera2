@@ -24,26 +24,26 @@ interface PatientTableProps {
 function videoStatusDisplay(p: Patient) {
   if (p.survey_completed) {
     return (
-      <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+      <span className="px-2 py-0.5 text-xs rounded-full bg-green-50 text-green-700 border border-green-100">
         Survey done
       </span>
     );
   }
   if (p.video_watched) {
     return (
-      <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+      <span className="px-2 py-0.5 text-xs rounded-full bg-green-50 text-green-700 border border-green-100">
         Watched
       </span>
     );
   }
   if (p.video_url) {
     return (
-      <span className="px-2 py-0.5 text-xs rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20">
+      <span className="px-2 py-0.5 text-xs rounded-full bg-purple-50 text-purple-700 border border-purple-100">
         Ready
       </span>
     );
   }
-  return <span className="text-gray-600 text-xs">&mdash;</span>;
+  return <span className="text-gray-400 text-xs">&mdash;</span>;
 }
 
 export default function PatientTable({
@@ -54,26 +54,25 @@ export default function PatientTable({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl text-white font-extralight">Patients</h2>
+        <h2 className="text-xl text-gray-900 font-semibold tracking-tight">Patients</h2>
         <button
           onClick={onAddPatient}
-          className="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600
-            hover:from-violet-500 hover:to-purple-500 text-white text-sm font-medium
-            transition-all shadow-lg shadow-violet-600/20"
+          className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500
+            text-white text-sm font-medium transition-colors"
         >
           + Add Patient
         </button>
       </div>
 
-      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/10">
-              <th className="text-left px-4 py-3 text-gray-400 font-medium">Name</th>
-              <th className="text-left px-4 py-3 text-gray-400 font-medium">Treatment</th>
-              <th className="text-left px-4 py-3 text-gray-400 font-medium">Consultation</th>
-              <th className="text-left px-4 py-3 text-gray-400 font-medium">Video</th>
-              <th className="text-right px-4 py-3 text-gray-400 font-medium w-16"></th>
+            <tr className="border-b border-gray-100">
+              <th className="text-left px-4 py-3 text-gray-500 font-medium text-xs uppercase tracking-wider">Name</th>
+              <th className="text-left px-4 py-3 text-gray-500 font-medium text-xs uppercase tracking-wider">Treatment</th>
+              <th className="text-left px-4 py-3 text-gray-500 font-medium text-xs uppercase tracking-wider">Consultation</th>
+              <th className="text-left px-4 py-3 text-gray-500 font-medium text-xs uppercase tracking-wider">Video</th>
+              <th className="text-right px-4 py-3 text-gray-500 font-medium w-16"></th>
             </tr>
           </thead>
           <tbody>
@@ -84,15 +83,15 @@ export default function PatientTable({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
                 onClick={() => onSelect(p)}
-                className="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
+                className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors"
               >
-                <td className="px-4 py-3 text-white">
+                <td className="px-4 py-3 text-gray-900">
                   {p.first_name} {p.last_name}
                 </td>
-                <td className="px-4 py-3 text-gray-400">
+                <td className="px-4 py-3 text-gray-500">
                   {p.treatment_type ? getTreatmentLabel(p.treatment_type) : "—"}
                 </td>
-                <td className="px-4 py-3 text-gray-400">
+                <td className="px-4 py-3 text-gray-500">
                   {p.consultation_date || "—"}
                 </td>
                 <td className="px-4 py-3">{videoStatusDisplay(p)}</td>
@@ -103,7 +102,7 @@ export default function PatientTable({
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="text-gray-500 hover:text-white transition-colors"
+                      className="text-gray-400 hover:text-gray-900 transition-colors"
                       title="Preview video"
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -117,7 +116,7 @@ export default function PatientTable({
             ))}
             {patients.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center py-12 text-gray-500">
+                <td colSpan={5} className="text-center py-12 text-gray-400">
                   No patients yet. Click &ldquo;Add Patient&rdquo; to get started.
                 </td>
               </tr>

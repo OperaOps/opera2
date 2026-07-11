@@ -23,7 +23,7 @@ interface VideoHistoryListProps {
 export default function VideoHistoryList({ videos }: VideoHistoryListProps) {
   if (videos.length === 0) {
     return (
-      <p className="text-gray-600 text-sm">No videos generated yet.</p>
+      <p className="text-gray-400 text-sm">No videos generated yet.</p>
     );
   }
 
@@ -34,17 +34,17 @@ export default function VideoHistoryList({ videos }: VideoHistoryListProps) {
           key={v.id}
           className={`flex items-center justify-between p-3 rounded-lg border ${
             v.is_active
-              ? "bg-violet-600/5 border-violet-500/20"
-              : "bg-white/[0.02] border-white/5"
+              ? "bg-purple-50 border-purple-100"
+              : "bg-gray-50 border-gray-100"
           }`}
         >
           <div className="flex items-center gap-3">
-            <span className="text-gray-600 text-xs w-5">{i + 1}.</span>
+            <span className="text-gray-400 text-xs w-5">{i + 1}.</span>
             <div>
-              <p className="text-sm text-gray-200">
+              <p className="text-sm text-gray-900">
                 {v.video_title || getTreatmentLabel(v.treatment_type)}
                 {v.is_active ? (
-                  <span className="ml-2 text-[10px] text-violet-400 uppercase tracking-wider">
+                  <span className="ml-2 text-[10px] text-purple-600 uppercase tracking-wider">
                     active
                   </span>
                 ) : null}
@@ -67,7 +67,7 @@ export default function VideoHistoryList({ videos }: VideoHistoryListProps) {
               href={v.video_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-violet-400 hover:text-violet-300 transition-colors"
+              className="text-xs text-purple-600 hover:text-purple-500 transition-colors"
             >
               Preview
             </a>

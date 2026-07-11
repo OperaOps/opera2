@@ -64,10 +64,10 @@ export default function ClinicDashboardHome() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-48 bg-white/5 rounded-2xl animate-pulse" />
+        <div className="h-48 bg-gray-100 rounded-2xl animate-pulse" />
         <div className="grid grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-20 bg-white/5 rounded-xl animate-pulse" />
+            <div key={i} className="h-20 bg-gray-100 rounded-xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -82,26 +82,25 @@ export default function ClinicDashboardHome() {
         animate={{ opacity: 1, y: 0 }}
         onClick={() => router.push("/clinic/dashboard/pipeline")}
         className="w-full group relative overflow-hidden rounded-2xl p-8 md:p-10 text-left
-          bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-transparent
-          border border-violet-500/30 hover:border-violet-500/50
-          transition-all shadow-xl shadow-violet-900/10"
+          bg-gradient-to-br from-purple-50 via-white to-white
+          border border-purple-200 hover:border-purple-300
+          transition-all shadow-sm"
       >
-        <div className="absolute top-0 right-0 w-64 h-64 bg-violet-500/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-100/60 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-3">
-            <Video className="w-6 h-6 text-violet-400" />
-            <h2 className="text-xl md:text-2xl text-white font-extralight tracking-wide">
+            <Video className="w-6 h-6 text-purple-600" />
+            <h2 className="text-xl md:text-2xl text-gray-900 font-semibold tracking-tight">
               Generate New Patient Video
             </h2>
           </div>
-          <p className="text-gray-400 font-light max-w-md">
+          <p className="text-gray-500 max-w-md">
             Create a personalized treatment video and send it to your patient in
             minutes.
           </p>
           <div className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl
-            bg-gradient-to-r from-violet-600 to-purple-600
-            group-hover:from-violet-500 group-hover:to-purple-500
-            text-white text-sm font-medium transition-all shadow-lg shadow-violet-600/20"
+            bg-purple-600 group-hover:bg-purple-500
+            text-white text-sm font-medium transition-all"
           >
             Start New Video
             <ArrowRight className="w-4 h-4" />
@@ -138,21 +137,21 @@ export default function ClinicDashboardHome() {
         transition={{ delay: 0.25 }}
       >
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm text-gray-400">Recent Patients</h3>
+          <h3 className="text-sm text-gray-500">Recent Patients</h3>
           <button
             onClick={() => router.push("/clinic/dashboard/patients")}
-            className="flex items-center gap-1 text-xs text-violet-400 hover:text-violet-300 transition-colors"
+            className="flex items-center gap-1 text-xs text-purple-600 hover:text-purple-500 transition-colors"
           >
             View All <ArrowRight className="w-3 h-3" />
           </button>
         </div>
-        <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left px-4 py-2.5 text-gray-500 font-medium text-xs">Name</th>
-                <th className="text-left px-4 py-2.5 text-gray-500 font-medium text-xs">Treatment</th>
-                <th className="text-left px-4 py-2.5 text-gray-500 font-medium text-xs">Video</th>
+              <tr className="border-b border-gray-100">
+                <th className="text-left px-4 py-2.5 text-gray-500 font-medium text-xs uppercase tracking-wider">Name</th>
+                <th className="text-left px-4 py-2.5 text-gray-500 font-medium text-xs uppercase tracking-wider">Treatment</th>
+                <th className="text-left px-4 py-2.5 text-gray-500 font-medium text-xs uppercase tracking-wider">Video</th>
                 <th className="text-right px-4 py-2.5 text-gray-500 font-medium text-xs w-28"></th>
               </tr>
             </thead>
@@ -161,23 +160,23 @@ export default function ClinicDashboardHome() {
                 <tr
                   key={p.id}
                   onClick={() => router.push(`/clinic/dashboard/patients/${p.id}`)}
-                  className="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
+                  className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors"
                 >
-                  <td className="px-4 py-2.5 text-white">
+                  <td className="px-4 py-2.5 text-gray-900">
                     {p.first_name} {p.last_name}
                   </td>
-                  <td className="px-4 py-2.5 text-gray-400">
+                  <td className="px-4 py-2.5 text-gray-500">
                     {p.treatment_type ? getTreatmentLabel(p.treatment_type) : "—"}
                   </td>
                   <td className="px-4 py-2.5">
                     {p.survey_completed ? (
-                      <span className="text-xs text-emerald-400">Survey done</span>
+                      <span className="text-xs text-green-700">Survey done</span>
                     ) : p.video_watched ? (
-                      <span className="text-xs text-emerald-400">Watched</span>
+                      <span className="text-xs text-green-700">Watched</span>
                     ) : p.video_url ? (
-                      <span className="text-xs text-violet-400">Ready</span>
+                      <span className="text-xs text-purple-600">Ready</span>
                     ) : (
-                      <span className="text-xs text-gray-600">—</span>
+                      <span className="text-xs text-gray-400">—</span>
                     )}
                   </td>
                   <td className="px-4 py-2.5 text-right">
@@ -189,7 +188,7 @@ export default function ClinicDashboardHome() {
                             `/clinic/dashboard/pipeline?patient_id=${p.id}`
                           );
                         }}
-                        className="inline-flex items-center gap-1 text-xs text-violet-400 hover:text-violet-300 transition-colors"
+                        className="inline-flex items-center gap-1 text-xs text-purple-600 hover:text-purple-500 transition-colors"
                       >
                         Generate <ArrowRight className="w-3 h-3" />
                       </button>
@@ -199,7 +198,7 @@ export default function ClinicDashboardHome() {
               ))}
               {patients.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="text-center py-8 text-gray-600">
+                  <td colSpan={4} className="text-center py-8 text-gray-400">
                     No patients yet
                   </td>
                 </tr>
@@ -228,11 +227,11 @@ function StatCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4"
+      className="bg-white rounded-xl border border-gray-200 shadow-sm p-4"
     >
       <p className="text-xs text-gray-500">{label}</p>
-      <p className="text-2xl text-white font-extralight mt-1">{value}</p>
-      {subtitle && <p className="text-xs text-gray-600 mt-0.5">{subtitle}</p>}
+      <p className="text-2xl text-gray-900 font-semibold tracking-tight mt-1">{value}</p>
+      {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
     </motion.div>
   );
 }

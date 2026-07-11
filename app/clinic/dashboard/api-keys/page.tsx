@@ -78,7 +78,7 @@ export default function ApiKeysPage() {
 
   return (
     <div className="max-w-3xl">
-      <h2 className="text-xl text-white font-extralight mb-1">API Keys</h2>
+      <h2 className="text-xl text-gray-900 font-semibold tracking-tight mb-1">API Keys</h2>
       <p className="text-sm text-gray-500 mb-6">
         Generate patient education videos programmatically from your own
         systems.
@@ -87,28 +87,28 @@ export default function ApiKeysPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 mb-6"
+        className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6"
       >
         <div className="flex items-center gap-2 mb-4">
-          <KeyRound className="w-4 h-4 text-violet-400" />
-          <h3 className="text-white text-sm font-medium">Your API key</h3>
+          <KeyRound className="w-4 h-4 text-purple-600" />
+          <h3 className="text-gray-900 text-sm font-medium">Your API key</h3>
         </div>
 
         {loading ? (
-          <div className="h-10 bg-white/5 rounded-lg animate-pulse" />
+          <div className="h-10 bg-gray-100 rounded-lg animate-pulse" />
         ) : apiKey ? (
           <>
             <div className="flex items-center gap-2 mb-4">
               <code
-                className="flex-1 px-3 py-2 rounded-lg bg-black/50 border border-white/10
-                  text-sm text-violet-300 font-mono overflow-x-auto whitespace-nowrap"
+                className="flex-1 px-3 py-2 rounded-lg bg-gray-50 border border-gray-200
+                  text-sm text-purple-700 font-mono overflow-x-auto whitespace-nowrap"
               >
                 {revealed ? apiKey : maskKey(apiKey)}
               </code>
               <button
                 onClick={() => setRevealed((v) => !v)}
-                className="p-2 rounded-lg bg-white/5 border border-white/10 text-gray-400
-                  hover:text-white hover:border-violet-500/40 transition-colors"
+                className="p-2 rounded-lg bg-white border border-gray-200 text-gray-500
+                  hover:text-gray-900 hover:border-gray-300 transition-colors"
                 title={revealed ? "Hide key" : "Reveal key"}
               >
                 {revealed ? (
@@ -121,8 +121,8 @@ export default function ApiKeysPage() {
                 onClick={copyKey}
                 className={`p-2 rounded-lg border transition-colors ${
                   copied
-                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                    : "bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-violet-500/40"
+                    ? "bg-green-50 text-green-700 border-green-200"
+                    : "bg-white border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-300"
                 }`}
                 title="Copy key"
               >
@@ -137,8 +137,8 @@ export default function ApiKeysPage() {
               onClick={() => generateKey(true)}
               disabled={rotating}
               className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium
-                bg-white/5 text-gray-300 border border-white/10 hover:text-white
-                hover:border-violet-500/40 transition-colors disabled:opacity-50"
+                bg-white text-gray-700 border border-gray-200 hover:text-gray-900
+                hover:border-gray-300 transition-colors disabled:opacity-50"
             >
               <RefreshCw
                 className={`w-3.5 h-3.5 ${rotating ? "animate-spin" : ""}`}
@@ -154,30 +154,29 @@ export default function ApiKeysPage() {
             <button
               onClick={() => generateKey(false)}
               disabled={rotating}
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600
-                hover:from-violet-500 hover:to-purple-500 text-white text-sm font-medium
-                transition-all shadow-lg shadow-violet-600/20 disabled:opacity-50"
+              className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500
+                text-white text-sm font-medium transition-colors disabled:opacity-50"
             >
               {rotating ? "Generating…" : "Generate API key"}
             </button>
           </div>
         )}
-        {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
+        {error && <p className="text-sm text-red-600 mt-3">{error}</p>}
       </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6"
+        className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6"
       >
-        <h3 className="text-white text-sm font-medium mb-1">Example request</h3>
+        <h3 className="text-gray-900 text-sm font-medium mb-1">Example request</h3>
         <p className="text-xs text-gray-500 mb-4">
           POST /api/v1/video/generate — generates a personalized patient video.
         </p>
         <pre
-          className="px-4 py-3 rounded-lg bg-black/60 border border-white/10 text-xs
-            text-gray-300 font-mono overflow-x-auto leading-relaxed"
+          className="px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-xs
+            text-gray-700 font-mono overflow-x-auto leading-relaxed"
         >
           {curlExample(apiKey && revealed ? apiKey : "opk_live_YOUR_API_KEY")}
         </pre>

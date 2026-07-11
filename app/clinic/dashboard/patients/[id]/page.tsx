@@ -85,7 +85,7 @@ export default function PatientDetailPage() {
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-24 bg-white/5 rounded-xl animate-pulse" />
+          <div key={i} className="h-24 bg-gray-100 rounded-xl animate-pulse" />
         ))}
       </div>
     );
@@ -106,18 +106,18 @@ export default function PatientDetailPage() {
       {/* Back button */}
       <button
         onClick={() => router.push("/clinic/dashboard/patients")}
-        className="text-sm text-violet-400 hover:text-violet-300 flex items-center gap-1.5"
+        className="text-sm text-purple-600 hover:text-purple-500 flex items-center gap-1.5"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Patients
       </button>
 
       {/* Patient header */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-        <h2 className="text-xl text-white font-extralight">
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <h2 className="text-xl text-gray-900 font-semibold tracking-tight">
           {patient.first_name} {patient.last_name}
         </h2>
-        <p className="text-gray-400 text-sm mt-1">
+        <p className="text-gray-500 text-sm mt-1">
           {patient.treatment_type ? getTreatmentLabel(patient.treatment_type) : "No treatment"}
           {patient.consulting_provider && ` · ${patient.consulting_provider}`}
           {patient.consultation_date && ` · Consulted ${patient.consultation_date}`}
@@ -125,31 +125,31 @@ export default function PatientDetailPage() {
       </div>
 
       {/* Access credentials */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-        <h3 className="text-sm text-gray-400 mb-3">Access Credentials</h3>
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <h3 className="text-sm text-gray-500 mb-3">Access Credentials</h3>
         <div className="grid grid-cols-3 gap-4 text-sm">
           <div>
             <p className="text-gray-500 text-xs">Email</p>
-            <p className="text-gray-300">{patient.email}</p>
+            <p className="text-gray-700">{patient.email}</p>
           </div>
           <div>
             <p className="text-gray-500 text-xs">Access Code</p>
             <div className="flex items-center gap-2">
-              <p className="text-white font-mono text-lg">{patient.access_code}</p>
-              <button onClick={() => copyToClipboard(patient.access_code)} className="text-xs text-violet-400 hover:text-violet-300">Copy</button>
+              <p className="text-gray-900 font-mono text-lg">{patient.access_code}</p>
+              <button onClick={() => copyToClipboard(patient.access_code)} className="text-xs text-purple-600 hover:text-purple-500">Copy</button>
             </div>
           </div>
           <div>
             <p className="text-gray-500 text-xs">Date of Birth</p>
-            <p className="text-gray-300">{patient.date_of_birth}</p>
+            <p className="text-gray-700">{patient.date_of_birth}</p>
           </div>
         </div>
       </div>
 
       {/* Video section */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm text-gray-400">Video</h3>
+          <h3 className="text-sm text-gray-500">Video</h3>
           <VideoStatusBadge
             renderStatus={activeVideo?.render_status || (patient.video_url ? "completed" : "")}
             jobId={activeVideo?.render_job_id}
@@ -161,7 +161,7 @@ export default function PatientDetailPage() {
 
         {patient.video_watched ? (
           <div className="text-sm space-y-1">
-            <p className="text-gray-300">
+            <p className="text-gray-700">
               Watched{patient.video_watched_at && ` on ${new Date(patient.video_watched_at).toLocaleDateString()}`}
             </p>
             {patient.video_watch_duration_seconds > 0 && (
@@ -174,7 +174,7 @@ export default function PatientDetailPage() {
         ) : patient.video_url ? (
           <p className="text-gray-500 text-sm">Video sent — not yet watched</p>
         ) : (
-          <p className="text-gray-600 text-sm">No video assigned</p>
+          <p className="text-gray-400 text-sm">No video assigned</p>
         )}
 
         <div className="flex gap-2 mt-4">
@@ -183,15 +183,15 @@ export default function PatientDetailPage() {
               href={patient.video_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs transition-colors"
+              className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:border-gray-300 text-gray-700 text-xs transition-colors"
             >
               Preview Video
             </a>
           )}
           <button
             onClick={() => router.push(`/clinic/dashboard/pipeline?patient_id=${patient.id}`)}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-violet-600/20 hover:bg-violet-600/30
-              border border-violet-500/30 text-violet-300 text-xs transition-colors"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100
+              border border-purple-100 text-purple-700 text-xs transition-colors"
           >
             Generate New Video <ArrowRight className="w-3 h-3" />
           </button>
@@ -200,15 +200,15 @@ export default function PatientDetailPage() {
 
       {/* Video history */}
       {videos.length > 0 && (
-        <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-          <h3 className="text-sm text-gray-400 mb-3">Video History</h3>
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+          <h3 className="text-sm text-gray-500 mb-3">Video History</h3>
           <VideoHistoryList videos={videos} />
         </div>
       )}
 
       {/* Survey response */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-        <h3 className="text-sm text-gray-400 mb-3">Survey Response</h3>
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <h3 className="text-sm text-gray-500 mb-3">Survey Response</h3>
         {survey ? (
           <div className="grid grid-cols-2 gap-3 text-sm">
             {Object.entries(survey)
@@ -216,18 +216,18 @@ export default function PatientDetailPage() {
               .map(([key, value]) => (
                 <div key={key}>
                   <p className="text-gray-500 text-xs capitalize">{key.replace(/^q_/, "").replace(/_/g, " ")}</p>
-                  <p className="text-gray-300">{String(value)}</p>
+                  <p className="text-gray-700">{String(value)}</p>
                 </div>
               ))}
           </div>
         ) : (
-          <p className="text-gray-600 text-sm">Survey not yet completed</p>
+          <p className="text-gray-400 text-sm">Survey not yet completed</p>
         )}
       </div>
 
       {/* Timeline */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-        <h3 className="text-sm text-gray-400 mb-3">Timeline</h3>
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <h3 className="text-sm text-gray-500 mb-3">Timeline</h3>
         <div className="space-y-2 text-sm">
           <TimelineItem date={patient.created_at} text="Patient created" />
           {videos
@@ -258,10 +258,10 @@ export default function PatientDetailPage() {
 function TimelineItem({ date, text }: { date: string; text: string }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-1.5 shrink-0" />
+      <div className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 shrink-0" />
       <div>
-        <p className="text-gray-300">{text}</p>
-        <p className="text-gray-600 text-xs">{new Date(date).toLocaleString()}</p>
+        <p className="text-gray-700">{text}</p>
+        <p className="text-gray-400 text-xs">{new Date(date).toLocaleString()}</p>
       </div>
     </div>
   );

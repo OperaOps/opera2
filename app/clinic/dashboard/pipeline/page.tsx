@@ -1,8 +1,14 @@
+"use client";
+
 /**
- * Generate Video — the clinic portal embeds the exact same Patient Video
- * Studio that runs on App Runner (/patient-video). On Netlify the studio's
- * API calls are proxied upstream via OPERA_RENDER_UPSTREAM, so generation
- * happens on the real pipeline either way.
+ * Generate Video — the same Patient Video Studio that runs standalone at
+ * /patient-video, rendered natively inside the portal (no splash screen,
+ * no full-screen shells). API calls proxy to App Runner on Netlify via
+ * OPERA_RENDER_UPSTREAM.
  */
 
-export { default } from "../../../patient-video/page";
+import { VideoStudio } from "@/Components/patient-video/VideoStudio";
+
+export default function GenerateVideoPage() {
+  return <VideoStudio embedded />;
+}

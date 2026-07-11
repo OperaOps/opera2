@@ -47,8 +47,8 @@ export default function VideoStatusBadge({
     effectiveStatus === "processing"
   ) {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
-        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
         {shouldPoll && poll.step
           ? stepLabel(poll.step)
           : "Generating..."}
@@ -58,7 +58,7 @@ export default function VideoStatusBadge({
 
   if (effectiveStatus === "failed") {
     return (
-      <span className="px-2 py-0.5 text-xs rounded-full bg-red-500/10 text-red-400 border border-red-500/20">
+      <span className="px-2 py-0.5 text-xs rounded-full bg-red-50 text-red-600 border border-red-200">
         Failed
       </span>
     );
@@ -67,21 +67,21 @@ export default function VideoStatusBadge({
   if (effectiveStatus === "completed") {
     if (surveyCompleted) {
       return (
-        <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+        <span className="px-2 py-0.5 text-xs rounded-full bg-green-50 text-green-700 border border-green-200">
           Survey done
         </span>
       );
     }
     if (watched) {
       return (
-        <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+        <span className="px-2 py-0.5 text-xs rounded-full bg-green-50 text-green-700 border border-green-200">
           Watched
         </span>
       );
     }
     if (videoUrl) {
       return (
-        <span className="px-2 py-0.5 text-xs rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20">
+        <span className="px-2 py-0.5 text-xs rounded-full bg-purple-50 text-purple-700 border border-purple-200">
           Ready
         </span>
       );
@@ -89,7 +89,7 @@ export default function VideoStatusBadge({
   }
 
   return (
-    <span className="px-2 py-0.5 text-xs rounded-full bg-gray-500/10 text-gray-500 border border-gray-500/20">
+    <span className="px-2 py-0.5 text-xs rounded-full bg-gray-50 text-gray-500 border border-gray-200">
       No video
     </span>
   );

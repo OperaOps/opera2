@@ -79,7 +79,7 @@ export default function LinkVideoToPatient({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/30 backdrop-blur-sm p-4"
           onClick={onClose}
         >
           <motion.div
@@ -87,10 +87,10 @@ export default function LinkVideoToPatient({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-gray-950 border border-white/10 rounded-2xl w-full max-w-md max-h-[80vh] overflow-hidden flex flex-col"
+            className="bg-white border border-gray-200 shadow-xl rounded-2xl w-full max-w-md max-h-[80vh] overflow-hidden flex flex-col"
           >
-            <div className="p-5 border-b border-white/10">
-              <h3 className="text-lg text-white font-light">
+            <div className="p-5 border-b border-gray-100">
+              <h3 className="text-lg text-gray-900 font-semibold tracking-tight">
                 Link Video to Patient
               </h3>
               <input
@@ -98,8 +98,8 @@ export default function LinkVideoToPatient({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search patients..."
-                className="w-full mt-3 rounded-lg bg-gray-900/80 border border-gray-700 text-white text-sm p-2.5
-                  focus:border-violet-500 outline-none placeholder:text-gray-600"
+                className="w-full mt-3 rounded-xl bg-white border border-gray-200 text-gray-900 text-sm p-2.5
+                  focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none placeholder:text-gray-400"
               />
             </div>
 
@@ -110,10 +110,10 @@ export default function LinkVideoToPatient({
                   onClick={() => linkToPatient(p.id)}
                   disabled={linking === p.id}
                   className="w-full flex items-center justify-between p-3 rounded-lg
-                    hover:bg-white/5 transition-colors text-left"
+                    hover:bg-gray-50 transition-colors text-left"
                 >
                   <div>
-                    <p className="text-sm text-white">
+                    <p className="text-sm text-gray-900">
                       {p.first_name} {p.last_name}
                     </p>
                     <p className="text-xs text-gray-500 capitalize">
@@ -121,22 +121,22 @@ export default function LinkVideoToPatient({
                     </p>
                   </div>
                   {linking === p.id && (
-                    <span className="text-xs text-violet-400">Linking...</span>
+                    <span className="text-xs text-purple-600">Linking...</span>
                   )}
                 </button>
               ))}
               {filtered.length === 0 && (
-                <p className="text-center text-gray-600 text-sm py-4">
+                <p className="text-center text-gray-400 text-sm py-4">
                   No patients found
                 </p>
               )}
             </div>
 
-            <div className="p-3 border-t border-white/10">
+            <div className="p-3 border-t border-gray-100">
               <button
                 onClick={onCreateNew}
-                className="w-full py-2.5 rounded-lg bg-white/5 hover:bg-white/10
-                  text-violet-400 text-sm transition-colors"
+                className="w-full py-2.5 rounded-xl bg-purple-50 hover:bg-purple-100
+                  text-purple-700 text-sm transition-colors"
               >
                 + Create New Patient with this video
               </button>

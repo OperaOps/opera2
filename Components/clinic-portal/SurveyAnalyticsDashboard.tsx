@@ -93,6 +93,13 @@ const resourceLabels: Record<string, string> = {
   other: "Other",
 };
 
+const tooltipStyle = {
+  background: "#ffffff",
+  border: "1px solid #e5e7eb",
+  borderRadius: "8px",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+};
+
 export default function SurveyAnalyticsDashboard() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -111,7 +118,7 @@ export default function SurveyAnalyticsDashboard() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="h-32 bg-white/5 rounded-xl animate-pulse"
+            className="h-32 bg-gray-100 rounded-xl animate-pulse"
           />
         ))}
       </div>
@@ -121,10 +128,10 @@ export default function SurveyAnalyticsDashboard() {
   if (!data || data.summary.totalSurveys === 0) {
     return (
       <div className="text-center py-20">
-        <p className="text-gray-400 text-lg font-light">
+        <p className="text-gray-700 text-lg">
           No survey responses yet
         </p>
-        <p className="text-gray-600 text-sm mt-2">
+        <p className="text-gray-400 text-sm mt-2">
           Data will appear here once patients complete their surveys
         </p>
       </div>
@@ -151,7 +158,7 @@ export default function SurveyAnalyticsDashboard() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl text-white font-extralight">
+      <h2 className="text-xl text-gray-900 font-semibold tracking-tight">
         Patient Experience Analytics
       </h2>
 
@@ -202,23 +209,19 @@ export default function SurveyAnalyticsDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-5"
+          className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5"
         >
-          <h3 className="text-sm text-gray-400 mb-4">
+          <h3 className="text-sm text-gray-500 mb-4">
             Understanding Before vs After
           </h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={understandingChart}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-              <XAxis dataKey="name" tick={{ fill: "#9CA3AF", fontSize: 12 }} />
-              <YAxis domain={[0, 5]} tick={{ fill: "#9CA3AF", fontSize: 12 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+              <XAxis dataKey="name" tick={{ fill: "#6b7280", fontSize: 12 }} />
+              <YAxis domain={[0, 5]} tick={{ fill: "#6b7280", fontSize: 12 }} />
               <Tooltip
-                contentStyle={{
-                  background: "#111",
-                  border: "1px solid #333",
-                  borderRadius: "8px",
-                }}
-                labelStyle={{ color: "#fff" }}
+                contentStyle={tooltipStyle}
+                labelStyle={{ color: "#111827" }}
               />
               <Bar dataKey="score" fill="#8B5CF6" radius={[6, 6, 0, 0]} />
             </BarChart>
@@ -230,9 +233,9 @@ export default function SurveyAnalyticsDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-5"
+          className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5"
         >
-          <h3 className="text-sm text-gray-400 mb-4">
+          <h3 className="text-sm text-gray-500 mb-4">
             Most Helpful Resource
           </h3>
           <ResponsiveContainer width="100%" height={200}>
@@ -256,13 +259,7 @@ export default function SurveyAnalyticsDashboard() {
                   />
                 ))}
               </Pie>
-              <Tooltip
-                contentStyle={{
-                  background: "#111",
-                  border: "1px solid #333",
-                  borderRadius: "8px",
-                }}
-              />
+              <Tooltip contentStyle={tooltipStyle} />
             </PieChart>
           </ResponsiveContainer>
         </motion.div>
@@ -274,23 +271,17 @@ export default function SurveyAnalyticsDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-5"
+          className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5"
         >
-          <h3 className="text-sm text-gray-400 mb-4">
+          <h3 className="text-sm text-gray-500 mb-4">
             Likelihood to Proceed Over Time
           </h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={data.weeklyTrend}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-              <XAxis dataKey="week" tick={{ fill: "#9CA3AF", fontSize: 11 }} />
-              <YAxis domain={[0, 10]} tick={{ fill: "#9CA3AF", fontSize: 12 }} />
-              <Tooltip
-                contentStyle={{
-                  background: "#111",
-                  border: "1px solid #333",
-                  borderRadius: "8px",
-                }}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+              <XAxis dataKey="week" tick={{ fill: "#6b7280", fontSize: 11 }} />
+              <YAxis domain={[0, 10]} tick={{ fill: "#6b7280", fontSize: 12 }} />
+              <Tooltip contentStyle={tooltipStyle} />
               <Line
                 type="monotone"
                 dataKey="avg_likelihood"
@@ -310,27 +301,27 @@ export default function SurveyAnalyticsDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
-          className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden"
+          className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
         >
-          <h3 className="text-sm text-gray-400 p-5 pb-3">
+          <h3 className="text-sm text-gray-500 p-5 pb-3">
             Breakdown by Treatment Type
           </h3>
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left px-5 py-2 text-gray-500 font-medium">
+              <tr className="border-b border-gray-100">
+                <th className="text-left px-5 py-2 text-gray-500 font-medium text-xs uppercase tracking-wider">
                   Treatment
                 </th>
-                <th className="text-left px-5 py-2 text-gray-500 font-medium">
+                <th className="text-left px-5 py-2 text-gray-500 font-medium text-xs uppercase tracking-wider">
                   Surveys
                 </th>
-                <th className="text-left px-5 py-2 text-gray-500 font-medium">
+                <th className="text-left px-5 py-2 text-gray-500 font-medium text-xs uppercase tracking-wider">
                   Video Helpfulness
                 </th>
-                <th className="text-left px-5 py-2 text-gray-500 font-medium">
+                <th className="text-left px-5 py-2 text-gray-500 font-medium text-xs uppercase tracking-wider">
                   Understanding Delta
                 </th>
-                <th className="text-left px-5 py-2 text-gray-500 font-medium">
+                <th className="text-left px-5 py-2 text-gray-500 font-medium text-xs uppercase tracking-wider">
                   Likelihood
                 </th>
               </tr>
@@ -339,23 +330,23 @@ export default function SurveyAnalyticsDashboard() {
               {data.byTreatment.map((t) => (
                 <tr
                   key={t.treatment_type}
-                  className="border-b border-white/5"
+                  className="border-b border-gray-50 hover:bg-gray-50"
                 >
-                  <td className="px-5 py-3 text-white capitalize">
+                  <td className="px-5 py-3 text-gray-900 capitalize">
                     {t.treatment_type.replace(/_/g, " ")}
                   </td>
-                  <td className="px-5 py-3 text-gray-400">
+                  <td className="px-5 py-3 text-gray-500">
                     {t.survey_count}
                   </td>
-                  <td className="px-5 py-3 text-gray-400">
+                  <td className="px-5 py-3 text-gray-500">
                     {t.avg_video_helpfulness?.toFixed(1) ?? "—"}
                   </td>
-                  <td className="px-5 py-3 text-emerald-400">
+                  <td className="px-5 py-3 text-green-700">
                     {t.understanding_delta != null
                       ? `+${t.understanding_delta.toFixed(1)}`
                       : "—"}
                   </td>
-                  <td className="px-5 py-3 text-gray-400">
+                  <td className="px-5 py-3 text-gray-500">
                     {t.avg_likelihood?.toFixed(1) ?? "—"}
                   </td>
                 </tr>
@@ -384,11 +375,11 @@ function MetricCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4"
+      className="bg-white rounded-xl border border-gray-200 shadow-sm p-4"
     >
       <p className="text-xs text-gray-500 mb-1">{title}</p>
-      <p className="text-2xl text-white font-extralight">{value}</p>
-      <p className="text-xs text-gray-600 mt-1">{subtitle}</p>
+      <p className="text-2xl text-gray-900 font-semibold tracking-tight">{value}</p>
+      <p className="text-xs text-gray-400 mt-1">{subtitle}</p>
     </motion.div>
   );
 }

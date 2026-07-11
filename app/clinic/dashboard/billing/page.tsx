@@ -50,7 +50,7 @@ export default function BillingPage() {
 
   return (
     <div className="max-w-3xl">
-      <h2 className="text-xl text-white font-extralight mb-1">Billing</h2>
+      <h2 className="text-xl text-gray-900 font-semibold tracking-tight mb-1">Billing</h2>
       <p className="text-sm text-gray-500 mb-6">
         Manage your Opera subscription and payment methods.
       </p>
@@ -58,17 +58,17 @@ export default function BillingPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6"
+        className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6"
       >
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <CreditCard className="w-4 h-4 text-violet-400" />
-              <h3 className="text-white text-sm font-medium">Current plan</h3>
+              <CreditCard className="w-4 h-4 text-purple-600" />
+              <h3 className="text-gray-900 text-sm font-medium">Current plan</h3>
             </div>
-            <p className="text-2xl text-white font-extralight mb-1">
+            <p className="text-2xl text-gray-900 font-semibold tracking-tight mb-1">
               Core{" "}
-              <span className="text-gray-400 text-base font-light">
+              <span className="text-gray-500 text-base font-normal">
                 — $199/mo
               </span>
             </p>
@@ -77,23 +77,22 @@ export default function BillingPage() {
               your trial ends.
             </p>
             {clinic && (
-              <p className="text-xs text-gray-600 mt-3">
+              <p className="text-xs text-gray-400 mt-3">
                 Billed to {clinic.clinic_email}
               </p>
             )}
           </div>
-          <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span className="px-2 py-0.5 text-xs rounded-full bg-green-50 text-green-700 border border-green-200">
             Active
           </span>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-white/10">
+        <div className="mt-6 pt-6 border-t border-gray-100">
           <button
             onClick={openBillingPortal}
             disabled={portalLoading}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600
-              hover:from-violet-500 hover:to-purple-500 text-white text-sm font-medium
-              transition-all shadow-lg shadow-violet-600/20 disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500
+              text-white text-sm font-medium transition-colors disabled:opacity-50"
           >
             <ExternalLink className="w-4 h-4" />
             {portalLoading ? "Opening…" : "Manage billing"}
@@ -104,13 +103,13 @@ export default function BillingPage() {
               Billing portal available once Stripe is connected.{" "}
               <a
                 href="/pricing"
-                className="text-violet-400 hover:text-violet-300 transition-colors"
+                className="text-purple-600 hover:text-purple-500 transition-colors"
               >
                 View plan details on the pricing page →
               </a>
             </p>
           )}
-          {error && <p className="text-sm text-red-400 mt-4">{error}</p>}
+          {error && <p className="text-sm text-red-600 mt-4">{error}</p>}
         </div>
       </motion.div>
     </div>
