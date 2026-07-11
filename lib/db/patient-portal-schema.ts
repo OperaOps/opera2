@@ -124,4 +124,12 @@ function initSchema(db: Database.Database) {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
+
+  // Migration: per-clinic API key for the public video-generation API
+  const clinicCols = db
+    .prepare("PRAGMA table_info(clinic_accounts)")
+    .all() as { name: string }[];
+  if (!clinicCols.some((c) => c.name === "api_key")) {
+    db.exec("ALTER TABLE clinic_accounts ADD COLUMN api_key TEXT");
+  }
 }

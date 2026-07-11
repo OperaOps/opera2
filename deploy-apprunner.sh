@@ -16,9 +16,9 @@ set -e
 # ============================================================
 AWS_REGION="us-east-1"
 APP_NAME="opera-ai"
-S3_VIDEO_BUCKET="opera-ai-videos"
+S3_VIDEO_BUCKET="opera-ai-videos-075483"
 ECR_REPO_NAME="opera-ai"
-IMAGE_TAG="latest"d
+IMAGE_TAG="latest"
 
 # Colors for output
 RED='\033[0;31m'

@@ -15,6 +15,8 @@ import {
 } from "../_lib/job-store";
 import { recordPatientVideo, patientKey } from "../_lib/patient-library";
 import { runRenderInBackground } from "@/lib/video/render";
+import { authorizeVideoRequest } from "@/lib/connect/auth";
+import { recordVideoGenerated } from "@/lib/connect/clinic-store";
 
 // ---------------------------------------------------------------------------
 // Input validation
@@ -225,6 +227,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Server-side key check — the embed forwards the clinic's Opera key (the
+  // Greyfinch connection token) in x-opera-key. Renders cost real money, so
+  // this is the one endpoint that also rate-limits per clinic.
+  const auth = await authorizeVideoRequest(request, {
+    body: body as Record<string, unknown>,
+    rateLimited: true,
+  });
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error, code: auth.code }, { status: auth.status });
+  }
+
   const validation = validateInput(body);
   if (!validation.ok) {
     return NextResponse.json(
@@ -270,6 +283,9 @@ export async function POST(request: NextRequest) {
 
   // Start render in background via child process
   runRenderInBackground(jobId, input);
+
+  // Usage metering (billing/ROI visibility) — non-blocking.
+  if (auth.kind === "clinic") recordVideoGenerated(auth.clinic.clinicId);
 
   return NextResponse.json(
     {

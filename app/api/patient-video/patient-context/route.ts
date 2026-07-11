@@ -9,11 +9,18 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { connectionToken, getPatientContext, ORG_XID } from "../_lib/greyfinch";
+import { authorizeVideoRequest } from "@/lib/connect/auth";
 
 export async function GET(request: NextRequest) {
   const sp = request.nextUrl.searchParams;
   const name = sp.get("patient_name")?.trim() || sp.get("patientName")?.trim() || "";
   const empty = { notesBox: "", txPlanBox: "" };
+
+  // Chart notes are patient data — key-gated. Prefill is best-effort in the
+  // embed, so an unauthorized caller just gets empty fields, not an error.
+  const keyAuth = await authorizeVideoRequest(request);
+  if (!keyAuth.ok) return NextResponse.json(empty);
+
   if (!name) return NextResponse.json(empty);
 
   try {

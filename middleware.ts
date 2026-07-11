@@ -23,6 +23,9 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/patient-video") ||
     pathname.startsWith("/greyfinch-embed") ||
     pathname.startsWith("/greyfinch-patient-videos") ||
+    pathname.startsWith("/connect") ||
+    pathname.startsWith("/api/connect") ||
+    pathname.startsWith("/api/health") ||
     pathname.startsWith("/video-prototype") ||
     pathname.startsWith("/clinic") ||
     pathname.startsWith("/patient") ||
@@ -36,6 +39,10 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/dig") ||
     pathname.startsWith("/overview") ||
     pathname.startsWith("/landing-v2") ||
+    pathname.startsWith("/pricing") ||
+    pathname.startsWith("/v/") ||
+    pathname.startsWith("/api/v/") ||
+    pathname.startsWith("/api/patient-context") ||
     pathname.startsWith("/docs-v2") ||
     pathname.includes(".") // static files like .css, .js, .ico
   ) {
@@ -52,9 +59,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Root redirects to landing (public)
+  // Root is the public marketing site (landing-v2 via app/page.tsx)
   if (pathname === "/") {
-    return NextResponse.redirect(new URL("/landing", request.url));
+    return NextResponse.next();
   }
 
   // Check for auth token

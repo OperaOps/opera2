@@ -14,6 +14,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { attachVideoResource } from "../_lib/greyfinch";
+import { authorizeVideoRequest } from "@/lib/connect/auth";
 
 export async function POST(request: NextRequest) {
   let body: Record<string, unknown>;
@@ -21,6 +22,11 @@ export async function POST(request: NextRequest) {
     body = (await request.json()) as Record<string, unknown>;
   } catch {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
+  }
+
+  const auth = await authorizeVideoRequest(request, { body });
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error, code: auth.code }, { status: auth.status });
   }
 
   const videoUrl = typeof body.videoUrl === "string" ? body.videoUrl : "";

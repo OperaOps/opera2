@@ -223,10 +223,11 @@ export default function LandingV2() {
         style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}
       >
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/landing-v2" className="text-lg font-bold tracking-tight text-gray-900">
+          <Link href="/" className="text-lg font-bold tracking-tight text-gray-900">
             Opera<span className="text-purple-600">AI</span>
           </Link>
           <div className="flex items-center gap-6">
+            <Link href="/pricing" className="text-[13px] text-gray-400 hover:text-gray-900 transition-colors">Pricing</Link>
             <Link href="/docs-v2" className="text-[13px] text-gray-400 hover:text-gray-900 transition-colors">API</Link>
             <Link href="/signin" className="text-[13px] text-gray-400 hover:text-gray-900 transition-colors">Log In</Link>
             <a href={CALENDLY} target="_blank" rel="noopener noreferrer"
@@ -249,6 +250,7 @@ export default function LandingV2() {
             Opera<span className="text-purple-400">AI</span>
           </span>
           <div className="flex items-center gap-6">
+            <Link href="/pricing" className="text-[13px] text-white/40 hover:text-white transition-colors">Pricing</Link>
             <Link href="/docs-v2" className="text-[13px] text-white/40 hover:text-white transition-colors">API</Link>
             <Link href="/signin" className="text-[13px] text-white/40 hover:text-white transition-colors">Log In</Link>
             <a href={CALENDLY} target="_blank" rel="noopener noreferrer"
@@ -402,6 +404,7 @@ export default function LandingV2() {
           <footer className="max-w-6xl mx-auto px-6 py-8 border-t border-white/5 flex items-center justify-between text-[13px] text-white/30">
             <span>Opera<span className="text-purple-400">AI</span></span>
             <div className="flex gap-6">
+              <Link href="/pricing" className="hover:text-white/60 transition-colors">Pricing</Link>
               <Link href="/docs-v2" className="hover:text-white/60 transition-colors">API</Link>
               <Link href="/signin" className="hover:text-white/60 transition-colors">Log In</Link>
             </div>

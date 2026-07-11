@@ -8,8 +8,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPatientVideos, patientKey } from "../_lib/patient-library";
 import { loadJob } from "../_lib/job-store";
+import { authorizeVideoRequest } from "@/lib/connect/auth";
 
 export async function GET(request: NextRequest) {
+  const auth = await authorizeVideoRequest(request);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error, code: auth.code }, { status: auth.status });
+  }
+
   const sp = request.nextUrl.searchParams;
   const xid = sp.get("xid")?.trim() || "";
   const name = sp.get("patient_name")?.trim() || sp.get("patientName")?.trim() || "";

@@ -40,6 +40,9 @@ function VideosInner() {
   const xid = params.get("xid") || params.get("patient_xid") || "";
   const patientName = params.get("patient_name") || params.get("patientName") || "this patient";
   const gfBase = (params.get("gf_base") || "https://admin.training.greyfinch.com").replace(/\/$/, "");
+  // Clinic's Opera key from the launcher URL (unresolved {{…}} means no connection).
+  const rawKey = params.get("api_key") || params.get("apiKey") || "";
+  const apiKey = rawKey.includes("{{") ? "" : rawKey;
 
   const [videos, setVideos] = useState<LibVideo[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -53,14 +56,16 @@ function VideosInner() {
       : "";
     if (!q) { setError("No patient provided."); return; }
     try {
-      const res = await fetch(`/api/patient-video/library?${q}`);
+      const res = await fetch(`/api/patient-video/library?${q}`, {
+        headers: { "x-opera-source": "greyfinch", ...(apiKey ? { "x-opera-key": apiKey } : {}) },
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed to load videos.");
       setVideos(data.videos || []);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load videos.");
     }
-  }, [xid, patientName]);
+  }, [xid, patientName, apiKey]);
 
   useEffect(() => { load(); }, [load]);
 

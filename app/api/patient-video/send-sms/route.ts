@@ -21,6 +21,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { gql, connectionToken, findPatient, ORG_XID } from "../_lib/greyfinch";
+import { authorizeVideoRequest } from "@/lib/connect/auth";
 
 // Preset SMS templates the clinic can pick at install (by name), plus the
 // default. The clinic can also write their own message (with {name}/{clinic}/{url}).
@@ -61,6 +62,11 @@ export async function POST(request: NextRequest) {
     body = (await request.json()) as Record<string, unknown>;
   } catch {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
+  }
+
+  const keyAuth = await authorizeVideoRequest(request, { body });
+  if (!keyAuth.ok) {
+    return NextResponse.json({ error: keyAuth.error, code: keyAuth.code }, { status: keyAuth.status });
   }
 
   const videoUrl = typeof body.videoUrl === "string" ? body.videoUrl : "";

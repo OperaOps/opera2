@@ -42,8 +42,13 @@ function prettyTreatment(t: string) {
 function EmbedInner() {
   const params = useSearchParams();
 
-  // Auth is handled by the Greyfinch connection (only installed/connected clinics
-  // can open this launcher), so the embed itself no longer collects an API key.
+  // The clinic's Opera API key rides in on the launcher URL as
+  // ?api_key={{connection.accessToken}} (what they pasted at Connect). It's
+  // forwarded to every API call in x-opera-key and validated server-side.
+  // A visible key field only appears if the server rejects the key (e.g.
+  // standalone testing, or the clinic hasn't connected yet).
+  const [apiKey, setApiKey] = useState("");
+  const [needsKey, setNeedsKey] = useState(false);
   const [patientName, setPatientName] = useState("");
   const [doctorName, setDoctorName] = useState("");
   const [clinicName, setClinicName] = useState("");
@@ -72,6 +77,8 @@ function EmbedInner() {
     setDoctorName(params.get("doctor_name") || params.get("doctorName") || "");
     setClinicName(params.get("clinic_name") || params.get("clinicName") || "");
     setXid(params.get("xid") || params.get("patient_xid") || "");
+    const key = params.get("api_key") || params.get("apiKey") || "";
+    if (key && !key.includes("{{")) setApiKey(key);
     setSmsTemplate(params.get("sms_template") || params.get("smsTemplate") || "");
     // Allow the Greyfinch admin base to be overridden via the launcher URL so the
     // "Go to messages" deep link points at the right tenant/host.
@@ -94,7 +101,9 @@ function EmbedInner() {
       try {
         const q = new URLSearchParams({ patient_name: patientName });
         if (xid) q.set("xid", xid);
-        const res = await fetch(`/api/patient-video/patient-context?${q.toString()}`);
+        const res = await fetch(`/api/patient-video/patient-context?${q.toString()}`, {
+          headers: { "x-opera-source": "greyfinch", ...(apiKey ? { "x-opera-key": apiKey } : {}) },
+        });
         const data = await res.json();
         const notesBox = typeof data?.notesBox === "string" ? data.notesBox.trim() : "";
         const txPlanBox = typeof data?.txPlanBox === "string" ? data.txPlanBox.trim() : "";
@@ -104,7 +113,7 @@ function EmbedInner() {
         /* best-effort prefill; provider can type their own */
       }
     })();
-  }, [patientName, xid]);
+  }, [patientName, xid, apiKey]);
 
   const poll = useCallback((jobId: string) => {
     let failures = 0;
@@ -138,7 +147,7 @@ function EmbedInner() {
     try {
       const res = await fetch("/api/patient-video/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-opera-source": "greyfinch", ...(apiKey ? { "x-opera-key": apiKey } : {}) },
         body: JSON.stringify({
           patientName: patientName.trim(),
           doctorName: doctorName.trim() || "Your Doctor",
@@ -154,6 +163,10 @@ function EmbedInner() {
         }),
       });
       const data = await res.json();
+      if (res.status === 401 || res.status === 402) {
+        setNeedsKey(true);
+        throw new Error(data?.error || "This clinic isn't connected to Opera yet.");
+      }
       if (!res.ok) throw new Error(data?.error || "Failed to start generation.");
       setJob({ jobId: data.jobId, status: "processing", progress: 0, step: "script" });
       poll(data.jobId);
@@ -162,7 +175,7 @@ function EmbedInner() {
       setError(e instanceof Error ? e.message : "Failed to start generation.");
       setJob(null);
     }
-  }, [patientName, doctorName, clinicName, treatment, notes, concerns, xid, poll]);
+  }, [apiKey, patientName, doctorName, clinicName, treatment, notes, concerns, xid, poll]);
 
   const reset = () => {
     if (pollRef.current) clearInterval(pollRef.current);
@@ -203,7 +216,7 @@ function EmbedInner() {
     try {
       const res = await fetch("/api/patient-video/send-sms", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-opera-source": "greyfinch", ...(apiKey ? { "x-opera-key": apiKey } : {}) },
         body: JSON.stringify({
           videoUrl: shareUrl(),
           patientName,
@@ -226,7 +239,7 @@ function EmbedInner() {
       setSmsResult(`Send failed: ${e instanceof Error ? e.message : "network error"}`);
     }
     setSmsState("done");
-  }, [shareUrl, patientName, clinicName, smsTemplate, xid]);
+  }, [shareUrl, patientName, clinicName, smsTemplate, xid, apiKey]);
 
   // Option A: jump to Greyfinch's comms/messages section so the link can be
   // pasted into a message.
@@ -246,7 +259,7 @@ function EmbedInner() {
     if (!patientName.trim()) return;
     fetch("/api/patient-video/record-resource", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-opera-source": "greyfinch", ...(apiKey ? { "x-opera-key": apiKey } : {}) },
       body: JSON.stringify({
         videoUrl: shareUrl(),
         patientName,
@@ -255,7 +268,7 @@ function EmbedInner() {
         jobId: job.jobId,
       }),
     }).catch(() => { /* best-effort; tracking is non-blocking */ });
-  }, [done, job, patientName, xid, treatment, shareUrl]);
+  }, [done, job, patientName, xid, treatment, shareUrl, apiKey]);
 
   return (
     <div className="min-h-screen bg-white text-gray-900 flex items-center justify-center p-6 sm:p-10">
@@ -268,6 +281,24 @@ function EmbedInner() {
 
         {!done && (
           <div className="space-y-3">
+            {needsKey && (
+              <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 space-y-2">
+                <div className="text-[12px] text-amber-800">
+                  This clinic isn&apos;t connected to Opera yet. Paste your Opera API key below, or{" "}
+                  <a href="/connect" target="_blank" rel="noopener" className="underline font-medium">
+                    start a 30-day free trial
+                  </a>{" "}
+                  to get one.
+                </div>
+                <input
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value.trim())}
+                  placeholder="opk_…"
+                  disabled={submitting}
+                  className={inputCls}
+                />
+              </div>
+            )}
             <Field label="Patient">
               <input value={patientName} onChange={(e) => setPatientName(e.target.value)}
                 placeholder="Patient name" disabled={submitting} className={inputCls} />
