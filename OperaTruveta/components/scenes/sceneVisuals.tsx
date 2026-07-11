@@ -487,10 +487,14 @@ function Bubble({
   );
 }
 
-/** care journey / discharge / recovery timeline — nodes filling. */
+/** care journey / discharge / recovery timeline — the whole path lights through. */
 export function CareJourneyScene({ useCase, scene }: SceneProps) {
   const stage = useCase.clinicalContext.journeyStage;
   const stops = [stage, 'This education', 'Prepare', 'Your care team'];
+  // Sequential sweep: node i lights, then its connector fills into node i+1,
+  // until the entire path is lit — never a half-finished timeline.
+  const litAt = (i: number) => 0.9 + i * 1.1;
+  const fillAt = (i: number) => litAt(i) + 0.25;
   return (
     <SceneShell visualType={scene.visualType}>
       <Eyebrow icon={Clock}>Where you are on your journey</Eyebrow>
@@ -501,26 +505,29 @@ export function CareJourneyScene({ useCase, scene }: SceneProps) {
             <motion.div
               initial={{ scale: 0.6, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.4 + i * 0.4, type: 'spring', stiffness: 300, damping: 18 }}
+              transition={{ delay: 0.3 + i * 0.12, type: 'spring', stiffness: 300, damping: 18 }}
               className="flex flex-col items-center"
             >
-              <span
-                className={cn(
-                  'flex h-9 w-9 items-center justify-center rounded-full border-2',
-                  i <= 1 ? 'border-teal-400 bg-teal-400 text-navy-900' : 'border-slate-300 text-slate-400',
-                )}
-              >
-                {i <= 1 ? <CheckCircle2 className="h-4 w-4" /> : <span className="h-2 w-2 rounded-full bg-current" />}
+              <span className="relative flex h-9 w-9 items-center justify-center rounded-full border-2 border-slate-300 text-slate-400">
+                <span className="h-2 w-2 rounded-full bg-current" />
+                <motion.span
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: litAt(i), type: 'spring', stiffness: 320, damping: 20 }}
+                  className="absolute -inset-0.5 flex items-center justify-center rounded-full border-2 border-teal-400 bg-teal-400 text-navy-900"
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                </motion.span>
               </span>
               <span className="mt-2 w-20 text-center text-[11px] font-medium text-slate-500">{s}</span>
             </motion.div>
             {i < stops.length - 1 && (
-              <div className="relative mx-1 h-px flex-1 bg-white">
+              <div className="relative mx-1 h-px flex-1 bg-slate-200">
                 <motion.span
                   className="absolute inset-y-0 left-0 bg-teal-400"
                   initial={{ width: 0 }}
-                  animate={{ width: i < 1 ? '100%' : '0%' }}
-                  transition={{ delay: 0.6 + i * 0.4, duration: 0.6 }}
+                  animate={{ width: '100%' }}
+                  transition={{ delay: fillAt(i), duration: 0.75, ease }}
                 />
               </div>
             )}
