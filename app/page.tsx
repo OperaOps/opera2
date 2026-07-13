@@ -83,9 +83,6 @@ export default function LandingPage() {
             Opera<span className="text-purple-600">AI</span>
           </Link>
           <div className="flex items-center gap-7">
-            <Link href="/pricing" className="hidden text-[13.5px] text-gray-500 transition-colors hover:text-gray-900 sm:block">
-              Pricing
-            </Link>
             <Link href="/docs-v2" className="hidden text-[13.5px] text-gray-500 transition-colors hover:text-gray-900 sm:block">
               API
             </Link>
@@ -133,17 +130,19 @@ export default function LandingPage() {
           className="mt-9 flex items-center justify-center gap-3"
         >
           <Link
-            href="/connect"
+            href="/clinic/login"
             className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-[14px] font-medium text-white transition-colors hover:bg-purple-500"
           >
-            Start free trial <ArrowRight className="h-4 w-4" />
+            Log in <ArrowRight className="h-4 w-4" />
           </Link>
-          <Link
-            href="/pricing"
+          <a
+            href={CALENDLY}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-6 py-3 text-[14px] font-medium text-gray-700 transition-colors hover:border-gray-300"
           >
-            View pricing
-          </Link>
+            Book a demo
+          </a>
         </motion.div>
       </section>
 
@@ -312,56 +311,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Pricing — straight to it ────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-6 pt-28">
-        <motion.h2 {...fade} className="text-center text-[28px] font-semibold tracking-tight sm:text-4xl">
-          Simple pricing
-        </motion.h2>
-        <motion.p {...fade} className="mt-3 text-center text-[14px] text-gray-500">
-          Every plan starts with a 30-day free trial.
-        </motion.p>
-        <div className="mt-12 grid gap-4 sm:grid-cols-3">
-          {[
-            { name: "Core", price: "$199", note: "/month", d: "For a single practice getting started." },
-            { name: "Growth", price: "$999", note: "/month", d: "For busy and multi-location practices.", best: true },
-            { name: "Enterprise", price: "Custom", note: "", d: "For DSOs, groups, and platforms." },
-          ].map((p, i) => (
-            <motion.div
-              key={p.name}
-              {...fade}
-              transition={{ ...fade.transition, delay: i * 0.06 }}
-              className={
-                p.best
-                  ? "rounded-2xl border-2 border-purple-600 bg-white p-7"
-                  : "rounded-2xl border border-gray-200 bg-white p-7"
-              }
-            >
-              <p className="text-[12px] font-semibold uppercase tracking-wider text-purple-600">{p.name}</p>
-              <p className="mt-3 text-[32px] font-semibold tracking-tight">
-                {p.price}
-                <span className="text-[13px] font-normal text-gray-400">{p.note}</span>
-              </p>
-              <p className="mt-2 text-[13px] leading-relaxed text-gray-500">{p.d}</p>
-              <Link
-                href={p.name === "Enterprise" ? "/pricing" : `/connect?plan=${p.name.toLowerCase()}`}
-                className={
-                  p.best
-                    ? "mt-6 flex items-center justify-center rounded-full bg-purple-600 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-purple-500"
-                    : "mt-6 flex items-center justify-center rounded-full border border-gray-200 py-2.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-300"
-                }
-              >
-                {p.name === "Enterprise" ? "Get in touch" : "Start free trial"}
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-        <motion.p {...fade} className="mt-6 text-center">
-          <Link href="/pricing" className="text-[13px] font-medium text-purple-600 hover:text-purple-500">
-            Compare all plans →
-          </Link>
-        </motion.p>
-      </section>
-
       {/* ── Quiet reassurance row ───────────────────────────── */}
       <section className="mx-auto max-w-3xl px-6 pt-24">
         <motion.div {...fade} className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
@@ -384,10 +333,10 @@ export default function LandingPage() {
           </p>
           <div className="mt-8 flex items-center justify-center gap-3">
             <Link
-              href="/connect"
+              href="/clinic/login"
               className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-[14px] font-medium text-white transition-colors hover:bg-purple-500"
             >
-              Start free trial <ArrowRight className="h-4 w-4" />
+              Log in <ArrowRight className="h-4 w-4" />
             </Link>
             <a
               href={CALENDLY}
@@ -408,7 +357,6 @@ export default function LandingPage() {
             Opera<span className="text-purple-600">AI</span>
           </p>
           <div className="flex items-center gap-6 text-[12.5px] text-gray-400">
-            <Link href="/pricing" className="hover:text-gray-700">Pricing</Link>
             <Link href="/docs-v2" className="hover:text-gray-700">API</Link>
             <Link href="/overview" className="hover:text-gray-700">Company</Link>
             <Link href="/clinic/login" className="hover:text-gray-700">Log in</Link>
