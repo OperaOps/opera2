@@ -31,6 +31,33 @@ export default function HomePage() {
     <div className="space-y-24">
       <HeroSection />
 
+      {/* New flagship — Opera Loop */}
+      <section>
+        <Reveal>
+          <Link
+            href="/loop"
+            className="group flex flex-col justify-between gap-4 rounded-3xl border border-navy-800 bg-navy-900 px-7 py-7 shadow-soft-lg transition-all hover:shadow-glow sm:flex-row sm:items-center sm:px-9"
+          >
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-teal-300">
+                New flagship · Opera Loop
+              </p>
+              <p className="mt-2 text-balance text-xl font-semibold tracking-tight text-white sm:text-2xl">
+                Healthcare records what happened. It never learns why.
+              </p>
+              <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-white/55">
+                The layer between visits — a living plan for every patient, deviations caught in
+                days, and a variable real-world evidence has never had.
+              </p>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-navy-900 transition-transform group-hover:translate-x-0.5">
+              Enter the Loop
+              <ArrowRight className="h-4 w-4" />
+            </span>
+          </Link>
+        </Reveal>
+      </section>
+
       {/* The demos — the first thing you reach when you scroll */}
       <DemoLibrarySection />
 
