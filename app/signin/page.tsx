@@ -68,7 +68,7 @@ export default function SignInPage() {
 
       <div className="relative z-10 w-full max-w-md px-6">
         {/* Back to home */}
-        <Link href="/landing">
+        <Link href="/">
           <motion.button
             whileHover={{ x: -4 }}
             className="flex items-center gap-2 text-purple-300/70 hover:text-purple-300 mb-8 transition-colors"
