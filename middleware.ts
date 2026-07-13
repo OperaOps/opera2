@@ -38,7 +38,6 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/dpm") ||
     pathname.startsWith("/dig") ||
     pathname.startsWith("/overview") ||
-    pathname.startsWith("/landing-v2") ||
     pathname.startsWith("/pricing") ||
     pathname.startsWith("/v/") ||
     pathname.startsWith("/api/v/") ||
@@ -59,7 +58,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Root is the public marketing site (landing-v2 via app/page.tsx)
+  // Root is the public marketing site (app/page.tsx)
   if (pathname === "/") {
     return NextResponse.next();
   }

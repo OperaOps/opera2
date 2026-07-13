@@ -214,7 +214,7 @@ export default function DocsV2() {
         style={{ borderBottom: scrolled ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(0,0,0,0.05)" }}
       >
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/landing-v2" className="text-lg font-bold tracking-tight text-gray-900">
+          <Link href="/" className="text-lg font-bold tracking-tight text-gray-900">
             Opera<span className="text-purple-600">AI</span>
           </Link>
           <div className="flex items-center gap-6">
@@ -401,7 +401,7 @@ while (true) {
       <footer className="max-w-6xl mx-auto px-6 py-8 border-t border-gray-100 flex items-center justify-between text-[13px] text-gray-400">
         <span>&copy; {new Date().getFullYear()} Opera<span className="text-purple-500">AI</span>, Inc. All rights reserved.</span>
         <div className="flex gap-6">
-          <Link href="/landing-v2" className="hover:text-gray-600 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-600 transition-colors">Home</Link>
           <Link href="/signin" className="hover:text-gray-600 transition-colors">Log In</Link>
         </div>
       </footer>

@@ -124,7 +124,7 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 antialiased selection:bg-purple-100">
-      {/* Nav — matches landing-v2 */}
+      {/* Nav — matches the landing page */}
       <nav className="fixed left-0 right-0 top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-2xl">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="text-lg font-bold tracking-tight text-gray-900">
