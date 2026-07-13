@@ -52,9 +52,6 @@ export default function ClinicLoginPage() {
           <Link href="/" className="text-[17px] font-semibold tracking-tight">
             Opera<span className="text-purple-600">AI</span>
           </Link>
-          <Link href="/pricing" className="text-[13.5px] text-gray-500 transition-colors hover:text-gray-900">
-            Pricing
-          </Link>
         </div>
       </nav>
 
@@ -123,12 +120,6 @@ export default function ClinicLoginPage() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-[13px] text-gray-500">
-            New to Opera?{" "}
-            <Link href="/connect" className="font-medium text-purple-600 hover:text-purple-500">
-              Start your free trial
-            </Link>
-          </p>
         </motion.div>
       </main>
 
