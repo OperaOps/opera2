@@ -248,6 +248,91 @@ export const medicalTranslations = [
   { from: 'Crown postponed', to: 'Specialty referral, never completed' },
 ];
 
+/** How a deployment actually works — the anti-integration pitch. */
+export interface DeployStep {
+  step: string;
+  title: string;
+  detail: string;
+  mono?: string;
+}
+
+export const deploySteps: DeployStep[] = [
+  {
+    step: '01',
+    title: 'A worklist, not an integration',
+    detail:
+      'The site sends a weekly flat file — who was recommended what. In dentistry it flows straight from the practice system. No EHR project, no new software for staff, live in days.',
+    mono: 'sftp://weekly.csv → {patient, recommendation, provider, date}',
+  },
+  {
+    step: '02',
+    title: 'Delivery patients already accept',
+    detail:
+      'A text from their own provider with a personalized explanation of their care. No app, no portal login, no survey. The channel already exists — Opera rides it.',
+    mono: 'sms → plan link · provider-branded · literacy-matched',
+  },
+  {
+    step: '03',
+    title: 'The page is the sensor',
+    detail:
+      'Sections watched and rewatched, where the session died, calculator behavior, a second device at 9pm, the question typed at midnight, silence itself. Behavioral — plus at most one tap.',
+    mono: 'events: {case_id, section, dwell, replay, device, question}',
+  },
+  {
+    step: '04',
+    title: 'The queue closes the loop',
+    detail:
+      'Signals become a ranked, barrier-coded worklist for the coordinator or navigator — each case with the reason and a drafted counter-move. Outcomes return from the practice system on their own.',
+    mono: 'queue → action → outcome label: started / didn’t',
+  },
+  {
+    step: '05',
+    title: 'Tokenized decision records out',
+    detail:
+      'Consented and de-identified, each window becomes one record — joinable to the clinical spine by privacy-preserving token, without identity ever moving.',
+    mono: '{token, recommendation, trajectory, barrier_codes[], outcome}',
+  },
+];
+
+/** Truveta's actual customer segments — and what this layer gives each one. */
+export interface DataConsumer {
+  audience: string;
+  question: string;
+  detail: string;
+  example: string;
+}
+
+export const dataConsumers: DataConsumer[] = [
+  {
+    audience: 'Life sciences & pharma',
+    question: 'Why do eligible patients never start — and why do they leave?',
+    detail:
+      'Non-initiation and discontinuation reason codes attached to real prescribing events: launch intelligence, RWE denominators, and trial design — including why eligible patients decline consent, per site.',
+    example: 'e.g. GLP-1 never-fills, reason-coded by segment, weeks after launch',
+  },
+  {
+    audience: 'Health systems',
+    question: 'Which recommended care is dying in the window — and what recovers it?',
+    detail:
+      'Completion lift the member system feels operationally (screenings, referrals, procedures), plus barrier mix and communication benchmarks across sites.',
+    example: 'e.g. colonoscopy completion after positive FIT, by barrier and by site',
+  },
+  {
+    audience: 'Public health & government',
+    question: 'Where is hesitancy actually coming from, right now?',
+    detail:
+      'Screening and vaccination barriers measured behaviorally at the point of care — near-real-time surveillance instead of lagging self-report surveys, stratifiable for equity work.',
+    example: 'e.g. why FIT follow-up fails by county — cost vs. fear vs. logistics',
+  },
+  {
+    audience: 'Academic institutions',
+    question: 'How do patients actually decide?',
+    detail:
+      'The first large-n behavioral corpus for shared decision-making, health-literacy, and disparities research — outcome-labeled decision windows instead of 40-person interview studies.',
+    example: 'e.g. validation studies that make Barrier Codes a citable standard',
+  },
+];
+
 export const dentalProof = [
   { value: '130,000+', label: 'instrumented patient experiences delivered' },
   { value: '$2.5M+', label: 'previously unscheduled treatment recovered' },

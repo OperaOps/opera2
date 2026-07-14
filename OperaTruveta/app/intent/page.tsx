@@ -3,6 +3,7 @@ import { IntentHero } from '@/components/intent/IntentHero';
 import { DecisionWindow } from '@/components/intent/DecisionWindow';
 import { TheQueue } from '@/components/intent/TheQueue';
 import { TheDenominator } from '@/components/intent/TheDenominator';
+import { TheDeployment } from '@/components/intent/TheDeployment';
 import { IntentCoda } from '@/components/intent/IntentCoda';
 
 export const metadata: Metadata = {
@@ -12,9 +13,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * The third flagship. One continuous story in five screens:
+ * The third flagship. One continuous story in six screens:
  * the invisible window → the window instrumented → the queue that acts on it
- * → the denominator it produces → the close.
+ * → the denominator it produces → how it deploys and who consumes it → the close.
  */
 export default function IntentPage() {
   return (
@@ -23,6 +24,7 @@ export default function IntentPage() {
       <DecisionWindow />
       <TheQueue />
       <TheDenominator />
+      <TheDeployment />
       <IntentCoda />
     </div>
   );
