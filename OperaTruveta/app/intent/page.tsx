@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { IntentHero } from '@/components/intent/IntentHero';
 import { DecisionWindow } from '@/components/intent/DecisionWindow';
+import { TheSensors } from '@/components/intent/TheSensors';
 import { TheQueue } from '@/components/intent/TheQueue';
 import { TheDenominator } from '@/components/intent/TheDenominator';
 import { TheDeployment } from '@/components/intent/TheDeployment';
@@ -13,15 +14,17 @@ export const metadata: Metadata = {
 };
 
 /**
- * The third flagship. One continuous story in six screens:
- * the invisible window → the window instrumented → the queue that acts on it
- * → the denominator it produces → how it deploys and who consumes it → the close.
+ * The third flagship. One continuous story in seven screens:
+ * the invisible window → the window instrumented → the sensor suite →
+ * the queue that acts on it → the denominator it produces →
+ * how it deploys and who consumes it → the close.
  */
 export default function IntentPage() {
   return (
     <div className="space-y-28 sm:space-y-36">
       <IntentHero />
       <DecisionWindow />
+      <TheSensors />
       <TheQueue />
       <TheDenominator />
       <TheDeployment />

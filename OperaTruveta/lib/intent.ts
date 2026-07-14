@@ -63,6 +63,19 @@ export const mayaWindow: IntentBeat[] = [
       'She just told the practice exactly what she can afford — with her fingers, not her mouth. No system on earth recorded it. Opera did.',
   },
   {
+    id: 'day3',
+    day: 3,
+    headline: '11:04pm — she asks the page what she never asked the doctor',
+    patientDoes:
+      'Types into the ask-anything box: “Is there a cheaper way to fix this than an implant?” The answer comes from her clinic’s approved content. The question is classified in the same second.',
+    telemetry: 'question → classified: F1 cost · considering alternatives · answered from reviewed library',
+    recordSees: 'status: PENDING',
+    intent: 43,
+    barrier: { code: 'F1', label: 'Cost — now in her own words' },
+    read:
+      'Patients ask an AI what they won’t ask a person. The consult never heard this question. It now exists in the decision record — verbatim, timestamped, and answered.',
+  },
+  {
     id: 'day4',
     day: 4,
     headline: 'A second device, 9:15pm',
@@ -246,6 +259,55 @@ export const medicalTranslations = [
   { from: 'Aligner case pending', to: 'GLP-1 prescribed, never filled' },
   { from: 'Oral surgery deferred', to: 'Cardiac rehab referred, never enrolled' },
   { from: 'Crown postponed', to: 'Specialty referral, never completed' },
+];
+
+/** Where the signal comes from — the sensor suite, grouped by how much it asks of the patient. */
+export interface SensorGroup {
+  group: string;
+  asksOfPatient: string;
+  sensors: { name: string; reveals: string }[];
+}
+
+export const sensorGroups: SensorGroup[] = [
+  {
+    group: 'Passive',
+    asksOfPatient: 'nothing — behavior observed on the clinic’s own page',
+    sensors: [
+      { name: 'Player telemetry', reveals: 'sections watched, rewatched, skipped — and where the session dies' },
+      { name: 'Dwell & return visits', reveals: 'which sections pull her back — the fee, the procedure, the before/after' },
+      { name: 'Timing & silence', reveals: '11pm opens, 48-hour gaps, decay — silence has a shape, and it’s computed nightly' },
+      { name: 'Second device & shares', reveals: 'who else is reading — the household enters the record' },
+    ],
+  },
+  {
+    group: 'Tools that help her decide',
+    asksOfPatient: 'using things built for her — the signal is exhaust',
+    sensors: [
+      { name: 'Payment calculator', reveals: 'the budget she’d never say out loud — every amount tried is disclosed' },
+      { name: 'Treatment comparison', reveals: 'which alternatives she’s actually weighing, and for how long' },
+      { name: 'Financing pre-qual tap', reveals: 'cost is the barrier — and she’s still in' },
+      { name: 'Scheduling widget', reveals: 'booking started-then-abandoned is a different state than never-clicked' },
+    ],
+  },
+  {
+    group: 'In her own words',
+    asksOfPatient: 'at most a tap or a typed question — never a survey',
+    sensors: [
+      { name: 'Ask-anything box', reveals: 'the questions she won’t ask a person — classified live: barrier, misunderstanding, outside information' },
+      { name: 'Suggested-question chips', reveals: 'a barrier disclosure with zero typing — “What if I wait?” tapped is a signal' },
+      { name: 'One-tap reason', reveals: 'shown only at a detected stall — “cost / another opinion / nervous / talking to family”' },
+      { name: '“What’s still on your mind?”', reveals: 'the residual doubt, caught at the end of the video while it’s freshest' },
+    ],
+  },
+  {
+    group: 'Ground truth',
+    asksOfPatient: 'nothing — the label arrives on its own',
+    sensors: [
+      { name: 'Practice-system outcomes', reveals: 'scheduled, started, cancelled, deposit paid — every window ends in a label' },
+      { name: 'Coordinator dispositions', reveals: 'one tap after a call — “reached, still deciding: cost” — human ground truth' },
+      { name: 'Send-level attribution', reveals: 'every counter-move labeled by what the patient does next — which explanation converts whom' },
+    ],
+  },
 ];
 
 /** How a deployment actually works — the anti-integration pitch. */
