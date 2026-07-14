@@ -31,16 +31,39 @@ export default function HomePage() {
     <div className="space-y-24">
       <HeroSection />
 
-      {/* New flagship — Opera Loop */}
-      <section>
+      {/* Flagships — Opera Intent & Opera Loop */}
+      <section className="grid gap-5 lg:grid-cols-2">
         <Reveal>
           <Link
-            href="/loop"
-            className="group flex flex-col justify-between gap-4 rounded-3xl border border-navy-800 bg-navy-900 px-7 py-7 shadow-soft-lg transition-all hover:shadow-glow sm:flex-row sm:items-center sm:px-9"
+            href="/intent"
+            className="group flex h-full flex-col justify-between gap-6 rounded-3xl border border-navy-800 bg-navy-900 px-7 py-7 shadow-soft-lg transition-all hover:shadow-glow sm:px-9"
           >
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-widest text-teal-300">
-                New flagship · Opera Loop
+                New flagship · Opera Intent
+              </p>
+              <p className="mt-2 text-balance text-xl font-semibold tracking-tight text-white sm:text-2xl">
+                Care that happens leaves a record. Care that almost happens leaves nothing.
+              </p>
+              <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-white/55">
+                The layer before the first yes — the decision window read from behavior, every
+                pending case scored and barrier-coded, and non-initiation turned into evidence.
+              </p>
+            </div>
+            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-navy-900 transition-transform group-hover:translate-x-0.5">
+              Enter the window
+              <ArrowRight className="h-4 w-4" />
+            </span>
+          </Link>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <Link
+            href="/loop"
+            className="group flex h-full flex-col justify-between gap-6 rounded-3xl border border-navy-800 bg-navy-900 px-7 py-7 shadow-soft-lg transition-all hover:shadow-glow sm:px-9"
+          >
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-teal-300">
+                Flagship · Opera Loop
               </p>
               <p className="mt-2 text-balance text-xl font-semibold tracking-tight text-white sm:text-2xl">
                 Healthcare records what happened. It never learns why.
@@ -50,7 +73,7 @@ export default function HomePage() {
                 days, and a variable real-world evidence has never had.
               </p>
             </div>
-            <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-navy-900 transition-transform group-hover:translate-x-0.5">
+            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-navy-900 transition-transform group-hover:translate-x-0.5">
               Enter the Loop
               <ArrowRight className="h-4 w-4" />
             </span>
