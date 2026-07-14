@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --surface-1: #ffffff;
+  --page: #fafaf9;
+  --text-primary: #111110;
+  --text-secondary: #5f5e5a;
+  --text-muted: #8a8984;
+  --hairline: #e8e7e3;
+  --series-1: #2a78d6;
+  --series-2: #1baf7a;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--page);
+  color: var(--text-primary);
+}
+
+::selection {
+  background: #d7e7fa;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Thin, recessive scrollbar for the live transcript pane */
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: #d6d5d0;
+  border-radius: 3px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
