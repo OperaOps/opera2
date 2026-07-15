@@ -1,3 +1,11 @@
 # Build settings live in the Netlify UI; this only augments the functions bundle.
 [functions]
-  included_files = ["data/opera_local.db"]
+  included_files = [
+    "data/opera_local.db",
+    # Keep the render pipeline's asset tree out of the serverless bundle —
+    # rendering happens on App Runner; these blew Netlify's upload limit.
+    "!video-renderer/**",
+    "!OperaTruveta/**",
+    "!WallyOpera/**",
+    "!OperaBola/**",
+  ]
