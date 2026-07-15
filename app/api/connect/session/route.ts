@@ -15,6 +15,7 @@ import {
   saveClinic,
 } from "@/lib/connect/clinic-store";
 import { getStripe, isStripeConfigured } from "@/lib/connect/stripe";
+import { signClinicToken, CLINIC_COOKIE_NAME } from "@/lib/auth/clinic-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -57,11 +58,32 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  return NextResponse.json({
+  // Checkout is verified against Stripe — sign the clinic into their portal
+  // so "Go to dashboard" works without a second login step.
+  const token = await signClinicToken({
+    clinicId: clinic.clinicId,
+    clinicName: clinic.clinicName,
+    email: clinic.email,
+  });
+  const res = NextResponse.json({
     clinicId: clinic.clinicId,
     clinicName: clinic.clinicName,
     status: clinic.status,
     apiKey: clinic.apiKey,
     trialEndsAt: clinic.trialEndsAt,
   });
+  res.cookies.set(CLINIC_COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60,
+    path: "/",
+  });
+  res.cookies.set("opera-clinic-name", clinic.clinicName, {
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60,
+    path: "/",
+  });
+  return res;
 }

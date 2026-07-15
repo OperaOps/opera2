@@ -14,11 +14,14 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import {
   activateClinic,
   createClinic,
+  findClinicByEmail,
   linkCheckoutSession,
 } from "@/lib/connect/clinic-store";
+import { signClinicToken, CLINIC_COOKIE_NAME } from "@/lib/auth/clinic-auth";
 import {
   getStripe,
   isStripeConfigured,
@@ -54,14 +57,29 @@ export async function POST(request: NextRequest) {
   const phone = typeof body.phone === "string" ? body.phone.trim() : undefined;
   const practiceType = typeof body.practiceType === "string" ? body.practiceType.trim() : undefined;
   const activationCode = typeof body.activationCode === "string" ? body.activationCode.trim() : "";
+  const password = typeof body.password === "string" ? body.password : "";
   const plan = normalizePlan(body.plan);
 
   if (!clinicName) return NextResponse.json({ error: "Clinic name is required." }, { status: 400 });
   if (!contactName) return NextResponse.json({ error: "Contact name is required." }, { status: 400 });
   if (!EMAIL_RE.test(email)) return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
+  if (password.length < 8) {
+    return NextResponse.json(
+      { error: "Choose a password of at least 8 characters — it's how you'll sign in to your portal." },
+      { status: 400 }
+    );
+  }
   if (body.acceptTerms !== true) {
     return NextResponse.json({ error: "You must accept the Terms of Service." }, { status: 400 });
   }
+  const existing = await findClinicByEmail(email);
+  if (existing && existing.status !== "pending") {
+    return NextResponse.json(
+      { error: "An account with this email already exists — sign in at getopera.ai/clinic/login." },
+      { status: 409 }
+    );
+  }
+  const passwordHash = bcrypt.hashSync(password, 10);
 
   // --- Path 2: activation code (beta) -------------------------------------
   if (activationCode) {
@@ -72,15 +90,36 @@ export async function POST(request: NextRequest) {
     const clinic = await createClinic({
       clinicName, contactName, email, phone, practiceType,
       activationMethod: "activation_code",
+      passwordHash,
     });
     await activateClinic(clinic, { status: "trialing", trialDays: TRIAL_DAYS });
-    return NextResponse.json({
+    // Activation is instant — sign the clinic straight into their portal.
+    const token = await signClinicToken({
+      clinicId: clinic.clinicId,
+      clinicName: clinic.clinicName,
+      email: clinic.email,
+    });
+    const res = NextResponse.json({
       mode: "activation",
       clinicId: clinic.clinicId,
       clinicName: clinic.clinicName,
       apiKey: clinic.apiKey,
       trialEndsAt: clinic.trialEndsAt,
     });
+    res.cookies.set(CLINIC_COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60,
+      path: "/",
+    });
+    res.cookies.set("opera-clinic-name", clinic.clinicName, {
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60,
+      path: "/",
+    });
+    return res;
   }
 
   // --- Path 1: Stripe checkout ---------------------------------------------
@@ -98,6 +137,7 @@ export async function POST(request: NextRequest) {
   const clinic = await createClinic({
     clinicName, contactName, email, phone, practiceType,
     activationMethod: "stripe",
+    passwordHash,
   });
 
   const origin = baseUrl(request);

@@ -60,6 +60,7 @@ function itemToJob(item: Record<string, unknown>): VideoJob {
     createdAt: typeof item.createdAt === "number" ? item.createdAt : 0,
     input: (item.input as RenderInput) ?? ({} as RenderInput),
     contentMode: item.contentMode as string | undefined,
+    clinicId: item.clinicId as string | undefined,
   };
 }
 

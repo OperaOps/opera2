@@ -18,6 +18,7 @@ import { recordPatientVideo, patientKey } from "../_lib/patient-library";
 import { runRenderInBackground } from "@/lib/video/render";
 import { authorizeVideoRequest } from "@/lib/connect/auth";
 import { recordVideoGenerated } from "@/lib/connect/clinic-store";
+import { verifyClinicToken } from "@/lib/auth/clinic-auth";
 
 // ---------------------------------------------------------------------------
 // Input validation
@@ -253,6 +254,17 @@ export async function POST(request: NextRequest) {
   const input = validation.data;
   const jobId = crypto.randomUUID();
 
+  // Tenant scoping: API-key callers carry their clinic; portal callers carry
+  // a session cookie (verified here when same-origin, or resolved by the
+  // Netlify proxy and forwarded as x-opera-clinic-id across the hop).
+  let clinicId: string | undefined;
+  if (auth.kind === "clinic") {
+    clinicId = auth.clinic.clinicId;
+  } else {
+    const portal = await verifyClinicToken(request);
+    clinicId = portal?.clinicId ?? request.headers.get("x-opera-clinic-id") ?? undefined;
+  }
+
   // Initialize job
   const job: VideoJob = {
     status: "processing",
@@ -264,6 +276,7 @@ export async function POST(request: NextRequest) {
     createdAt: Date.now(),
     input,
     contentMode: input.contentMode,
+    clinicId,
   };
   await saveJob(jobId, job);
 

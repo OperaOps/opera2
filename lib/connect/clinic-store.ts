@@ -10,6 +10,7 @@
  *   KEY#<sha256(rawKey)>    → { clinicId } pointer for O(1) key auth
  *   SESSION#<checkoutId>    → { clinicId } pointer (Stripe success page)
  *   SUB#<subscriptionId>    → { clinicId } pointer (Stripe webhooks)
+ *   EMAIL#<lowercased>      → { clinicId } pointer (portal email+password login)
  *
  * The raw API key is stored on the clinic record (retrievable) — deliberate
  * beta tradeoff so clinics who lose their key can be re-sent it without
@@ -50,6 +51,11 @@ export interface ClinicAccount {
   apiKey: string | null;
   keyPrefix: string | null;
   keyHash: string | null;
+  // Portal login (bcrypt hash; set at signup so checkout → dashboard is one flow)
+  passwordHash?: string | null;
+  // Portal profile extras
+  clinicAddress?: string;
+  logoUrl?: string | null;
   // Stripe linkage
   stripeCustomerId?: string;
   stripeSubscriptionId?: string;
@@ -159,6 +165,7 @@ export async function createClinic(input: {
   phone?: string;
   practiceType?: string;
   activationMethod: "stripe" | "activation_code";
+  passwordHash?: string;
 }): Promise<ClinicAccount> {
   const now = new Date().toISOString();
   const clinic: ClinicAccount = {
@@ -176,12 +183,20 @@ export async function createClinic(input: {
     apiKey: null,
     keyPrefix: null,
     keyHash: null,
+    passwordHash: input.passwordHash ?? null,
     videosGenerated: 0,
     createdAt: now,
     updatedAt: now,
   };
   await putItem(`CLINIC#${clinic.clinicId}`, clinic as unknown as Record<string, unknown>);
+  await putItem(`EMAIL#${clinic.email.trim().toLowerCase()}`, { clinicId: clinic.clinicId });
   return clinic;
+}
+
+export async function findClinicByEmail(email: string): Promise<ClinicAccount | null> {
+  const ptr = await getItem(`EMAIL#${email.trim().toLowerCase()}`);
+  if (!ptr?.clinicId) return null;
+  return getClinic(ptr.clinicId as string);
 }
 
 export async function getClinic(clinicId: string): Promise<ClinicAccount | null> {
@@ -222,7 +237,24 @@ export async function activateClinic(
 export async function findClinicByApiKey(rawKey: string): Promise<ClinicAccount | null> {
   const ptr = await getItem(`KEY#${hashKey(rawKey)}`);
   if (!ptr?.clinicId) return null;
-  return getClinic(ptr.clinicId as string);
+  const clinic = await getClinic(ptr.clinicId as string);
+  // A rotated key leaves its old KEY# pointer behind — only the key whose
+  // hash matches the clinic record is valid.
+  if (clinic && clinic.keyHash && clinic.keyHash !== hashKey(rawKey)) return null;
+  return clinic;
+}
+
+/** Rotate a clinic's API key (portal "generate new key"). */
+export async function rotateApiKey(clinicId: string): Promise<string | null> {
+  const clinic = await getClinic(clinicId);
+  if (!clinic) return null;
+  const raw = generateApiKey();
+  clinic.apiKey = raw;
+  clinic.keyPrefix = raw.slice(0, 8);
+  clinic.keyHash = hashKey(raw);
+  await putItem(`KEY#${clinic.keyHash}`, { clinicId: clinic.clinicId });
+  await saveClinic(clinic);
+  return raw;
 }
 
 export async function linkCheckoutSession(clinicId: string, sessionId: string): Promise<void> {

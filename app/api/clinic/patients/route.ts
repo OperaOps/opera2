@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
   // list reflects everything the clinic has actually generated.
   let merged = patients as Record<string, unknown>[];
   let mergedTotal = total.count;
+  const isDemoClinic = clinic.email === "demo@getopera.ai";
   if (isDynamoJobStoreEnabled()) {
     try {
       const jobs = await dynamoListJobs(200);
@@ -72,6 +73,8 @@ export async function GET(request: NextRequest) {
       );
       const byPatient = new Map<string, (typeof jobs)[number]>();
       for (const job of jobs) {
+        // Tenant scoping: only this clinic's jobs (demo account keeps legacy unscoped ones).
+        if (job.clinicId ? job.clinicId !== clinic.clinicId : !isDemoClinic) continue;
         const name = String(job.input?.patientName || "").trim();
         if (!name) continue;
         if (search && !name.toLowerCase().includes(search.toLowerCase())) continue;

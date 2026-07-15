@@ -53,13 +53,24 @@ export function KeyReveal({
     <div className="space-y-5">
       <div>
         <div className="text-[13px] text-emerald-600 mb-1">✓ {clinicName} is set up</div>
-        <h2 className="text-lg font-semibold text-gray-900">Your Opera API key</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Welcome to Opera</h2>
         <p className="text-sm text-gray-500">
-          Paste this into Greyfinch to connect the app. Keep it private — it identifies your clinic.
-          {trialNote ? ` ${trialNote}` : ""}
+          You&apos;re signed in and your portal is ready — generate your first patient video in
+          about a minute.{trialNote ? ` ${trialNote}` : ""}
         </p>
       </div>
 
+      <a
+        href="/clinic/dashboard"
+        className="block w-full rounded-xl bg-purple-600 hover:bg-purple-700 px-4 py-3 text-center text-sm font-semibold text-white transition"
+      >
+        Go to your dashboard →
+      </a>
+
+      <div>
+        <div className="text-[11px] uppercase tracking-wide text-gray-500 mb-1.5">
+          Your API key <span className="normal-case tracking-normal">— for the Greyfinch app or the Opera API (also in your portal under API Keys)</span>
+        </div>
       <div className="flex gap-2">
         <code className="flex-1 truncate rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-[13px] text-gray-900">
           {apiKey}
@@ -71,10 +82,11 @@ export function KeyReveal({
           {copied ? "✓ Copied" : "Copy"}
         </button>
       </div>
+      </div>
 
       <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
         <div className="text-[11px] uppercase tracking-wide text-gray-500 mb-2">
-          Finish setup in Greyfinch — about a minute
+          Using Greyfinch? Finish setup there — about a minute
         </div>
         <ol className="space-y-2 text-sm text-gray-700 list-decimal list-inside">
           <li>In Greyfinch, open <span className="font-medium">Settings → Apps</span> and find <span className="font-medium">Opera</span>.</li>

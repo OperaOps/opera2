@@ -42,12 +42,16 @@ export async function GET(request: NextRequest) {
   }
 
   // Pipeline jobs → same row shape. Every studio generation shows up here.
+  // Tenant-scoped: a clinic sees only its own jobs. The seeded demo account
+  // also sees legacy unscoped jobs (everything predating clinicId tagging).
+  const isDemoClinic = clinic.email === "demo@getopera.ai";
   if (isDynamoJobStoreEnabled()) {
     try {
       const jobs = await dynamoListJobs(200);
       const seen = new Set(videos.map((v) => v.id));
       for (const job of jobs) {
         if (seen.has(job.jobId)) continue;
+        if (job.clinicId ? job.clinicId !== clinic.clinicId : !isDemoClinic) continue;
         const input = job.input ?? ({} as Record<string, string>);
         if (!input.patientName) continue; // not a portal-visible job
         const [first, ...rest] = String(input.patientName).trim().split(/\s+/);

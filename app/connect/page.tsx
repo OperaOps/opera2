@@ -34,6 +34,7 @@ function ConnectInner() {
   const [clinicName, setClinicName] = useState("");
   const [contactName, setContactName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [practiceType, setPracticeType] = useState("orthodontic");
   const [acceptTerms, setAcceptTerms] = useState(false);
@@ -55,6 +56,7 @@ function ConnectInner() {
     if (!clinicName.trim()) { setError("Clinic name is required."); return; }
     if (!contactName.trim()) { setError("Your name is required."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setError("A valid email is required."); return; }
+    if (password.length < 8) { setError("Choose a password of at least 8 characters — you'll use it to sign in to your portal."); return; }
     if (!acceptTerms) { setError("Please accept the Terms of Service to continue."); return; }
     setSubmitting(true);
     try {
@@ -65,6 +67,7 @@ function ConnectInner() {
           clinicName: clinicName.trim(),
           contactName: contactName.trim(),
           email: email.trim(),
+          password,
           phone: phone.trim() || undefined,
           practiceType,
           acceptTerms: true,
@@ -88,7 +91,7 @@ function ConnectInner() {
     } finally {
       setSubmitting(false);
     }
-  }, [clinicName, contactName, email, phone, practiceType, acceptTerms, activationCode, plan]);
+  }, [clinicName, contactName, email, password, phone, practiceType, acceptTerms, activationCode, plan]);
 
   return (
     <div className="min-h-screen bg-white text-gray-900 flex items-center justify-center p-6 sm:p-10">
@@ -137,6 +140,9 @@ function ConnectInner() {
               </div>
               <Field label="Work email">
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@yourclinic.com" disabled={submitting} className={inputCls} />
+              </Field>
+              <Field label="Create a password">
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 8 characters — for your portal login" disabled={submitting} className={inputCls} autoComplete="new-password" />
               </Field>
               <Field label="Phone (optional)">
                 <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(555) 555-5555" disabled={submitting} className={inputCls} />

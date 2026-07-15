@@ -53,6 +53,23 @@ function isPublicPath(pathname: string): boolean {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Clinic portal pages need a clinic session (its own cookie, separate from
+  // the main opera-token). APIs under /api/clinic verify per-route.
+  if (pathname.startsWith("/clinic/dashboard")) {
+    const clinicToken = request.cookies.get("opera-clinic-token")?.value;
+    if (!clinicToken) {
+      return NextResponse.redirect(new URL("/clinic/login", request.url));
+    }
+    try {
+      await jwtVerify(clinicToken, JWT_SECRET);
+      return NextResponse.next();
+    } catch {
+      const response = NextResponse.redirect(new URL("/clinic/login", request.url));
+      response.cookies.delete("opera-clinic-token");
+      return response;
+    }
+  }
+
   // Let public paths through
   if (isPublicPath(pathname)) {
     return NextResponse.next();

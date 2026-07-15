@@ -9,6 +9,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { verifyClinicToken } from "@/lib/auth/clinic-auth";
 
 export function renderUpstream(): string | null {
   const u = process.env.OPERA_RENDER_UPSTREAM?.trim();
@@ -31,6 +32,15 @@ export async function proxyToRenderer(
   if (operaKey) headers["x-opera-key"] = operaKey;
   const operaSource = request.headers.get("x-opera-source");
   if (operaSource) headers["x-opera-source"] = operaSource;
+  // Tenant scoping across the proxy hop: the upstream never sees the portal
+  // cookie, so resolve the session here and forward the clinic identity.
+  const forwardedClinicId = request.headers.get("x-opera-clinic-id");
+  if (forwardedClinicId) {
+    headers["x-opera-clinic-id"] = forwardedClinicId;
+  } else {
+    const portal = await verifyClinicToken(request);
+    if (portal?.clinicId) headers["x-opera-clinic-id"] = portal.clinicId;
+  }
 
   try {
     const res = await fetch(url, {

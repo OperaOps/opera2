@@ -110,7 +110,9 @@ export async function POST(request: NextRequest, { params }: Params) {
   try {
     generateRes = await fetch(`${baseUrl}/api/patient-video/generate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      // Server-side hop drops the session cookie — pass the verified clinic
+      // identity explicitly so the job is tenant-scoped.
+      headers: { "Content-Type": "application/json", "x-opera-clinic-id": clinic.clinicId },
       body: JSON.stringify({
         patientName: patient.first_name,
         doctorName: patient.consulting_provider || clinic.clinicName,

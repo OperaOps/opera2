@@ -45,4 +45,6 @@ export interface VideoJob {
   createdAt: number;
   input: RenderInput;
   contentMode?: string;
+  /** Tenant scoping — the Dynamo clinicId that created this job (portal or API key). */
+  clinicId?: string;
 }

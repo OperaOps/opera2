@@ -43,7 +43,17 @@ export default function ClinicDashboardLayout({
       .split("; ")
       .find((c) => c.startsWith("opera-clinic-name="))
       ?.split("=")[1];
-    if (cookieClinicName) setClinicName(decodeURIComponent(cookieClinicName));
+    if (cookieClinicName) {
+      setClinicName(decodeURIComponent(cookieClinicName));
+      return;
+    }
+    // Sessions from before the name cookie existed — resolve via the API.
+    fetch("/api/clinic/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.clinic?.clinic_name) setClinicName(d.clinic.clinic_name);
+      })
+      .catch(() => {});
   }, []);
 
   // Close the mobile sidebar on navigation

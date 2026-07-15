@@ -120,6 +120,13 @@ export default function ClinicLoginPage() {
             </button>
           </form>
 
+          <p className="mt-6 text-center text-[13px] text-gray-400">
+            New to Opera?{" "}
+            <Link href="/pricing" className="font-medium text-purple-600 hover:text-purple-500">
+              Start your free trial →
+            </Link>
+          </p>
+
         </motion.div>
       </main>
 

@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db/patient-portal-schema";
 import { verifyClinicToken } from "@/lib/auth/clinic-auth";
+import { getClinic } from "@/lib/connect/clinic-store";
 import { getStripe } from "@/lib/connect/stripe";
 
 export async function POST(request: NextRequest) {
@@ -22,32 +23,46 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const db = getDb();
-  const row = db
-    .prepare("SELECT clinic_email, clinic_name FROM clinic_accounts WHERE id = ?")
-    .get(clinic.clinicId) as
-    | { clinic_email: string; clinic_name: string }
-    | undefined;
+  // Prefer the customer the subscription actually lives on (Dynamo record
+  // written during Connect checkout); fall back to email lookup.
+  let customerId: string | null = null;
+  let clinicEmail = clinic.email;
+  let clinicName = clinic.clinicName;
+  try {
+    const account = await getClinic(clinic.clinicId);
+    if (account) {
+      customerId = account.stripeCustomerId ?? null;
+      clinicEmail = account.email;
+      clinicName = account.clinicName;
+    }
+  } catch (err) {
+    console.error("[billing-portal] store lookup failed", err);
+  }
 
-  if (!row) {
-    return NextResponse.json({ error: "Clinic not found" }, { status: 404 });
+  if (!customerId) {
+    const db = getDb();
+    const row = db
+      .prepare("SELECT clinic_email, clinic_name FROM clinic_accounts WHERE id = ?")
+      .get(clinic.clinicId) as
+      | { clinic_email: string; clinic_name: string }
+      | undefined;
+    if (row) {
+      clinicEmail = row.clinic_email;
+      clinicName = row.clinic_name;
+    }
   }
 
   try {
     const stripe = getStripe();
 
-    // Find-or-create customer by clinic email
-    const existing = await stripe.customers.list({
-      email: row.clinic_email,
-      limit: 1,
-    });
-    const customer =
-      existing.data[0] ??
-      (await stripe.customers.create({
-        email: row.clinic_email,
-        name: row.clinic_name,
-        metadata: { opera_clinic_id: clinic.clinicId },
-      }));
+    const customer = customerId
+      ? { id: customerId }
+      : (await stripe.customers.list({ email: clinicEmail, limit: 1 })).data[0] ??
+        (await stripe.customers.create({
+          email: clinicEmail,
+          name: clinicName,
+          metadata: { opera_clinic_id: clinic.clinicId },
+        }));
 
     const returnUrl = `${request.nextUrl.origin}/clinic/dashboard/billing`;
     const session = await stripe.billingPortal.sessions.create({
