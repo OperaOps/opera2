@@ -1,0 +1,17 @@
+# Netlify config for the Opera × Bola periodontics demo (OperaBola),
+# deployed as its OWN Netlify site: operabola.netlify.app
+# (same repo pattern as WallyOpera / OperaTruveta — base directory OperaBola).
+#
+# Fully static (next.config.mjs has output: "export") — plain HTML in out/.
+#
+# If created from the repo UI instead of the CLI:
+#   Base directory:    OperaBola
+#   Build command:     npm run build
+#   Publish directory: out   (relative to base)
+
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "20"

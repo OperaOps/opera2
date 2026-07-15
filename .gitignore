@@ -85,3 +85,13 @@ video-renderer/public/narration-*.mp3
 /Screenshot*.png
 
 
+
+# Local Netlify folder
+.netlify
+
+# Claude Code local settings (contains tokens in permission allowlists)
+.claude/
+
+# OperaBola build artifacts
+OperaBola/.next/
+OperaBola/out/
