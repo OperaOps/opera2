@@ -15,12 +15,12 @@ import { StoryFooter } from "@/components/nav";
 const treatments = [
   {
     id: "srp",
-    src: "/videos/maria-srp.mp4",
-    poster: "/videos/maria-srp-poster.jpg",
+    src: "/videos/bola-maria-srp.mp4",
+    poster: "/videos/bola-maria-srp-poster.jpg",
     tag: "Deep Cleaning",
     title: "Scaling & Root Planing",
     patient: "Maria, 54 · diagnosed today, treatment next week",
-    length: "1:33",
+    length: "1:31",
     patientLine:
       "Maria's gums bleed when she brushes, and today a few pockets on her lower left measured fours and fives. This is the video she gets by text an hour after her consult.",
     personalization: [
@@ -31,12 +31,12 @@ const treatments = [
   },
   {
     id: "laser",
-    src: "/videos/david-laser.mp4",
-    poster: "/videos/david-laser-poster.jpg",
+    src: "/videos/bola-david-laser.mp4",
+    poster: "/videos/bola-david-laser-poster.jpg",
     tag: "Laser Therapy",
     title: "Laser Periodontal Treatment",
     patient: "David, 62 · anxious about surgery, scheduled Thursday",
-    length: "1:14",
+    length: "1:33",
     patientLine:
       "David almost declined treatment because he heard the word 'surgery.' His video answers exactly that fear: no scalpel, no stitches, and back with the grandkids next day.",
     personalization: [
@@ -47,12 +47,12 @@ const treatments = [
   },
   {
     id: "pocket",
-    src: "/videos/susan-pocket-reduction.mp4",
-    poster: "/videos/susan-pocket-reduction-poster.jpg",
+    src: "/videos/bola-susan-pocket-reduction.mp4",
+    poster: "/videos/bola-susan-pocket-reduction-poster.jpg",
     tag: "Osseous Surgery",
     title: "Pocket Reduction Surgery",
     patient: "Susan, 58 · deep molar pockets after SRP",
-    length: "0:49",
+    length: "1:22",
     patientLine:
       "Susan's back molars didn't respond to deep cleaning, and she's nervous about stitches. Her video shows the whole surgery honestly — and ends where she wants to be: her garden.",
     personalization: [

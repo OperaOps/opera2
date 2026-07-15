@@ -172,6 +172,71 @@ const dentalVideoMap: Record<string, TreatmentVideoAssets> = {
   },
 
   /**
+   * Periodontics trio (Bola demo) — scene-cut from full procedure animations.
+   * Six unique clips each → six clean flagship slides, no duplication.
+   */
+  perio_srp: {
+    problem: [
+      { src: `${LOCAL}/perio-srp/problem.mp4`, durationSeconds: 10.0 },
+    ],
+    deepDive: [
+      { src: `${LOCAL}/perio-srp/deepdive.mp4`, durationSeconds: 14.8 },
+    ],
+    treatment: [
+      { src: `${LOCAL}/perio-srp/treatment.mp4`, durationSeconds: 15.2 },
+    ],
+    journey: [
+      { src: `${LOCAL}/perio-srp/journey.mp4`, durationSeconds: 10.0 },
+    ],
+    whatToExpect: [
+      { src: `${LOCAL}/perio-srp/expect.mp4`, durationSeconds: 8.9 },
+    ],
+    outcome: [
+      { src: `${LOCAL}/perio-srp/outcome.mp4`, durationSeconds: 7.9 },
+    ],
+  },
+  perio_laser: {
+    problem: [
+      { src: `${LOCAL}/perio-laser/problem.mp4`, durationSeconds: 17.5 },
+    ],
+    deepDive: [
+      { src: `${LOCAL}/perio-laser/deepdive.mp4`, durationSeconds: 14.7 },
+    ],
+    treatment: [
+      { src: `${LOCAL}/perio-laser/treatment.mp4`, durationSeconds: 10.8 },
+    ],
+    journey: [
+      { src: `${LOCAL}/perio-laser/journey.mp4`, durationSeconds: 9.2 },
+    ],
+    whatToExpect: [
+      { src: `${LOCAL}/perio-laser/expect.mp4`, durationSeconds: 14.0 },
+    ],
+    outcome: [
+      { src: `${LOCAL}/perio-laser/outcome.mp4`, durationSeconds: 15.0 },
+    ],
+  },
+  pocket_reduction: {
+    problem: [
+      { src: `${LOCAL}/pocket-reduction/problem.mp4`, durationSeconds: 4.3 },
+    ],
+    deepDive: [
+      { src: `${LOCAL}/pocket-reduction/deepdive.mp4`, durationSeconds: 8.1 },
+    ],
+    treatment: [
+      { src: `${LOCAL}/pocket-reduction/treatment.mp4`, durationSeconds: 6.4 },
+    ],
+    journey: [
+      { src: `${LOCAL}/pocket-reduction/journey.mp4`, durationSeconds: 5.8 },
+    ],
+    whatToExpect: [
+      { src: `${LOCAL}/pocket-reduction/expect.mp4`, durationSeconds: 4.8 },
+    ],
+    outcome: [
+      { src: `${LOCAL}/pocket-reduction/outcome.mp4`, durationSeconds: 10.1 },
+    ],
+  },
+
+  /**
    * Full Mouth Rehabilitation — 6-stage phased care:
    *   Stage 1 (problem):     severe decay / compromised dentition
    *   Stage 2 (treatment):   extractions

@@ -31,6 +31,9 @@ export const TreatmentType = z.enum([
   "dentures",
   "retainer",
   "full_mouth_rehab",
+  "perio_srp",
+  "perio_laser",
+  "pocket_reduction",
 ]);
 export type TreatmentType = z.infer<typeof TreatmentType>;
 

@@ -486,7 +486,9 @@ export async function renderPatientVideo(
   const lambdaFnName = process.env.REMOTION_LAMBDA_FUNCTION_NAME || "remotion-render-4-0-242-mem3008mb-disk2048mb-240sec";
   const lambdaServeUrl = process.env.REMOTION_LAMBDA_SERVE_URL || "https://remotionlambda-useast1-zpvm5jjogw.s3.us-east-1.amazonaws.com/sites/opera-patient-video/index.html";
   const lambdaRegion = (process.env.REMOTION_LAMBDA_REGION || process.env.AWS_REGION || "us-east-1") as AwsRegion;
-  let useLambda = true; // Always use Lambda
+  // Always use Lambda — unless forced local (e.g. new clips not yet in the
+  // deployed Lambda serve bundle).
+  let useLambda = process.env.OPERA_FORCE_LOCAL_RENDER !== "1";
   process.stderr.write(`[render-pipeline] Lambda: fn=${lambdaFnName} region=${lambdaRegion}\n`);
 
   if (useLambda) {

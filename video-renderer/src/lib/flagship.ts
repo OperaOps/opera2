@@ -127,6 +127,9 @@ function timelineSteps(
     const start = /invisalign|aligner/i.test(treatment) ? "Aligners on" : "Braces on";
     return ["Consult & scan", "Custom plan", start, "Your reveal"];
   }
+  if (/^perio_|^pocket_/.test(treatment)) {
+    return ["Exam & mapping", "Treatment day", "Healing weeks", "Healthy gums"];
+  }
   return ["Exam & plan", "Gentle prep", "Treatment day", "Your new smile"];
 }
 
