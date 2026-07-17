@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import { CALENDLY_URL } from "@/lib/concepts/shared";
 
 /**
- * No bar. Three floating glass buttons, one per third of the screen,
- * big enough to actually read. Hidden over the opening wall.
+ * One quiet bar: wordmark on the left, Product and Book a demo on the
+ * right. Hidden over the opening wall, slides in once the reader moves.
  */
 export default function Nav() {
   const [shown, setShown] = useState(false);
@@ -18,35 +18,34 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const pill =
-    "pointer-events-auto cf-body flex min-w-[190px] items-center justify-center rounded-full border border-white/30 bg-[#141412]/60 px-10 py-3.5 text-[16.5px] font-medium tracking-[0.01em] text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:border-[#a9c0aa]/80 hover:shadow-[0_8px_36px_rgba(95,122,97,0.4)]";
-
   return (
     <motion.nav
       initial={false}
-      animate={{ y: shown ? 0 : -90, opacity: shown ? 1 : 0 }}
+      animate={{ y: shown ? 0 : -80, opacity: shown ? 1 : 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="pointer-events-none fixed inset-x-0 top-5 z-50 grid grid-cols-3 px-6 md:px-14"
+      className="fixed inset-x-0 top-0 z-50 border-b border-[#1a1a17]/10 bg-[#f7f5f0]/90 backdrop-blur-md"
     >
-      <div className="flex justify-center">
-        <a href="#top" className={pill}>
-          Opera<span className="text-[#a9c0aa]">AI</span>
+      <div className="mx-auto flex h-[64px] max-w-[1560px] items-center justify-between px-6 md:px-10">
+        <a href="#top" className="cf-display text-[24px] leading-none tracking-[-0.01em] text-[#1a1a17]">
+          Opera<span className="text-[#5f7a61]">AI</span>
         </a>
-      </div>
-      <div className="flex justify-center">
-        <a href="#product" className={pill}>
-          Product
-        </a>
-      </div>
-      <div className="flex justify-center">
-        <a
-          href={CALENDLY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`${pill} shadow-[0_8px_32px_rgba(95,122,97,0.35)]`}
-        >
-          Book a demo
-        </a>
+
+        <div className="flex items-center gap-8">
+          <a
+            href="#product"
+            className="cf-body text-[15.5px] font-medium text-[#1a1a17]/70 transition-colors hover:text-[#1a1a17]"
+          >
+            Product
+          </a>
+          <a
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cf-body rounded-full bg-[#1a1a17] px-6 py-2.5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-[#5f7a61]"
+          >
+            Book a demo
+          </a>
+        </div>
       </div>
     </motion.nav>
   );
