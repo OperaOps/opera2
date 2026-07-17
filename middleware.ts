@@ -43,6 +43,9 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/api/v/") ||
     pathname.startsWith("/api/patient-context") ||
     pathname.startsWith("/docs-v2") ||
+    pathname.startsWith("/concepts") ||
+    pathname.startsWith("/concept-") ||
+    pathname.startsWith("/final") ||
     pathname.includes(".") // static files like .css, .js, .ico
   ) {
     return true;

@@ -1,0 +1,89 @@
+/* Concept 3 — Editorial Science. All classes prefixed c3-. */
+
+.c3-root {
+  --c3-paper: #f7f5f0;
+  --c3-ink: #1a1a17;
+  --c3-warm: #8a8578;
+  --c3-red: #c2410c;
+  font-optical-sizing: auto;
+}
+
+.c3-root ::selection {
+  background: #c2410c;
+  color: #f7f5f0;
+}
+
+.c3-display {
+  font-family: var(--c3-font-display), Georgia, "Times New Roman", serif;
+}
+
+.c3-body {
+  font-family: var(--c3-font-body), -apple-system, "Helvetica Neue", sans-serif;
+}
+
+.c3-mono {
+  font-family: var(--c3-font-mono), "SF Mono", Menlo, monospace;
+}
+
+/* Drawn-underline link: a faint rule always present, a full-strength rule
+   that draws left-to-right on hover. Pair with `group` for arrow slides. */
+.c3-link {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+.c3-link::before,
+.c3-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+}
+.c3-link::before {
+  opacity: 0.3;
+}
+.c3-link::after {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.c3-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Solid nav button: ink plate, red fill sweeps up on hover. */
+.c3-button-solid {
+  position: relative;
+  overflow: hidden;
+  background: var(--c3-ink);
+  color: var(--c3-paper);
+  isolation: isolate;
+}
+.c3-button-solid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--c3-red);
+  transform: translateY(101%);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: -1;
+}
+.c3-button-solid:hover::after {
+  transform: translateY(0);
+}
+
+/* Rubber-stamp treatment for FIG. B */
+.c3-stamp {
+  border: 2px solid var(--c3-red);
+  color: var(--c3-red);
+  letter-spacing: 0.32em;
+  transform: rotate(-8deg);
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='60'><filter id='n'><feTurbulence baseFrequency='0.6' numOctaves='2'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.9 0.9 0.9 0 0'/></filter><rect width='120' height='60' filter='url(%23n)'/></svg>");
+  mask-size: cover;
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='60'><filter id='n'><feTurbulence baseFrequency='0.6' numOctaves='2'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.9 0.9 0.9 0 0'/></filter><rect width='120' height='60' filter='url(%23n)'/></svg>");
+  -webkit-mask-size: cover;
+}
+

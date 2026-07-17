@@ -95,3 +95,10 @@ video-renderer/public/narration-*.mp3
 # OperaBola build artifacts
 OperaBola/.next/
 OperaBola/out/
+
+# Raw video masters too large for GitHub (>100MB); small web clips are tracked
+public/videos/laserperio.mp4
+public/videos/periolaser.mp4
+public/videos/pocketreduction.mp4
+public/videos/periodontic1.mov
+public/videos/periodonticlaser1.mov

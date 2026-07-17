@@ -1,0 +1,98 @@
+/* Concept 1 — Clinical Cinematic. All classes/keyframes prefixed c1-. */
+
+.c1-root {
+  background: #050607;
+  color: #f2f0eb;
+  font-family: var(--c1-display), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.c1-root ::selection {
+  background: rgba(34, 211, 238, 0.28);
+  color: #f2f0eb;
+}
+
+/* ————— Film grain (fixed overlay) ————— */
+.c1-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* ————— Hero wall drift (slow, organic, alternating directions) ————— */
+@keyframes c1-drift-l {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-3vw); }
+}
+@keyframes c1-drift-r {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3vw); }
+}
+.c1-row-a { animation: c1-drift-l 38s ease-in-out infinite; will-change: transform; }
+.c1-row-b { animation: c1-drift-r 47s ease-in-out infinite; will-change: transform; }
+.c1-row-c { animation: c1-drift-l 55s ease-in-out infinite; will-change: transform; }
+.c1-row-d { animation: c1-drift-r 42s ease-in-out infinite; will-change: transform; }
+
+@keyframes c1-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.045); }
+}
+.c1-breathe { animation: c1-breathe 40s ease-in-out infinite; will-change: transform; }
+
+/* ————— EKG trace ————— */
+@keyframes c1-ekg {
+  to { stroke-dashoffset: -480; }
+}
+.c1-ekg {
+  stroke-dasharray: 110 370;
+  animation: c1-ekg 3.4s linear infinite;
+}
+.c1-ekg-slow {
+  stroke-dasharray: 90 390;
+  animation: c1-ekg 5.2s linear infinite;
+}
+
+/* ————— Typing caret / live dot ————— */
+@keyframes c1-blink {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0; }
+}
+.c1-caret { animation: c1-blink 1.05s steps(1) infinite; }
+
+@keyframes c1-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+.c1-pulse { animation: c1-pulse 2.2s ease-in-out infinite; }
+
+/* ————— Console scanline sweep ————— */
+@keyframes c1-scan {
+  0% { top: -3%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { top: 103%; opacity: 0; }
+}
+.c1-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(103, 232, 249, 0.22), transparent);
+  animation: c1-scan 7s linear infinite;
+  pointer-events: none;
+}
+
+/* ————— Scroll cue ————— */
+@keyframes c1-cue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  45% { transform: scaleY(1); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.c1-cue { animation: c1-cue 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite; }

@@ -1,0 +1,92 @@
+/* Final composed site. All classes prefixed cf-. */
+
+.cf-root {
+  --cf-paper: #f7f5f0;
+  --cf-ink: #1a1a17;
+  --cf-warm: #8a8578;
+  --cf-red: #c2410c;
+  font-optical-sizing: auto;
+}
+
+.cf-root ::selection {
+  background: #c2410c;
+  color: #f7f5f0;
+}
+
+.cf-display {
+  font-family: var(--cf-font-display), Georgia, "Times New Roman", serif;
+}
+
+.cf-body {
+  font-family: var(--cf-font-body), -apple-system, "Helvetica Neue", sans-serif;
+}
+
+.cf-mono {
+  font-family: var(--cf-font-mono), "SF Mono", Menlo, monospace;
+}
+
+/* Drawn-underline link: faint rule always present, full-strength rule
+   draws left-to-right on hover. */
+.cf-link {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+.cf-link::before,
+.cf-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+}
+.cf-link::before {
+  opacity: 0.3;
+}
+.cf-link::after {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cf-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Solid nav button: ink plate, red fill sweeps up on hover. */
+.cf-button-solid {
+  position: relative;
+  overflow: hidden;
+  background: var(--cf-ink);
+  color: var(--cf-paper);
+  isolation: isolate;
+}
+.cf-button-solid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--cf-red);
+  transform: translateY(101%);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: -1;
+}
+.cf-button-solid:hover::after {
+  transform: translateY(0);
+}
+
+/* Viewfinder vignette for the full-frame product moment. */
+.cf-vignette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 140px 30px rgba(0, 0, 0, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-link::after,
+  .cf-button-solid::after {
+    transition-duration: 0.01ms;
+  }
+}

@@ -1,0 +1,107 @@
+/* Concept 2 — Living Interface. All classes/keyframes prefixed c2-. */
+
+/* ---------- Vertical marquee columns (hero + closing backdrop) ---------- */
+@keyframes c2-marquee-up {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+@keyframes c2-marquee-down {
+  from { transform: translateY(-50%); }
+  to   { transform: translateY(0); }
+}
+.c2-col-up   { animation: c2-marquee-up linear infinite; }
+.c2-col-down { animation: c2-marquee-down linear infinite; }
+
+/* ---------- Floating orbit chips (Ask Opera) ---------- */
+@keyframes c2-float-a {
+  0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+  50%      { transform: translateY(-10px) rotate(0.4deg); }
+}
+@keyframes c2-float-b {
+  0%, 100% { transform: translateY(-6px) rotate(0.5deg); }
+  50%      { transform: translateY(6px) rotate(-0.5deg); }
+}
+.c2-float-a { animation: c2-float-a 7s ease-in-out infinite; }
+.c2-float-b { animation: c2-float-b 9s ease-in-out infinite; }
+
+/* ---------- Typing caret ---------- */
+@keyframes c2-caret { 0%, 45% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.c2-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  background: #4f46e5;
+  animation: c2-caret 0.9s steps(1) infinite;
+}
+
+/* ---------- Thinking ring — conic sweep around the answer surface ---------- */
+@keyframes c2-spin { to { transform: rotate(360deg); } }
+.c2-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+.c2-ring::before {
+  content: "";
+  position: absolute;
+  inset: -150%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 250deg,
+    rgba(99, 102, 241, 0.9) 310deg,
+    rgba(79, 70, 229, 1) 340deg,
+    transparent 360deg
+  );
+  animation: c2-spin 1.3s linear infinite;
+}
+
+/* ---------- Live pulse dot ---------- */
+@keyframes c2-pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  80%  { transform: scale(2.6); opacity: 0; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.c2-live-dot { position: relative; width: 7px; height: 7px; }
+.c2-live-dot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: #10b981;
+  animation: c2-pulse-ring 2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.c2-live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: #10b981;
+}
+
+/* ---------- Render-progress shimmer bar (hero designed card) ---------- */
+@keyframes c2-render {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(160%); }
+  100% { transform: translateX(160%); }
+}
+.c2-render-bar { animation: c2-render 3.2s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+
+/* ---------- Soft grain-free light texture ---------- */
+.c2-tint {
+  background:
+    radial-gradient(1100px 620px at 82% -10%, rgba(99, 102, 241, 0.07), transparent 60%),
+    radial-gradient(900px 540px at -10% 30%, rgba(16, 185, 129, 0.04), transparent 55%),
+    #fafaf8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c2-col-up, .c2-col-down, .c2-float-a, .c2-float-b,
+  .c2-render-bar, .c2-ring::before, .c2-live-dot::before {
+    animation: none;
+  }
+}
