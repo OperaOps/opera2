@@ -141,18 +141,18 @@ function IntentSlide() {
         >
           {/* what Opera extracts */}
           <div className="overflow-hidden rounded-2xl border border-[#1a1a17]/10 bg-white shadow-[0_30px_70px_-35px_rgba(26,26,23,0.35)]">
-            <div className="grid sm:grid-cols-2">
+            <div className="grid h-full sm:grid-cols-2 sm:grid-rows-2">
               {FIELDS.map((f, i) => (
                 <div
                   key={f.label}
-                  className={`px-6 py-5 ${i % 2 === 1 ? "sm:border-l sm:border-[#1a1a17]/[0.07]" : ""} ${
+                  className={`flex flex-col justify-center px-7 py-6 ${i % 2 === 1 ? "sm:border-l sm:border-[#1a1a17]/[0.07]" : ""} ${
                     i > 1 ? "border-t border-[#1a1a17]/[0.07]" : ""
                   }`}
                 >
-                  <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#5f7a61]">
+                  <p className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#5f7a61]">
                     {f.label}
                   </p>
-                  <p className="mt-2 text-[16.5px] font-medium leading-snug text-[#1a1a17]">
+                  <p className="mt-2.5 text-[19px] font-medium leading-snug text-[#1a1a17]">
                     {f.value}
                   </p>
                 </div>
