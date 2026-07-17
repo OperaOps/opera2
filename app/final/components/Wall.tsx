@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { WALL_POOL } from "./wallAssets";
 import { useIsMobile } from "./media";
+import CursorGlow from "./CursorGlow";
 
 /* ————————————————————————————————————————————————————————————————
    The wall. Opens as a black field. A randomizer keeps roughly half
@@ -164,6 +165,8 @@ export default function Wall() {
           );
         })}
       </div>
+
+      <CursorGlow />
 
       {/* ——— soft shadow toward the sentence ——— */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />

@@ -41,7 +41,7 @@ const ROW_GRID =
 const SHOWN_IDS = ["PT-4821", "PT-3390", "PT-5177", "PT-2856", "PT-8862"];
 
 export default function Dataset() {
-  const [open, setOpen] = useState<string | null>(null);
+  const [open, setOpen] = useState<string | null>("PT-4821");
   const rows = INTENT_ROWS.filter((r) => SHOWN_IDS.includes(r.patient_id));
 
   return (
@@ -58,16 +58,6 @@ export default function Dataset() {
             Every consult becomes a row. Here are eight of{" "}
             <em className="italic text-[#5f7a61]">12,406</em>.
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
-            className="cf-body max-w-sm text-[15px] leading-relaxed text-[#1a1a17]/75"
-          >
-            Open a row for Opera&rsquo;s read. From 25+ clinics and $420M+ of
-            analyzed clinical revenue.
-          </motion.p>
         </div>
 
         {/* ledger */}
