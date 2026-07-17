@@ -32,8 +32,6 @@ const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 export type ProductView = "overview" | "patients" | "education" | "ask" | "intent";
 
 export const PRODUCT_VIEWS: { key: ProductView; label: string; icon: typeof LayoutGrid; hint: string }[] = [
-  { key: "overview", label: "Overview", icon: LayoutGrid, hint: "The morning read: who needs attention and why" },
-  { key: "patients", label: "Patients", icon: Users, hint: "One patient's plan, timeline, and next step" },
   { key: "education", label: "Education", icon: Film, hint: "The visual library, assembled into plans" },
   { key: "ask", label: "Ask Opera", icon: MessageCircle, hint: "Questions answered from the patient's own plan" },
   { key: "intent", label: "Intent", icon: Activity, hint: "Signals read from real engagement, with an action" },
@@ -534,7 +532,7 @@ function IntentView({
                     transition={{ duration: 0.4, ease: EASE }}
                     className="overflow-hidden"
                   >
-                    <div className="grid gap-3 bg-[#f7f5f0]/60 px-4 pb-4 pt-1 sm:grid-cols-3">
+                    <div className="grid gap-3 bg-[#1a1a17]/[0.03] px-4 pb-4 pt-1 sm:grid-cols-3">
                       <div>
                         <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#8a8578]">
                           They asked
@@ -565,12 +563,6 @@ function IntentView({
                             }`}
                           >
                             {assigned[p.id] ? "Assigned to TC" : "Assign to TC"}
-                          </button>
-                          <button
-                            onClick={() => onOpenPatient(p.id)}
-                            className="cf-mono rounded-full border border-[#1a1a17]/15 px-3 py-1 text-[12px] uppercase tracking-[0.12em] text-[#1a1a17]/70 transition-colors hover:border-[#7c3aed]/40 hover:text-[#7c3aed]"
-                          >
-                            Open patient
                           </button>
                         </div>
                       </div>
@@ -608,8 +600,8 @@ export default function ProductApp({
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-[#1a1a17]/15 bg-[#f7f5f0] shadow-[0_40px_90px_-40px_rgba(26,26,23,0.35)]">
-      <div className="min-h-[440px] bg-[#f7f5f0] p-4 sm:p-6">
+    <div className="overflow-hidden rounded-xl border border-[#1a1a17]/15 bg-white shadow-[0_40px_90px_-40px_rgba(26,26,23,0.25)]">
+      <div className="min-h-[62vh] bg-white p-4 sm:p-6">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={view}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { WALL_POOL } from "./wallAssets";
 import { useIsMobile } from "./media";
 
@@ -111,8 +111,19 @@ export default function Wall() {
   const byCell = new Map<number, Placement>();
   for (const p of placements) byCell.set(p.cell, p);
 
+  const wrapRef = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: wrapRef,
+    offset: ["start start", "end end"],
+  });
+  const sentenceOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const sentenceY = useTransform(scrollYProgress, [0, 0.3], [0, -24]);
+  const brandOpacity = useTransform(scrollYProgress, [0.25, 0.55], [0, 1]);
+  const brandY = useTransform(scrollYProgress, [0.25, 0.55], [24, 0]);
+
   return (
-    <section id="top" className="relative h-[100svh] overflow-hidden bg-[#070707]">
+    <section ref={wrapRef} id="top" className="relative h-[200vh]">
+      <div className="sticky top-0 h-[100svh] overflow-hidden bg-[#070707]">
       {/* ——— the field ——— */}
       <div
         className="grid h-full w-full gap-[2px]"
@@ -147,17 +158,27 @@ export default function Wall() {
       {/* ——— soft shadow toward the sentence ——— */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
 
-      {/* ——— the sentence ——— */}
+      {/* ——— the sentence, then the name ——— */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-14 md:pb-16">
         <motion.p
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          style={{ opacity: sentenceOpacity, y: sentenceY }}
           className="cf-display px-6 text-center text-[clamp(2rem,4.6vw,3.8rem)] font-light leading-[1.08] tracking-[-0.02em] text-[#f7f5f0]"
         >
           Understanding is a{" "}
           <em className="italic text-[#a78bfa]">visual</em> act.
         </motion.p>
+      </div>
+      <motion.div
+        style={{ opacity: brandOpacity, y: brandY }}
+        className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-14 md:pb-16"
+      >
+        <p className="cf-display px-6 text-center text-[clamp(2.6rem,7vw,6rem)] font-light leading-none tracking-[-0.02em] text-[#f7f5f0]">
+          Opera<span className="text-[#a78bfa]">AI</span>
+        </p>
+      </motion.div>
       </div>
     </section>
   );

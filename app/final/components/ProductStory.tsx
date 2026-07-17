@@ -7,33 +7,16 @@ import { useIsMobile } from "./media";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-/* ————————————————————————————————————————————————————————————————
-   The product IS the story. One live interface, pinned. Scrolling
-   walks it through the five chapters of a working day; the strip
-   above the frame says where you are and what is happening. All of
-   it stays clickable the whole way through.
-   ———————————————————————————————————————————————————————————————— */
-
 const CHAPTERS: { view: ProductView; label: string; line: string }[] = [
-  {
-    view: "overview",
-    label: "Overview",
-    line: "The morning read. Three numbers, and who needs attention today.",
-  },
-  {
-    view: "patients",
-    label: "Patients",
-    line: "Open a patient. The plan, the timeline, the barrier.",
-  },
   {
     view: "education",
     label: "Education",
-    line: "Plans are assembled from a visual library that spans medicine.",
+    line: "The visual library. Every plan starts here.",
   },
   {
     view: "ask",
     label: "Ask Opera",
-    line: "Questions arrive at night. Answers come from the patient's own plan.",
+    line: "Questions answered from the patient's own plan.",
   },
   {
     view: "intent",
@@ -45,7 +28,9 @@ const CHAPTERS: { view: ProductView; label: string; line: string }[] = [
 export default function ProductStory() {
   const isMobile = useIsMobile();
   const wrapRef = useRef<HTMLDivElement | null>(null);
-  const [view, setView] = useState<ProductView>("overview");
+  const [view, setView] = useState<ProductView>("education");
+  // once the reader clicks, scrolling stops driving the view
+  const manual = useRef(false);
 
   const { scrollYProgress } = useScroll({
     target: wrapRef,
@@ -55,6 +40,7 @@ export default function ProductStory() {
   useEffect(() => {
     if (isMobile) return;
     return scrollYProgress.on("change", (v) => {
+      if (manual.current) return;
       const idx = Math.min(
         CHAPTERS.length - 1,
         Math.max(0, Math.floor(v * CHAPTERS.length * 1.02))
@@ -66,31 +52,29 @@ export default function ProductStory() {
   const active = CHAPTERS.find((c) => c.view === view) ?? CHAPTERS[0];
   const activeIdx = CHAPTERS.indexOf(active);
 
+  const pick = (v: ProductView) => {
+    manual.current = true;
+    setView(v);
+  };
+
   return (
-    <section id="product" className="scroll-mt-14 border-t border-[#1a1a17]/15 bg-[#f2f0e9]">
-      <div ref={wrapRef} className="relative lg:h-[420vh]">
+    <section id="product" className="scroll-mt-20 border-t border-[#1a1a17]/10 bg-white">
+      <div ref={wrapRef} className="relative lg:h-[300vh]">
         <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-center">
-          <div className="mx-auto w-full max-w-[1480px] px-6 py-14 md:px-10 lg:py-0">
-            {/* chapter strip: where you are, what is happening */}
-            <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 border-b border-[#1a1a17]/15 pb-3">
+          <div className="w-full px-5 py-14 md:px-10 lg:py-0">
+            {/* chapter picker: three big clear choices */}
+            <div className="flex flex-wrap items-baseline gap-x-10 gap-y-3 border-b border-[#1a1a17]/15 pb-4">
               {CHAPTERS.map((c, i) => {
                 const on = c.view === view;
                 return (
                   <button
                     key={c.view}
-                    onClick={() => setView(c.view)}
-                    className="group relative flex items-baseline gap-2 pb-1 text-left"
+                    onClick={() => pick(c.view)}
+                    className="group relative pb-1 text-left"
                   >
                     <span
-                      className={`cf-mono text-[11.5px] tracking-[0.12em] transition-colors ${
-                        on ? "text-[#7c3aed]" : "text-[#8a8578]"
-                      }`}
-                    >
-                      0{i + 1}
-                    </span>
-                    <span
-                      className={`cf-mono text-[12.5px] uppercase tracking-[0.18em] transition-colors ${
-                        on ? "text-[#1a1a17]" : "text-[#1a1a17]/45 group-hover:text-[#1a1a17]/75"
+                      className={`cf-body text-[19px] font-semibold tracking-[0.01em] transition-colors md:text-[21px] ${
+                        on ? "text-[#1a1a17]" : "text-[#1a1a17]/35 group-hover:text-[#1a1a17]/65"
                       }`}
                     >
                       {c.label}
@@ -99,27 +83,26 @@ export default function ProductStory() {
                       <motion.span
                         layoutId="cf-chapter"
                         transition={{ type: "spring", stiffness: 400, damping: 36 }}
-                        className="absolute -bottom-[13px] left-0 right-0 h-[2px] bg-[#7c3aed]"
+                        className="absolute -bottom-[17px] left-0 right-0 h-[3px] bg-[#7c3aed]"
                       />
                     )}
                   </button>
                 );
               })}
-              {/* progress dots, desktop */}
-              <span className="ml-auto hidden items-center gap-1.5 lg:flex">
+              <span className="ml-auto hidden items-center gap-2 lg:flex">
                 {CHAPTERS.map((_, i) => (
                   <span
                     key={i}
-                    className={`h-1 rounded-full transition-all duration-500 ${
-                      i === activeIdx ? "w-5 bg-[#7c3aed]" : "w-2 bg-[#1a1a17]/15"
+                    className={`h-1.5 rounded-full transition-all duration-500 ${
+                      i === activeIdx ? "w-7 bg-[#7c3aed]" : "w-2.5 bg-[#1a1a17]/15"
                     }`}
                   />
                 ))}
               </span>
             </div>
 
-            {/* the one sentence of narration */}
-            <div className="flex h-16 items-center md:h-16">
+            {/* the one line of narration */}
+            <div className="flex h-16 items-center md:h-[4.5rem]">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.p
                   key={active.view}
@@ -127,14 +110,14 @@ export default function ProductStory() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.4, ease: EASE }}
-                  className="cf-display text-[clamp(1.3rem,2.3vw,1.9rem)] italic leading-snug text-[#1a1a17]"
+                  className="cf-display text-[clamp(1.4rem,2.5vw,2.1rem)] italic leading-snug text-[#1a1a17]"
                 >
                   {active.line}
                 </motion.p>
               </AnimatePresence>
             </div>
 
-            <ProductApp view={view} onViewChange={setView} />
+            <ProductApp view={view} onViewChange={pick} />
           </div>
         </div>
       </div>
