@@ -390,7 +390,7 @@ function EducationView({
             Visual library
           </p>
           <p className="text-[13.5px] text-[#6d6858]">
-            {featured.length} of {MODULES.length} modules shown
+            {featured.length} of 10,600 modules shown
           </p>
         </div>
         <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
