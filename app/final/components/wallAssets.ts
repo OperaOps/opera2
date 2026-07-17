@@ -1,5 +1,7 @@
-// Every unique visual available to the landing wall. Each appears at most
-// once on screen at a time; the wall randomizes which ones are visible.
+// Every unique visual available to the landing wall. Each is a genuinely
+// distinct piece of source material (no stills derived from clips that are
+// also in the pool, so nothing can ever read as a duplicate), and each
+// appears in at most one cell at a time.
 
 export const WALL_VIDEOS: string[] = [
   "/videos/knee-anatomy-acl.mp4",
@@ -14,6 +16,21 @@ export const WALL_VIDEOS: string[] = [
   "/videos/library/medication-routine.mp4",
   "/videos/library/patient-watching-home.mp4",
   "/videos/sitepics/patient-watching-veo.mp4",
+  // photoreal Veo clips
+  "/videos/sitepics/veo-01.mp4",
+  "/videos/sitepics/veo-02.mp4",
+  "/videos/sitepics/veo-03.mp4",
+  "/videos/sitepics/veo-04.mp4",
+  "/videos/sitepics/veo-05.mp4",
+  "/videos/sitepics/veo-06.mp4",
+  "/videos/sitepics/veo-07.mp4",
+  "/videos/sitepics/veo-08.mp4",
+  "/videos/sitepics/veo-09.mp4",
+  "/videos/sitepics/veo-10.mp4",
+  "/videos/sitepics/veo-11.mp4",
+  "/videos/sitepics/veo-12.mp4",
+  "/videos/sitepics/veo-13.mp4",
+  "/videos/sitepics/veo-14.mp4",
   // the full dental allowance
   "/videos/hero-tooth.mp4",
   "/videos/invisalignseries.mp4",
@@ -30,6 +47,7 @@ const SITEPICS = Array.from(
 
 export const WALL_IMAGES: string[] = [
   ...SITEPICS,
+  "/videos/sitepics/sitepic-39.png",
   "/videos/sitepics/jesse-orrico-Us3AQvyOP-o-unsplash.jpg",
   "/videos/sitepics/robina-weermeijer-NIuGLCC7q54-unsplash.jpg",
   "/videos/sitepics/bhautik-patel-NVprB2Xt1bA-unsplash.jpg",
@@ -38,22 +56,6 @@ export const WALL_IMAGES: string[] = [
   "/videos/sitepics/piron-guillaume-U4FyCp3-KzY-unsplash.jpg",
   "/videos/sitepics/stefanie-belinda-tHSLU1CMc7g-unsplash.jpg",
   "/videos/sitepics/patricia-prudente--P2djqAwM8U-unsplash.jpg",
-  "/videos/posters/scene-colonoscopy-patient-video-1.jpg",
-  "/videos/posters/scene-colonoscopy-patient-video-2.jpg",
-  "/videos/posters/scene-colonoscopy-patient-video-3.jpg",
-  "/videos/posters/scene-colonoscopy-patient-video-5.jpg",
-  "/videos/posters/scene-colonoscopy-patient-video-7.jpg",
-  "/videos/posters/scene-colonoscopy-patient-video-8.jpg",
-  "/videos/posters/scene-knee6-2.jpg",
-  "/videos/posters/scene-knee6-3.jpg",
-  "/videos/posters/scene-patient-watching-home-2.jpg",
-  "/videos/posters/scene-patient-watching-home-3.jpg",
-  "/videos/posters/scene-medication-routine-1.jpg",
-  "/videos/posters/scene-medication-routine-3.jpg",
-  "/videos/posters/scene-cardio-stent-2.jpg",
-  "/videos/posters/scene-cardio-stent-3.jpg",
-  "/videos/posters/scene-scope-device-1.jpg",
-  "/videos/posters/scene-patient-watching-veo-2.jpg",
 ];
 
 export const WALL_POOL: { kind: "video" | "image"; src: string }[] = [

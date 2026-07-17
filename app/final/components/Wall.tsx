@@ -56,7 +56,9 @@ export default function Wall() {
   const cols = isMobile ? 5 : 16;
   const rows = isMobile ? 12 : 10;
   const cellCount = cols * rows;
-  const target = Math.min(WALL_POOL.length, Math.floor(cellCount / 2));
+  // Roughly a third of the field alive at once: calmer, and with the pool
+  // larger than the target there is always a resting reserve rotating in.
+  const target = Math.min(WALL_POOL.length, Math.floor(cellCount / 3));
 
   const [placements, setPlacements] = useState<Placement[]>([]);
   const nextId = useRef(1);
