@@ -193,8 +193,8 @@ export default function Wall() {
         style={{ opacity: brandOpacity }}
         className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-14 md:pb-16"
       >
-        <p className="cf-body text-center text-[clamp(1.05rem,1.7vw,1.45rem)] font-medium tracking-[0.02em] text-[#f7f5f0]/90" style={{ textShadow: "0 2px 30px rgba(0,0,0,0.7)" }}>
-          The future of patient education
+        <p className="cf-display px-6 text-center text-[clamp(2rem,4.6vw,3.8rem)] font-light leading-[1.08] tracking-[-0.02em] text-[#f7f5f0]" style={{ textShadow: "0 2px 30px rgba(0,0,0,0.7)" }}>
+          The future of patient <em className="italic text-[#a9c0aa]">education</em>.
         </p>
       </motion.div>
       </div>
