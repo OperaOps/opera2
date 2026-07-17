@@ -1,260 +1,161 @@
 "use client";
 
-import { useMemo } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { CALENDLY_URL, SITE_PHOTOS } from "@/lib/concepts/shared";
-import { WallVideo, useIsMobile } from "./media";
-
-const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { WALL_POOL } from "./wallAssets";
+import { useIsMobile } from "./media";
 
 /* ————————————————————————————————————————————————————————————————
-   The wall. One full screen of treatment footage resting in shadowed
-   black and white, with one lit sentence at its center. Hovering a
-   tile brings it back to color and size. No other copy.
-
-   Composition is deliberately medicine wide: dental appears exactly
-   six times; everything else is orthopedics, GI, cardiology,
-   neurology, radiology, and general medicine.
+   The wall. Opens as a black field. A randomizer keeps roughly half
+   of the cells alive at any moment; every visual in the library
+   appears in at most one cell at a time, lives for 5 to 8 seconds,
+   fades out, and resurfaces later somewhere else. One sentence sits
+   at the bottom. Nothing else.
    ———————————————————————————————————————————————————————————————— */
 
-const NONDENTAL_VIDEOS = [
-  "/videos/knee-anatomy-acl.mp4",
-  "/videos/knee2.mp4",
-  "/videos/knee3.mp4",
-  "/videos/knee4.mp4",
-  "/videos/knee5.mp4",
-  "/videos/knee6.mp4",
-  "/videos/library/cardio-stent.mp4",
-  "/videos/library/scope-device.mp4",
-  "/videos/library/colonoscopy-patient-video.mp4",
-  "/videos/library/medication-routine.mp4",
-  "/videos/library/patient-watching-home.mp4",
-  "/videos/sitepics/patient-watching-veo.mp4",
-];
+type Placement = {
+  id: number;
+  visual: number; // index into WALL_POOL
+  cell: number;
+  dies: number;
+};
 
-// Photography plus scene stills pulled from different moments of the long
-// clips, so the wall reads as far more footage than the clip count alone.
-const PHOTOS = [
-  SITE_PHOTOS.anatomyHeart,
-  "/videos/posters/scene-colonoscopy-patient-video-1.jpg",
-  SITE_PHOTOS.surgeryBW,
-  "/videos/posters/scene-knee6-2.jpg",
-  "/videos/posters/scene-patient-watching-home-2.jpg",
-  SITE_PHOTOS.neurons,
-  "/videos/posters/scene-colonoscopy-patient-video-3.jpg",
-  SITE_PHOTOS.xrayOk,
-  "/videos/posters/scene-medication-routine-1.jpg",
-  "/videos/posters/scene-cardio-stent-2.jpg",
-  SITE_PHOTOS.surgeryTeal,
-  "/videos/posters/scene-colonoscopy-patient-video-5.jpg",
-  "/videos/posters/scene-patient-watching-veo-2.jpg",
-  SITE_PHOTOS.anatomyHeartAlt,
-  "/videos/posters/scene-knee6-3.jpg",
-  "/videos/posters/scene-colonoscopy-patient-video-7.jpg",
-  SITE_PHOTOS.surgeryLights,
-  "/videos/posters/scene-scope-device-1.jpg",
-  "/videos/posters/scene-medication-routine-3.jpg",
-  SITE_PHOTOS.newborn,
-  "/videos/posters/scene-colonoscopy-patient-video-8.jpg",
-  "/videos/posters/scene-cardio-stent-3.jpg",
-  "/videos/posters/scene-patient-watching-home-3.jpg",
-  "/videos/posters/scene-colonoscopy-patient-video-2.jpg",
-];
+const TTL_MIN = 5000;
+const TTL_MAX = 8000;
+const TICK_MS = 450;
+const SPAWNS_PER_TICK = 4;
 
-// The full dental allowance for the entire wall.
-const DENTAL_VIDEOS = [
-  "/videos/hero-tooth.mp4",
-  "/videos/invisalignseries.mp4",
-  "/videos/crown-outcome.mp4",
-  "/videos/bracesoutcome.mp4",
-  "/videos/ceramic-smile.mp4",
-  "/videos/expander-device.mp4",
-];
-
-const POSITIONS = [
-  "object-center",
-  "object-[25%_50%]",
-  "object-[75%_50%]",
-  "object-[50%_30%]",
-  "object-[50%_70%]",
-];
-
-function mulberry32(seed: number) {
-  return () => {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function shuffled<T>(arr: T[], seed: number): T[] {
-  const a = [...arr];
-  const rnd = mulberry32(seed);
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(rnd() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+function WallMedia({ visual }: { visual: number }) {
+  const v = WALL_POOL[visual];
+  if (v.kind === "video") {
+    return (
+      <video
+        src={v.src}
+        muted
+        loop
+        playsInline
+        autoPlay
+        preload="metadata"
+        className="cf-bw h-full w-full object-cover"
+      />
+    );
   }
-  return a;
-}
-
-type WallTile =
-  | { kind: "video"; src: string; live: boolean; posterVariant: "a" | "b"; position: string }
-  | { kind: "photo"; src: string; position: string };
-
-function buildTiles(count: number, dentalAt: number[]): WallTile[] {
-  const order = shuffled(NONDENTAL_VIDEOS, 11);
-  const tiles: WallTile[] = [];
-  let v = 0;
-  let ph = 0;
-  let d = 0;
-  for (let i = 0; i < count; i++) {
-    if (dentalAt.includes(i) && d < DENTAL_VIDEOS.length) {
-      tiles.push({
-        kind: "video",
-        src: DENTAL_VIDEOS[d++],
-        live: true,
-        posterVariant: "a",
-        position: "object-center",
-      });
-    } else if (i % 5 === 2) {
-      tiles.push({ kind: "photo", src: PHOTOS[ph++ % PHOTOS.length], position: POSITIONS[ph % POSITIONS.length] });
-    } else {
-      const src = order[v % order.length];
-      const wrap = Math.floor(v / order.length);
-      tiles.push({
-        kind: "video",
-        src,
-        live: v % 3 === 1,
-        posterVariant: (wrap + v) % 2 === 0 ? "a" : "b",
-        position: POSITIONS[(wrap * 2 + v) % POSITIONS.length],
-      });
-      v++;
-    }
-  }
-  return tiles;
-}
-
-function chunk<T>(arr: T[], size: number): T[][] {
-  const out: T[][] = [];
-  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-  return out;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={v.src}
+      alt=""
+      draggable={false}
+      className="cf-bw h-full w-full object-cover"
+    />
+  );
 }
 
 export default function Wall() {
   const isMobile = useIsMobile();
+  const cols = isMobile ? 5 : 16;
+  const rows = isMobile ? 12 : 10;
+  const cellCount = cols * rows;
+  const target = Math.min(WALL_POOL.length, Math.floor(cellCount / 2));
 
-  const rows = useMemo(() => {
-    const cols = isMobile ? 4 : 12;
-    const rowCount = isMobile ? 8 : 9;
-    const dentalAt = isMobile ? [5, 17, 27] : [7, 25, 47, 63, 82, 101];
-    return chunk(buildTiles(cols * rowCount, dentalAt), cols);
-  }, [isMobile]);
+  const [placements, setPlacements] = useState<Placement[]>([]);
+  const nextId = useRef(1);
+
+  // reset when the grid geometry changes
+  useEffect(() => setPlacements([]), [cellCount]);
+
+  useEffect(() => {
+    const tick = () => {
+      setPlacements((prev) => {
+        const now = Date.now();
+        let out = prev.filter((p) => p.dies > now);
+
+        const usedVisuals = new Set(out.map((p) => p.visual));
+        const usedCells = new Set(out.map((p) => p.cell));
+        const freeVisuals: number[] = [];
+        for (let i = 0; i < WALL_POOL.length; i++)
+          if (!usedVisuals.has(i)) freeVisuals.push(i);
+        const freeCells: number[] = [];
+        for (let i = 0; i < cellCount; i++)
+          if (!usedCells.has(i)) freeCells.push(i);
+
+        let spawns = Math.min(
+          SPAWNS_PER_TICK,
+          target - out.length,
+          freeVisuals.length,
+          freeCells.length
+        );
+        while (spawns-- > 0) {
+          const vi = Math.floor(Math.random() * freeVisuals.length);
+          const ci = Math.floor(Math.random() * freeCells.length);
+          out = [
+            ...out,
+            {
+              id: nextId.current++,
+              visual: freeVisuals.splice(vi, 1)[0],
+              cell: freeCells.splice(ci, 1)[0],
+              dies: now + TTL_MIN + Math.random() * (TTL_MAX - TTL_MIN),
+            },
+          ];
+        }
+        return out;
+      });
+    };
+    tick();
+    const h = setInterval(tick, TICK_MS);
+    return () => clearInterval(h);
+  }, [cellCount, target]);
+
+  const byCell = new Map<number, Placement>();
+  for (const p of placements) byCell.set(p.cell, p);
 
   return (
-    <section id="top" className="relative h-[100svh] overflow-hidden bg-[#0c0c0b]">
-      {/* ——— the grid, edge to edge ——— */}
-      <div className="flex h-full flex-col gap-px">
-        {rows.map((row, r) => (
-          <div key={r} className="cf-wallrow flex min-h-0 gap-px">
-            {row.map((tile, c) => (
-              <motion.div
-                key={`${r}-${c}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 0.05 * r + 0.03 * c, ease: EASE }}
-                className="cf-walltile relative min-w-0 overflow-hidden bg-[#161614]"
-              >
-                {tile.kind === "video" ? (
-                  <WallVideo
-                    src={tile.src}
-                    live={tile.live}
-                    posterVariant={tile.posterVariant}
-                    position={tile.position}
-                    mediaClassName="cf-bw"
-                  />
-                ) : (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={tile.src}
-                    alt=""
-                    loading="lazy"
-                    draggable={false}
-                    className={`cf-bw h-full w-full object-cover ${tile.position}`}
-                  />
+    <section id="top" className="relative h-[100svh] overflow-hidden bg-[#070707]">
+      {/* ——— the field ——— */}
+      <div
+        className="grid h-full w-full gap-[2px]"
+        style={{
+          gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+          gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+        }}
+      >
+        {Array.from({ length: cellCount }, (_, i) => {
+          const p = byCell.get(i);
+          return (
+            <div key={i} className="relative overflow-hidden">
+              <AnimatePresence>
+                {p && (
+                  <motion.div
+                    key={p.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1.1, ease: "easeInOut" }}
+                    className="absolute inset-0"
+                  >
+                    <WallMedia visual={p.visual} />
+                  </motion.div>
                 )}
-              </motion.div>
-            ))}
-          </div>
-        ))}
+              </AnimatePresence>
+            </div>
+          );
+        })}
       </div>
 
-      {/* ——— shadow over the field ——— */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.5) 100%)",
-        }}
-      />
+      {/* ——— soft shadow toward the sentence ——— */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
 
-      {/* ——— the opening: OPERA AI across the page, then the sentence ——— */}
-      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-6">
-        <h1
-          aria-label="Opera AI"
-          className="cf-display flex w-[93vw] max-w-full items-baseline justify-between font-light leading-none text-[#f7f5f0]"
-          style={{ textShadow: "0 4px 60px rgba(0,0,0,0.65)" }}
+      {/* ——— the sentence ——— */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-14 md:pb-16">
+        <motion.p
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="cf-display px-6 text-center text-[clamp(2rem,4.6vw,3.8rem)] font-light leading-[1.08] tracking-[-0.02em] text-[#f7f5f0]"
         >
-          {["O", "P", "E", "R", "A"].map((ch, i) => (
-            <motion.span
-              key={`o-${i}`}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.25 + i * 0.09, ease: EASE }}
-              className="text-[clamp(3.4rem,12.5vw,12.5rem)]"
-            >
-              {ch}
-            </motion.span>
-          ))}
-          {["A", "I"].map((ch, i) => (
-            <motion.span
-              key={`a-${i}`}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.25 + (5 + i) * 0.09, ease: EASE }}
-              className="text-[clamp(3.4rem,12.5vw,12.5rem)] text-[#a78bfa]"
-            >
-              {ch}
-            </motion.span>
-          ))}
-        </h1>
-
-        <motion.div
-          initial={{ opacity: 0, y: 26, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.9, delay: 1.15, ease: EASE }}
-          className="pointer-events-auto mt-9 bg-[#f7f5f0] px-9 py-7 text-center shadow-[0_0_130px_16px_rgba(247,245,240,0.22),0_40px_90px_-30px_rgba(0,0,0,0.7)] md:px-14 md:py-8"
-        >
-          <p className="cf-display text-[clamp(1.4rem,2.7vw,2.2rem)] font-light leading-[1.06] tracking-[-0.02em]">
-            Understanding is a{" "}
-            <em className="italic text-[#7c3aed]">visual</em> act.
-          </p>
-          <a
-            href={CALENDLY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="cf-link group cf-mono mt-6 inline-flex gap-2 text-[12px] uppercase tracking-[0.24em] text-[#7c3aed]"
-          >
-            Book a demo
-            <ArrowRight
-              size={13}
-              strokeWidth={1.75}
-              className="translate-y-[1.5px] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1.5"
-            />
-          </a>
-        </motion.div>
+          Understanding is a{" "}
+          <em className="italic text-[#a78bfa]">visual</em> act.
+        </motion.p>
       </div>
     </section>
   );

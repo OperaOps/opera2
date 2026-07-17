@@ -90,37 +90,14 @@
    grows within its row, the hovered row grows within the column,
    so neighbors compress smoothly to make room.
    ———————————————————————————————————————————————————————————— */
-.cf-wallrow {
-  flex: 1 1 0%;
-  transition: flex-grow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.cf-walltile {
-  flex: 1 1 0%;
-  transition: flex-grow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-/* The wall rests in shadowed black and white; the tile under the
-   cursor comes back to light and color. */
+/* The wall rests in shadowed black and white. */
 .cf-bw {
-  filter: grayscale(1) brightness(0.52) contrast(1.05);
-  transition: filter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
-@media (hover: hover) and (pointer: fine) {
-  .cf-wallrow:hover {
-    flex-grow: 1.65;
-  }
-  .cf-wallrow:hover .cf-walltile:hover {
-    flex-grow: 2.4;
-  }
-  .cf-walltile:hover .cf-bw {
-    filter: grayscale(1) brightness(0.82) contrast(1.05);
-  }
+  filter: grayscale(1) brightness(0.6) contrast(1.05);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cf-link::after,
-  .cf-button-solid::after,
-  .cf-wallrow,
-  .cf-walltile {
+  .cf-button-solid::after {
     transition-duration: 0.01ms;
   }
 }

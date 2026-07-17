@@ -62,7 +62,7 @@ export default function MayoPlate() {
             transition={{ duration: 1, ease: EASE }}
             className="w-full max-w-[400px] border border-[#f7f5f0]/20 bg-[#141412]/85 px-9 py-9 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.8)] backdrop-blur-sm md:px-11 md:py-10"
           >
-            <p className="cf-mono text-[11px] uppercase tracking-[0.28em] text-[#f7f5f0]/65">
+            <p className="cf-mono text-[12.5px] uppercase tracking-[0.28em] text-[#f7f5f0]/65">
               In the field today
             </p>
             <ul className="mt-6 space-y-[7px]">
@@ -75,10 +75,10 @@ export default function MayoPlate() {
                   transition={{ duration: 0.5, delay: 0.25 + i * 0.04, ease: EASE }}
                   className="flex items-baseline gap-4"
                 >
-                  <span className="cf-mono w-6 shrink-0 text-[10px] tracking-[0.12em] text-[#a78bfa]">
+                  <span className="cf-mono w-6 shrink-0 text-[11.5px] tracking-[0.12em] text-[#a78bfa]">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="cf-display text-[17px] leading-snug tracking-[-0.01em] text-[#f7f5f0]">
+                  <span className="cf-display text-[18px] leading-snug tracking-[-0.01em] text-[#f7f5f0]">
                     {s}
                   </span>
                 </motion.li>
@@ -90,10 +90,10 @@ export default function MayoPlate() {
                 transition={{ duration: 0.5, delay: 0.25 + SPECIALTIES.length * 0.04, ease: EASE }}
                 className="flex items-baseline gap-4 border-t border-[#f7f5f0]/15 pt-3 mt-3"
               >
-                <span className="cf-mono w-6 shrink-0 text-[10px] tracking-[0.12em] text-[#a78bfa]">
+                <span className="cf-mono w-6 shrink-0 text-[11.5px] tracking-[0.12em] text-[#a78bfa]">
                   20
                 </span>
-                <span className="cf-display text-[17px] italic leading-snug text-[#a78bfa]">
+                <span className="cf-display text-[18px] italic leading-snug text-[#a78bfa]">
                   More to come
                 </span>
               </motion.li>
@@ -114,7 +114,7 @@ export default function MayoPlate() {
               >
                 Built for teams who take understanding seriously.
               </motion.h2>
-              <p className="cf-mono mt-3 text-[10.5px] uppercase tracking-[0.22em] text-[#f7f5f0]/60">
+              <p className="cf-mono mt-3 text-[12px] uppercase tracking-[0.22em] text-[#f7f5f0]/60">
                 Mayo Clinic, Rochester MN
               </p>
             </div>

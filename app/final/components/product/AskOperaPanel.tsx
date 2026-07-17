@@ -43,7 +43,7 @@ export default function AskOperaPanel({
       {/* header */}
       <div className="flex items-center justify-between gap-3 border-b border-[#1a1a17]/10 px-4 py-2.5 md:px-5">
         <div className="flex min-w-0 items-center gap-2.5">
-          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#7c3aed] text-[10px] font-semibold text-white">
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#7c3aed] text-[12px] font-semibold text-white">
             O
           </span>
           <AnimatePresence mode="wait" initial={false}>
@@ -53,13 +53,13 @@ export default function AskOperaPanel({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.3, ease: EASE }}
-              className="cf-mono truncate text-[9px] uppercase tracking-[0.18em] text-[#1a1a17]/70"
+              className="cf-mono truncate text-[12px] uppercase tracking-[0.18em] text-[#1a1a17]/70"
             >
               Ask Opera · {patient.name} · {patient.treatment}
             </motion.span>
           </AnimatePresence>
         </div>
-        <span className="cf-mono hidden shrink-0 text-[9px] uppercase tracking-[0.18em] text-[#8a8578] sm:inline">
+        <span className="cf-mono hidden shrink-0 text-[12px] uppercase tracking-[0.18em] text-[#8a8578] sm:inline">
           Plan grounded · {patient.doctor}
         </span>
       </div>
@@ -67,7 +67,7 @@ export default function AskOperaPanel({
       <div className="grid min-h-0 flex-1 md:grid-cols-[1fr_1.35fr]">
         {/* question list */}
         <div className="border-b border-[#1a1a17]/10 p-3 md:border-b-0 md:border-r md:p-4">
-          <p className="cf-mono px-2 text-[8px] uppercase tracking-[0.2em] text-[#8a8578]">
+          <p className="cf-mono px-2 text-[11.5px] uppercase tracking-[0.2em] text-[#8a8578]">
             What patients actually ask
           </p>
           <div className="mt-2 space-y-0.5">
@@ -90,7 +90,7 @@ export default function AskOperaPanel({
                     />
                   )}
                   <span
-                    className={`cf-mono shrink-0 text-[8px] tracking-[0.12em] ${
+                    className={`cf-mono shrink-0 text-[11.5px] tracking-[0.12em] ${
                       active ? "text-[#7c3aed]" : "text-[#8a8578]"
                     }`}
                   >
@@ -98,13 +98,13 @@ export default function AskOperaPanel({
                   </span>
                   <span className="min-w-0">
                     <span
-                      className={`block text-[12.5px] leading-snug ${
+                      className={`block text-[14px] leading-snug ${
                         active ? "text-[#1a1a17]" : "text-[#1a1a17]/65"
                       }`}
                     >
                       {t.question}
                     </span>
-                    <span className="cf-mono mt-0.5 block text-[8px] uppercase tracking-[0.14em] text-[#8a8578]">
+                    <span className="cf-mono mt-0.5 block text-[11.5px] uppercase tracking-[0.14em] text-[#8a8578]">
                       {p.name} · {p.specialty}
                     </span>
                   </span>
@@ -125,7 +125,7 @@ export default function AskOperaPanel({
               transition={{ duration: 0.45, ease: EASE }}
               className="flex min-h-0 flex-1 flex-col"
             >
-              <p className="cf-mono flex items-center gap-2 text-[8px] uppercase tracking-[0.2em] text-[#7c3aed]">
+              <p className="cf-mono flex items-center gap-2 text-[11.5px] uppercase tracking-[0.2em] text-[#7c3aed]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#7c3aed]" />
                 Grounded in {patient.name.split(" ")[0]}&rsquo;s treatment plan
               </p>
@@ -141,18 +141,18 @@ export default function AskOperaPanel({
                     src={module.src}
                     className="aspect-video w-full object-cover"
                   />
-                  <span className="cf-mono absolute bottom-1 right-1 rounded-sm bg-[#1a1a17]/75 px-1 py-0.5 text-[8px] text-white">
+                  <span className="cf-mono absolute bottom-1 right-1 rounded-sm bg-[#1a1a17]/75 px-1 py-0.5 text-[11.5px] text-white">
                     {module.duration}
                   </span>
                 </div>
                 <div className="min-w-0">
-                  <p className="cf-mono text-[8px] uppercase tracking-[0.18em] text-[#7c3aed]">
+                  <p className="cf-mono text-[11.5px] uppercase tracking-[0.18em] text-[#7c3aed]">
                     Cited visual · {module.id}
                   </p>
-                  <p className="mt-1 text-[13px] font-medium text-[#1a1a17]">
+                  <p className="mt-1 text-[14.5px] font-medium text-[#1a1a17]">
                     {module.title}
                   </p>
-                  <p className="mt-0.5 text-[11.5px] text-[#8a8578]">
+                  <p className="mt-0.5 text-[13px] text-[#8a8578]">
                     From the visuals shown at {patient.name.split(" ")[0]}&rsquo;s consult
                   </p>
                 </div>
@@ -163,18 +163,18 @@ export default function AskOperaPanel({
                 <div className="mt-4 flex items-center gap-3">
                   {needsReview ? (
                     <>
-                      <span className="cf-mono rounded-full bg-[#b45309]/10 px-2.5 py-1 text-[8.5px] uppercase tracking-[0.14em] text-[#b45309]">
+                      <span className="cf-mono rounded-full bg-[#b45309]/10 px-2.5 py-1 text-[11.5px] uppercase tracking-[0.14em] text-[#b45309]">
                         Draft, awaiting {patient.doctor}
                       </span>
                       <button
                         onClick={() => setApproved(true)}
-                        className="rounded-full bg-[#1a1a17] px-4 py-1.5 text-[11.5px] font-medium text-white transition-colors hover:bg-[#7c3aed]"
+                        className="rounded-full bg-[#1a1a17] px-4 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-[#7c3aed]"
                       >
                         Approve and send
                       </button>
                     </>
                   ) : (
-                    <span className="cf-mono flex items-center gap-1.5 rounded-full bg-[#15803d]/10 px-2.5 py-1 text-[8.5px] uppercase tracking-[0.14em] text-[#15803d]">
+                    <span className="cf-mono flex items-center gap-1.5 rounded-full bg-[#15803d]/10 px-2.5 py-1 text-[11.5px] uppercase tracking-[0.14em] text-[#15803d]">
                       <Check size={9} />
                       Sent to {patient.name.split(" ")[0]}
                     </span>

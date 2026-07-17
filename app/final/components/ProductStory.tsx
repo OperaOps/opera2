@@ -82,14 +82,14 @@ export default function ProductStory() {
                     className="group relative flex items-baseline gap-2 pb-1 text-left"
                   >
                     <span
-                      className={`cf-mono text-[10px] tracking-[0.12em] transition-colors ${
+                      className={`cf-mono text-[11.5px] tracking-[0.12em] transition-colors ${
                         on ? "text-[#7c3aed]" : "text-[#8a8578]"
                       }`}
                     >
                       0{i + 1}
                     </span>
                     <span
-                      className={`cf-mono text-[11px] uppercase tracking-[0.18em] transition-colors ${
+                      className={`cf-mono text-[12.5px] uppercase tracking-[0.18em] transition-colors ${
                         on ? "text-[#1a1a17]" : "text-[#1a1a17]/45 group-hover:text-[#1a1a17]/75"
                       }`}
                     >
@@ -119,7 +119,7 @@ export default function ProductStory() {
             </div>
 
             {/* the one sentence of narration */}
-            <div className="flex h-12 items-center md:h-11">
+            <div className="flex h-16 items-center md:h-16">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.p
                   key={active.view}
@@ -127,7 +127,7 @@ export default function ProductStory() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.4, ease: EASE }}
-                  className="cf-display text-[16px] italic leading-snug text-[#1a1a17]/80 md:text-[18px]"
+                  className="cf-display text-[clamp(1.3rem,2.3vw,1.9rem)] italic leading-snug text-[#1a1a17]"
                 >
                   {active.line}
                 </motion.p>

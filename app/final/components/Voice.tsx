@@ -41,7 +41,7 @@ export default function Voice() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.8, delay: 0.18, ease: EASE }}
-              className="cf-mono mt-10 text-[12px] uppercase tracking-[0.22em] text-[#8a8578]"
+              className="cf-mono mt-10 text-[13px] uppercase tracking-[0.22em] text-[#8a8578]"
             >
               <span className="text-[#1a1a17]">Dr. Jacob Zitterkopf</span>
               <span className="mx-2 text-[#1a1a17]/25">·</span>
@@ -66,7 +66,7 @@ export default function Voice() {
             className="absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#1a1a17]/55 to-transparent" />
-          <p className="cf-mono absolute bottom-8 left-8 right-8 text-[8px] uppercase leading-relaxed tracking-[0.3em] text-white/70 md:bottom-10 md:left-10">
+          <p className="cf-mono absolute bottom-8 left-8 right-8 text-[11.5px] uppercase leading-relaxed tracking-[0.3em] text-white/70 md:bottom-10 md:left-10">
             Every patient story starts with care
           </p>
         </motion.div>

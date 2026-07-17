@@ -12,7 +12,7 @@ export default function Closing() {
           href={CALENDLY_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="cf-mono bg-[#f7f5f0] px-11 py-4 text-[13px] uppercase tracking-[0.26em] text-[#1a1a17] transition-colors duration-300 hover:bg-[#7c3aed] hover:text-white"
+          className="cf-mono bg-[#f7f5f0] px-11 py-4 text-[13.5px] uppercase tracking-[0.26em] text-[#1a1a17] transition-colors duration-300 hover:bg-[#7c3aed] hover:text-white"
         >
           Book a demo
         </a>
@@ -20,7 +20,7 @@ export default function Closing() {
 
       {/* ——— Trusted by ——— */}
       <div className="pb-12 md:pb-16">
-        <p className="cf-mono mb-8 text-center text-[11px] uppercase tracking-[0.3em] text-white/50">
+        <p className="cf-mono mb-8 text-center text-[12.5px] uppercase tracking-[0.3em] text-white/50">
           Trusted by
         </p>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -38,7 +38,7 @@ export default function Closing() {
           <span className="cf-display text-[17px] text-[#f7f5f0]">
             Opera<span className="text-[#a78bfa]">.</span>
           </span>
-          <span className="cf-mono text-center text-[10.5px] uppercase tracking-[0.2em] text-white/55">
+          <span className="cf-mono text-center text-[12px] uppercase tracking-[0.2em] text-white/55">
             opera@getopera.ai · © 2026 Opera AI
           </span>
         </div>

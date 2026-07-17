@@ -74,7 +74,7 @@ export default function Dataset() {
         <div className="mt-12 overflow-x-auto">
           <div className="min-w-[760px] md:min-w-[1060px]">
             <div
-              className={`${ROW_GRID} cf-mono border-b border-[#1a1a17]/35 pb-2.5 text-[10.5px] uppercase tracking-[0.16em] text-[#8a8578]`}
+              className={`${ROW_GRID} cf-mono border-b border-[#1a1a17]/35 pb-2.5 text-[12px] uppercase tracking-[0.16em] text-[#8a8578]`}
             >
               <span />
               <span>ID</span>
@@ -119,11 +119,11 @@ export default function Dataset() {
                     <span className="cf-display text-[15px] italic leading-snug text-[#1a1a17]">
                       &ldquo;{row.primary_question}&rdquo;
                     </span>
-                    <span className="cf-mono hidden text-[11px] leading-relaxed tracking-[0.02em] text-[#8a8578] md:block">
+                    <span className="cf-mono hidden text-[12px] leading-relaxed tracking-[0.02em] text-[#8a8578] md:block">
                       {row.hesitation_reason}
                     </span>
                     <span className="flex items-baseline gap-2">
-                      <span className="cf-mono w-6 shrink-0 text-right text-[11px] tabular-nums text-[#1a1a17]">
+                      <span className="cf-mono w-6 shrink-0 text-right text-[12px] tabular-nums text-[#1a1a17]">
                         {row.engagement_score}
                       </span>
                       <span className="relative top-[-3px] h-[2px] w-12 shrink-0 bg-[#1a1a17]/10">
@@ -135,8 +135,8 @@ export default function Dataset() {
                         />
                       </span>
                     </span>
-                    <span className={`cf-mono flex items-baseline gap-1.5 text-[10px] uppercase tracking-[0.1em] ${sig.cls}`}>
-                      <span className="text-[11px] leading-none">{sig.glyph}</span>
+                    <span className={`cf-mono flex items-baseline gap-1.5 text-[12px] uppercase tracking-[0.1em] ${sig.cls}`}>
+                      <span className="text-[12px] leading-none">{sig.glyph}</span>
                       {row.intent_signal}
                     </span>
                   </button>
@@ -160,7 +160,7 @@ export default function Dataset() {
                           </button>
                           <div className="grid gap-5 pr-8 md:grid-cols-[1.4fr_1fr_1fr]">
                             <div>
-                              <p className="cf-mono text-[10px] uppercase tracking-[0.18em] text-[#7c3aed]">
+                              <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#7c3aed]">
                                 Opera&rsquo;s read
                               </p>
                               <p className="cf-body mt-2 text-[14px] leading-relaxed text-[#1a1a17]/80">
@@ -168,10 +168,10 @@ export default function Dataset() {
                               </p>
                             </div>
                             <div>
-                              <p className="cf-mono text-[10px] uppercase tracking-[0.18em] text-[#8a8578]">
+                              <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#8a8578]">
                                 Context
                               </p>
-                              <div className="cf-mono mt-2 space-y-1.5 text-[11px] leading-relaxed text-[#1a1a17]/75">
+                              <div className="cf-mono mt-2 space-y-1.5 text-[12px] leading-relaxed text-[#1a1a17]/75">
                                 <p>stage · {row.consultation_stage}</p>
                                 <p>barrier · {row.likely_barrier}</p>
                                 <p>
@@ -183,7 +183,7 @@ export default function Dataset() {
                               </div>
                             </div>
                             <div>
-                              <p className="cf-mono text-[10px] uppercase tracking-[0.18em] text-[#8a8578]">
+                              <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#8a8578]">
                                 What happened next
                               </p>
                               <p className="cf-display mt-2 text-[16px] italic leading-snug text-[#1a1a17]">
@@ -200,10 +200,10 @@ export default function Dataset() {
             })}
 
             <div className="flex items-baseline justify-between pt-2.5">
-              <span className="cf-mono text-[10.5px] uppercase tracking-[0.16em] text-[#8a8578]">
+              <span className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#8a8578]">
                 5 of 12,406 records shown
               </span>
-              <span className="cf-mono text-[10.5px] uppercase tracking-[0.16em] text-[#8a8578]">
+              <span className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#8a8578]">
                 <span className="text-[#15803d]">●</span> high&ensp;
                 <span className="text-[#7c3aed]">◐</span> building&ensp;
                 <span className="text-[#b45309]">○</span> stalled&ensp;
