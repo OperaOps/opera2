@@ -183,10 +183,13 @@ export default function Wall() {
       </div>
       <motion.div
         style={{ opacity: brandOpacity, y: brandY }}
-        className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-14 md:pb-16"
+        className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-6"
       >
-        <p className="cf-display px-6 text-center text-[clamp(2.6rem,7vw,6rem)] font-light leading-none tracking-[-0.02em] text-[#f7f5f0]">
+        <p className="cf-display text-center text-[clamp(3rem,8.5vw,7.5rem)] font-light leading-none tracking-[-0.02em] text-[#f7f5f0]" style={{ textShadow: "0 4px 60px rgba(0,0,0,0.7)" }}>
           Opera<span className="text-[#a9c0aa]">AI</span>
+        </p>
+        <p className="cf-body mt-5 text-center text-[clamp(1.05rem,1.7vw,1.45rem)] font-medium tracking-[0.02em] text-[#f7f5f0]/90" style={{ textShadow: "0 2px 30px rgba(0,0,0,0.7)" }}>
+          The future of patient education
         </p>
       </motion.div>
       </div>
