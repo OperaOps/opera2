@@ -83,7 +83,7 @@ export default function ProductStory() {
                       <motion.span
                         layoutId="cf-chapter"
                         transition={{ type: "spring", stiffness: 400, damping: 36 }}
-                        className="absolute -bottom-[17px] left-0 right-0 h-[3px] bg-[#7c3aed]"
+                        className="absolute -bottom-[17px] left-0 right-0 h-[3px] bg-[#5f7a61]"
                       />
                     )}
                   </button>
@@ -94,7 +94,7 @@ export default function ProductStory() {
                   <span
                     key={i}
                     className={`h-1.5 rounded-full transition-all duration-500 ${
-                      i === activeIdx ? "w-7 bg-[#7c3aed]" : "w-2.5 bg-[#1a1a17]/15"
+                      i === activeIdx ? "w-7 bg-[#5f7a61]" : "w-2.5 bg-[#1a1a17]/15"
                     }`}
                   />
                 ))}

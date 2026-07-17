@@ -19,7 +19,7 @@ export default function Nav() {
   }, []);
 
   const pill =
-    "pointer-events-auto cf-body flex min-w-[190px] items-center justify-center rounded-full border border-white/30 bg-[#141412]/60 px-10 py-3.5 text-[16.5px] font-medium tracking-[0.01em] text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:border-[#a78bfa]/80 hover:shadow-[0_8px_36px_rgba(124,58,237,0.4)]";
+    "pointer-events-auto cf-body flex min-w-[190px] items-center justify-center rounded-full border border-white/30 bg-[#141412]/60 px-10 py-3.5 text-[16.5px] font-medium tracking-[0.01em] text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:border-[#a9c0aa]/80 hover:shadow-[0_8px_36px_rgba(95,122,97,0.4)]";
 
   return (
     <motion.nav
@@ -30,7 +30,7 @@ export default function Nav() {
     >
       <div className="flex justify-center">
         <a href="#top" className={pill}>
-          Opera<span className="text-[#a78bfa]">AI</span>
+          Opera<span className="text-[#a9c0aa]">AI</span>
         </a>
       </div>
       <div className="flex justify-center">
@@ -43,7 +43,7 @@ export default function Nav() {
           href={CALENDLY_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className={`${pill} shadow-[0_8px_32px_rgba(124,58,237,0.35)]`}
+          className={`${pill} shadow-[0_8px_32px_rgba(95,122,97,0.35)]`}
         >
           Book a demo
         </a>

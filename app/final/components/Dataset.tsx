@@ -29,7 +29,7 @@ const READS: Record<string, string> = {
 
 const SIGNAL_GLYPH: Record<IntentRow["intent_signal"], { glyph: string; cls: string }> = {
   high: { glyph: "●", cls: "text-[#15803d]" },
-  building: { glyph: "◐", cls: "text-[#7c3aed]" },
+  building: { glyph: "◐", cls: "text-[#5f7a61]" },
   stalled: { glyph: "○", cls: "text-[#b45309]" },
   "at-risk": { glyph: "▲", cls: "text-[#b91c1c]" },
 };
@@ -56,7 +56,7 @@ export default function Dataset() {
             className="cf-display max-w-2xl text-[clamp(1.9rem,3.6vw,3rem)] font-light leading-[1.04] tracking-[-0.025em]"
           >
             Every consult becomes a row. Here are eight of{" "}
-            <em className="italic text-[#7c3aed]">12,406</em>.
+            <em className="italic text-[#5f7a61]">12,406</em>.
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 12 }}
@@ -107,7 +107,7 @@ export default function Dataset() {
                     <ChevronDown
                       size={13}
                       className={`relative top-[2px] text-[#8a8578] transition-transform duration-400 ${
-                        isOpen ? "rotate-180 text-[#7c3aed]" : ""
+                        isOpen ? "rotate-180 text-[#5f7a61]" : ""
                       }`}
                     />
                     <span className="cf-mono text-[12px] tracking-[0.06em] text-[#1a1a17]">
@@ -129,7 +129,7 @@ export default function Dataset() {
                       <span className="relative top-[-3px] h-[2px] w-12 shrink-0 bg-[#1a1a17]/10">
                         <span
                           className={`absolute inset-y-0 left-0 ${
-                            row.intent_signal === "at-risk" ? "bg-[#b91c1c]" : "bg-[#7c3aed]"
+                            row.intent_signal === "at-risk" ? "bg-[#b91c1c]" : "bg-[#5f7a61]"
                           }`}
                           style={{ width: `${row.engagement_score}%` }}
                         />
@@ -160,7 +160,7 @@ export default function Dataset() {
                           </button>
                           <div className="grid gap-5 pr-8 md:grid-cols-[1.4fr_1fr_1fr]">
                             <div>
-                              <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#7c3aed]">
+                              <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#5f7a61]">
                                 Opera&rsquo;s read
                               </p>
                               <p className="cf-body mt-2 text-[14px] leading-relaxed text-[#1a1a17]/80">
@@ -205,7 +205,7 @@ export default function Dataset() {
               </span>
               <span className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#8a8578]">
                 <span className="text-[#15803d]">●</span> high&ensp;
-                <span className="text-[#7c3aed]">◐</span> building&ensp;
+                <span className="text-[#5f7a61]">◐</span> building&ensp;
                 <span className="text-[#b45309]">○</span> stalled&ensp;
                 <span className="text-[#b91c1c]">▲</span> at risk
               </span>

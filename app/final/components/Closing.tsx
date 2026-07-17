@@ -11,7 +11,7 @@ export default function Closing() {
           href={CALENDLY_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="cf-body bg-[#f7f5f0] px-12 py-4 text-[16px] font-medium text-[#1a1a17] transition-colors duration-300 hover:bg-[#7c3aed] hover:text-white"
+          className="cf-body bg-[#f7f5f0] px-12 py-4 text-[16px] font-medium text-[#1a1a17] transition-colors duration-300 hover:bg-[#5f7a61] hover:text-white"
         >
           Book a demo
         </a>
@@ -20,7 +20,7 @@ export default function Closing() {
       <footer className="border-t border-white/10">
         <div className="mx-auto flex max-w-[1480px] items-center justify-between px-6 py-6 md:px-10">
           <span className="cf-display text-[17px] text-[#f7f5f0]">
-            Opera<span className="text-[#a78bfa]">AI</span>
+            Opera<span className="text-[#a9c0aa]">AI</span>
           </span>
           <span className="cf-body text-[14px] text-white/60">OperaAI Inc. · 2026</span>
         </div>

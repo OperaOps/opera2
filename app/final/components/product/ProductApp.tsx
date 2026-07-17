@@ -74,7 +74,7 @@ function EngagementBar({ value, signal }: { value: number; signal: Signal }) {
 function Avatar({ p, size = 8 }: { p: Patient; size?: 7 | 8 }) {
   return (
     <span
-      className={`flex ${size === 8 ? "h-8 w-8 text-[13px]" : "h-7 w-7 text-[12px]"} shrink-0 items-center justify-center rounded-full bg-[#7c3aed]/10 font-semibold text-[#7c3aed]`}
+      className={`flex ${size === 8 ? "h-8 w-8 text-[13px]" : "h-7 w-7 text-[12px]"} shrink-0 items-center justify-center rounded-full bg-[#5f7a61]/10 font-semibold text-[#5f7a61]`}
     >
       {p.initials}
     </span>
@@ -149,7 +149,7 @@ function OverviewView({
           className={`cf-mono mt-3 w-full rounded-md border py-2.5 text-[12.5px] uppercase tracking-[0.16em] transition-colors ${
             queued
               ? "border-[#15803d]/25 text-[#15803d]"
-              : "border-[#7c3aed]/30 text-[#7c3aed] hover:bg-[#7c3aed]/[0.05]"
+              : "border-[#5f7a61]/30 text-[#5f7a61] hover:bg-[#5f7a61]/[0.05]"
           }`}
         >
           {queued ? "Queued for Priya and Rosa" : "Queue re-engagement visuals"}
@@ -162,10 +162,10 @@ function OverviewView({
 /* ————————————————————— patients ————————————————————— */
 
 const EVENT_DOT: Record<string, string> = {
-  sent: "#7c3aed",
+  sent: "#5f7a61",
   watch: "#15803d",
   question: "#b45309",
-  share: "#7c3aed",
+  share: "#5f7a61",
   flag: "#b91c1c",
   action: "#1a1a17",
 };
@@ -201,7 +201,7 @@ function PatientsView({
             key={x.id}
             onClick={() => onSelect(x.id)}
             className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left transition-colors ${
-              x.id === selectedId ? "bg-[#7c3aed]/[0.07]" : "hover:bg-[#1a1a17]/[0.03]"
+              x.id === selectedId ? "bg-[#5f7a61]/[0.07]" : "hover:bg-[#1a1a17]/[0.03]"
             }`}
           >
             <Avatar p={x} size={7} />
@@ -267,8 +267,8 @@ function PatientsView({
                       onClick={() => setPlaying(id)}
                       className={`cf-mono rounded-full border px-2.5 py-1 text-[11.5px] uppercase tracking-[0.1em] transition-colors ${
                         active
-                          ? "border-[#7c3aed]/40 bg-[#7c3aed]/[0.07] text-[#7c3aed]"
-                          : "border-[#1a1a17]/10 text-[#1a1a17]/60 hover:border-[#7c3aed]/30 hover:text-[#7c3aed]"
+                          ? "border-[#5f7a61]/40 bg-[#5f7a61]/[0.07] text-[#5f7a61]"
+                          : "border-[#1a1a17]/10 text-[#1a1a17]/60 hover:border-[#5f7a61]/30 hover:text-[#5f7a61]"
                       }`}
                     >
                       {m.title}
@@ -285,7 +285,7 @@ function PatientsView({
                   className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
                     resent[p.id]
                       ? "bg-[#15803d]/10 text-[#15803d]"
-                      : "bg-[#1a1a17] text-white hover:bg-[#7c3aed]"
+                      : "bg-[#1a1a17] text-white hover:bg-[#5f7a61]"
                   }`}
                 >
                   {resent[p.id] ? <Check size={11} /> : <Send size={11} />}
@@ -297,7 +297,7 @@ function PatientsView({
                   className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-[13px] font-medium transition-colors ${
                     alerted[p.id]
                       ? "border-[#15803d]/25 text-[#15803d]"
-                      : "border-[#1a1a17]/15 text-[#1a1a17]/70 hover:border-[#7c3aed]/40 hover:text-[#7c3aed]"
+                      : "border-[#1a1a17]/15 text-[#1a1a17]/70 hover:border-[#5f7a61]/40 hover:text-[#5f7a61]"
                   }`}
                 >
                   {alerted[p.id] ? <Check size={11} /> : <Phone size={11} />}
@@ -330,7 +330,7 @@ function PatientsView({
                     animate={{ opacity: 1, x: 0 }}
                     className="flex items-baseline gap-2.5"
                   >
-                    <span className="relative top-[-1px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#7c3aed]" />
+                    <span className="relative top-[-1px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#5f7a61]" />
                     <span className="cf-mono w-14 shrink-0 text-[12px] uppercase tracking-[0.06em] text-[#8a8578]">
                       now
                     </span>
@@ -341,8 +341,8 @@ function PatientsView({
                 )}
               </div>
 
-              <div className="mt-4 rounded-md border border-[#7c3aed]/20 bg-[#7c3aed]/[0.04] p-3">
-                <p className="cf-mono text-[11.5px] uppercase tracking-[0.18em] text-[#7c3aed]">
+              <div className="mt-4 rounded-md border border-[#5f7a61]/20 bg-[#5f7a61]/[0.04] p-3">
+                <p className="cf-mono text-[11.5px] uppercase tracking-[0.18em] text-[#5f7a61]">
                   Opera reads
                 </p>
                 <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#1a1a17]/80">
@@ -400,7 +400,7 @@ function EducationView({
               key={m.id}
               onClick={() => setPreview(m.id)}
               className={`group overflow-hidden rounded-md border text-left transition-colors ${
-                preview === m.id ? "border-[#7c3aed]/50" : "border-[#1a1a17]/10 hover:border-[#7c3aed]/30"
+                preview === m.id ? "border-[#5f7a61]/50" : "border-[#1a1a17]/10 hover:border-[#5f7a61]/30"
               }`}
             >
               <div className="relative aspect-video overflow-hidden bg-[#e9e6df]">
@@ -441,7 +441,7 @@ function EducationView({
               className={`mt-3.5 w-full rounded-full py-2 text-[13px] font-medium transition-colors ${
                 inPlan
                   ? "bg-[#15803d]/10 text-[#15803d]"
-                  : "bg-[#1a1a17] text-white hover:bg-[#7c3aed]"
+                  : "bg-[#1a1a17] text-white hover:bg-[#5f7a61]"
               }`}
             >
               {inPlan ? `In ${p.name.split(" ")[0]}'s plan` : `Add to ${p.name.split(" ")[0]}'s plan`}
@@ -478,7 +478,7 @@ function IntentView({
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as "all" | Signal)}
-            className="cf-mono appearance-none rounded-md border border-[#1a1a17]/10 bg-white py-1.5 pl-3 pr-8 text-[12px] uppercase tracking-[0.1em] text-[#1a1a17]/75 outline-none transition-colors hover:border-[#7c3aed]/40 focus:border-[#7c3aed]/50"
+            className="cf-mono appearance-none rounded-md border border-[#1a1a17]/10 bg-white py-1.5 pl-3 pr-8 text-[12px] uppercase tracking-[0.1em] text-[#1a1a17]/75 outline-none transition-colors hover:border-[#5f7a61]/40 focus:border-[#5f7a61]/50"
           >
             <option value="all">All signals</option>
             <option value="high">High</option>
@@ -554,7 +554,7 @@ function IntentView({
                             className={`cf-mono rounded-full px-3 py-1 text-[12px] uppercase tracking-[0.12em] transition-colors ${
                               assigned[p.id]
                                 ? "bg-[#15803d]/10 text-[#15803d]"
-                                : "bg-[#1a1a17] text-white hover:bg-[#7c3aed]"
+                                : "bg-[#1a1a17] text-white hover:bg-[#5f7a61]"
                             }`}
                           >
                             {assigned[p.id] ? "Assigned to TC" : "Assign to TC"}

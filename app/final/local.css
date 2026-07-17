@@ -4,13 +4,13 @@
   --cf-paper: #f7f5f0;
   --cf-ink: #1a1a17;
   --cf-warm: #8a8578;
-  --cf-accent: #7c3aed;
-  --cf-accent-soft: #a78bfa;
+  --cf-accent: #5f7a61;
+  --cf-accent-soft: #a9c0aa;
   font-optical-sizing: auto;
 }
 
 .cf-root ::selection {
-  background: #7c3aed;
+  background: #5f7a61;
   color: #f7f5f0;
 }
 

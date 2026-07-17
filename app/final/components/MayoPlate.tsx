@@ -75,7 +75,7 @@ export default function MayoPlate() {
                   transition={{ duration: 0.5, delay: 0.25 + i * 0.04, ease: EASE }}
                   className="flex items-baseline gap-4"
                 >
-                  <span className="cf-mono w-6 shrink-0 text-[11.5px] tracking-[0.12em] text-[#a78bfa]">
+                  <span className="cf-mono w-6 shrink-0 text-[11.5px] tracking-[0.12em] text-[#a9c0aa]">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="cf-display text-[18px] leading-snug tracking-[-0.01em] text-[#f7f5f0]">
@@ -90,10 +90,10 @@ export default function MayoPlate() {
                 transition={{ duration: 0.5, delay: 0.25 + SPECIALTIES.length * 0.04, ease: EASE }}
                 className="flex items-baseline gap-4 border-t border-[#f7f5f0]/15 pt-3 mt-3"
               >
-                <span className="cf-mono w-6 shrink-0 text-[11.5px] tracking-[0.12em] text-[#a78bfa]">
+                <span className="cf-mono w-6 shrink-0 text-[11.5px] tracking-[0.12em] text-[#a9c0aa]">
                   20
                 </span>
-                <span className="cf-display text-[18px] italic leading-snug text-[#a78bfa]">
+                <span className="cf-display text-[18px] italic leading-snug text-[#a9c0aa]">
                   More to come
                 </span>
               </motion.li>

@@ -24,14 +24,14 @@ export default function Voice() {
             >
               <span
                 aria-hidden
-                className="cf-display block text-[64px] leading-[0.6] text-[#7c3aed]/25"
+                className="cf-display block text-[64px] leading-[0.6] text-[#5f7a61]/25"
               >
                 &ldquo;
               </span>
               <p className="cf-display mt-5 text-[clamp(1.7rem,3vw,2.6rem)] font-light italic leading-[1.28] tracking-[-0.01em] text-[#1a1a17]">
                 I can explain a case for twenty minutes, or my patient can
                 watch their own treatment in ninety seconds.{" "}
-                <em className="text-[#7c3aed]">They say yes to what they see.</em>
+                <em className="text-[#5f7a61]">They say yes to what they see.</em>
                 &rdquo;
               </p>
             </motion.blockquote>

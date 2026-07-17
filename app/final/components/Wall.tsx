@@ -168,7 +168,7 @@ export default function Wall() {
           className="cf-display px-6 text-center text-[clamp(2rem,4.6vw,3.8rem)] font-light leading-[1.08] tracking-[-0.02em] text-[#f7f5f0]"
         >
           Understanding is a{" "}
-          <em className="italic text-[#a78bfa]">visual</em> act.
+          <em className="italic text-[#a9c0aa]">visual</em> act.
         </motion.p>
       </div>
       <motion.div
@@ -176,7 +176,7 @@ export default function Wall() {
         className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-14 md:pb-16"
       >
         <p className="cf-display px-6 text-center text-[clamp(2.6rem,7vw,6rem)] font-light leading-none tracking-[-0.02em] text-[#f7f5f0]">
-          Opera<span className="text-[#a78bfa]">AI</span>
+          Opera<span className="text-[#a9c0aa]">AI</span>
         </p>
       </motion.div>
       </div>

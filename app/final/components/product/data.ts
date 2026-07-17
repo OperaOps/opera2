@@ -229,7 +229,7 @@ export const SIGNAL_LABEL: Record<Signal, string> = {
 
 export const SIGNAL_COLOR: Record<Signal, string> = {
   high: "#15803d",
-  building: "#7c3aed",
+  building: "#5f7a61",
   stalled: "#b45309",
   "at-risk": "#b91c1c",
 };
