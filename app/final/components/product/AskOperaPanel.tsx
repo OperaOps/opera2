@@ -67,29 +67,6 @@ export default function AskOperaPanel() {
 
       {/* ——— the console ——— */}
       <div className="flex min-h-[380px] flex-col">
-        <div className="flex items-center justify-between gap-3 border-b border-[#1a1a17]/10 px-5 py-3 md:px-6">
-          <div className="flex min-w-0 items-center gap-2.5">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#5f7a61] text-[12px] font-semibold text-white">
-              O
-            </span>
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={patient.id}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.3, ease: EASE }}
-                className="cf-mono truncate text-[11.5px] uppercase tracking-[0.14em] text-[#1a1a17]/85"
-              >
-                Ask Opera · {patient.name} · {patient.treatment}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-          <span className="cf-mono hidden shrink-0 text-[11.5px] uppercase tracking-[0.14em] text-[#5e6a60] lg:inline">
-            Plan grounded · {patient.doctor}
-          </span>
-        </div>
-
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-5 md:p-6">
           {/* the question, dropped in */}
           <AnimatePresence mode="wait" initial={false}>

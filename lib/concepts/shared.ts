@@ -1,7 +1,7 @@
 // Shared constants + asset manifest for the getopera.ai redesign concepts.
 // Swap CALENDLY_URL once and every concept CTA updates.
 
-export const CALENDLY_URL = "https://calendly.com/opera-ai/demo"; // ← placeholder, swap before launch
+export const CALENDLY_URL = "https://calendly.com/anishsuvarna-berkeley/30min?month=2026-07";
 
 export type ClipCategory =
   | "ortho"

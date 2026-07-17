@@ -141,9 +141,6 @@ function IntentSlide() {
         >
           {/* what Opera extracts */}
           <div className="overflow-hidden rounded-2xl border border-[#1a1a17]/10 bg-white shadow-[0_30px_70px_-35px_rgba(26,26,23,0.35)]">
-            <div className="cf-mono border-b border-[#1a1a17]/10 px-6 py-3 text-[12px] uppercase tracking-[0.16em] text-[#5e6a60]">
-              What Opera reads from {first}&rsquo;s engagement
-            </div>
             <div className="grid sm:grid-cols-2">
               {FIELDS.map((f, i) => (
                 <div

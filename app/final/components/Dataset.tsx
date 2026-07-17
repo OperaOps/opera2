@@ -55,8 +55,8 @@ export default function Dataset() {
             transition={{ duration: 0.9, ease: EASE }}
             className="cf-display max-w-2xl text-[clamp(1.9rem,3.6vw,3rem)] font-light leading-[1.04] tracking-[-0.025em]"
           >
-            Every consult becomes a row. Here are eight of{" "}
-            <em className="italic text-[#5f7a61]">12,406</em>.
+            Every consult becomes a row. Here are five of{" "}
+            <em className="italic text-[#5f7a61]">765,000</em>.
           </motion.h2>
         </div>
 
@@ -191,7 +191,7 @@ export default function Dataset() {
 
             <div className="flex items-baseline justify-between pt-2.5">
               <span className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#6e7a71]">
-                5 of 12,406 records shown
+                5 of 765,000 records shown
               </span>
               <span className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#6e7a71]">
                 <span className="text-[#15803d]">●</span> high&ensp;

@@ -23,7 +23,7 @@ export default function Nav() {
       initial={false}
       animate={{ y: shown ? 0 : -80, opacity: shown ? 1 : 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed inset-x-0 top-0 z-50 border-b border-[#1a1a17]/10 bg-white/90 backdrop-blur-md"
+      className="fixed inset-x-0 top-0 z-50 border-b border-[#1a1a17]/10 bg-white"
     >
       <div className="mx-auto flex h-[64px] max-w-[1560px] items-center justify-between px-6 md:px-10">
         <a href="#top" className="cf-display text-[24px] leading-none tracking-[-0.01em] text-[#1a1a17]">
