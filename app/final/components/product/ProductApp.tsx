@@ -371,14 +371,13 @@ function EducationView({
   // A curated six. The full library stays in data; the panel never
   // grows taller than the screen.
   const featured = [
-    "screening-walkthrough",
-    "acl-anatomy",
-    "recovery-timeline",
+    "colon-tool",
     "medication-routine",
-    "scope-camera",
-    "crowding-progression",
+    "lasik-eye",
+    "acl-anatomy",
+    "smile-outcome",
   ].map(moduleById);
-  const [preview, setPreview] = useState(featured[0].id);
+  const [preview, setPreview] = useState("colon-tool");
   const previewModule = moduleById(preview);
   const p = patientById(selectedPatient);
   const inPlan = p.plan.includes(preview) || (added[p.id] ?? []).includes(preview);
@@ -391,7 +390,7 @@ function EducationView({
             Visual library
           </p>
           <p className="text-[13.5px] text-[#8a8578]">
-            6 of {MODULES.length} modules shown
+            {featured.length} of {MODULES.length} modules shown
           </p>
         </div>
         <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
@@ -404,7 +403,12 @@ function EducationView({
               }`}
             >
               <div className="relative aspect-video overflow-hidden bg-[#e9e6df]">
-                <WallVideo src={m.src} posterVariant="a" live={false} />
+                {m.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={m.src} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <WallVideo src={m.src} posterVariant="a" live={false} />
+                )}
               </div>
               <div className="bg-white px-2 py-1.5">
                 <p className="truncate text-[13px] font-medium text-[#1a1a17]/85">{m.title}</p>
@@ -429,7 +433,12 @@ function EducationView({
             transition={{ duration: 0.3 }}
           >
             <div className="mt-2 overflow-hidden rounded-md border border-[#1a1a17]/10">
-              <AutoVideo src={previewModule.src} className="aspect-video w-full object-cover" />
+              {previewModule.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={previewModule.src} alt="" className="aspect-video w-full object-cover" />
+              ) : (
+                <AutoVideo src={previewModule.src} className="aspect-video w-full object-cover" />
+              )}
             </div>
             <p className="mt-2.5 text-[14.5px] font-medium text-[#1a1a17]">{previewModule.title}</p>
             <p className="cf-mono mt-0.5 text-[11.5px] uppercase tracking-[0.12em] text-[#8a8578]">

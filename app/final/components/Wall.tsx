@@ -53,8 +53,8 @@ function WallMedia({ visual }: { visual: number }) {
 
 export default function Wall() {
   const isMobile = useIsMobile();
-  const cols = isMobile ? 5 : 16;
-  const rows = isMobile ? 12 : 10;
+  const cols = isMobile ? 6 : 30;
+  const rows = isMobile ? 15 : 17;
   const cellCount = cols * rows;
   // Roughly a third of the field alive at once: calmer, and with the pool
   // larger than the target there is always a resting reserve rotating in.
@@ -62,6 +62,9 @@ export default function Wall() {
 
   const [placements, setPlacements] = useState<Placement[]>([]);
   const nextId = useRef(1);
+  // Visuals whose exit fade is still playing. They stay reserved until the
+  // fade completes so one visual can never be on screen in two cells.
+  const cooling = useRef(new Map<number, number>());
 
   // reset when the grid geometry changes
   useEffect(() => setPlacements([]), [cellCount]);
@@ -70,9 +73,16 @@ export default function Wall() {
     const tick = () => {
       setPlacements((prev) => {
         const now = Date.now();
+        for (const p of prev)
+          if (p.dies <= now && !cooling.current.has(p.visual))
+            cooling.current.set(p.visual, now + 1600);
+        cooling.current.forEach((t, v) => {
+          if (t <= now) cooling.current.delete(v);
+        });
         let out = prev.filter((p) => p.dies > now);
 
         const usedVisuals = new Set(out.map((p) => p.visual));
+        cooling.current.forEach((_, v) => usedVisuals.add(v));
         const usedCells = new Set(out.map((p) => p.cell));
         const freeVisuals: number[] = [];
         for (let i = 0; i < WALL_POOL.length; i++)

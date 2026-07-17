@@ -9,6 +9,8 @@ export type PlanModule = {
   src: string;
   duration: string;
   specialty: string;
+  /** still image module rather than a clip */
+  image?: boolean;
 };
 
 export type TimelineEvent = {
@@ -42,13 +44,16 @@ export const MODULES: PlanModule[] = [
   { id: "alignment-outcome", title: "Post treatment alignment", src: "/videos/bracesoutcome.mp4", duration: "0:12", specialty: "Orthodontics" },
   { id: "screening-walkthrough", title: "Colon screening walkthrough", src: "/videos/library/colonoscopy-patient-video.mp4", duration: "1:32", specialty: "GI" },
   { id: "scope-camera", title: "The camera, up close", src: "/videos/library/scope-device.mp4", duration: "0:16", specialty: "GI" },
-  { id: "acl-anatomy", title: "ACL anatomy", src: "/videos/knee-anatomy-acl.mp4", duration: "0:18", specialty: "Orthopedics" },
+  { id: "acl-anatomy", title: "ACL", src: "/videos/knee-anatomy-acl.mp4", duration: "0:18", specialty: "Orthopedics" },
   { id: "recovery-timeline", title: "Recovery, first 12 weeks", src: "/videos/knee6.mp4", duration: "0:22", specialty: "Orthopedics" },
   { id: "graft-reconstruction", title: "Reconstruction graft", src: "/videos/knee4.mp4", duration: "0:17", specialty: "Orthopedics" },
   { id: "crown-prep", title: "Crown preparation", src: "/videos/crown-step1-treatment.mp4", duration: "0:15", specialty: "Dental" },
   { id: "fracture-progression", title: "Fracture progression", src: "/videos/crownproblem.mp4", duration: "0:13", specialty: "Dental" },
   { id: "implant-placement", title: "Implant placement", src: "/videos/implant-step1-placement.mp4", duration: "0:19", specialty: "Dental" },
-  { id: "medication-routine", title: "Daily medication routine", src: "/videos/library/medication-routine.mp4", duration: "0:24", specialty: "General Medicine" },
+  { id: "medication-routine", title: "Medication", src: "/videos/library/medication-routine.mp4", duration: "0:24", specialty: "General Medicine" },
+  { id: "colon-tool", title: "Colonoscopy", src: "/videos/sitepics/veo-03.mp4", duration: "0:18", specialty: "GI" },
+  { id: "lasik-eye", title: "Lasik", src: "/videos/sitepics/sitepic-16.jpeg", duration: "0:12", specialty: "Ophthalmology", image: true },
+  { id: "smile-outcome", title: "Smile", src: "/videos/shared-smile-outcome.mp4", duration: "0:11", specialty: "Dental" },
 ];
 
 export const moduleById = (id: string) => MODULES.find((m) => m.id === id)!;
