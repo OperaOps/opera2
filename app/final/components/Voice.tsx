@@ -61,7 +61,7 @@ export default function Voice() {
           className="relative h-[60vh] min-h-[420px] md:h-auto md:min-h-full"
         >
           <img
-            src={SITE_PHOTOS.newborn}
+            src="/videos/sitepics/newborn-hero.jpg"
             alt="A newborn's first moments, black and white"
             className="absolute inset-0 h-full w-full object-cover"
           />

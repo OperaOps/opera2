@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { WALL_POOL } from "./wallAssets";
+import { WALL_POOL, wallPoster } from "./wallAssets";
 import { useIsMobile } from "./media";
 import CursorGlow from "./CursorGlow";
 
@@ -19,19 +19,25 @@ type Placement = {
   visual: number; // index into WALL_POOL
   cell: number;
   dies: number;
+  /** render as a playing clip; false shows the clip's poster frame */
+  asVideo: boolean;
 };
 
 const TTL_MIN = 5000;
 const TTL_MAX = 8000;
 const TICK_MS = 450;
 const SPAWNS_PER_TICK = 4;
+// How many clips actually decode at once. Everything else shows a real
+// frame of its clip, which is indistinguishable at tile size.
+const MAX_LIVE_VIDEOS = 10;
 
-function WallMedia({ visual }: { visual: number }) {
+function WallMedia({ visual, asVideo }: { visual: number; asVideo: boolean }) {
   const v = WALL_POOL[visual];
-  if (v.kind === "video") {
+  if (v.kind === "video" && asVideo) {
     return (
       <video
         src={v.src}
+        poster={wallPoster(v.src)}
         muted
         loop
         playsInline
@@ -44,7 +50,7 @@ function WallMedia({ visual }: { visual: number }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={v.src}
+      src={v.kind === "video" ? wallPoster(v.src) : v.src}
       alt=""
       draggable={false}
       className="cf-bw h-full w-full object-cover"
@@ -92,6 +98,7 @@ export default function Wall() {
         for (let i = 0; i < cellCount; i++)
           if (!usedCells.has(i)) freeCells.push(i);
 
+        let liveVideos = out.filter((p) => p.asVideo).length;
         let spawns = Math.min(
           SPAWNS_PER_TICK,
           target - out.length,
@@ -101,13 +108,18 @@ export default function Wall() {
         while (spawns-- > 0) {
           const vi = Math.floor(Math.random() * freeVisuals.length);
           const ci = Math.floor(Math.random() * freeCells.length);
+          const visual = freeVisuals.splice(vi, 1)[0];
+          const isClip = WALL_POOL[visual].kind === "video";
+          const asVideo = isClip && liveVideos < MAX_LIVE_VIDEOS;
+          if (asVideo) liveVideos++;
           out = [
             ...out,
             {
               id: nextId.current++,
-              visual: freeVisuals.splice(vi, 1)[0],
+              visual,
               cell: freeCells.splice(ci, 1)[0],
               dies: now + TTL_MIN + Math.random() * (TTL_MAX - TTL_MIN),
+              asVideo,
             },
           ];
         }
@@ -157,7 +169,7 @@ export default function Wall() {
                     transition={{ duration: 1.1, ease: "easeInOut" }}
                     className="absolute inset-0"
                   >
-                    <WallMedia visual={p.visual} />
+                    <WallMedia visual={p.visual} asVideo={p.asVideo} />
                   </motion.div>
                 )}
               </AnimatePresence>
