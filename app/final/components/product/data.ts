@@ -33,6 +33,8 @@ export type Patient = {
   hesitation: string;
   barrier: string;
   nextAction: string;
+  sentiment: string;
+  behavior: string;
   plan: string[]; // module ids
   timeline: TimelineEvent[];
 };
@@ -73,6 +75,8 @@ export const PATIENTS: Patient[] = [
     hesitation: "cost vs urgency unclear",
     barrier: "Financing never came up in the consult",
     nextAction: "TC call about financing, today",
+    sentiment: "Positive, price sensitive",
+    behavior: "Watched her plan twice, shared it with her mom",
     plan: ["crowding-progression", "aligner-timeline", "alignment-outcome"],
     timeline: [
       { time: "2:10 pm", text: "Consult with Dr. Chen ends, plan assembled", kind: "action" },
@@ -97,6 +101,8 @@ export const PATIENTS: Patient[] = [
     hesitation: "procedure anxiety",
     barrier: "Fear of the procedure itself",
     nextAction: "Send sedation explainer",
+    sentiment: "Willing, anxious about the procedure",
+    behavior: "Watched the walkthrough to the end",
     plan: ["screening-walkthrough", "scope-camera"],
     timeline: [
       { time: "Mon", text: "Screening recommended at annual physical", kind: "action" },
@@ -119,6 +125,8 @@ export const PATIENTS: Patient[] = [
     hesitation: "recovery worries",
     barrier: "Unsure she can manage the recovery alone",
     nextAction: "Share the 12 week recovery visual",
+    sentiment: "Motivated, worried about recovery",
+    behavior: "Rewatched the recovery timeline",
     plan: ["acl-anatomy", "graft-reconstruction", "recovery-timeline"],
     timeline: [
       { time: "Thu", text: "Surgical consult with Dr. Reyes", kind: "action" },
@@ -141,6 +149,8 @@ export const PATIENTS: Patient[] = [
     hesitation: "asymptomatic tooth",
     barrier: "Doesn't feel any urgency",
     nextAction: "Re-engage with the fracture progression visual",
+    sentiment: "Skeptical, feels no urgency",
+    behavior: "Opened the plan, stopped after 20 seconds",
     plan: ["fracture-progression", "crown-prep"],
     timeline: [
       { time: "Day 1", text: "Crown recommended, plan sent", kind: "sent" },
@@ -162,6 +172,8 @@ export const PATIENTS: Patient[] = [
     hesitation: "disengaged after visit",
     barrier: "Never opened her materials",
     nextAction: "Flag for a personal call",
+    sentiment: "Disengaged since the visit",
+    behavior: "Never opened her materials",
     plan: ["medication-routine"],
     timeline: [
       { time: "Day 1", text: "Care plan and routine video sent", kind: "sent" },
@@ -214,6 +226,14 @@ export const ASK_THREADS: AskThread[] = [
       "Your scan shows the crack reaching the dentin layer. Cracks like this deepen toward the nerve even without pain. A crown now protects the tooth before a root canal becomes necessary.",
     citedModule: "fracture-progression",
     status: "review",
+  },
+  {
+    patientId: "PT-4821",
+    question: "Will people notice the aligners?",
+    answer:
+      "Up close, sometimes. In conversation, almost never. The trays are cut to your gumline and polished clear. Your visual shows exactly how they sit on your teeth, so you can judge for yourself.",
+    citedModule: "aligner-fit",
+    status: "answered",
   },
   {
     patientId: "PT-8862",

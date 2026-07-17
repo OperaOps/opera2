@@ -2,6 +2,7 @@
 
 import { MotionConfig } from "framer-motion";
 import Nav from "./components/Nav";
+import CursorGlow from "./components/CursorGlow";
 import Wall from "./components/Wall";
 import Voice from "./components/Voice";
 import ProductCarousel from "./components/ProductCarousel";
@@ -13,6 +14,7 @@ export default function FinalPage() {
   return (
     <MotionConfig reducedMotion="user">
       <main>
+        <CursorGlow />
         <Nav />
         <Wall />
         <Voice />

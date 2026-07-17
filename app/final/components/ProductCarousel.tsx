@@ -9,6 +9,7 @@ import {
   PATIENTS,
   SIGNAL_COLOR,
   SIGNAL_LABEL,
+  patientById,
   type Signal,
 } from "./product/data";
 
@@ -76,76 +77,135 @@ function AskSlide() {
   );
 }
 
-/* ——— slide 3: Intent, one clear read ——— */
+/* ——— slide 3: Intent, the data made explicit ——— */
 
 function IntentSlide() {
+  const [sel, setSel] = useState("PT-4821");
   const [assigned, setAssigned] = useState<Record<string, boolean>>({});
-  const rows = PATIENTS.slice(0, 4);
+  const p = patientById(sel);
+  const first = p.name.split(" ")[0];
+
+  const FIELDS = [
+    { label: "Patient sentiment", value: p.sentiment },
+    { label: "Watch behavior", value: p.behavior },
+    { label: "Their question", value: p.question || "No questions yet" },
+    { label: "Likely barrier", value: p.barrier },
+  ];
 
   return (
     <div className="flex h-full flex-col p-8 md:p-14">
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <h3 className="cf-display text-[clamp(2rem,3.2vw,2.9rem)] font-light leading-[1.02] tracking-[-0.02em] text-[#1a1a17]">
-          Intent, read for you.
+          The data behind intent.
         </h3>
         <p className="cf-body max-w-md text-[16px] leading-relaxed text-[#1a1a17]/85 md:text-right">
-          Engagement becomes a signal. The signal becomes one clear task.
+          Pick a patient. This is what Opera reads for you.
         </p>
       </div>
-      <div className="mt-6 overflow-hidden rounded-2xl border border-[#1a1a17]/10 bg-white shadow-[0_30px_70px_-35px_rgba(26,26,23,0.35)]">
-        {rows.map((p, i) => (
-          <div
-            key={p.id}
-            className={`flex flex-wrap items-center gap-x-5 gap-y-2 px-6 py-4 md:flex-nowrap ${
-              i > 0 ? "border-t border-[#1a1a17]/[0.07]" : ""
-            }`}
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#5f7a61]/10 text-[13px] font-semibold text-[#5f7a61]">
-              {p.initials}
-            </span>
-            <span className="min-w-0 md:w-[30%]">
-              <span className="block truncate text-[15.5px] font-medium text-[#1a1a17]">
-                {p.name} · {p.treatment}
-              </span>
-              <span className="cf-mono block text-[11.5px] uppercase tracking-[0.1em] text-[#6d6858]">
-                {p.specialty}
-              </span>
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="cf-mono w-7 text-right text-[13.5px] tabular-nums text-[#1a1a17]">
-                {p.engagement}
-              </span>
-              <span className="h-[4px] w-20 rounded-full bg-[#1a1a17]/10">
-                <span
-                  className="block h-full rounded-full"
-                  style={{ width: `${p.engagement}%`, background: SIGNAL_COLOR[p.signal] }}
-                />
-              </span>
-            </span>
-            <SignalBadge signal={p.signal} />
-            <span className="hidden min-w-0 flex-1 truncate text-[14px] text-[#1a1a17]/85 lg:block">
-              {p.nextAction}
-            </span>
+
+      {/* patient picker */}
+      <div className="mt-6 flex flex-wrap gap-2.5">
+        {PATIENTS.slice(0, 4).map((x) => {
+          const active = x.id === sel;
+          return (
             <button
-              onClick={() => setAssigned((s) => ({ ...s, [p.id]: true }))}
-              disabled={assigned[p.id]}
-              className={`ml-auto shrink-0 rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
-                assigned[p.id]
-                  ? "bg-[#15803d]/10 text-[#15803d]"
-                  : "bg-[#1a1a17] text-white hover:bg-[#5f7a61]"
+              key={x.id}
+              onClick={() => setSel(x.id)}
+              className={`flex items-center gap-2.5 rounded-full border px-4 py-2 transition-all duration-300 ${
+                active
+                  ? "border-[#5f7a61]/60 bg-[#5f7a61]/[0.07]"
+                  : "border-[#1a1a17]/10 bg-white hover:border-[#5f7a61]/40"
               }`}
             >
-              {assigned[p.id] ? (
-                <span className="flex items-center gap-1.5">
-                  <Check size={12} /> Assigned
-                </span>
-              ) : (
-                "Assign to TC"
-              )}
+              <span
+                className="h-2 w-2 rounded-full"
+                style={{ background: SIGNAL_COLOR[x.signal] }}
+              />
+              <span className="text-[14.5px] font-medium text-[#1a1a17]">{x.name}</span>
+              <span className="cf-mono text-[11px] uppercase tracking-[0.08em] text-[#6d6858]">
+                {x.specialty}
+              </span>
             </button>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={sel}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.4, ease: EASE }}
+          className="mt-5 grid min-h-0 flex-1 gap-4 lg:grid-cols-[1.5fr_1fr]"
+        >
+          {/* what Opera extracts */}
+          <div className="overflow-hidden rounded-2xl border border-[#1a1a17]/10 bg-white shadow-[0_30px_70px_-35px_rgba(26,26,23,0.35)]">
+            <div className="cf-mono border-b border-[#1a1a17]/10 px-6 py-3 text-[12px] uppercase tracking-[0.16em] text-[#6d6858]">
+              What Opera reads from {first}&rsquo;s engagement
+            </div>
+            <div className="grid sm:grid-cols-2">
+              {FIELDS.map((f, i) => (
+                <div
+                  key={f.label}
+                  className={`px-6 py-5 ${i % 2 === 1 ? "sm:border-l sm:border-[#1a1a17]/[0.07]" : ""} ${
+                    i > 1 ? "border-t border-[#1a1a17]/[0.07]" : ""
+                  }`}
+                >
+                  <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#5f7a61]">
+                    {f.label}
+                  </p>
+                  <p className="mt-2 text-[16.5px] font-medium leading-snug text-[#1a1a17]">
+                    {f.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* the read out */}
+          <div className="flex flex-col justify-between rounded-2xl border border-[#1a1a17]/10 bg-white p-6 shadow-[0_30px_70px_-35px_rgba(26,26,23,0.35)]">
+            <div>
+              <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">
+                Engagement
+              </p>
+              <div className="mt-2 flex items-end gap-3">
+                <span className="cf-display text-[44px] font-light leading-none text-[#1a1a17]">
+                  {p.engagement}
+                </span>
+                <div className="mb-2 h-[5px] flex-1 rounded-full bg-[#1a1a17]/10">
+                  <span
+                    className="block h-full rounded-full"
+                    style={{ width: `${p.engagement}%`, background: SIGNAL_COLOR[p.signal] }}
+                  />
+                </div>
+              </div>
+              <div className="mt-3">
+                <SignalBadge signal={p.signal} />
+              </div>
+            </div>
+            <div>
+              <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">
+                One clear task
+              </p>
+              <p className="mt-1.5 text-[16px] font-medium leading-snug text-[#1a1a17]">
+                {p.nextAction}
+              </p>
+              <button
+                onClick={() => setAssigned((s) => ({ ...s, [p.id]: true }))}
+                disabled={assigned[p.id]}
+                className={`mt-4 w-full rounded-full py-2.5 text-[14px] font-medium transition-colors ${
+                  assigned[p.id]
+                    ? "bg-[#15803d]/10 text-[#15803d]"
+                    : "bg-[#1a1a17] text-white hover:bg-[#5f7a61]"
+                }`}
+              >
+                {assigned[p.id] ? "Assigned to the TC" : "Assign to TC"}
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
