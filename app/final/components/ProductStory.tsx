@@ -74,7 +74,7 @@ export default function ProductStory() {
                   >
                     <span
                       className={`cf-body text-[19px] font-semibold tracking-[0.01em] transition-colors md:text-[21px] ${
-                        on ? "text-[#1a1a17]" : "text-[#1a1a17]/35 group-hover:text-[#1a1a17]/65"
+                        on ? "text-[#1a1a17]" : "text-[#1a1a17]/50 group-hover:text-[#1a1a17]/75"
                       }`}
                     >
                       {c.label}

@@ -53,13 +53,13 @@ export default function AskOperaPanel({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.3, ease: EASE }}
-              className="cf-mono truncate text-[12px] uppercase tracking-[0.18em] text-[#1a1a17]/70"
+              className="cf-mono truncate text-[12px] uppercase tracking-[0.18em] text-[#1a1a17]/90"
             >
               Ask Opera · {patient.name} · {patient.treatment}
             </motion.span>
           </AnimatePresence>
         </div>
-        <span className="cf-mono hidden shrink-0 text-[12px] uppercase tracking-[0.18em] text-[#8a8578] sm:inline">
+        <span className="cf-mono hidden shrink-0 text-[12px] uppercase tracking-[0.18em] text-[#6d6858] sm:inline">
           Plan grounded · {patient.doctor}
         </span>
       </div>
@@ -67,7 +67,7 @@ export default function AskOperaPanel({
       <div className="grid min-h-0 flex-1 md:grid-cols-[1fr_1.35fr]">
         {/* question list */}
         <div className="border-b border-[#1a1a17]/10 p-3 md:border-b-0 md:border-r md:p-4">
-          <p className="cf-mono px-2 text-[11.5px] uppercase tracking-[0.2em] text-[#8a8578]">
+          <p className="cf-mono px-2 text-[11.5px] uppercase tracking-[0.2em] text-[#6d6858]">
             What patients actually ask
           </p>
           <div className="mt-2 space-y-0.5">
@@ -91,7 +91,7 @@ export default function AskOperaPanel({
                   )}
                   <span
                     className={`cf-mono shrink-0 text-[11.5px] tracking-[0.12em] ${
-                      active ? "text-[#5f7a61]" : "text-[#8a8578]"
+                      active ? "text-[#5f7a61]" : "text-[#6d6858]"
                     }`}
                   >
                     Q-{String(i + 1).padStart(2, "0")}
@@ -99,12 +99,12 @@ export default function AskOperaPanel({
                   <span className="min-w-0">
                     <span
                       className={`block text-[14px] leading-snug ${
-                        active ? "text-[#1a1a17]" : "text-[#1a1a17]/65"
+                        active ? "text-[#1a1a17]" : "text-[#1a1a17]/90"
                       }`}
                     >
                       {t.question}
                     </span>
-                    <span className="cf-mono mt-0.5 block text-[11.5px] uppercase tracking-[0.14em] text-[#8a8578]">
+                    <span className="cf-mono mt-0.5 block text-[11.5px] uppercase tracking-[0.14em] text-[#6d6858]">
                       {p.name} · {p.specialty}
                     </span>
                   </span>
@@ -130,7 +130,7 @@ export default function AskOperaPanel({
                 Grounded in {patient.name.split(" ")[0]}&rsquo;s treatment plan
               </p>
 
-              <p className="cf-body mt-3.5 max-w-xl text-[14.5px] leading-relaxed text-[#1a1a17]/85">
+              <p className="cf-body mt-3.5 max-w-xl text-[14.5px] leading-relaxed text-[#1a1a17]/90">
                 {thread.answer}
               </p>
 
@@ -152,7 +152,7 @@ export default function AskOperaPanel({
                   <p className="mt-1 text-[14.5px] font-medium text-[#1a1a17]">
                     {module.title}
                   </p>
-                  <p className="mt-0.5 text-[13px] text-[#8a8578]">
+                  <p className="mt-0.5 text-[13px] text-[#6d6858]">
                     From the visuals shown at {patient.name.split(" ")[0]}&rsquo;s consult
                   </p>
                 </div>

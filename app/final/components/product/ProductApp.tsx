@@ -86,10 +86,10 @@ function Avatar({ p, size = 8 }: { p: Patient; size?: 7 | 8 }) {
 function StatTile({ label, value, unit, note }: { label: string; value: string; unit?: string; note: string }) {
   return (
     <div className="rounded-lg border border-[#1a1a17]/10 bg-white p-4">
-      <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#8a8578]">{label}</p>
+      <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">{label}</p>
       <p className="cf-display mt-2 text-[26px] font-light leading-none text-[#1a1a17]">
         {value}
-        {unit && <span className="text-[14px] text-[#8a8578]"> {unit}</span>}
+        {unit && <span className="text-[14px] text-[#6d6858]"> {unit}</span>}
       </p>
       <p className="mt-2 text-[13px] text-[#15803d]">{note}</p>
     </div>
@@ -116,7 +116,7 @@ function OverviewView({
 
       <div className="rounded-lg border border-[#1a1a17]/10 bg-white p-5">
         <div className="flex items-center justify-between">
-          <p className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#8a8578]">
+          <p className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#6d6858]">
             Needs attention
           </p>
           <span className="cf-mono rounded-full bg-[#b91c1c]/10 px-2.5 py-1 text-[12px] uppercase tracking-[0.12em] text-[#b91c1c]">
@@ -132,10 +132,10 @@ function OverviewView({
             >
               <Avatar p={p} />
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[15.5px] font-medium text-[#1a1a17]/85">
+                <span className="block truncate text-[15.5px] font-medium text-[#1a1a17]/90">
                   {p.name} · {p.treatment}
                 </span>
-                <span className="block truncate text-[14px] text-[#8a8578]">
+                <span className="block truncate text-[14px] text-[#6d6858]">
                   {p.question ? `asked: ${p.question}` : "no engagement since the visit"}
                 </span>
               </span>
@@ -206,8 +206,8 @@ function PatientsView({
           >
             <Avatar p={x} size={7} />
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-[13.5px] font-medium text-[#1a1a17]/85">{x.name}</span>
-              <span className="cf-mono block truncate text-[11.5px] uppercase tracking-[0.1em] text-[#8a8578]">
+              <span className="block truncate text-[13.5px] font-medium text-[#1a1a17]/90">{x.name}</span>
+              <span className="cf-mono block truncate text-[11.5px] uppercase tracking-[0.1em] text-[#6d6858]">
                 {x.specialty}
               </span>
             </span>
@@ -231,9 +231,9 @@ function PatientsView({
               <Avatar p={p} />
               <div>
                 <p className="text-[14px] font-medium text-[#1a1a17]">
-                  {p.name} <span className="text-[#8a8578]">· {p.age}</span>
+                  {p.name} <span className="text-[#6d6858]">· {p.age}</span>
                 </p>
-                <p className="cf-mono text-[12px] uppercase tracking-[0.12em] text-[#8a8578]">
+                <p className="cf-mono text-[12px] uppercase tracking-[0.12em] text-[#6d6858]">
                   {p.treatment} · {p.doctor}
                 </p>
               </div>
@@ -247,7 +247,7 @@ function PatientsView({
           <div className="mt-4 grid gap-4 xl:grid-cols-[1.2fr_1fr]">
             {/* plan player */}
             <div>
-              <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#8a8578]">
+              <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">
                 Visual plan · {planIds.length} modules
               </p>
               <div className="mt-2 overflow-hidden rounded-md border border-[#1a1a17]/10">
@@ -268,7 +268,7 @@ function PatientsView({
                       className={`cf-mono rounded-full border px-2.5 py-1 text-[11.5px] uppercase tracking-[0.1em] transition-colors ${
                         active
                           ? "border-[#5f7a61]/40 bg-[#5f7a61]/[0.07] text-[#5f7a61]"
-                          : "border-[#1a1a17]/10 text-[#1a1a17]/60 hover:border-[#5f7a61]/30 hover:text-[#5f7a61]"
+                          : "border-[#1a1a17]/10 text-[#1a1a17]/90 hover:border-[#5f7a61]/30 hover:text-[#5f7a61]"
                       }`}
                     >
                       {m.title}
@@ -297,7 +297,7 @@ function PatientsView({
                   className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-[13px] font-medium transition-colors ${
                     alerted[p.id]
                       ? "border-[#15803d]/25 text-[#15803d]"
-                      : "border-[#1a1a17]/15 text-[#1a1a17]/70 hover:border-[#5f7a61]/40 hover:text-[#5f7a61]"
+                      : "border-[#1a1a17]/15 text-[#1a1a17]/90 hover:border-[#5f7a61]/40 hover:text-[#5f7a61]"
                   }`}
                 >
                   {alerted[p.id] ? <Check size={11} /> : <Phone size={11} />}
@@ -308,7 +308,7 @@ function PatientsView({
 
             {/* timeline + read */}
             <div className="min-w-0">
-              <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#8a8578]">
+              <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">
                 Engagement timeline
               </p>
               <div className="mt-2 space-y-2.5">
@@ -318,10 +318,10 @@ function PatientsView({
                       className="relative top-[-1px] h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{ background: EVENT_DOT[e.kind] }}
                     />
-                    <span className="cf-mono w-14 shrink-0 text-[12px] uppercase tracking-[0.06em] text-[#8a8578]">
+                    <span className="cf-mono w-14 shrink-0 text-[12px] uppercase tracking-[0.06em] text-[#6d6858]">
                       {e.time}
                     </span>
-                    <span className="text-[13.5px] leading-snug text-[#1a1a17]/80">{e.text}</span>
+                    <span className="text-[13.5px] leading-snug text-[#1a1a17]/90">{e.text}</span>
                   </div>
                 ))}
                 {resent[p.id] && (
@@ -331,10 +331,10 @@ function PatientsView({
                     className="flex items-baseline gap-2.5"
                   >
                     <span className="relative top-[-1px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#5f7a61]" />
-                    <span className="cf-mono w-14 shrink-0 text-[12px] uppercase tracking-[0.06em] text-[#8a8578]">
+                    <span className="cf-mono w-14 shrink-0 text-[12px] uppercase tracking-[0.06em] text-[#6d6858]">
                       now
                     </span>
-                    <span className="text-[13.5px] leading-snug text-[#1a1a17]/80">
+                    <span className="text-[13.5px] leading-snug text-[#1a1a17]/90">
                       Plan re-sent to {p.name.split(" ")[0]}
                     </span>
                   </motion.div>
@@ -345,7 +345,7 @@ function PatientsView({
                 <p className="cf-mono text-[11.5px] uppercase tracking-[0.18em] text-[#5f7a61]">
                   Opera reads
                 </p>
-                <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#1a1a17]/80">
+                <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#1a1a17]/90">
                   {p.barrier}. Next: {p.nextAction.toLowerCase()}.
                 </p>
               </div>
@@ -386,10 +386,10 @@ function EducationView({
     <div className="grid gap-4 lg:grid-cols-[1.35fr_1fr]">
       <div>
         <div className="flex items-baseline justify-between gap-3">
-          <p className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#8a8578]">
+          <p className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#6d6858]">
             Visual library
           </p>
-          <p className="text-[13.5px] text-[#8a8578]">
+          <p className="text-[13.5px] text-[#6d6858]">
             {featured.length} of {MODULES.length} modules shown
           </p>
         </div>
@@ -411,8 +411,8 @@ function EducationView({
                 )}
               </div>
               <div className="bg-white px-2 py-1.5">
-                <p className="truncate text-[13px] font-medium text-[#1a1a17]/85">{m.title}</p>
-                <p className="cf-mono text-[11.5px] uppercase tracking-[0.1em] text-[#8a8578]">
+                <p className="truncate text-[13px] font-medium text-[#1a1a17]/90">{m.title}</p>
+                <p className="cf-mono text-[11.5px] uppercase tracking-[0.1em] text-[#6d6858]">
                   {m.specialty} · {m.duration}
                 </p>
               </div>
@@ -423,7 +423,7 @@ function EducationView({
 
       {/* preview + add to plan */}
       <div className="rounded-lg border border-[#1a1a17]/10 bg-white p-4">
-        <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#8a8578]">Preview</p>
+        <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">Preview</p>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={preview}
@@ -441,7 +441,7 @@ function EducationView({
               )}
             </div>
             <p className="mt-2.5 text-[14.5px] font-medium text-[#1a1a17]">{previewModule.title}</p>
-            <p className="cf-mono mt-0.5 text-[11.5px] uppercase tracking-[0.12em] text-[#8a8578]">
+            <p className="cf-mono mt-0.5 text-[11.5px] uppercase tracking-[0.12em] text-[#6d6858]">
               {previewModule.specialty} · {previewModule.duration} · medically reviewed
             </p>
             <button
@@ -480,14 +480,14 @@ function IntentView({
   return (
     <div className="rounded-lg border border-[#1a1a17]/10 bg-white">
       <div className="flex items-center justify-between gap-3 border-b border-[#1a1a17]/10 px-4 py-2.5">
-        <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#8a8578]">
+        <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">
           Intent signals · read from engagement, not guessed
         </p>
         <div className="relative">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as "all" | Signal)}
-            className="cf-mono appearance-none rounded-md border border-[#1a1a17]/10 bg-white py-1.5 pl-3 pr-8 text-[12px] uppercase tracking-[0.1em] text-[#1a1a17]/75 outline-none transition-colors hover:border-[#5f7a61]/40 focus:border-[#5f7a61]/50"
+            className="cf-mono appearance-none rounded-md border border-[#1a1a17]/10 bg-white py-1.5 pl-3 pr-8 text-[12px] uppercase tracking-[0.1em] text-[#1a1a17]/90 outline-none transition-colors hover:border-[#5f7a61]/40 focus:border-[#5f7a61]/50"
           >
             <option value="all">All signals</option>
             <option value="high">High</option>
@@ -497,7 +497,7 @@ function IntentView({
           </select>
           <ChevronDown
             size={11}
-            className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8a8578]"
+            className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#6d6858]"
           />
         </div>
       </div>
@@ -513,10 +513,10 @@ function IntentView({
               >
                 <Avatar p={p} size={7} />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[14px] font-medium text-[#1a1a17]/85">
+                  <span className="block truncate text-[14px] font-medium text-[#1a1a17]/90">
                     {p.name} · {p.treatment}
                   </span>
-                  <span className="cf-mono block text-[11.5px] uppercase tracking-[0.1em] text-[#8a8578]">
+                  <span className="cf-mono block text-[11.5px] uppercase tracking-[0.1em] text-[#6d6858]">
                     {p.specialty}
                   </span>
                 </span>
@@ -524,7 +524,7 @@ function IntentView({
                 <SignalBadge signal={p.signal} />
                 <ChevronDown
                   size={13}
-                  className={`shrink-0 text-[#8a8578] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                  className={`shrink-0 text-[#6d6858] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                 />
               </button>
               <AnimatePresence initial={false}>
@@ -538,7 +538,7 @@ function IntentView({
                   >
                     <div className="grid gap-3 bg-[#1a1a17]/[0.03] px-4 pb-4 pt-1 sm:grid-cols-3">
                       <div>
-                        <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#8a8578]">
+                        <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">
                           They asked
                         </p>
                         <p className="cf-display mt-1 text-[14.5px] italic leading-snug text-[#1a1a17]">
@@ -546,16 +546,16 @@ function IntentView({
                         </p>
                       </div>
                       <div>
-                        <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#8a8578]">
+                        <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">
                           Likely barrier
                         </p>
-                        <p className="mt-1 text-[13.5px] leading-snug text-[#1a1a17]/80">{p.barrier}</p>
+                        <p className="mt-1 text-[13.5px] leading-snug text-[#1a1a17]/90">{p.barrier}</p>
                       </div>
                       <div className="flex flex-col items-start gap-2">
-                        <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#8a8578]">
+                        <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">
                           Recommended
                         </p>
-                        <p className="text-[13.5px] leading-snug text-[#1a1a17]/80">{p.nextAction}</p>
+                        <p className="text-[13.5px] leading-snug text-[#1a1a17]/90">{p.nextAction}</p>
                         <div className="flex gap-2">
                           <button
                             onClick={() => onAssign(p.id)}
@@ -605,7 +605,7 @@ export default function ProductApp({
 
   return (
     <div className="overflow-hidden rounded-xl border border-[#1a1a17]/15 bg-white shadow-[0_40px_90px_-40px_rgba(26,26,23,0.25)]">
-      <div className="bg-white p-4 sm:p-6">
+      <div className="bg-white p-4 sm:p-6 lg:h-[580px] lg:overflow-y-auto">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={view}

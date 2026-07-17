@@ -24,6 +24,7 @@
 
 .cf-mono {
   font-family: var(--cf-font-mono), "SF Mono", Menlo, monospace;
+  font-weight: 500;
 }
 
 /* Drawn-underline link: faint rule always present, full-strength rule
