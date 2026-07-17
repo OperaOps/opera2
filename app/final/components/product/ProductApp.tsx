@@ -368,10 +368,17 @@ function EducationView({
   added: Record<string, string[]>;
   onAdd: (patientId: string, moduleId: string) => void;
 }) {
-  const [filter, setFilter] = useState("All specialties");
-  const [preview, setPreview] = useState(MODULES[4].id);
-  const specialties = ["All specialties", ...Array.from(new Set(MODULES.map((m) => m.specialty)))];
-  const shown = MODULES.filter((m) => filter === "All specialties" || m.specialty === filter);
+  // A curated six. The full library stays in data; the panel never
+  // grows taller than the screen.
+  const featured = [
+    "screening-walkthrough",
+    "acl-anatomy",
+    "recovery-timeline",
+    "medication-routine",
+    "scope-camera",
+    "crowding-progression",
+  ].map(moduleById);
+  const [preview, setPreview] = useState(featured[0].id);
   const previewModule = moduleById(preview);
   const p = patientById(selectedPatient);
   const inPlan = p.plan.includes(preview) || (added[p.id] ?? []).includes(preview);
@@ -379,28 +386,16 @@ function EducationView({
   return (
     <div className="grid gap-4 lg:grid-cols-[1.35fr_1fr]">
       <div>
-        <div className="flex items-center justify-between gap-3">
-          <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#8a8578]">
-            Visual library · {shown.length} modules
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#8a8578]">
+            Visual library
           </p>
-          <div className="relative">
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              className="cf-mono appearance-none rounded-md border border-[#1a1a17]/10 bg-white py-1.5 pl-3 pr-8 text-[12px] uppercase tracking-[0.1em] text-[#1a1a17]/75 outline-none transition-colors hover:border-[#7c3aed]/40 focus:border-[#7c3aed]/50"
-            >
-              {specialties.map((s) => (
-                <option key={s}>{s}</option>
-              ))}
-            </select>
-            <ChevronDown
-              size={11}
-              className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8a8578]"
-            />
-          </div>
+          <p className="text-[13.5px] text-[#8a8578]">
+            6 of {MODULES.length} modules shown
+          </p>
         </div>
-        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {shown.map((m) => (
+        <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+          {featured.map((m) => (
             <button
               key={m.id}
               onClick={() => setPreview(m.id)}
@@ -601,7 +596,7 @@ export default function ProductApp({
 
   return (
     <div className="overflow-hidden rounded-xl border border-[#1a1a17]/15 bg-white shadow-[0_40px_90px_-40px_rgba(26,26,23,0.25)]">
-      <div className="min-h-[62vh] bg-white p-4 sm:p-6">
+      <div className="bg-white p-4 sm:p-6">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={view}
