@@ -41,7 +41,7 @@ export default function Voice() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.8, delay: 0.18, ease: EASE }}
-              className="cf-mono mt-10 text-[13px] uppercase tracking-[0.22em] text-[#8a8578]"
+              className="cf-mono mt-10 text-[13px] uppercase tracking-[0.22em] text-[#6e7a71]"
             >
               <span className="text-[#1a1a17]">Dr. Jacob Zitterkopf</span>
               <span className="mx-2 text-[#1a1a17]/25">·</span>

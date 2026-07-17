@@ -1,9 +1,9 @@
 /* Final composed site. All classes prefixed cf-. */
 
 .cf-root {
-  --cf-paper: #f7f5f0;
+  --cf-paper: #ffffff;
   --cf-ink: #1a1a17;
-  --cf-warm: #8a8578;
+  --cf-warm: #6e7a71;
   --cf-accent: #5f7a61;
   --cf-accent-soft: #a9c0aa;
   font-optical-sizing: auto;
@@ -11,7 +11,7 @@
 
 .cf-root ::selection {
   background: #5f7a61;
-  color: #f7f5f0;
+  color: #ffffff;
 }
 
 .cf-display {

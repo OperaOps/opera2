@@ -45,7 +45,7 @@ export default function Dataset() {
   const rows = INTENT_ROWS.filter((r) => SHOWN_IDS.includes(r.patient_id));
 
   return (
-    <section id="dataset" className="scroll-mt-14 border-t border-[#1a1a17]/15 bg-[#f2f0e9]">
+    <section id="dataset" className="scroll-mt-14 border-t border-[#1a1a17]/15 bg-[#f5f8f5]">
       <div className="mx-auto max-w-[1480px] px-6 py-20 md:px-10 md:py-28">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <motion.h2
@@ -64,7 +64,7 @@ export default function Dataset() {
         <div className="mt-12 overflow-x-auto">
           <div className="min-w-[760px] md:min-w-[1060px]">
             <div
-              className={`${ROW_GRID} cf-mono border-b border-[#1a1a17]/35 pb-2.5 text-[12px] uppercase tracking-[0.16em] text-[#8a8578]`}
+              className={`${ROW_GRID} cf-mono border-b border-[#1a1a17]/35 pb-2.5 text-[12px] uppercase tracking-[0.16em] text-[#6e7a71]`}
             >
               <span />
               <span>ID</span>
@@ -96,7 +96,7 @@ export default function Dataset() {
                   >
                     <ChevronDown
                       size={13}
-                      className={`relative top-[2px] text-[#8a8578] transition-transform duration-400 ${
+                      className={`relative top-[2px] text-[#6e7a71] transition-transform duration-400 ${
                         isOpen ? "rotate-180 text-[#5f7a61]" : ""
                       }`}
                     />
@@ -109,7 +109,7 @@ export default function Dataset() {
                     <span className="cf-display text-[15px] italic leading-snug text-[#1a1a17]">
                       &ldquo;{row.primary_question}&rdquo;
                     </span>
-                    <span className="cf-mono hidden text-[12px] leading-relaxed tracking-[0.02em] text-[#8a8578] md:block">
+                    <span className="cf-mono hidden text-[12px] leading-relaxed tracking-[0.02em] text-[#6e7a71] md:block">
                       {row.hesitation_reason}
                     </span>
                     <span className="flex items-baseline gap-2">
@@ -140,11 +140,11 @@ export default function Dataset() {
                         transition={{ duration: 0.45, ease: EASE }}
                         className="overflow-hidden"
                       >
-                        <div className="relative mb-5 mt-1 rounded-lg border border-[#1a1a17]/10 bg-[#fdfcfa] p-5">
+                        <div className="relative mb-5 mt-1 rounded-lg border border-[#1a1a17]/10 bg-[#ffffff] p-5">
                           <button
                             onClick={() => setOpen(null)}
                             aria-label="Close"
-                            className="absolute right-3 top-3 rounded-full p-1.5 text-[#8a8578] transition-colors hover:bg-[#1a1a17]/[0.05] hover:text-[#1a1a17]"
+                            className="absolute right-3 top-3 rounded-full p-1.5 text-[#6e7a71] transition-colors hover:bg-[#1a1a17]/[0.05] hover:text-[#1a1a17]"
                           >
                             <X size={13} />
                           </button>
@@ -158,7 +158,7 @@ export default function Dataset() {
                               </p>
                             </div>
                             <div>
-                              <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#8a8578]">
+                              <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#6e7a71]">
                                 Context
                               </p>
                               <div className="cf-mono mt-2 space-y-1.5 text-[12px] leading-relaxed text-[#1a1a17]/75">
@@ -173,7 +173,7 @@ export default function Dataset() {
                               </div>
                             </div>
                             <div>
-                              <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#8a8578]">
+                              <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#6e7a71]">
                                 What happened next
                               </p>
                               <p className="cf-display mt-2 text-[16px] italic leading-snug text-[#1a1a17]">
@@ -190,10 +190,10 @@ export default function Dataset() {
             })}
 
             <div className="flex items-baseline justify-between pt-2.5">
-              <span className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#8a8578]">
+              <span className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#6e7a71]">
                 5 of 12,406 records shown
               </span>
-              <span className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#8a8578]">
+              <span className="cf-mono text-[12px] uppercase tracking-[0.16em] text-[#6e7a71]">
                 <span className="text-[#15803d]">●</span> high&ensp;
                 <span className="text-[#5f7a61]">◐</span> building&ensp;
                 <span className="text-[#b45309]">○</span> stalled&ensp;

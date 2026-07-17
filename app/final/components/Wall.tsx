@@ -178,7 +178,7 @@ export default function Wall() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
           style={{ opacity: sentenceOpacity, y: sentenceY }}
-          className="cf-display px-6 text-center text-[clamp(2rem,4.6vw,3.8rem)] font-light leading-[1.08] tracking-[-0.02em] text-[#f7f5f0]"
+          className="cf-display px-6 text-center text-[clamp(2rem,4.6vw,3.8rem)] font-light leading-[1.08] tracking-[-0.02em] text-[#ffffff]"
         >
           Understanding is a{" "}
           <em className="italic text-[#a9c0aa]">visual</em> act.
@@ -188,7 +188,7 @@ export default function Wall() {
         style={{ opacity: brandOpacity, y: brandY }}
         className="pointer-events-none absolute inset-0 flex items-center justify-center px-6"
       >
-        <p className="cf-display text-center text-[clamp(3.6rem,11.5vw,10.5rem)] font-light leading-none tracking-[-0.02em] text-[#f7f5f0]" style={{ textShadow: "0 4px 60px rgba(0,0,0,0.7)" }}>
+        <p className="cf-display text-center text-[clamp(3.6rem,11.5vw,10.5rem)] font-light leading-none tracking-[-0.02em] text-[#ffffff]" style={{ textShadow: "0 4px 60px rgba(0,0,0,0.7)" }}>
           Opera<span className="text-[#a9c0aa]">AI</span>
         </p>
       </motion.div>
@@ -196,7 +196,7 @@ export default function Wall() {
         style={{ opacity: brandOpacity }}
         className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-14 md:pb-16"
       >
-        <p className="cf-display px-6 text-center text-[clamp(2rem,4.6vw,3.8rem)] font-light leading-[1.08] tracking-[-0.02em] text-[#f7f5f0]" style={{ textShadow: "0 2px 30px rgba(0,0,0,0.7)" }}>
+        <p className="cf-display px-6 text-center text-[clamp(2rem,4.6vw,3.8rem)] font-light leading-[1.08] tracking-[-0.02em] text-[#ffffff]" style={{ textShadow: "0 2px 30px rgba(0,0,0,0.7)" }}>
           The future of patient <em className="italic text-[#a9c0aa]">education</em>.
         </p>
       </motion.div>

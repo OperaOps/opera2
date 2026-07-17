@@ -70,7 +70,7 @@ function AskSlide() {
           Click a question. It answers live, from that patient&rsquo;s own plan.
         </p>
       </div>
-      <div className="mt-6 min-h-0 flex-1 overflow-hidden rounded-2xl border border-[#1a1a17]/10 bg-[#fdfcfa] shadow-[0_30px_70px_-35px_rgba(26,26,23,0.35)]">
+      <div className="mt-6 min-h-0 flex-1 overflow-hidden rounded-2xl border border-[#1a1a17]/10 bg-[#ffffff] shadow-[0_30px_70px_-35px_rgba(26,26,23,0.35)]">
         <AskOperaPanel />
       </div>
     </div>
@@ -122,7 +122,7 @@ function IntentSlide() {
                 style={{ background: SIGNAL_COLOR[x.signal] }}
               />
               <span className="text-[14.5px] font-medium text-[#1a1a17]">{x.name}</span>
-              <span className="cf-mono text-[11px] uppercase tracking-[0.08em] text-[#6d6858]">
+              <span className="cf-mono text-[11px] uppercase tracking-[0.08em] text-[#5e6a60]">
                 {x.specialty}
               </span>
             </button>
@@ -141,7 +141,7 @@ function IntentSlide() {
         >
           {/* what Opera extracts */}
           <div className="overflow-hidden rounded-2xl border border-[#1a1a17]/10 bg-white shadow-[0_30px_70px_-35px_rgba(26,26,23,0.35)]">
-            <div className="cf-mono border-b border-[#1a1a17]/10 px-6 py-3 text-[12px] uppercase tracking-[0.16em] text-[#6d6858]">
+            <div className="cf-mono border-b border-[#1a1a17]/10 px-6 py-3 text-[12px] uppercase tracking-[0.16em] text-[#5e6a60]">
               What Opera reads from {first}&rsquo;s engagement
             </div>
             <div className="grid sm:grid-cols-2">
@@ -166,7 +166,7 @@ function IntentSlide() {
           {/* the read out */}
           <div className="flex flex-col justify-between rounded-2xl border border-[#1a1a17]/10 bg-white p-6 shadow-[0_30px_70px_-35px_rgba(26,26,23,0.35)]">
             <div>
-              <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">
+              <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#5e6a60]">
                 Engagement
               </p>
               <div className="mt-2 flex items-end gap-3">
@@ -185,7 +185,7 @@ function IntentSlide() {
               </div>
             </div>
             <div>
-              <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#6d6858]">
+              <p className="cf-mono text-[11.5px] uppercase tracking-[0.16em] text-[#5e6a60]">
                 One clear task
               </p>
               <p className="mt-1.5 text-[16px] font-medium leading-snug text-[#1a1a17]">
@@ -227,7 +227,7 @@ export default function ProductCarousel() {
     <section id="product" className="scroll-mt-16 border-t border-[#1a1a17]/10 bg-white py-16 md:py-24">
       <div className="relative px-5 md:px-12">
         {/* the card */}
-        <div className="relative h-[640px] overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f5efe6] via-[#f4f2ee] to-[#e9f0f3] md:h-[660px]">
+        <div className="relative h-[640px] overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f1f6f1] via-[#fbfdfb] to-[#e9f1ea] md:h-[660px]">
           <AnimatePresence mode="popLayout" initial={false} custom={dir}>
             <motion.div
               key={SLIDES[index].key}

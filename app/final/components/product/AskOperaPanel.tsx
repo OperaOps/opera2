@@ -36,7 +36,7 @@ export default function AskOperaPanel() {
     <div className="grid h-full md:grid-cols-[1fr_1.45fr]">
       {/* ——— the questions ——— */}
       <div className="overflow-y-auto border-b border-[#1a1a17]/10 p-5 md:border-b-0 md:border-r md:p-6">
-        <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#6d6858]">
+        <p className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#5e6a60]">
           Choose a question
         </p>
         <div className="mt-4 space-y-2.5">
@@ -56,7 +56,7 @@ export default function AskOperaPanel() {
                 <span className="block text-[15px] font-medium leading-snug text-[#1a1a17]">
                   {t.question}
                 </span>
-                <span className="cf-mono mt-1 block text-[11.5px] uppercase tracking-[0.1em] text-[#6d6858]">
+                <span className="cf-mono mt-1 block text-[11.5px] uppercase tracking-[0.1em] text-[#5e6a60]">
                   {p.name} · {p.specialty}
                 </span>
               </button>
@@ -85,7 +85,7 @@ export default function AskOperaPanel() {
               </motion.span>
             </AnimatePresence>
           </div>
-          <span className="cf-mono hidden shrink-0 text-[11.5px] uppercase tracking-[0.14em] text-[#6d6858] lg:inline">
+          <span className="cf-mono hidden shrink-0 text-[11.5px] uppercase tracking-[0.14em] text-[#5e6a60] lg:inline">
             Plan grounded · {patient.doctor}
           </span>
         </div>
@@ -152,7 +152,7 @@ export default function AskOperaPanel() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-[15px] font-medium text-[#1a1a17]">{module.title}</p>
-                    <p className="mt-1 text-[13.5px] text-[#6d6858]">
+                    <p className="mt-1 text-[13.5px] text-[#5e6a60]">
                       From the visuals shown at {patient.name.split(" ")[0]}&rsquo;s consult
                     </p>
                   </div>

@@ -33,7 +33,7 @@ export default function FinalLayout({
 }) {
   return (
     <div
-      className={`${fraunces.variable} ${archivo.variable} ${plexMono.variable} cf-root cf-body min-h-screen bg-[#f7f5f0] text-[#1a1a17] antialiased`}
+      className={`${fraunces.variable} ${archivo.variable} ${plexMono.variable} cf-root cf-body min-h-screen bg-[#ffffff] text-[#1a1a17] antialiased`}
     >
       {children}
     </div>
