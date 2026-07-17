@@ -2,24 +2,25 @@
 
 import { CALENDLY_URL, SITE_PHOTOS } from "@/lib/concepts/shared";
 
+/** Everything after the newborn photograph lives on black. */
 export default function Closing() {
   return (
-    <section className="border-t border-[#1a1a17]/15">
+    <section className="bg-black">
       {/* ——— One button. That's the section. ——— */}
       <div className="flex justify-center py-24 md:py-32">
         <a
           href={CALENDLY_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="cf-button-solid cf-mono px-10 py-4 text-[12px] uppercase tracking-[0.26em]"
+          className="cf-mono bg-[#f7f5f0] px-11 py-4 text-[13px] uppercase tracking-[0.26em] text-[#1a1a17] transition-colors duration-300 hover:bg-[#7c3aed] hover:text-white"
         >
           Book a demo
         </a>
       </div>
 
       {/* ——— Trusted by ——— */}
-      <div className="bg-black py-10 md:py-14">
-        <p className="cf-mono mb-7 text-center text-[9px] uppercase tracking-[0.3em] text-white/45">
+      <div className="pb-12 md:pb-16">
+        <p className="cf-mono mb-8 text-center text-[11px] uppercase tracking-[0.3em] text-white/50">
           Trusted by
         </p>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -32,12 +33,12 @@ export default function Closing() {
       </div>
 
       {/* ——— Colophon ——— */}
-      <footer className="border-t border-[#1a1a17]/10">
-        <div className="mx-auto flex max-w-[1480px] flex-col items-center justify-between gap-2 px-6 py-5 md:flex-row md:px-10">
-          <span className="cf-display text-[16px] text-[#1a1a17]">
-            Opera<span className="text-[#7c3aed]">.</span>
+      <footer className="border-t border-white/10">
+        <div className="mx-auto flex max-w-[1480px] flex-col items-center justify-between gap-2 px-6 py-6 md:flex-row md:px-10">
+          <span className="cf-display text-[17px] text-[#f7f5f0]">
+            Opera<span className="text-[#a78bfa]">.</span>
           </span>
-          <span className="cf-mono text-center text-[9px] uppercase tracking-[0.2em] text-[#8a8578]">
+          <span className="cf-mono text-center text-[10.5px] uppercase tracking-[0.2em] text-white/55">
             opera@getopera.ai · © 2026 Opera AI
           </span>
         </div>

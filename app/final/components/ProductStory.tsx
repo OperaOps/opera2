@@ -82,14 +82,14 @@ export default function ProductStory() {
                     className="group relative flex items-baseline gap-2 pb-1 text-left"
                   >
                     <span
-                      className={`cf-mono text-[9px] tracking-[0.12em] transition-colors ${
+                      className={`cf-mono text-[10px] tracking-[0.12em] transition-colors ${
                         on ? "text-[#7c3aed]" : "text-[#8a8578]"
                       }`}
                     >
                       0{i + 1}
                     </span>
                     <span
-                      className={`cf-mono text-[10px] uppercase tracking-[0.18em] transition-colors ${
+                      className={`cf-mono text-[11px] uppercase tracking-[0.18em] transition-colors ${
                         on ? "text-[#1a1a17]" : "text-[#1a1a17]/45 group-hover:text-[#1a1a17]/75"
                       }`}
                     >
@@ -127,7 +127,7 @@ export default function ProductStory() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.4, ease: EASE }}
-                  className="cf-display text-[15px] italic leading-snug text-[#1a1a17]/80 md:text-[17px]"
+                  className="cf-display text-[16px] italic leading-snug text-[#1a1a17]/80 md:text-[18px]"
                 >
                   {active.line}
                 </motion.p>

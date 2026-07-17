@@ -200,30 +200,56 @@ export default function Wall() {
         }}
       />
 
-      {/* ——— the one lit thing on the page ——— */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.1, delay: 0.9, ease: EASE }}
-          className="pointer-events-auto max-w-[640px] bg-[#f7f5f0] px-8 py-8 text-center shadow-[0_0_130px_16px_rgba(247,245,240,0.22),0_40px_90px_-30px_rgba(0,0,0,0.7)] md:px-14 md:py-11"
+      {/* ——— the opening: OPERA AI across the page, then the sentence ——— */}
+      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-6">
+        <h1
+          aria-label="Opera AI"
+          className="cf-display flex w-[93vw] max-w-full items-baseline justify-between font-light leading-none text-[#f7f5f0]"
+          style={{ textShadow: "0 4px 60px rgba(0,0,0,0.65)" }}
         >
-          <p className="cf-display text-[15px] tracking-[-0.01em]">
-            Opera<span className="text-[#7c3aed]">.</span>
-          </p>
-          <h1 className="cf-display mt-4 text-[clamp(1.9rem,4vw,3.3rem)] font-light leading-[1.04] tracking-[-0.025em]">
+          {["O", "P", "E", "R", "A"].map((ch, i) => (
+            <motion.span
+              key={`o-${i}`}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.25 + i * 0.09, ease: EASE }}
+              className="text-[clamp(3.4rem,12.5vw,12.5rem)]"
+            >
+              {ch}
+            </motion.span>
+          ))}
+          {["A", "I"].map((ch, i) => (
+            <motion.span
+              key={`a-${i}`}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.25 + (5 + i) * 0.09, ease: EASE }}
+              className="text-[clamp(3.4rem,12.5vw,12.5rem)] text-[#a78bfa]"
+            >
+              {ch}
+            </motion.span>
+          ))}
+        </h1>
+
+        <motion.div
+          initial={{ opacity: 0, y: 26, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.9, delay: 1.15, ease: EASE }}
+          className="pointer-events-auto mt-9 bg-[#f7f5f0] px-9 py-7 text-center shadow-[0_0_130px_16px_rgba(247,245,240,0.22),0_40px_90px_-30px_rgba(0,0,0,0.7)] md:px-14 md:py-8"
+        >
+          <p className="cf-display text-[clamp(1.4rem,2.7vw,2.2rem)] font-light leading-[1.06] tracking-[-0.02em]">
             Understanding is a{" "}
             <em className="italic text-[#7c3aed]">visual</em> act.
-          </h1>
+          </p>
           <a
             href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="cf-link group cf-mono mt-7 inline-flex gap-2 text-[11px] uppercase tracking-[0.24em] text-[#7c3aed]"
+            className="cf-link group cf-mono mt-6 inline-flex gap-2 text-[12px] uppercase tracking-[0.24em] text-[#7c3aed]"
           >
             Book a demo
             <ArrowRight
-              size={12}
+              size={13}
               strokeWidth={1.75}
               className="translate-y-[1.5px] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1.5"
             />

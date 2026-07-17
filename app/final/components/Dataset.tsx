@@ -34,22 +34,15 @@ const SIGNAL_GLYPH: Record<IntentRow["intent_signal"], { glyph: string; cls: str
   "at-risk": { glyph: "▲", cls: "text-[#b91c1c]" },
 };
 
-const SCHEMA_FIELDS = [
-  "patient_id",
-  "primary_question",
-  "hesitation_reason",
-  "viewed_visual_modules",
-  "engagement_score",
-  "intent_signal",
-  "likely_barrier",
-  "follow_up_outcome",
-];
 
 const ROW_GRID =
   "grid grid-cols-[24px_64px_1fr_100px_120px] items-baseline gap-x-4 md:grid-cols-[24px_68px_1.05fr_1.5fr_120px_110px_1.05fr]";
 
+const SHOWN_IDS = ["PT-4821", "PT-3390", "PT-5177", "PT-2856", "PT-8862"];
+
 export default function Dataset() {
   const [open, setOpen] = useState<string | null>(null);
+  const rows = INTENT_ROWS.filter((r) => SHOWN_IDS.includes(r.patient_id));
 
   return (
     <section id="dataset" className="scroll-mt-14 border-t border-[#1a1a17]/15 bg-[#f2f0e9]">
@@ -70,37 +63,18 @@ export default function Dataset() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
-            className="cf-body max-w-sm text-[14px] leading-relaxed text-[#1a1a17]/75"
+            className="cf-body max-w-sm text-[15px] leading-relaxed text-[#1a1a17]/75"
           >
-            Open a row to see Opera&rsquo;s read: the question, the barrier,
-            and what happened next. From 25+ clinics and $420M+ of analyzed
-            clinical revenue.
+            Open a row for Opera&rsquo;s read. From 25+ clinics and $420M+ of
+            analyzed clinical revenue.
           </motion.p>
         </div>
 
-        {/* schema strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, ease: EASE }}
-          className="mt-12 flex flex-wrap items-baseline gap-x-4 gap-y-1 border-y border-[#1a1a17]/15 py-2.5"
-        >
-          <span className="cf-mono text-[9px] uppercase tracking-[0.18em] text-[#7c3aed]">
-            Schema v3
-          </span>
-          {SCHEMA_FIELDS.map((f) => (
-            <span key={f} className="cf-mono text-[9.5px] tracking-[0.04em] text-[#8a8578]">
-              {f}
-            </span>
-          ))}
-        </motion.div>
-
         {/* ledger */}
-        <div className="mt-6 overflow-x-auto">
+        <div className="mt-12 overflow-x-auto">
           <div className="min-w-[760px] md:min-w-[1060px]">
             <div
-              className={`${ROW_GRID} cf-mono border-b border-[#1a1a17]/35 pb-2.5 text-[9px] uppercase tracking-[0.16em] text-[#8a8578]`}
+              className={`${ROW_GRID} cf-mono border-b border-[#1a1a17]/35 pb-2.5 text-[10.5px] uppercase tracking-[0.16em] text-[#8a8578]`}
             >
               <span />
               <span>ID</span>
@@ -111,7 +85,7 @@ export default function Dataset() {
               <span>Signal</span>
             </div>
 
-            {INTENT_ROWS.map((row, i) => {
+            {rows.map((row, i) => {
               const isOpen = open === row.patient_id;
               const sig = SIGNAL_GLYPH[row.intent_signal];
               return (
@@ -136,16 +110,16 @@ export default function Dataset() {
                         isOpen ? "rotate-180 text-[#7c3aed]" : ""
                       }`}
                     />
-                    <span className="cf-mono text-[11px] tracking-[0.06em] text-[#1a1a17]">
+                    <span className="cf-mono text-[12px] tracking-[0.06em] text-[#1a1a17]">
                       {row.patient_id}
                     </span>
-                    <span className="cf-body hidden text-[12px] text-[#1a1a17]/85 md:block">
+                    <span className="cf-body hidden text-[13px] text-[#1a1a17]/85 md:block">
                       {row.treatment_type}
                     </span>
-                    <span className="cf-display text-[13.5px] italic leading-snug text-[#1a1a17]">
+                    <span className="cf-display text-[15px] italic leading-snug text-[#1a1a17]">
                       &ldquo;{row.primary_question}&rdquo;
                     </span>
-                    <span className="cf-mono hidden text-[10px] leading-relaxed tracking-[0.02em] text-[#8a8578] md:block">
+                    <span className="cf-mono hidden text-[11px] leading-relaxed tracking-[0.02em] text-[#8a8578] md:block">
                       {row.hesitation_reason}
                     </span>
                     <span className="flex items-baseline gap-2">
@@ -161,7 +135,7 @@ export default function Dataset() {
                         />
                       </span>
                     </span>
-                    <span className={`cf-mono flex items-baseline gap-1.5 text-[9px] uppercase tracking-[0.1em] ${sig.cls}`}>
+                    <span className={`cf-mono flex items-baseline gap-1.5 text-[10px] uppercase tracking-[0.1em] ${sig.cls}`}>
                       <span className="text-[11px] leading-none">{sig.glyph}</span>
                       {row.intent_signal}
                     </span>
@@ -186,18 +160,18 @@ export default function Dataset() {
                           </button>
                           <div className="grid gap-5 pr-8 md:grid-cols-[1.4fr_1fr_1fr]">
                             <div>
-                              <p className="cf-mono text-[8px] uppercase tracking-[0.18em] text-[#7c3aed]">
+                              <p className="cf-mono text-[10px] uppercase tracking-[0.18em] text-[#7c3aed]">
                                 Opera&rsquo;s read
                               </p>
-                              <p className="cf-body mt-2 text-[13px] leading-relaxed text-[#1a1a17]/80">
+                              <p className="cf-body mt-2 text-[14px] leading-relaxed text-[#1a1a17]/80">
                                 {READS[row.patient_id]}
                               </p>
                             </div>
                             <div>
-                              <p className="cf-mono text-[8px] uppercase tracking-[0.18em] text-[#8a8578]">
+                              <p className="cf-mono text-[10px] uppercase tracking-[0.18em] text-[#8a8578]">
                                 Context
                               </p>
-                              <div className="cf-mono mt-2 space-y-1.5 text-[10px] leading-relaxed text-[#1a1a17]/75">
+                              <div className="cf-mono mt-2 space-y-1.5 text-[11px] leading-relaxed text-[#1a1a17]/75">
                                 <p>stage · {row.consultation_stage}</p>
                                 <p>barrier · {row.likely_barrier}</p>
                                 <p>
@@ -209,10 +183,10 @@ export default function Dataset() {
                               </div>
                             </div>
                             <div>
-                              <p className="cf-mono text-[8px] uppercase tracking-[0.18em] text-[#8a8578]">
+                              <p className="cf-mono text-[10px] uppercase tracking-[0.18em] text-[#8a8578]">
                                 What happened next
                               </p>
-                              <p className="cf-display mt-2 text-[15px] italic leading-snug text-[#1a1a17]">
+                              <p className="cf-display mt-2 text-[16px] italic leading-snug text-[#1a1a17]">
                                 {row.follow_up_outcome}
                               </p>
                             </div>
@@ -226,10 +200,10 @@ export default function Dataset() {
             })}
 
             <div className="flex items-baseline justify-between pt-2.5">
-              <span className="cf-mono text-[9px] uppercase tracking-[0.16em] text-[#8a8578]">
-                8 of 12,406 records shown
+              <span className="cf-mono text-[10.5px] uppercase tracking-[0.16em] text-[#8a8578]">
+                5 of 12,406 records shown
               </span>
-              <span className="cf-mono text-[9px] uppercase tracking-[0.16em] text-[#8a8578]">
+              <span className="cf-mono text-[10.5px] uppercase tracking-[0.16em] text-[#8a8578]">
                 <span className="text-[#15803d]">●</span> high&ensp;
                 <span className="text-[#7c3aed]">◐</span> building&ensp;
                 <span className="text-[#b45309]">○</span> stalled&ensp;

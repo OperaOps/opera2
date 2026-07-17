@@ -112,7 +112,7 @@
     flex-grow: 2.4;
   }
   .cf-walltile:hover .cf-bw {
-    filter: grayscale(0) brightness(0.96) contrast(1);
+    filter: grayscale(1) brightness(0.82) contrast(1.05);
   }
 }
 

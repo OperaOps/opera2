@@ -40,7 +40,7 @@ export default function Nav() {
               <a
                 key={l.href}
                 href={l.href}
-                className="cf-link cf-mono text-[10px] uppercase tracking-[0.2em] text-[#1a1a17]/80 hover:text-[#1a1a17]"
+                className="cf-link cf-mono text-[11px] uppercase tracking-[0.2em] text-[#1a1a17]/80 hover:text-[#1a1a17]"
               >
                 {l.label}
               </a>
@@ -50,7 +50,7 @@ export default function Nav() {
             href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="cf-button-solid cf-mono px-5 py-2.5 text-[10px] uppercase tracking-[0.24em]"
+            className="cf-button-solid cf-mono px-5 py-2.5 text-[11px] uppercase tracking-[0.24em]"
           >
             Book a demo
           </a>

@@ -53,51 +53,53 @@ export default function MayoPlate() {
         />
         <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[#1a1a17]/70 to-transparent" />
 
-        {/* ——— specialty column, shadowed onto the photograph ——— */}
-        <motion.div
-          initial={{ opacity: 0, x: -16 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-120px" }}
-          transition={{ duration: 1, ease: EASE }}
-          className="relative flex min-h-[100svh] w-full max-w-[400px] flex-col justify-center bg-gradient-to-r from-[#141412]/80 via-[#141412]/60 to-transparent px-8 py-16 md:px-12"
-        >
-          <p className="cf-mono text-[9px] uppercase tracking-[0.28em] text-[#f7f5f0]/55">
-            In the field today
-          </p>
-          <ul className="mt-6 space-y-[7px]">
-            {SPECIALTIES.map((s, i) => (
+        {/* ——— specialty index, one framed box on the photograph ——— */}
+        <div className="relative flex min-h-[100svh] items-center px-6 py-20 md:px-14">
+          <motion.div
+            initial={{ opacity: 0, x: -16 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-120px" }}
+            transition={{ duration: 1, ease: EASE }}
+            className="w-full max-w-[400px] border border-[#f7f5f0]/20 bg-[#141412]/85 px-9 py-9 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.8)] backdrop-blur-sm md:px-11 md:py-10"
+          >
+            <p className="cf-mono text-[11px] uppercase tracking-[0.28em] text-[#f7f5f0]/65">
+              In the field today
+            </p>
+            <ul className="mt-6 space-y-[7px]">
+              {SPECIALTIES.map((s, i) => (
+                <motion.li
+                  key={s}
+                  initial={{ opacity: 0, x: -8 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.25 + i * 0.04, ease: EASE }}
+                  className="flex items-baseline gap-4"
+                >
+                  <span className="cf-mono w-6 shrink-0 text-[10px] tracking-[0.12em] text-[#a78bfa]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="cf-display text-[17px] leading-snug tracking-[-0.01em] text-[#f7f5f0]">
+                    {s}
+                  </span>
+                </motion.li>
+              ))}
               <motion.li
-                key={s}
                 initial={{ opacity: 0, x: -8 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.25 + i * 0.045, ease: EASE }}
-                className="flex items-baseline gap-3.5"
+                transition={{ duration: 0.5, delay: 0.25 + SPECIALTIES.length * 0.04, ease: EASE }}
+                className="flex items-baseline gap-4 border-t border-[#f7f5f0]/15 pt-3 mt-3"
               >
-                <span className="cf-mono w-5 shrink-0 text-[8.5px] tracking-[0.12em] text-[#a78bfa]">
-                  {String(i + 1).padStart(2, "0")}
+                <span className="cf-mono w-6 shrink-0 text-[10px] tracking-[0.12em] text-[#a78bfa]">
+                  20
                 </span>
-                <span className="cf-display text-[15px] leading-snug tracking-[-0.01em] text-[#f7f5f0]/90">
-                  {s}
+                <span className="cf-display text-[17px] italic leading-snug text-[#a78bfa]">
+                  More to come
                 </span>
               </motion.li>
-            ))}
-            <motion.li
-              initial={{ opacity: 0, x: -8 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.25 + SPECIALTIES.length * 0.045, ease: EASE }}
-              className="flex items-baseline gap-3.5 pt-1.5"
-            >
-              <span className="cf-mono w-5 shrink-0 text-[8.5px] tracking-[0.12em] text-[#a78bfa]">
-                20
-              </span>
-              <span className="cf-display text-[15px] italic leading-snug text-[#a78bfa]">
-                More to come
-              </span>
-            </motion.li>
-          </ul>
-        </motion.div>
+            </ul>
+          </motion.div>
+        </div>
 
         {/* ——— one line, bottom right ——— */}
         <div className="absolute inset-x-0 bottom-0">
@@ -112,7 +114,7 @@ export default function MayoPlate() {
               >
                 Built for teams who take understanding seriously.
               </motion.h2>
-              <p className="cf-mono mt-3 text-[9px] uppercase tracking-[0.22em] text-[#f7f5f0]/55">
+              <p className="cf-mono mt-3 text-[10.5px] uppercase tracking-[0.22em] text-[#f7f5f0]/60">
                 Mayo Clinic, Rochester MN
               </p>
             </div>

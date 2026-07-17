@@ -41,39 +41,14 @@ export default function Voice() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.8, delay: 0.18, ease: EASE }}
-              className="cf-mono mt-10 text-[10px] uppercase tracking-[0.22em] text-[#8a8578]"
+              className="cf-mono mt-10 text-[12px] uppercase tracking-[0.22em] text-[#8a8578]"
             >
               <span className="text-[#1a1a17]">Dr. Jacob Zitterkopf</span>
               <span className="mx-2 text-[#1a1a17]/25">·</span>
               Orthodontist
               <span className="mx-2 text-[#1a1a17]/25">·</span>
-              Opera lighthouse practice
+              Falcon Orthodontics
             </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.8, delay: 0.26, ease: EASE }}
-              className="cf-mono mt-12 flex gap-14 border-t border-[#1a1a17]/15 pt-7"
-            >
-              <div>
-                <p className="text-[9px] uppercase tracking-[0.22em] text-[#8a8578]">
-                  Case acceptance
-                </p>
-                <p className="mt-1.5 text-[17px] font-medium tracking-[0.02em] text-[#1a1a17]">
-                  +14 <span className="text-[10px] uppercase text-[#8a8578]">pts</span>
-                </p>
-              </div>
-              <div>
-                <p className="text-[9px] uppercase tracking-[0.22em] text-[#8a8578]">
-                  Time to yes
-                </p>
-                <p className="mt-1.5 text-[17px] font-medium tracking-[0.02em] text-[#1a1a17]">
-                  &minus;38%
-                </p>
-              </div>
-            </motion.div>
           </div>
         </div>
 
