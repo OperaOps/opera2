@@ -3,10 +3,10 @@
 import { MotionConfig } from "framer-motion";
 import Nav from "./components/Nav";
 import Wall from "./components/Wall";
-import MayoPlate from "./components/MayoPlate";
-import ProductStory from "./components/ProductStory";
-import Dataset from "./components/Dataset";
 import Voice from "./components/Voice";
+import ProductCarousel from "./components/ProductCarousel";
+import Dataset from "./components/Dataset";
+import MayoPlate from "./components/MayoPlate";
 import Closing from "./components/Closing";
 
 export default function FinalPage() {
@@ -15,10 +15,10 @@ export default function FinalPage() {
       <main>
         <Nav />
         <Wall />
-        <MayoPlate />
-        <ProductStory />
-        <Dataset />
         <Voice />
+        <ProductCarousel />
+        <Dataset />
+        <MayoPlate />
         <Closing />
       </main>
     </MotionConfig>

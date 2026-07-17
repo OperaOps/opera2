@@ -145,7 +145,7 @@ export default function Wall() {
         {Array.from({ length: cellCount }, (_, i) => {
           const p = byCell.get(i);
           return (
-            <div key={i} className="relative overflow-hidden">
+            <div key={i} className="cf-cell relative overflow-hidden">
               <AnimatePresence>
                 {p && (
                   <motion.div

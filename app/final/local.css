@@ -94,6 +94,21 @@
 /* The wall keeps its color but rests in shadow so the type stays lit. */
 .cf-bw {
   filter: brightness(0.55) saturate(0.92) contrast(1.02);
+  transition: filter 0.35s ease;
+}
+
+/* One tile at a time lifts slightly under the cursor. */
+.cf-cell {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .cf-cell:hover {
+    transform: scale(1.22);
+    z-index: 10;
+  }
+  .cf-cell:hover .cf-bw {
+    filter: brightness(0.85) saturate(1) contrast(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
