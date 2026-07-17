@@ -47,7 +47,7 @@ export default function Nav() {
             href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="cf-body rounded-full bg-[#1a1a17] px-6 py-2.5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-[#5f7a61]"
+            className="cf-body rounded-full bg-[#5f7a61] px-6 py-2.5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-[#4e6650]"
           >
             Book a demo
           </a>
