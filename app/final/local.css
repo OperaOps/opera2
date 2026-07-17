@@ -91,9 +91,9 @@
    grows within its row, the hovered row grows within the column,
    so neighbors compress smoothly to make room.
    ———————————————————————————————————————————————————————————— */
-/* The wall rests in shadowed black and white. */
+/* The wall keeps its color but rests in shadow so the type stays lit. */
 .cf-bw {
-  filter: grayscale(1) brightness(0.6) contrast(1.05);
+  filter: brightness(0.55) saturate(0.92) contrast(1.02);
 }
 
 @media (prefers-reduced-motion: reduce) {
