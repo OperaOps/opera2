@@ -43,7 +43,7 @@ function VideoSlide() {
         </h3>
         <p className="cf-body mt-6 max-w-md text-[17px] leading-relaxed text-[#1a1a17]/85">
           Every patient sees their own treatment, in their own plan&rsquo;s
-          terms. This one explains a colonoscopy in eight seconds.
+          terms.
         </p>
       </div>
       <div className="overflow-hidden rounded-2xl shadow-[0_40px_90px_-35px_rgba(26,26,23,0.45)]">
