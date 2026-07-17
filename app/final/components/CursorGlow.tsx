@@ -46,22 +46,22 @@ export default function CursorGlow() {
       const now = performance.now();
       const dx = x - last.x;
       const dy = y - last.y;
-      if (Math.hypot(dx, dy) > 5) {
-        const n = 1 + Math.floor(Math.min(3, Math.hypot(dx, dy) / 18));
+      if (Math.hypot(dx, dy) > 3) {
+        const n = 2 + Math.floor(Math.min(6, Math.hypot(dx, dy) / 9));
         for (let i = 0; i < n; i++) {
           parts.push({
-            x: x + (Math.random() - 0.5) * 10,
-            y: y + (Math.random() - 0.5) * 10,
-            vx: (Math.random() - 0.5) * 0.8 - dx * 0.005,
-            vy: (Math.random() - 0.5) * 0.8 - dy * 0.005,
+            x: x + (Math.random() - 0.5) * 16,
+            y: y + (Math.random() - 0.5) * 16,
+            vx: (Math.random() - 0.5) * 1.4 - dx * 0.012,
+            vy: (Math.random() - 0.5) * 1.4 - dy * 0.012,
             born: now,
-            life: 500 + Math.random() * 450,
-            size: 1 + Math.random() * 2.2,
+            life: 650 + Math.random() * 650,
+            size: 1.2 + Math.random() * 3,
           });
         }
         last = { x, y };
       }
-      if (parts.length > 110) parts.splice(0, parts.length - 110);
+      if (parts.length > 260) parts.splice(0, parts.length - 260);
     };
     window.addEventListener("mousemove", onMove, { passive: true });
 
@@ -82,10 +82,18 @@ export default function CursorGlow() {
         const k = 1 - age / p.life;
         p.x += p.vx;
         p.y += p.vy;
-        ctx.fillStyle = `rgba(190,214,192,${0.75 * k})`;
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+        const bright = p.size > 3.2;
+        ctx.shadowColor = "rgba(190,214,192,0.8)";
+        ctx.shadowBlur = bright ? 10 * k : 4 * k;
+        ctx.fillStyle = bright
+          ? `rgba(226,240,227,${0.9 * k})`
+          : `rgba(190,214,192,${0.8 * k})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, Math.max(0.2, p.size * k), 0, Math.PI * 2);
         ctx.fill();
+        ctx.shadowBlur = 0;
       }
 
       raf = requestAnimationFrame(loop);
