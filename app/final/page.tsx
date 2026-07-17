@@ -2,11 +2,10 @@
 
 import { MotionConfig } from "framer-motion";
 import Nav from "./components/Nav";
-import Hero from "./components/Hero";
+import Wall from "./components/Wall";
 import MayoPlate from "./components/MayoPlate";
+import ProductStory from "./components/ProductStory";
 import Dataset from "./components/Dataset";
-import VideoMoment from "./components/VideoMoment";
-import Journey from "./components/Journey";
 import Voice from "./components/Voice";
 import Closing from "./components/Closing";
 
@@ -15,11 +14,10 @@ export default function FinalPage() {
     <MotionConfig reducedMotion="user">
       <main>
         <Nav />
-        <Hero />
+        <Wall />
         <MayoPlate />
+        <ProductStory />
         <Dataset />
-        <VideoMoment />
-        <Journey />
         <Voice />
         <Closing />
       </main>

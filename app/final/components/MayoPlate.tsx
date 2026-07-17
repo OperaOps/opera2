@@ -6,64 +6,117 @@ import { SITE_PHOTOS } from "@/lib/concepts/shared";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
+/* ————————————————————————————————————————————————————————————————
+   Page two: the Mayo Clinic plate, full screen. The specialty index
+   sits on the photograph itself as a shadowed column of type on the
+   left. Nothing else on the page.
+   ———————————————————————————————————————————————————————————————— */
+
+const SPECIALTIES = [
+  "Dental",
+  "Orthodontics",
+  "Oral Surgery",
+  "Oncology",
+  "Neurology",
+  "Ophthalmology",
+  "Radiology",
+  "Cardiology",
+  "General Medicine",
+  "Pediatrics",
+  "Veterinary",
+  "Orthopedics",
+  "ENT",
+  "Dermatology",
+  "Women's Health",
+  "Physical Therapy",
+  "Plastic Surgery",
+  "Behavioral Health",
+  "Pain Management",
+];
+
 export default function MayoPlate() {
   const ref = useRef<HTMLElement | null>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], ["-9%", "9%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
 
   return (
-    <section ref={ref} className="relative mt-16 h-[92vh] min-h-[560px] overflow-hidden md:mt-24">
-      {/* Oversized photograph, drifting slower than the scroll */}
-      <motion.img
-        src={SITE_PHOTOS.mayoClinic}
-        alt="Mayo Clinic, Rochester, Minnesota"
-        style={{ y }}
-        className="absolute inset-x-0 top-[-10%] h-[120%] w-full object-cover"
-      />
-      {/* Dual scrim */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/50" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
+    <section ref={ref} id="specialties" className="scroll-mt-14">
+      <div className="relative min-h-[100svh] overflow-hidden">
+        <motion.img
+          src={SITE_PHOTOS.mayoClinic}
+          alt="Mayo Clinic, Rochester, Minnesota"
+          style={{ y }}
+          className="absolute inset-x-0 top-[-9%] h-[118%] w-full object-cover"
+        />
+        <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[#1a1a17]/70 to-transparent" />
 
-      <div className="relative mx-auto flex h-full max-w-[1480px] flex-col justify-between px-6 py-14 md:px-10">
+        {/* ——— specialty column, shadowed onto the photograph ——— */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0, x: -16 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-120px" }}
           transition={{ duration: 1, ease: EASE }}
-          className="flex items-baseline justify-between border-b border-[#f7f5f0]/25 pb-3"
+          className="relative flex min-h-[100svh] w-full max-w-[400px] flex-col justify-center bg-gradient-to-r from-[#141412]/80 via-[#141412]/60 to-transparent px-8 py-16 md:px-12"
         >
-          <span className="cf-mono text-[10px] uppercase tracking-[0.24em] text-[#f7f5f0]/80">
-            Plate II — Fieldwork
-          </span>
-          <span className="cf-mono text-[10px] uppercase tracking-[0.24em] text-[#f7f5f0]/60">
-            Mayo Clinic · Rochester, MN
-          </span>
+          <p className="cf-mono text-[9px] uppercase tracking-[0.28em] text-[#f7f5f0]/55">
+            In the field today
+          </p>
+          <ul className="mt-6 space-y-[7px]">
+            {SPECIALTIES.map((s, i) => (
+              <motion.li
+                key={s}
+                initial={{ opacity: 0, x: -8 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.25 + i * 0.045, ease: EASE }}
+                className="flex items-baseline gap-3.5"
+              >
+                <span className="cf-mono w-5 shrink-0 text-[8.5px] tracking-[0.12em] text-[#a78bfa]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="cf-display text-[15px] leading-snug tracking-[-0.01em] text-[#f7f5f0]/90">
+                  {s}
+                </span>
+              </motion.li>
+            ))}
+            <motion.li
+              initial={{ opacity: 0, x: -8 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.25 + SPECIALTIES.length * 0.045, ease: EASE }}
+              className="flex items-baseline gap-3.5 pt-1.5"
+            >
+              <span className="cf-mono w-5 shrink-0 text-[8.5px] tracking-[0.12em] text-[#a78bfa]">
+                20
+              </span>
+              <span className="cf-display text-[15px] italic leading-snug text-[#a78bfa]">
+                More to come
+              </span>
+            </motion.li>
+          </ul>
         </motion.div>
 
-        <div className="max-w-3xl pb-4">
-          <motion.p
-            initial={{ opacity: 0, y: 26 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1.1, ease: EASE }}
-            className="cf-display text-[clamp(2.4rem,5.4vw,4.8rem)] font-light italic leading-[1.06] tracking-[-0.02em] text-[#f7f5f0]"
-          >
-            Built for systems that take understanding seriously.
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.9, delay: 0.2, ease: EASE }}
-            className="cf-mono mt-8 text-[10px] uppercase leading-loose tracking-[0.22em] text-[#f7f5f0]/75"
-          >
-            From single-chair practices to academic medicine —
-            <br className="hidden sm:block" /> the standard of explanation
-            should be the same.
-          </motion.p>
+        {/* ——— one line, bottom right ——— */}
+        <div className="absolute inset-x-0 bottom-0">
+          <div className="mx-auto flex max-w-[1480px] flex-col gap-2 px-6 pb-10 md:flex-row md:items-end md:justify-end md:px-10">
+            <div className="md:text-right">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 1, ease: EASE }}
+                className="cf-display max-w-2xl text-[clamp(1.9rem,4vw,3.4rem)] font-light italic leading-[1.06] tracking-[-0.02em] text-[#f7f5f0] md:ml-auto"
+              >
+                Built for teams who take understanding seriously.
+              </motion.h2>
+              <p className="cf-mono mt-3 text-[9px] uppercase tracking-[0.22em] text-[#f7f5f0]/55">
+                Mayo Clinic, Rochester MN
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

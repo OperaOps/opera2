@@ -97,10 +97,21 @@ export const LIBRARY_CLIPS: Clip[] = [
   { src: "/videos/library/patient-watching-home.mp4", label: "Watched at home — 9:41 PM", category: "general", phase: "Outcome" },
 ];
 
+// Cinematic Veo clip: a patient at home watching her own cardiac video on a
+// tablet. High quality. Use as the full-frame product moment.
+export const PATIENT_WATCH_VIDEO = "/videos/sitepics/patient-watching-veo.mp4";
+
+// Poster stills extracted from every clip (two per clip, variants a/b),
+// generated into /public/videos/posters/<basename>-{a,b}.jpg at 320px wide.
+export const posterOf = (src: string, variant: "a" | "b" = "a") =>
+  `/videos/posters/${src.split("/").pop()!.replace(/\.mp4$/, "")}-${variant}.jpg`;
+
 // Full-bleed photography (user-provided). Use as shadowed full-viewport or
 // half-page background plates, not as small inline images.
 export const SITE_PHOTOS = {
   mayoClinic: "/videos/sitepics/Mayo-Clinic-Rochester-Minnesota-2020.webp",
+  /** Two-row partner/backer logo strip, white logos on pure black. Show on a black band. */
+  trustedByStrip: "/videos/sitepics/trusted-by-strip.png",
   /** B&W surgical team under OR lights — dramatic, cinematic. Quote spreads. */
   surgeryBW: "/videos/sitepics/jonathan-borba-Ld50KjnPSzM-unsplash.jpg",
   /** Desaturated teal OR team at instrument table. */
@@ -136,7 +147,7 @@ export type IntentRow = {
 export const INTENT_ROWS: IntentRow[] = [
   {
     patient_id: "PT-4821",
-    treatment_type: "Invisalign — comprehensive",
+    treatment_type: "Invisalign, comprehensive",
     consultation_stage: "post-consult · day 2",
     primary_question: "What happens if I wait 6 months?",
     hesitation_reason: "cost vs. urgency unclear",
@@ -148,7 +159,7 @@ export const INTENT_ROWS: IntentRow[] = [
   },
   {
     patient_id: "PT-3390",
-    treatment_type: "Implant — #19",
+    treatment_type: "Implant, tooth 19",
     consultation_stage: "treatment presented",
     primary_question: "Will this hurt?",
     hesitation_reason: "procedure anxiety",
@@ -160,7 +171,7 @@ export const INTENT_ROWS: IntentRow[] = [
   },
   {
     patient_id: "PT-5177",
-    treatment_type: "Crown — #30",
+    treatment_type: "Crown, tooth 30",
     consultation_stage: "post-consult · day 6",
     primary_question: "Why do I need this now?",
     hesitation_reason: "asymptomatic tooth",
@@ -172,7 +183,7 @@ export const INTENT_ROWS: IntentRow[] = [
   },
   {
     patient_id: "PT-6034",
-    treatment_type: "Perio — scaling + laser",
+    treatment_type: "Perio, scaling + laser",
     consultation_stage: "hygiene referral",
     primary_question: "What are my options?",
     hesitation_reason: "comparing to extraction",
@@ -184,7 +195,7 @@ export const INTENT_ROWS: IntentRow[] = [
   },
   {
     patient_id: "PT-2856",
-    treatment_type: "Braces — phase I",
+    treatment_type: "Braces, phase I",
     consultation_stage: "parent consult",
     primary_question: "Is 9 too young to start?",
     hesitation_reason: "second-opinion seeking",
@@ -196,7 +207,7 @@ export const INTENT_ROWS: IntentRow[] = [
   },
   {
     patient_id: "PT-7719",
-    treatment_type: "Root canal — #14",
+    treatment_type: "Root canal, tooth 14",
     consultation_stage: "emergency visit",
     primary_question: "How long is recovery?",
     hesitation_reason: "work schedule",
@@ -208,7 +219,7 @@ export const INTENT_ROWS: IntentRow[] = [
   },
   {
     patient_id: "PT-1204",
-    treatment_type: "Veneers — 8 unit",
+    treatment_type: "Veneers, 8 unit",
     consultation_stage: "cosmetic consult",
     primary_question: "Will they look natural?",
     hesitation_reason: "outcome uncertainty",

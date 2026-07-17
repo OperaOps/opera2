@@ -21,9 +21,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Opera — Understanding is a visual act",
+  title: "Opera. Understanding is a visual act",
   description:
-    "Opera turns every treatment plan into moving, medically-true images — across cardiology, GI, orthopedics, OB, dental and beyond — and works the interval between the consult and the yes.",
+    "Opera turns every treatment plan into moving, medically true images, in every specialty, and works the interval between the consult and the yes.",
 };
 
 export default function FinalLayout({
