@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { SITE_PHOTOS } from "@/lib/concepts/shared";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -49,6 +50,26 @@ export default function Voice() {
               <span className="mx-2 text-[#1a1a17]/25">·</span>
               Penguin Pediatrics
             </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.8, delay: 0.28, ease: EASE }}
+              className="mt-8"
+            >
+              <a
+                href="/live"
+                className="cf-body group inline-flex items-center gap-2.5 rounded-full bg-[#5f7a61] px-7 py-3 text-[15.5px] font-medium text-white transition-colors duration-300 hover:bg-[#4e6650]"
+              >
+                Live
+                <ArrowRight
+                  size={16}
+                  strokeWidth={2}
+                  className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1"
+                />
+              </a>
+            </motion.div>
           </div>
         </div>
 
