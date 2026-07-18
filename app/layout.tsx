@@ -4,22 +4,22 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Opera AI',
-  description: 'AI-powered dental practice management',
+  title: 'OperaAI',
+  description: 'The future of patient education.',
   icons: {
-    icon: '/favicon.png',
-    shortcut: '/favicon.png',
-    apple: '/favicon.png',
+    icon: '/favicon.png?v=2',
+    shortcut: '/favicon.png?v=2',
+    apple: '/favicon.png?v=2',
   },
   openGraph: {
-    title: 'Opera AI',
-    description: 'AI-powered dental practice management',
-    images: [{ url: '/og.png', width: 1200, height: 630 }],
+    title: 'OperaAI',
+    description: 'The future of patient education.',
+    images: [{ url: '/og.png?v=2', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Opera AI',
-    images: ['/og.png'],
+    title: 'OperaAI',
+    images: ['/og.png?v=2'],
   },
 }
 
