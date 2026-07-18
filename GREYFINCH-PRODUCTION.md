@@ -70,9 +70,9 @@ patient → Generate. The signup itself is one form + one checkout.
 | `OPERA_ACTIVATION_CODE` | beta code to hand clinics (see App Runner console) |
 | `OPERA_PUBLIC_URL` | `https://fjuy43gika.us-east-1.awsapprunner.com` |
 | `OPERA_MONTHLY_PRICE_DISPLAY` | shown on /connect (change anytime, no rebuild) |
-| `STRIPE_SECRET_KEY` | **unset — Anish** |
-| `STRIPE_PRICE_ID` | **unset — Anish** (monthly recurring price) |
-| `STRIPE_WEBHOOK_SECRET` | **unset — Anish** |
+| `STRIPE_SECRET_KEY` | **TEST-mode key set 2026-07-17** — swap to live key at go-live |
+| `STRIPE_PRICE_ID_CORE` / `STRIPE_PRICE_ID_GROWTH` | TEST prices ($199/$999) — recreate in live mode at go-live |
+| `STRIPE_WEBHOOK_SECRET` | set (endpoint `we_1TuNDWEqbJ9c0fujBYJr5R8S` → getopera.ai, test mode) |
 
 ⚠️ `deploy-apprunner.sh` **overwrites** the service env with a hardcoded subset
 (it predates the Lambda/Greyfinch/connect vars). Until it's fixed, deploy with:
@@ -92,22 +92,34 @@ production Greyfinch** with all 4 launchers. The updated definition
 `cd greyfinch-connect-sdk/opera-app && GREYFINCH_ENDPOINT=https://connect-api.greyfinch.com/v1/graphql GREYFINCH_APP_KEY=… GREYFINCH_APP_SECRET=… APP_FILE=app.prod.json node push-app.mjs --apply`
 (creds are in the App Runner env console).
 
+## State as of 2026-07-17
+
+- Jacob's org (`5eb1f`) verified end-to-end from our app creds: client key
+  GRANTED, client login OK, **4 outbound SMS numbers** (real texts send in his
+  env), patient queries work. `GREYFINCH_ORG_XID=5eb1f` on the service.
+- Jacob is generating videos via the embed, connected with the legacy
+  `greyfinchtest` key (billing bypass — move him to a real key before flipping
+  `OPERA_ALLOW_TEST_KEY=0`).
+- Stripe TEST mode wired everywhere: plan-aware /connect (Core $199 / Growth
+  $999, 30-day trial) on both getopera.ai (Netlify) and App Runner; webhook
+  registered (test mode) at getopera.ai/api/connect/stripe-webhook; secret in
+  both Netlify + App Runner env.
+- Greyfinch prod app def **v1.2.0**: website + Connect prompt →
+  `https://getopera.ai/connect`; launchers stay on App Runner.
+
 ## Anish TODO (in order)
 
-1. **Stripe (turns on real payments)** — create a Product "Opera Patient
-   Videos" + monthly Price; add `STRIPE_SECRET_KEY` + `STRIPE_PRICE_ID` to App
-   Runner env; add a webhook endpoint
-   `https://fjuy43gika.us-east-1.awsapprunner.com/api/connect/stripe-webhook`
-   with events `checkout.session.completed`, `customer.subscription.updated`,
-   `customer.subscription.deleted`, `invoice.payment_failed`; set
-   `STRIPE_WEBHOOK_SECRET`. Test with a Stripe test key first. Then set
-   `OPERA_ALLOW_TEST_KEY=0`.
-2. **Get the app in front of Jacob** — the app is UNLISTED on production; ask
-   Neil/Jake to allow-list Jacob's org (or flip to LISTED when ready). Confirm
-   with Neil which org xid Jacob's install runs under.
-3. **Org scoping** — `_lib/greyfinch.ts` is single-org (`GREYFINCH_ORG_XID` env,
-   used for SMS/timeline/notes lookups). Set it to Jacob's org xid for the
-   pilot; needs per-connection org resolution before the wider rollout.
+1. **Stripe live mode** — in the Stripe dashboard switch to live, create the
+   Core/Growth prices again, then: put the live `sk_live_` +
+   live `STRIPE_PRICE_ID_CORE`/`_GROWTH` into BOTH Netlify env and App Runner
+   env, create a live-mode webhook endpoint (same URL + events) and update
+   `STRIPE_WEBHOOK_SECRET` in both. Everything else is already wired.
+2. **Move Jacob to a real key** — /connect → activation code → key; then in
+   Greyfinch admin → Apps → Opera → Connect, replace `greyfinchtest` with it.
+   Then set `OPERA_ALLOW_TEST_KEY=0` on App Runner.
+3. **Multi-org scoping (before clinic #2)** — `_lib/greyfinch.ts` is single-org
+   (`GREYFINCH_ORG_XID`); per-connection org resolution needed for the next
+   clinic beyond Jacob.
 4. **Price** — $299/month is a placeholder; set the real number in the Stripe
    Price and `OPERA_MONTHLY_PRICE_DISPLAY`.
 5. **Terms** — `/connect/terms` is a working draft; have counsel review, and
