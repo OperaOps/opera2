@@ -25,7 +25,7 @@ export default function Voice() {
             >
               <span
                 aria-hidden
-                className="cf-display block text-[64px] leading-[0.6] text-[#5f7a61]/25"
+                className="cf-display block text-[64px] leading-[0.6] text-[#5f7a61]"
               >
                 &ldquo;
               </span>
