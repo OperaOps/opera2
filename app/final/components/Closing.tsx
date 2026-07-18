@@ -10,8 +10,12 @@ export default function Closing() {
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           {/* wordmark + tagline */}
           <div>
-            <span className="cf-display text-[26px] leading-none tracking-[-0.01em] text-[#1a1a17]">
-              Opera<span className="text-[#5f7a61]">AI</span>
+            <span className="flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/videos/sitepics/logo-mark.png" alt="" className="h-[42px] w-[42px]" />
+              <span className="cf-display text-[26px] leading-none tracking-[-0.01em] text-[#1a1a17]">
+                Opera<span className="text-[#5f7a61]">AI</span>
+              </span>
             </span>
             <p className="cf-body mt-4 max-w-sm text-[15.5px] leading-relaxed text-[#5e6a60]">
               The future of patient education.

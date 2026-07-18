@@ -26,8 +26,12 @@ export default function Nav() {
       className="fixed inset-x-0 top-4 z-50 px-4 md:px-8"
     >
       <div className="mx-auto flex h-[62px] max-w-[1240px] items-center justify-between rounded-full border border-[#1a1a17]/10 bg-white px-7 shadow-[0_14px_44px_-18px_rgba(26,26,23,0.28)]">
-        <a href="#top" className="cf-display text-[23px] leading-none tracking-[-0.01em] text-[#1a1a17]">
-          Opera<span className="text-[#5f7a61]">AI</span>
+        <a href="#top" className="flex items-center gap-2.5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/videos/sitepics/logo-mark.png" alt="" className="h-[34px] w-[34px]" />
+          <span className="cf-display text-[23px] leading-none tracking-[-0.01em] text-[#1a1a17]">
+            Opera<span className="text-[#5f7a61]">AI</span>
+          </span>
         </a>
 
         <div className="flex items-center gap-7">
