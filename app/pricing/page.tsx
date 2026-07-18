@@ -114,7 +114,7 @@ const FAQS = [
 // ---------------------------------------------------------------------------
 
 function FeatureCheck({ v }: { v: string | boolean }) {
-  if (v === true) return <Check className="mx-auto h-4 w-4 text-purple-600" />;
+  if (v === true) return <Check className="mx-auto h-4 w-4 text-[#5f7a61]" />;
   if (v === false) return <Minus className="mx-auto h-4 w-4 text-gray-300" />;
   return <span className="text-[13px] font-medium text-gray-700">{v}</span>;
 }
@@ -123,12 +123,12 @@ export default function PricingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 antialiased selection:bg-purple-100">
+    <div className="min-h-screen bg-white text-gray-900 antialiased selection:bg-[#5f7a61]/10">
       {/* Nav — matches the landing page */}
       <nav className="fixed left-0 right-0 top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-2xl">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="text-lg font-bold tracking-tight text-gray-900">
-            Opera<span className="text-purple-600">AI</span>
+            Opera<span className="text-[#5f7a61]">AI</span>
           </Link>
           <div className="flex items-center gap-6">
             <Link href="/pricing" className="text-[13px] font-medium text-gray-900">Pricing</Link>
@@ -149,13 +149,13 @@ export default function PricingPage() {
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-6 pb-4 pt-32 text-center">
         <motion.div {...reveal}>
-          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-purple-200 bg-purple-50 px-3.5 py-1.5 text-xs font-semibold text-purple-700">
+          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-[#5f7a61]/30 bg-[#5f7a61]/[0.07] px-3.5 py-1.5 text-xs font-semibold text-[#3e5540]">
             <Sparkles className="h-3.5 w-3.5" />
             30-day free trial on every plan
           </div>
           <h1 className="mx-auto max-w-3xl text-4xl font-bold leading-[1.08] tracking-tight md:text-6xl">
             Pricing that pays for itself with{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-violet-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#5f7a61] to-[#5f7a61] bg-clip-text text-transparent">
               one accepted case
             </span>
           </h1>
@@ -176,20 +176,20 @@ export default function PricingPage() {
               transition={{ ...reveal.transition, delay: i * 0.08 }}
               className={
                 p.highlight
-                  ? "relative rounded-3xl bg-gray-900 p-8 text-white shadow-[0_24px_80px_rgba(88,28,135,0.35)] ring-1 ring-purple-500/40"
+                  ? "relative rounded-3xl bg-gray-900 p-8 text-white shadow-[0_24px_80px_rgba(63,85,64,0.35)] ring-1 ring-[#5f7a61]/40"
                   : "relative rounded-3xl border border-gray-200 bg-white p-8 shadow-[0_10px_40px_rgba(15,23,42,0.06)]"
               }
             >
               {p.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-purple-600 to-violet-500 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-[#5f7a61] to-[#5f7a61] px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
                   Most popular
                 </div>
               )}
               <div className="flex items-center gap-2">
                 {p.name === "Enterprise" && (
-                  <Building2 className={p.highlight ? "h-4 w-4 text-purple-300" : "h-4 w-4 text-purple-600"} />
+                  <Building2 className={p.highlight ? "h-4 w-4 text-[#a9c0aa]" : "h-4 w-4 text-[#5f7a61]"} />
                 )}
-                <h3 className={`text-sm font-bold uppercase tracking-wider ${p.highlight ? "text-purple-300" : "text-purple-600"}`}>
+                <h3 className={`text-sm font-bold uppercase tracking-wider ${p.highlight ? "text-[#a9c0aa]" : "text-[#5f7a61]"}`}>
                   {p.name}
                 </h3>
               </div>
@@ -207,8 +207,8 @@ export default function PricingPage() {
                 {...(p.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className={
                   p.highlight
-                    ? "mt-6 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-violet-500 px-5 py-3 text-sm font-semibold text-white transition-all hover:opacity-90"
-                    : "mt-6 flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-900 transition-colors hover:border-purple-400 hover:text-purple-700"
+                    ? "mt-6 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#5f7a61] to-[#5f7a61] px-5 py-3 text-sm font-semibold text-white transition-all hover:opacity-90"
+                    : "mt-6 flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-900 transition-colors hover:border-[#5f7a61]/60 hover:text-[#3e5540]"
                 }
               >
                 {p.cta}
@@ -217,7 +217,7 @@ export default function PricingPage() {
               <ul className="mt-7 space-y-3">
                 {p.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5">
-                    <Check className={`mt-0.5 h-4 w-4 shrink-0 ${p.highlight ? "text-purple-300" : "text-purple-600"}`} />
+                    <Check className={`mt-0.5 h-4 w-4 shrink-0 ${p.highlight ? "text-[#a9c0aa]" : "text-[#5f7a61]"}`} />
                     <span className={`text-[13.5px] leading-snug ${p.highlight ? "text-white/80" : "text-gray-600"}`}>
                       {f}
                     </span>
@@ -244,7 +244,7 @@ export default function PricingPage() {
               <tr className="border-b border-gray-200 bg-gray-50/70">
                 <th className="px-5 py-3.5 text-[13px] font-semibold text-gray-500">Feature</th>
                 <th className="px-4 py-3.5 text-center text-[13px] font-semibold text-gray-900">Core</th>
-                <th className="px-4 py-3.5 text-center text-[13px] font-semibold text-purple-700">Growth</th>
+                <th className="px-4 py-3.5 text-center text-[13px] font-semibold text-[#3e5540]">Growth</th>
                 <th className="px-4 py-3.5 text-center text-[13px] font-semibold text-gray-900">Enterprise</th>
               </tr>
             </thead>
@@ -275,7 +275,7 @@ export default function PricingPage() {
                 className="flex w-full items-center justify-between px-6 py-4 text-left"
               >
                 <span className="text-[14.5px] font-semibold text-gray-900">{f.q}</span>
-                <span className={`text-lg text-purple-600 transition-transform ${openFaq === i ? "rotate-45" : ""}`}>+</span>
+                <span className={`text-lg text-[#5f7a61] transition-transform ${openFaq === i ? "rotate-45" : ""}`}>+</span>
               </button>
               {openFaq === i && (
                 <p className="px-6 pb-5 text-[13.5px] leading-relaxed text-gray-500">{f.a}</p>
@@ -291,7 +291,7 @@ export default function PricingPage() {
           {...reveal}
           className="relative overflow-hidden rounded-3xl bg-gray-950 px-8 py-14 text-center text-white"
         >
-          <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[540px] -translate-x-1/2 rounded-full bg-purple-600/25 blur-3xl" />
+          <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[540px] -translate-x-1/2 rounded-full bg-[#5f7a61]/25 blur-3xl" />
           <h2 className="relative text-3xl font-bold tracking-tight md:text-4xl">
             Your patients are waiting to understand
           </h2>
@@ -301,7 +301,7 @@ export default function PricingPage() {
           <div className="relative mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               href="/connect"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-violet-500 px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#5f7a61] to-[#5f7a61] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             >
               Start your free trial <ArrowRight className="h-4 w-4" />
             </Link>

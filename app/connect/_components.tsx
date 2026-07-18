@@ -62,7 +62,7 @@ export function KeyReveal({
 
       <a
         href="/clinic/dashboard"
-        className="block w-full rounded-xl bg-purple-600 hover:bg-purple-700 px-4 py-3 text-center text-sm font-semibold text-white transition"
+        className="block w-full rounded-xl bg-[#5f7a61] hover:bg-[#4e6650] px-4 py-3 text-center text-sm font-semibold text-white transition"
       >
         Go to your dashboard →
       </a>

@@ -46,7 +46,7 @@ export default function SignInPage() {
         {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-purple-500 rounded-full"
+            className="absolute w-1 h-1 bg-[#5f7a61] rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -71,7 +71,7 @@ export default function SignInPage() {
         <Link href="/">
           <motion.button
             whileHover={{ x: -4 }}
-            className="flex items-center gap-2 text-purple-300/70 hover:text-purple-300 mb-8 transition-colors"
+            className="flex items-center gap-2 text-[#a9c0aa]/70 hover:text-[#a9c0aa] mb-8 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="text-sm font-light">Back</span>
@@ -83,26 +83,26 @@ export default function SignInPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="bg-black/80 backdrop-blur-xl border-2 border-purple-700/50 rounded-2xl p-8 shadow-2xl shadow-purple-900/20"
+          className="bg-black/80 backdrop-blur-xl border-2 border-[#5f7a61]/50 rounded-2xl p-8 shadow-2xl shadow-[#3e5540]/20"
         >
           <h1 className="text-3xl font-serif text-white mb-2">Sign In</h1>
-          <p className="text-purple-300/60 text-sm font-light mb-8">
+          <p className="text-[#a9c0aa]/60 text-sm font-light mb-8">
             Enter your credentials to access Opera AI
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label className="block text-sm text-purple-300/70 mb-2 font-light">
+              <label className="block text-sm text-[#a9c0aa]/70 mb-2 font-light">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-500/50" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#5f7a61]/50" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-black/50 border border-purple-700/30 rounded-lg text-white placeholder-purple-500/30 focus:outline-none focus:border-purple-500/50 transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-black/50 border border-[#5f7a61]/30 rounded-lg text-white placeholder-[#5f7a61]/40 focus:outline-none focus:border-[#5f7a61]/50 transition-colors"
                   placeholder="you@example.com"
                   required
                 />
@@ -111,16 +111,16 @@ export default function SignInPage() {
 
             {/* Password Field */}
             <div>
-              <label className="block text-sm text-purple-300/70 mb-2 font-light">
+              <label className="block text-sm text-[#a9c0aa]/70 mb-2 font-light">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-500/50" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#5f7a61]/50" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-black/50 border border-purple-700/30 rounded-lg text-white placeholder-purple-500/30 focus:outline-none focus:border-purple-500/50 transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-black/50 border border-[#5f7a61]/30 rounded-lg text-white placeholder-[#5f7a61]/40 focus:outline-none focus:border-[#5f7a61]/50 transition-colors"
                   placeholder="••••••••"
                   required
                 />
@@ -148,15 +148,15 @@ export default function SignInPage() {
               }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2 }}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 rounded-lg text-white font-medium shadow-lg shadow-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-gradient-to-r from-[#5f7a61] to-[#3e5540] hover:from-[#4e6650] hover:to-[#3e5540] rounded-lg text-white font-medium shadow-lg shadow-[#5f7a61]/30 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "Logging in..." : "Login"}
             </motion.button>
           </form>
 
           {/* Demo portal access */}
-          <div className="mt-8 pt-6 border-t border-purple-700/30">
-            <p className="text-xs uppercase tracking-wider text-purple-400/60 mb-4 text-center font-medium">
+          <div className="mt-8 pt-6 border-t border-[#5f7a61]/30">
+            <p className="text-xs uppercase tracking-wider text-[#5f7a61]/70/60 mb-4 text-center font-medium">
               Or try the demo portals
             </p>
             <div className="space-y-3">
@@ -164,22 +164,22 @@ export default function SignInPage() {
                 <motion.div
                   whileHover={{ x: 4 }}
                   transition={{ duration: 0.2 }}
-                  className="group flex items-center justify-between p-4 bg-purple-600/5 hover:bg-purple-600/10 border border-purple-700/30 hover:border-purple-500/50 rounded-lg cursor-pointer transition-all"
+                  className="group flex items-center justify-between p-4 bg-[#5f7a61]/5 hover:bg-[#5f7a61]/10 border border-[#5f7a61]/30 hover:border-[#5f7a61]/50 rounded-lg cursor-pointer transition-all"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-purple-600/20 border border-purple-500/30 flex items-center justify-center">
-                      <Building2 className="w-5 h-5 text-purple-300" />
+                    <div className="w-10 h-10 rounded-lg bg-[#5f7a61]/20 border border-[#5f7a61]/30 flex items-center justify-center">
+                      <Building2 className="w-5 h-5 text-[#a9c0aa]" />
                     </div>
                     <div>
                       <p className="text-sm text-white font-medium">
                         Clinic Portal
                       </p>
-                      <p className="text-xs text-purple-300/60 font-light">
+                      <p className="text-xs text-[#a9c0aa]/60 font-light">
                         Generate and send patient videos
                       </p>
                     </div>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                  <ArrowRight className="w-4 h-4 text-[#5f7a61]/70 group-hover:text-[#a9c0aa] transition-colors" />
                 </motion.div>
               </Link>
 
@@ -187,38 +187,38 @@ export default function SignInPage() {
                 <motion.div
                   whileHover={{ x: 4 }}
                   transition={{ duration: 0.2 }}
-                  className="group flex items-center justify-between p-4 bg-purple-600/5 hover:bg-purple-600/10 border border-purple-700/30 hover:border-purple-500/50 rounded-lg cursor-pointer transition-all"
+                  className="group flex items-center justify-between p-4 bg-[#5f7a61]/5 hover:bg-[#5f7a61]/10 border border-[#5f7a61]/30 hover:border-[#5f7a61]/50 rounded-lg cursor-pointer transition-all"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-purple-600/20 border border-purple-500/30 flex items-center justify-center">
-                      <User className="w-5 h-5 text-purple-300" />
+                    <div className="w-10 h-10 rounded-lg bg-[#5f7a61]/20 border border-[#5f7a61]/30 flex items-center justify-center">
+                      <User className="w-5 h-5 text-[#a9c0aa]" />
                     </div>
                     <div>
                       <p className="text-sm text-white font-medium">
                         Patient Portal
                       </p>
-                      <p className="text-xs text-purple-300/60 font-light">
+                      <p className="text-xs text-[#a9c0aa]/60 font-light">
                         View your treatment video
                       </p>
                     </div>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                  <ArrowRight className="w-4 h-4 text-[#5f7a61]/70 group-hover:text-[#a9c0aa] transition-colors" />
                 </motion.div>
               </Link>
             </div>
 
             {/* Demo credentials */}
-            <div className="mt-5 p-3 bg-black/40 border border-purple-700/20 rounded-lg">
-              <p className="text-[10px] uppercase tracking-wider text-purple-400/60 mb-2 font-medium">
+            <div className="mt-5 p-3 bg-black/40 border border-[#5f7a61]/20 rounded-lg">
+              <p className="text-[10px] uppercase tracking-wider text-[#5f7a61]/70/60 mb-2 font-medium">
                 Demo credentials
               </p>
-              <div className="space-y-1.5 text-[11px] text-purple-300/70 font-mono">
+              <div className="space-y-1.5 text-[11px] text-[#a9c0aa]/70 font-mono">
                 <div>
-                  <span className="text-purple-400/60">Clinic:</span>{" "}
+                  <span className="text-[#5f7a61]/70/60">Clinic:</span>{" "}
                   demo@smileortho.com / opera2024
                 </div>
                 <div>
-                  <span className="text-purple-400/60">Patient:</span>{" "}
+                  <span className="text-[#5f7a61]/70/60">Patient:</span>{" "}
                   sarah.johnson@example.com / 1995-06-15 / 482917
                 </div>
               </div>

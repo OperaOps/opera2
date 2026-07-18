@@ -17,7 +17,7 @@ export default async function PatientSharePage({ params }: { params: { id: strin
   const treatmentLabel = ctx.treatmentType.replace(/_/g, " ");
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50/60 via-white to-white text-gray-900 antialiased">
+    <div className="min-h-screen bg-gradient-to-b from-[#f5f8f5] via-white to-white text-gray-900 antialiased">
       {/* Clinic header */}
       <header className="mx-auto flex max-w-3xl items-center justify-between px-5 pt-6">
         <div className="flex items-center gap-2.5">
@@ -29,7 +29,7 @@ export default async function PatientSharePage({ params }: { params: { id: strin
               className="h-8 w-8 rounded-lg object-cover"
             />
           ) : (
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-violet-500 text-[13px] font-bold text-white">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#5f7a61] to-[#5f7a61] text-[13px] font-bold text-white">
               {ctx.clinicName.charAt(0)}
             </span>
           )}
@@ -38,14 +38,14 @@ export default async function PatientSharePage({ params }: { params: { id: strin
             {ctx.provider && <p className="text-[11.5px] text-gray-400">{ctx.provider}</p>}
           </div>
         </div>
-        <span className="rounded-full bg-purple-100 px-3 py-1 text-[11px] font-semibold capitalize text-purple-700">
+        <span className="rounded-full bg-[#5f7a61]/10 px-3 py-1 text-[11px] font-semibold capitalize text-[#3e5540]">
           {treatmentLabel}
         </span>
       </header>
 
       {/* Title */}
       <div className="mx-auto max-w-3xl px-5 pt-8 text-center">
-        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-purple-600">
+        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#5f7a61]">
           Made for {ctx.patientFirstName}
         </p>
         <h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">{ctx.videoTitle}</h1>
@@ -56,7 +56,7 @@ export default async function PatientSharePage({ params }: { params: { id: strin
 
       {/* The video */}
       <div className="mx-auto mt-6 max-w-3xl px-5">
-        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-black shadow-[0_24px_70px_rgba(88,28,135,0.16)]">
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-black shadow-[0_24px_70px_rgba(63,85,64,0.18)]">
           <video
             src={ctx.videoUrl}
             controls
@@ -79,7 +79,7 @@ export default async function PatientSharePage({ params }: { params: { id: strin
       </div>
 
       <footer className="border-t border-gray-100 py-5 text-center text-[11px] text-gray-400">
-        Powered by <span className="font-semibold text-gray-500">Opera<span className="text-purple-500">AI</span></span> · Personalized patient education
+        Powered by <span className="font-semibold text-gray-500">Opera<span className="text-[#5f7a61]">AI</span></span> · Personalized patient education
       </footer>
     </div>
   );

@@ -557,7 +557,7 @@ function GeneratingScreen({ jobStatus, onCancel, embedded = false }: { jobStatus
           <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="42" fill="none" stroke="#f3f0ff" strokeWidth="6" />
             <motion.circle
-              cx="50" cy="50" r="42" fill="none" stroke="#7c3aed" strokeWidth="6"
+              cx="50" cy="50" r="42" fill="none" stroke="#5f7a61" strokeWidth="6"
               strokeLinecap="round"
               strokeDasharray={264}
               strokeDashoffset={264 - 264 * progress}
