@@ -140,9 +140,9 @@ export function AskOpera({
           e.preventDefault();
           ask(input);
         }}
-        className="mx-auto mt-4 flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-2.5 shadow-[0_6px_28px_rgba(88,28,135,0.08)] transition-shadow focus-within:border-purple-300 focus-within:shadow-[0_6px_32px_rgba(88,28,135,0.14)]"
+        className="mx-auto mt-4 flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-2.5 shadow-[0_6px_28px_rgba(63,85,64,0.10)] transition-shadow focus-within:border-[#5f7a61]/50 focus-within:shadow-[0_6px_32px_rgba(63,85,64,0.16)]"
       >
-        <Sparkles className="h-4 w-4 shrink-0 text-purple-500" />
+        <Sparkles className="h-4 w-4 shrink-0 text-[#5f7a61]" />
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -154,7 +154,7 @@ export function AskOpera({
           type="submit"
           disabled={!input.trim() || !!pending}
           aria-label="Ask"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-violet-500 text-white transition-opacity disabled:opacity-30"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#5f7a61] text-white transition-opacity disabled:opacity-30"
         >
           <ArrowUp className="h-4 w-4" />
         </button>
@@ -170,7 +170,7 @@ export function AskOpera({
             key={s}
             onClick={() => ask(s)}
             disabled={!!pending}
-            className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-[13px] text-gray-600 transition-colors hover:border-purple-300 hover:bg-purple-50 hover:text-purple-800 disabled:opacity-50"
+            className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-[13px] text-gray-600 transition-colors hover:border-[#5f7a61]/50 hover:bg-[#5f7a61]/[0.06] hover:text-[#3e5540] disabled:opacity-50"
           >
             {s}
           </button>
@@ -185,11 +185,11 @@ export function AskOpera({
               key="pending"
               initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl border border-purple-100 bg-purple-50/50 px-5 py-4"
+              className="rounded-2xl border border-[#5f7a61]/20 bg-[#5f7a61]/[0.05] px-5 py-4"
             >
-              <p className="text-[12.5px] font-semibold text-purple-800">{pending}</p>
+              <p className="text-[12.5px] font-semibold text-[#3e5540]">{pending}</p>
               <p className="mt-2 inline-flex items-center gap-2 text-[13.5px] text-gray-400">
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-purple-500" />
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-[#5f7a61]" />
                 Opera is thinking…
               </p>
             </motion.div>
@@ -200,9 +200,9 @@ export function AskOpera({
               initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="rounded-2xl border border-purple-100 bg-purple-50/50 px-5 py-4"
+              className="rounded-2xl border border-[#5f7a61]/20 bg-[#5f7a61]/[0.05] px-5 py-4"
             >
-              <p className="text-[12.5px] font-semibold text-purple-800">{e.q}</p>
+              <p className="text-[12.5px] font-semibold text-[#3e5540]">{e.q}</p>
               <p className="mt-1.5 whitespace-pre-line text-[14.5px] leading-relaxed text-gray-700">
                 {e.a}
               </p>
@@ -213,7 +213,7 @@ export function AskOpera({
                       key={f}
                       onClick={() => ask(f)}
                       disabled={!!pending}
-                      className="rounded-full border border-purple-200 bg-white px-3 py-1 text-[12px] text-purple-700 transition-colors hover:border-purple-400 hover:bg-purple-50 disabled:opacity-50"
+                      className="rounded-full border border-[#5f7a61]/30 bg-white px-3 py-1 text-[12px] text-[#3e5540] transition-colors hover:border-[#5f7a61]/60 hover:bg-[#5f7a61]/[0.06] disabled:opacity-50"
                     >
                       {f}
                     </button>
@@ -232,9 +232,9 @@ export function AskOpera({
             key={t.label}
             onClick={t.onClick}
             disabled={!!pending && t.label !== "Share with Family" && t.label !== "Link copied!"}
-            className="group flex flex-col items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-4 text-center transition-all hover:-translate-y-0.5 hover:border-purple-300 hover:shadow-[0_10px_30px_rgba(88,28,135,0.10)] disabled:opacity-60"
+            className="group flex flex-col items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-4 text-center transition-all hover:-translate-y-0.5 hover:border-[#5f7a61]/50 hover:shadow-[0_10px_30px_rgba(63,85,64,0.12)] disabled:opacity-60"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-600 transition-colors group-hover:bg-purple-100">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#5f7a61]/10 text-[#5f7a61] transition-colors group-hover:bg-[#5f7a61]/15">
               <t.icon className="h-[18px] w-[18px]" />
             </span>
             <span className="text-[12.5px] font-medium leading-tight text-gray-700">{t.label}</span>
