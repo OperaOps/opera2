@@ -14,7 +14,7 @@ export default function Voice() {
     <section className="border-t border-[#1a1a17]/15">
       <div className="grid md:min-h-[88vh] md:grid-cols-[52fr_48fr]">
         {/* ── Quote half ─────────────────────────────────────────────── */}
-        <div className="flex items-center px-6 py-24 md:py-32 md:pl-[max(3rem,calc((100vw-1480px)/2+3rem))] md:pr-20">
+        <div className="flex items-center px-6 py-16 md:py-32 md:pl-[max(3rem,calc((100vw-1480px)/2+3rem))] md:pr-20">
           <div className="w-full max-w-[600px]">
             <motion.blockquote
               initial={{ opacity: 0, y: 22 }}
@@ -41,7 +41,7 @@ export default function Voice() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.8, delay: 0.18, ease: EASE }}
-              className="cf-mono mt-10 text-[13px] uppercase tracking-[0.22em] text-[#6e7a71]"
+              className="cf-mono mt-8 text-[12px] uppercase md:mt-10 md:text-[13px] tracking-[0.22em] text-[#6e7a71]"
             >
               <span className="text-[#1a1a17]">Dr. Umesh Kodu</span>
               <span className="mx-2 text-[#1a1a17]/25">·</span>

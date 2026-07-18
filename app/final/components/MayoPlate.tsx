@@ -42,7 +42,7 @@ export default function MayoPlate() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.9, ease: EASE }}
-              className="group block w-full max-w-[440px] rounded-2xl bg-[#5f7a61] p-8 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.7)] transition-colors duration-300 hover:bg-[#516b53] md:p-10"
+              className="group block w-full max-w-[440px] rounded-2xl bg-[#5f7a61] p-6 sm:p-8 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.7)] transition-colors duration-300 hover:bg-[#516b53] md:p-10"
             >
               <span className="cf-display flex items-center gap-3 text-[clamp(2rem,3.4vw,3rem)] font-light leading-none tracking-[-0.02em] text-white">
                 Book a demo

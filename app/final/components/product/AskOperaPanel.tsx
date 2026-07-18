@@ -66,7 +66,7 @@ export default function AskOperaPanel() {
       </div>
 
       {/* ——— the console ——— */}
-      <div className="flex min-h-[380px] flex-col">
+      <div className="flex min-h-[320px] flex-col md:min-h-[380px]">
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-5 md:p-6">
           {/* the question, dropped in */}
           <AnimatePresence mode="wait" initial={false}>

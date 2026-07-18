@@ -37,7 +37,7 @@ function SignalBadge({ signal }: { signal: Signal }) {
 
 function VideoSlide() {
   return (
-    <div className="grid h-full items-center gap-10 p-8 md:p-14 lg:grid-cols-[1fr_1.35fr]">
+    <div className="grid h-full items-center gap-7 p-6 sm:p-8 md:gap-10 md:p-14 lg:grid-cols-[1fr_1.35fr]">
       <div>
         <h3 className="cf-display text-[clamp(2.2rem,4vw,3.6rem)] font-light leading-[1.02] tracking-[-0.02em] text-[#1a1a17]">
           Personalized videos, at your fingertips.
@@ -61,7 +61,7 @@ function VideoSlide() {
 
 function AskSlide() {
   return (
-    <div className="flex h-full flex-col p-8 md:p-14">
+    <div className="flex h-full flex-col p-6 sm:p-8 md:p-14">
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <h3 className="cf-display text-[clamp(2rem,3.2vw,2.9rem)] font-light leading-[1.02] tracking-[-0.02em] text-[#1a1a17]">
           Ask Opera.
@@ -93,7 +93,7 @@ function IntentSlide() {
   ];
 
   return (
-    <div className="flex h-full flex-col p-8 md:p-14">
+    <div className="flex h-full flex-col p-6 sm:p-8 md:p-14">
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <h3 className="cf-display text-[clamp(2rem,3.2vw,2.9rem)] font-light leading-[1.02] tracking-[-0.02em] text-[#1a1a17]">
           The data behind intent.
@@ -224,8 +224,8 @@ export default function ProductCarousel() {
     <section id="product" className="scroll-mt-16 border-t border-[#1a1a17]/10 bg-white py-16 md:py-24">
       <div className="relative px-5 md:px-12">
         {/* the card */}
-        <div className="relative h-[640px] overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f1f6f1] via-[#fbfdfb] to-[#e9f1ea] md:h-[660px]">
-          <AnimatePresence mode="popLayout" initial={false} custom={dir}>
+        <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f1f6f1] via-[#fbfdfb] to-[#e9f1ea] md:h-[660px]">
+          <AnimatePresence mode="wait" initial={false} custom={dir}>
             <motion.div
               key={SLIDES[index].key}
               custom={dir}
@@ -233,7 +233,7 @@ export default function ProductCarousel() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: dir >= 0 ? -120 : 120, opacity: 0 }}
               transition={{ duration: 0.55, ease: EASE }}
-              className="absolute inset-0"
+              className="relative md:absolute md:inset-0"
             >
               {SLIDES[index].node}
             </motion.div>
@@ -244,14 +244,14 @@ export default function ProductCarousel() {
         <button
           aria-label="Previous"
           onClick={() => go(-1)}
-          className="absolute left-1 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#1a1a17] text-white shadow-lg transition-colors hover:bg-[#5f7a61] md:left-4"
+          className="absolute left-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#1a1a17] text-white shadow-lg transition-colors hover:bg-[#5f7a61] md:left-4 md:h-12 md:w-12"
         >
           <ChevronLeft size={20} />
         </button>
         <button
           aria-label="Next"
           onClick={() => go(1)}
-          className="absolute right-1 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#1a1a17] text-white shadow-lg transition-colors hover:bg-[#5f7a61] md:right-4"
+          className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#1a1a17] text-white shadow-lg transition-colors hover:bg-[#5f7a61] md:right-4 md:h-12 md:w-12"
         >
           <ChevronRight size={20} />
         </button>

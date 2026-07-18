@@ -25,16 +25,16 @@ export default function Nav() {
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       className="fixed inset-x-0 top-4 z-50 px-4 md:px-8"
     >
-      <div className="mx-auto flex h-[62px] max-w-[1240px] items-center justify-between rounded-full border border-[#1a1a17]/10 bg-white px-7 shadow-[0_14px_44px_-18px_rgba(26,26,23,0.28)]">
+      <div className="mx-auto flex h-[54px] max-w-[1240px] items-center justify-between rounded-full border border-[#1a1a17]/10 bg-white px-4 shadow-[0_14px_44px_-18px_rgba(26,26,23,0.28)] md:h-[62px] md:px-7">
         <a href="#top" className="flex items-center gap-2.5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/videos/sitepics/logo-mark.png" alt="" className="h-[34px] w-[34px]" />
-          <span className="cf-display text-[23px] leading-none tracking-[-0.01em] text-[#1a1a17]">
+          <img src="/videos/sitepics/logo-mark.png" alt="" className="h-[28px] w-[28px] md:h-[34px] md:w-[34px]" />
+          <span className="cf-display text-[19px] leading-none tracking-[-0.01em] text-[#1a1a17] md:text-[23px]">
             Opera<span className="text-[#5f7a61]">AI</span>
           </span>
         </a>
 
-        <div className="flex items-center gap-7">
+        <div className="flex items-center gap-4 md:gap-7">
           <a
             href="#product"
             className="cf-body hidden text-[15.5px] font-medium text-[#1a1a17]/70 transition-colors hover:text-[#1a1a17] sm:block"
@@ -43,7 +43,7 @@ export default function Nav() {
           </a>
           <a
             href="/final/login"
-            className="cf-body text-[15.5px] font-medium text-[#1a1a17]/70 transition-colors hover:text-[#1a1a17]"
+            className="cf-body text-[14px] font-medium text-[#1a1a17]/70 transition-colors hover:text-[#1a1a17]"
           >
             Login
           </a>
@@ -51,7 +51,7 @@ export default function Nav() {
             href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="cf-body rounded-full bg-[#5f7a61] px-6 py-2.5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-[#4e6650]"
+            className="cf-body rounded-full bg-[#5f7a61] px-4 py-2 text-[13.5px] font-medium text-white transition-colors duration-300 hover:bg-[#4e6650] md:px-6 md:py-2.5 md:text-[15px]"
           >
             Book a demo
           </a>
