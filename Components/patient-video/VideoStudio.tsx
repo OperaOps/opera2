@@ -278,14 +278,26 @@ function StartScreen({ onStart }: { onStart: () => void }) {
 // Page 1: Form Wizard
 // ============================================================================
 
+interface PortalPatientOption {
+  id: string;
+  first_name: string;
+  last_name: string;
+  treatment_type: string | null;
+  consulting_provider: string | null;
+}
+
 function FormWizard({
   onSubmit,
   onBack,
   embedded = false,
+  patients = [],
+  prefillPatientId,
 }: {
   onSubmit: (data: Record<string, any>) => void;
   onBack: () => void;
   embedded?: boolean;
+  patients?: PortalPatientOption[];
+  prefillPatientId?: string | null;
 }) {
   const [formStep, setFormStep] = useState(0);
   const [specialty, setSpecialty] = useState<Specialty>("dental");
@@ -298,6 +310,34 @@ function FormWizard({
   const [clinicName, setClinicName] = useState("");
   const [treatmentNotes, setTreatmentNotes] = useState("");
   const [concerns, setConcerns] = useState("");
+  const [selectedPatient, setSelectedPatient] = useState<string>("");
+
+  const applyPatient = (id: string) => {
+    setSelectedPatient(id);
+    if (!id) return;
+    const p = patients.find((x) => x.id === id);
+    if (!p) return;
+    setPatientName(`${p.first_name} ${p.last_name}`.trim());
+    if (p.consulting_provider) setDoctorName(p.consulting_provider);
+    if (p.treatment_type) {
+      const ortho = ORTHODONTIC_TREATMENTS.some((t) => t.value === p.treatment_type);
+      const nextSpecialty: Specialty = ortho ? "orthodontic" : "dental";
+      setSpecialty(nextSpecialty);
+      // apply treatment after the specialty effect resets defaults
+      setTimeout(() => {
+        const opts = TREATMENT_OPTIONS[nextSpecialty];
+        if (opts.some((o) => o.value === p.treatment_type)) {
+          setTreatment(p.treatment_type as string);
+        }
+      }, 0);
+    }
+  };
+
+  // prefill from the patients page (Generate video button on a patient)
+  useEffect(() => {
+    if (prefillPatientId && patients.length) applyPatient(prefillPatientId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefillPatientId, patients.length]);
 
   useEffect(() => {
     const opts = TREATMENT_OPTIONS[specialty];
@@ -410,6 +450,23 @@ function FormWizard({
                   <p className="text-sm text-gray-500">Who is this video for?</p>
                 </div>
                 <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5 shadow-sm">
+                  {patients.length > 0 && (
+                    <FormField label="Start from an existing patient (optional)">
+                      <select
+                        value={selectedPatient}
+                        onChange={(e) => applyPatient(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#5f7a61]/20 focus:border-[#5f7a61] transition-all appearance-none"
+                      >
+                        <option value="">New patient — enter details below</option>
+                        {patients.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.first_name} {p.last_name}
+                            {p.treatment_type ? ` · ${p.treatment_type.replace(/_/g, " ")}` : ""}
+                          </option>
+                        ))}
+                      </select>
+                    </FormField>
+                  )}
                   <FormField label="Patient Name">
                     <TextInput value={patientName} onChange={setPatientName} placeholder="e.g. Sarah Johnson" />
                   </FormField>
@@ -740,7 +797,34 @@ function PreviewScreen({
 // Main Page Controller
 // ============================================================================
 
-export function VideoStudio({ embedded = false }: { embedded?: boolean }) {
+export function VideoStudio({
+  embedded = false,
+  prefillPatientId = null,
+}: {
+  embedded?: boolean;
+  prefillPatientId?: string | null;
+}) {
+  const [portalPatients, setPortalPatients] = useState<PortalPatientOption[]>([]);
+  useEffect(() => {
+    if (!embedded) return;
+    fetch("/api/clinic/patients?limit=200")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.patients) {
+          setPortalPatients(
+            d.patients.map((p: Record<string, unknown>) => ({
+              id: String(p.id),
+              first_name: String(p.first_name ?? ""),
+              last_name: String(p.last_name ?? ""),
+              treatment_type: (p.treatment_type as string) ?? null,
+              consulting_provider: (p.consulting_provider as string) ?? null,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, [embedded]);
+
   // Embedded (clinic portal): no splash screen, no full-screen gradient shells —
   // the studio renders as a native portal page.
   const [step, setStep] = useState<Step>(embedded ? "form" : "start");
@@ -857,7 +941,7 @@ export function VideoStudio({ embedded = false }: { embedded?: boolean }) {
       )}
       {step === "form" && (
         <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <FormWizard onSubmit={handleSubmit} onBack={() => setStep("start")} embedded={embedded} />
+          <FormWizard onSubmit={handleSubmit} onBack={() => setStep("start")} embedded={embedded} patients={portalPatients} prefillPatientId={prefillPatientId} />
         </motion.div>
       )}
       {step === "generating" && (

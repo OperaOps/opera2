@@ -1,14 +1,24 @@
 "use client";
 
 /**
- * Generate Video — the same Patient Video Studio that runs standalone at
- * /patient-video, rendered natively inside the portal (no splash screen,
- * no full-screen shells). API calls proxy to App Runner on Netlify via
- * OPERA_RENDER_UPSTREAM.
+ * Generate Video — the Patient Video Studio inside the portal. Supports
+ * ?patient=<id> to prefill from an existing patient, and offers the
+ * patient dropdown for autofill either way.
  */
 
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { VideoStudio } from "@/Components/patient-video/VideoStudio";
 
+function GenerateInner() {
+  const params = useSearchParams();
+  return <VideoStudio embedded prefillPatientId={params?.get("patient") ?? null} />;
+}
+
 export default function GenerateVideoPage() {
-  return <VideoStudio embedded />;
+  return (
+    <Suspense fallback={null}>
+      <GenerateInner />
+    </Suspense>
+  );
 }

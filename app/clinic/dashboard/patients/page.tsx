@@ -17,6 +17,7 @@ import {
   MessageCircle,
   Plus,
   Search,
+  Sparkles,
   X,
 } from "lucide-react";
 import AddPatientModal from "@/Components/clinic-portal/AddPatientModal";
@@ -410,6 +411,17 @@ export default function PatientsPage() {
                     ))}
                   </div>
                 )}
+              </section>
+
+              {/* generate */}
+              <section>
+                <a
+                  href={`/clinic/dashboard/pipeline?patient=${selected.id}`}
+                  className="cf-body inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#5f7a61] py-3 text-[15px] font-medium text-white transition-colors hover:bg-[#4e6650]"
+                >
+                  <Sparkles size={16} />
+                  Generate a video for {selected.first_name}
+                </a>
               </section>
 
               {/* contact */}
