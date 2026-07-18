@@ -97,7 +97,7 @@ export default function PatientPortalPage() {
   if (loading || !patient || !clinic) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#5f7a61] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -125,8 +125,8 @@ export default function PatientPortalPage() {
   return (
     <div className="min-h-screen bg-gray-950 relative overflow-hidden">
       {/* Background gradients */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-600/3 rounded-full blur-[150px]" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/3 rounded-full blur-[150px]" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#5f7a61]/5 rounded-full blur-[150px]" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#5f7a61]/3 rounded-full blur-[150px]" />
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 py-8 md:py-12">
         <ClinicHeader
@@ -188,9 +188,9 @@ export default function PatientPortalPage() {
                 </p>
                 <button
                   onClick={() => setState("SURVEY")}
-                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600
-                    hover:from-violet-500 hover:to-purple-500 text-white font-medium
-                    transition-all shadow-lg shadow-violet-600/20 text-lg"
+                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#5f7a61] to-[#5f7a61]
+                    hover:from-[#4e6650] hover:to-[#4e6650] text-white font-medium
+                    transition-all shadow-lg shadow-[#5f7a61]/20 text-lg"
                 >
                   Take a Quick Survey
                 </button>
@@ -231,7 +231,7 @@ export default function PatientPortalPage() {
               />
               <button
                 onClick={() => setState("SURVEY_COMPLETED")}
-                className="text-sm text-violet-400 hover:text-violet-300 transition-colors flex items-center gap-1"
+                className="text-sm text-[#5f7a61] hover:text-[#3e5540] transition-colors flex items-center gap-1"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="15,18 9,12 15,6" />
@@ -289,7 +289,7 @@ export default function PatientPortalPage() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                  className="w-20 h-20 rounded-full bg-violet-600/20 flex items-center justify-center mx-auto"
+                  className="w-20 h-20 rounded-full bg-[#5f7a61]/20 flex items-center justify-center mx-auto"
                 >
                   <svg
                     width="40"

@@ -15,13 +15,13 @@ export default function FinalLogin() {
     setBusy(true);
     setError("");
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/auth/clinic/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
       if (res.ok) {
-        window.location.href = "/dashboard";
+        window.location.href = "/clinic/dashboard/patients";
       } else {
         setError("That login didn't work. Check your username and password.");
       }

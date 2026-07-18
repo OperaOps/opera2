@@ -65,7 +65,7 @@ export default function ConfigureStep({
         </div>
         <button
           onClick={onBack}
-          className="text-xs text-violet-400 hover:text-violet-300 transition-colors"
+          className="text-xs text-[#5f7a61] hover:text-[#5f7a61]/70 transition-colors"
         >
           Edit
         </button>
@@ -80,7 +80,7 @@ export default function ConfigureStep({
           value={treatmentType}
           onChange={(e) => setTreatmentType(e.target.value)}
           className="w-full rounded-lg bg-gray-900/80 border border-gray-700 text-white text-sm p-2.5
-            focus:border-violet-500 outline-none"
+            focus:border-[#5f7a61] outline-none"
         >
           <option value="">Select treatment...</option>
           <optgroup label="Dental">
@@ -106,7 +106,7 @@ export default function ConfigureStep({
             onChange={(e) => setProvider(e.target.value)}
             placeholder="Dr. Martinez"
             className="w-full rounded-lg bg-gray-900/80 border border-gray-700 text-white text-sm p-2.5
-              focus:border-violet-500 outline-none placeholder:text-gray-600"
+              focus:border-[#5f7a61] outline-none placeholder:text-gray-600"
           />
         </div>
         <div>
@@ -116,7 +116,7 @@ export default function ConfigureStep({
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className="w-full rounded-lg bg-gray-900/80 border border-gray-700 text-white text-sm p-2.5
-              focus:border-violet-500 outline-none [color-scheme:dark]"
+              focus:border-[#5f7a61] outline-none [color-scheme:dark]"
           />
         </div>
       </div>
@@ -132,7 +132,7 @@ export default function ConfigureStep({
           rows={4}
           placeholder="e.g. patient has mild crowding on lower arch, concerned about treatment duration. Discussed 12-month estimate with refinements."
           className="w-full rounded-lg bg-gray-900/80 border border-gray-700 text-white text-sm p-2.5
-            focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50 outline-none
+            focus:border-[#5f7a61] focus:ring-1 focus:ring-[#5f7a61]/40 outline-none
             placeholder:text-gray-600 resize-none"
         />
       </div>
@@ -148,9 +148,9 @@ export default function ConfigureStep({
         </button>
         <button
           onClick={handleGenerate}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600
-            hover:from-violet-500 hover:to-purple-500 text-white font-medium transition-all
-            shadow-lg shadow-violet-600/20"
+          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#5f7a61] to-[#5f7a61]
+            hover:from-[#4e6650] hover:to-[#4e6650] text-white font-medium transition-all
+            shadow-lg shadow-[#5f7a61]/20"
         >
           Generate Video <ArrowRight className="w-4 h-4" />
         </button>

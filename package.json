@@ -17,6 +17,7 @@
     "@remotion/cli": "^4.0.436",
     "@remotion/lambda": "^4.0.242",
     "@remotion/renderer": "^4.0.436",
+    "@stripe/stripe-js": "^9.10.0",
     "@types/uuid": "^11.0.0",
     "autoprefixer": "^10.4.16",
     "axios": "^1.12.2",

@@ -293,6 +293,14 @@ export function recordVideoGenerated(clinicId: string): void {
   })().catch((err) => console.error("[connect] usage record failed", err));
 }
 
+/** Shared item access for sibling stores living in the same table. */
+export async function portalGetItem(pk: string): Promise<Record<string, unknown> | null> {
+  return getItem(pk);
+}
+export async function portalPutItem(pk: string, item: Record<string, unknown>): Promise<void> {
+  return putItem(pk, item);
+}
+
 /** All clinic records (admin/ops visibility). */
 export async function listClinics(): Promise<ClinicAccount[]> {
   if (isDynamoClinicStoreEnabled()) {

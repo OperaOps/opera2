@@ -63,7 +63,7 @@ export default function GenerateVideoForm({
           value={treatment}
           onChange={(e) => setTreatment(e.target.value)}
           className="w-full rounded-lg bg-gray-900/80 border border-gray-700 text-white text-sm p-2.5
-            focus:border-violet-500 outline-none"
+            focus:border-[#5f7a61] outline-none"
         >
           <option value="">Select treatment...</option>
           <optgroup label="Dental">
@@ -98,7 +98,7 @@ export default function GenerateVideoForm({
           rows={compact ? 2 : 3}
           placeholder="e.g. patient has mild crowding on lower arch, concerned about treatment duration"
           className="w-full rounded-lg bg-gray-900/80 border border-gray-700 text-white text-sm p-2.5
-            focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50 outline-none
+            focus:border-[#5f7a61] focus:ring-1 focus:ring-[#5f7a61]/40 outline-none
             placeholder:text-gray-600 resize-none"
         />
       </div>
@@ -106,9 +106,9 @@ export default function GenerateVideoForm({
       <button
         onClick={handleGenerate}
         disabled={!treatment || submitting}
-        className="w-full py-2.5 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600
-          hover:from-violet-500 hover:to-purple-500 text-white text-sm font-medium
-          transition-all shadow-lg shadow-violet-600/20
+        className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#5f7a61] to-[#5f7a61]
+          hover:from-[#4e6650] hover:to-[#4e6650] text-white text-sm font-medium
+          transition-all shadow-lg shadow-[#5f7a61]/20
           disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {submitting ? "Starting..." : "Generate Video"}

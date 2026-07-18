@@ -92,7 +92,7 @@ export default function ConsultImageUpload({ onAccept }: ConsultImageUploadProps
           onClick={() => fileRef.current?.click()}
           className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
             dragging
-              ? "border-violet-500 bg-violet-500/5"
+              ? "border-[#5f7a61] bg-[#5f7a61]/5"
               : "border-gray-700 hover:border-gray-600"
           }`}
         >
@@ -112,7 +112,7 @@ export default function ConsultImageUpload({ onAccept }: ConsultImageUploadProps
 
       {parsing && (
         <div className="flex items-center justify-center py-6 gap-2">
-          <div className="w-4 h-4 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-4 h-4 border-2 border-[#5f7a61] border-t-transparent rounded-full animate-spin" />
           <span className="text-sm text-gray-400">Analyzing document...</span>
         </div>
       )}
@@ -158,8 +158,8 @@ export default function ConsultImageUpload({ onAccept }: ConsultImageUploadProps
             <div className="flex gap-2 pt-1">
               <button
                 onClick={() => onAccept(parsed)}
-                className="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600
-                  hover:from-violet-500 hover:to-purple-500 text-white text-sm font-medium transition-all"
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#5f7a61] to-[#5f7a61]
+                  hover:from-[#4e6650] hover:to-[#4e6650] text-white text-sm font-medium transition-all"
               >
                 Accept & Fill
               </button>

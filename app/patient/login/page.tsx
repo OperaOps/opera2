@@ -56,8 +56,8 @@ export default function PatientLoginPage() {
     <div className="min-h-screen bg-gray-950 flex items-center justify-center relative overflow-hidden">
       {/* Subtle gradient background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-violet-600/5 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-[150px]" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#5f7a61]/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#5f7a61]/5 rounded-full blur-[150px]" />
       </div>
 
       <motion.div
@@ -106,7 +106,7 @@ export default function PatientLoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full rounded-xl bg-gray-950/80 border border-gray-700 text-white text-base p-3.5
-                focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50 outline-none
+                focus:border-[#5f7a61] focus:ring-1 focus:ring-[#5f7a61]/40 outline-none
                 placeholder:text-gray-600"
               placeholder="your@email.com"
             />
@@ -122,7 +122,7 @@ export default function PatientLoginPage() {
               onChange={(e) => setDob(e.target.value)}
               required
               className="w-full rounded-xl bg-gray-950/80 border border-gray-700 text-white text-base p-3.5
-                focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50 outline-none
+                focus:border-[#5f7a61] focus:ring-1 focus:ring-[#5f7a61]/40 outline-none
                 [color-scheme:dark]"
             />
           </div>
@@ -137,9 +137,9 @@ export default function PatientLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600
-              hover:from-violet-500 hover:to-purple-500 text-white font-medium
-              transition-all shadow-lg shadow-violet-600/20
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#5f7a61] to-[#5f7a61]
+              hover:from-[#4e6650] hover:to-[#4e6650] text-white font-medium
+              transition-all shadow-lg shadow-[#5f7a61]/20
               disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Signing in..." : "View My Treatment"}

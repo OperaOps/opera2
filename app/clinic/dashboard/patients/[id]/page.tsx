@@ -106,7 +106,7 @@ export default function PatientDetailPage() {
       {/* Back button */}
       <button
         onClick={() => router.push("/clinic/dashboard/patients")}
-        className="text-sm text-purple-600 hover:text-purple-500 flex items-center gap-1.5"
+        className="text-sm text-[#5f7a61] hover:text-[#3e5540] flex items-center gap-1.5"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Patients
@@ -136,7 +136,7 @@ export default function PatientDetailPage() {
             <p className="text-gray-500 text-xs">Access Code</p>
             <div className="flex items-center gap-2">
               <p className="text-gray-900 font-mono text-lg">{patient.access_code}</p>
-              <button onClick={() => copyToClipboard(patient.access_code)} className="text-xs text-purple-600 hover:text-purple-500">Copy</button>
+              <button onClick={() => copyToClipboard(patient.access_code)} className="text-xs text-[#5f7a61] hover:text-[#3e5540]">Copy</button>
             </div>
           </div>
           <div>
@@ -190,8 +190,8 @@ export default function PatientDetailPage() {
           )}
           <button
             onClick={() => router.push(`/clinic/dashboard/pipeline?patient_id=${patient.id}`)}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100
-              border border-purple-100 text-purple-700 text-xs transition-colors"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#5f7a61]/[0.07] hover:bg-[#5f7a61]/10
+              border border-[#5f7a61]/20 text-[#3e5540] text-xs transition-colors"
           >
             Generate New Video <ArrowRight className="w-3 h-3" />
           </button>
@@ -258,7 +258,7 @@ export default function PatientDetailPage() {
 function TimelineItem({ date, text }: { date: string; text: string }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 shrink-0" />
+      <div className="w-1.5 h-1.5 rounded-full bg-[#5f7a61] mt-1.5 shrink-0" />
       <div>
         <p className="text-gray-700">{text}</p>
         <p className="text-gray-400 text-xs">{new Date(date).toLocaleString()}</p>

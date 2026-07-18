@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db/patient-portal-schema";
 import { verifyClinicToken } from "@/lib/auth/clinic-auth";
+import { listPortalPatients, upsertPatientByName } from "@/lib/portal/store";
 import {
   dynamoListJobs,
   isDynamoJobStoreEnabled,
@@ -62,6 +63,44 @@ export async function GET(request: NextRequest) {
   // list reflects everything the clinic has actually generated.
   let merged = patients as Record<string, unknown>[];
   let mergedTotal = total.count;
+  // Durable portal patients (production store) — merge ahead of job stubs.
+  try {
+    const durable = await listPortalPatients(clinic.clinicId);
+    const knownNames = new Set(
+      merged.map((p) =>
+        `${String(p.first_name ?? "").toLowerCase()} ${String(p.last_name ?? "").toLowerCase()}`.trim()
+      )
+    );
+    for (const dp of durable) {
+      const nameKey = `${dp.firstName.toLowerCase()} ${dp.lastName.toLowerCase()}`.trim();
+      if (knownNames.has(nameKey)) continue;
+      knownNames.add(nameKey);
+      merged.push({
+        id: dp.patientId,
+        first_name: dp.firstName,
+        last_name: dp.lastName,
+        email: dp.email ?? null,
+        date_of_birth: dp.dateOfBirth ?? null,
+        phone: dp.phone ?? null,
+        treatment_type: dp.treatmentType ?? null,
+        consulting_provider: dp.provider ?? null,
+        consultation_date: null,
+        video_url: null,
+        video_title: null,
+        video_watched: 0,
+        video_watched_at: null,
+        survey_completed: 0,
+        survey_completed_at: null,
+        created_at: dp.createdAt,
+        durable: 1,
+        video_jobs: dp.videoJobs,
+      });
+      mergedTotal++;
+    }
+  } catch (err) {
+    console.error("[clinic/patients] durable store read failed", err);
+  }
+
   const isDemoClinic = clinic.email === "demo@getopera.ai";
   if (isDynamoJobStoreEnabled()) {
     try {
@@ -176,6 +215,17 @@ export async function POST(request: NextRequest) {
         video_url || null,
         video_title || null
       );
+
+    // Mirror into the durable portal store so real clinics keep patients
+    // across serverless deploys (SQLite is ephemeral in production).
+    upsertPatientByName(clinic.clinicId, {
+      firstName: String(first_name),
+      lastName: String(last_name),
+      email: email ? String(email) : undefined,
+      phone: phone ? String(phone) : undefined,
+      treatmentType: treatment_type ? String(treatment_type) : undefined,
+      provider: consulting_provider ? String(consulting_provider) : undefined,
+    }).catch((err) => console.error("[patients] durable mirror failed", err));
 
     const patient = db
       .prepare("SELECT id, first_name, last_name, email FROM patient_accounts WHERE rowid = ?")

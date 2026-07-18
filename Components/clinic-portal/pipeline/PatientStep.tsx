@@ -152,7 +152,7 @@ export default function PatientStep({ initial, onNext }: PatientStepProps) {
       <ExistingPatientSearch onSelect={handleExistingSelect} />
 
       {selectedExisting && (
-        <div className="bg-violet-600/10 border border-violet-500/20 rounded-lg p-3 text-sm text-violet-300">
+        <div className="bg-[#5f7a61]/10 border border-[#5f7a61]/20 rounded-lg p-3 text-sm text-[#5f7a61]/70">
           Selected: {selectedExisting.firstName} {selectedExisting.lastName} ({selectedExisting.email})
         </div>
       )}
@@ -165,9 +165,9 @@ export default function PatientStep({ initial, onNext }: PatientStepProps) {
         <button
           onClick={handleNext}
           disabled={submitting}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600
-            hover:from-violet-500 hover:to-purple-500 text-white font-medium transition-all
-            shadow-lg shadow-violet-600/20 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#5f7a61] to-[#5f7a61]
+            hover:from-[#4e6650] hover:to-[#4e6650] text-white font-medium transition-all
+            shadow-lg shadow-[#5f7a61]/20 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting ? "Creating..." : "Next: Configure Video"}
           {!submitting && <ArrowRight className="w-4 h-4" />}
@@ -190,7 +190,7 @@ function FormInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full rounded-lg bg-gray-900/80 border border-gray-700 text-white text-sm p-2.5
-          focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50 outline-none
+          focus:border-[#5f7a61] focus:ring-1 focus:ring-[#5f7a61]/40 outline-none
           placeholder:text-gray-600 [color-scheme:dark]"
       />
     </div>

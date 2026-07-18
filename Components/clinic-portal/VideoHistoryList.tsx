@@ -34,7 +34,7 @@ export default function VideoHistoryList({ videos }: VideoHistoryListProps) {
           key={v.id}
           className={`flex items-center justify-between p-3 rounded-lg border ${
             v.is_active
-              ? "bg-purple-50 border-purple-100"
+              ? "bg-[#5f7a61]/[0.07] border-[#5f7a61]/20"
               : "bg-gray-50 border-gray-100"
           }`}
         >
@@ -44,7 +44,7 @@ export default function VideoHistoryList({ videos }: VideoHistoryListProps) {
               <p className="text-sm text-gray-900">
                 {v.video_title || getTreatmentLabel(v.treatment_type)}
                 {v.is_active ? (
-                  <span className="ml-2 text-[10px] text-purple-600 uppercase tracking-wider">
+                  <span className="ml-2 text-[10px] text-[#5f7a61] uppercase tracking-wider">
                     active
                   </span>
                 ) : null}
@@ -67,7 +67,7 @@ export default function VideoHistoryList({ videos }: VideoHistoryListProps) {
               href={v.video_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-purple-600 hover:text-purple-500 transition-colors"
+              className="text-xs text-[#5f7a61] hover:text-[#5f7a61] transition-colors"
             >
               Preview
             </a>

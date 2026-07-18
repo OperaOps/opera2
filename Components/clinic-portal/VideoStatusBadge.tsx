@@ -81,7 +81,7 @@ export default function VideoStatusBadge({
     }
     if (videoUrl) {
       return (
-        <span className="px-2 py-0.5 text-xs rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+        <span className="px-2 py-0.5 text-xs rounded-full bg-[#5f7a61]/[0.07] text-[#3e5540] border border-[#5f7a61]/30">
           Ready
         </span>
       );

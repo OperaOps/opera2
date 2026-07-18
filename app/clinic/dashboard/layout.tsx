@@ -1,15 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+/**
+ * Clinic portal shell — matches the getopera.ai marketing site exactly:
+ * white surfaces, sage #5f7a61 accent, Fraunces display / Archivo body /
+ * Plex Mono labels (via Shell). Five items, nothing else.
+ */
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Shell from "@/app/final/components/Shell";
 import {
-  Home,
   Users,
-  Wand2,
-  Video,
-  BarChart3,
-  KeyRound,
+  Film,
+  Sparkles,
   CreditCard,
   Settings,
   LogOut,
@@ -17,15 +21,12 @@ import {
   X,
 } from "lucide-react";
 
-const navItems = [
-  { label: "Dashboard", href: "/clinic/dashboard", icon: Home },
-  { label: "Patients", href: "/clinic/dashboard/patients", icon: Users },
-  { label: "Generate Video", href: "/clinic/dashboard/pipeline", icon: Wand2 },
-  { label: "Videos", href: "/clinic/dashboard/videos", icon: Video },
-  { label: "Analytics", href: "/clinic/dashboard/analytics", icon: BarChart3 },
-  { label: "API Keys", href: "/clinic/dashboard/api-keys", icon: KeyRound },
-  { label: "Billing", href: "/clinic/dashboard/billing", icon: CreditCard },
-  { label: "Settings", href: "/clinic/dashboard/settings", icon: Settings },
+const NAV = [
+  { href: "/clinic/dashboard/patients", label: "Patients", icon: Users },
+  { href: "/clinic/dashboard/videos", label: "Videos", icon: Film },
+  { href: "/clinic/dashboard/pipeline", label: "Generate", icon: Sparkles },
+  { href: "/clinic/dashboard/billing", label: "Billing", icon: CreditCard },
+  { href: "/clinic/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 export default function ClinicDashboardLayout({
@@ -33,143 +34,100 @@ export default function ClinicDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
   const pathname = usePathname();
-  const [clinicName, setClinicName] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+  const [clinicName, setClinicName] = useState("Your clinic");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const cookieClinicName = document.cookie
+    const match = document.cookie
       .split("; ")
-      .find((c) => c.startsWith("opera-clinic-name="))
-      ?.split("=")[1];
-    if (cookieClinicName) {
-      setClinicName(decodeURIComponent(cookieClinicName));
-      return;
+      .find((c) => c.startsWith("opera-clinic-name="));
+    if (match) {
+      try {
+        setClinicName(decodeURIComponent(match.split("=")[1]));
+      } catch {
+        /* keep default */
+      }
     }
-    // Sessions from before the name cookie existed — resolve via the API.
-    fetch("/api/clinic/settings")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (d?.clinic?.clinic_name) setClinicName(d.clinic.clinic_name);
-      })
-      .catch(() => {});
   }, []);
 
-  // Close the mobile sidebar on navigation
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [pathname]);
+  const logout = () => {
+    document.cookie = "opera-clinic-token=; Max-Age=0; path=/";
+    document.cookie = "opera-clinic-name=; Max-Age=0; path=/";
+    router.push("/final/login");
+  };
 
-  function handleLogout() {
-    document.cookie =
-      "opera-clinic-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie =
-      "opera-clinic-name=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    router.push("/clinic/login");
-  }
+  const sidebar = (
+    <div className="flex h-full flex-col">
+      <Link href="/" className="flex items-center gap-2.5 px-5 pt-6">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/videos/sitepics/logo-mark.png" alt="" className="h-[30px] w-[30px]" />
+        <span className="cf-display text-[21px] leading-none tracking-[-0.01em] text-[#1a1a17]">
+          Opera<span className="text-[#5f7a61]">AI</span>
+        </span>
+      </Link>
 
-  const nav = (
-    <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-      {navItems.map(({ label, href, icon: Icon }) => {
-        const isActive =
-          href === "/clinic/dashboard"
-            ? pathname === "/clinic/dashboard"
-            : (pathname ?? "").startsWith(href);
+      <p className="cf-mono mt-6 px-5 text-[11px] uppercase tracking-[0.16em] text-[#6e7a71]">
+        {clinicName}
+      </p>
 
-        return (
-          <Link
-            key={href}
-            href={href}
-            className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              isActive
-                ? "bg-purple-50 text-purple-700"
-                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-            }`}
-          >
-            <Icon className="w-4 h-4 shrink-0" />
-            {label}
-          </Link>
-        );
-      })}
-    </nav>
-  );
+      <nav className="mt-3 flex-1 space-y-1 px-3">
+        {NAV.map((item) => {
+          const active = pathname?.startsWith(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium transition-colors ${
+                active
+                  ? "bg-[#5f7a61]/[0.09] text-[#3e5540]"
+                  : "text-[#1a1a17]/60 hover:bg-[#1a1a17]/[0.04] hover:text-[#1a1a17]"
+              }`}
+            >
+              <item.icon size={17} strokeWidth={active ? 2.2 : 1.9} />
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
 
-  const sidebarFooter = (
-    <div className="px-3 py-4 border-t border-gray-100 space-y-2">
-      {clinicName && (
-        <div className="px-3 text-sm text-gray-400 truncate" title={clinicName}>
-          {clinicName}
-        </div>
-      )}
-      <button
-        onClick={handleLogout}
-        className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
-      >
-        <LogOut className="w-4 h-4 shrink-0" />
-        Log out
-      </button>
+      <div className="border-t border-[#1a1a17]/10 p-3">
+        <button
+          onClick={logout}
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-[#1a1a17]/60 transition-colors hover:bg-[#1a1a17]/[0.04] hover:text-[#1a1a17]"
+        >
+          <LogOut size={17} strokeWidth={1.9} />
+          Log out
+        </button>
+      </div>
     </div>
-  );
-
-  const logo = (
-    <Link href="/clinic/dashboard" className="flex items-center gap-2.5">
-      <span className="text-lg font-semibold text-gray-900 tracking-tight">
-        Opera<span className="text-purple-600">AI</span>
-      </span>
-      <span className="text-[11px] text-purple-700 font-medium bg-purple-50 px-2 py-0.5 rounded-full">
-        Clinic
-      </span>
-    </Link>
   );
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      {/* Mobile top bar */}
-      <header className="md:hidden sticky top-0 z-50 border-b border-gray-100 bg-white/85 backdrop-blur-xl">
-        <div className="px-4 h-14 flex items-center justify-between">
-          {logo}
-          <button
-            onClick={() => setSidebarOpen((v) => !v)}
-            className="p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
-            aria-label="Toggle menu"
-          >
-            {sidebarOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
+    <Shell>
+      <div className="flex min-h-screen bg-white">
+        <aside className="hidden w-[236px] shrink-0 border-r border-[#1a1a17]/10 md:block">
+          <div className="sticky top-0 h-screen">{sidebar}</div>
+        </aside>
+
+        <div className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-[#1a1a17]/10 bg-white px-4 md:hidden">
+          <span className="cf-display text-[19px] text-[#1a1a17]">
+            Opera<span className="text-[#5f7a61]">AI</span>
+          </span>
+          <button aria-label="Menu" onClick={() => setMobileOpen((v) => !v)}>
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
-      </header>
+        {mobileOpen && (
+          <div className="fixed inset-0 z-30 bg-white pt-14 md:hidden">{sidebar}</div>
+        )}
 
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="md:hidden fixed inset-0 z-40 bg-gray-900/20 backdrop-blur-sm"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Left sidebar */}
-      <aside
-        className={`fixed top-0 left-0 z-40 h-full w-60 flex flex-col
-          border-r border-gray-100 bg-white
-          transition-transform duration-200
-          ${sidebarOpen ? "translate-x-0 pt-14 md:pt-0" : "-translate-x-full"}
-          md:translate-x-0`}
-      >
-        <div className="hidden md:flex items-center px-6 h-14 border-b border-gray-100">
-          {logo}
-        </div>
-        {nav}
-        {sidebarFooter}
-      </aside>
-
-      {/* Main content */}
-      <main className="md:pl-60">
-        <div className="max-w-7xl mx-auto px-6 py-8">{children}</div>
-      </main>
-    </div>
+        <main className="min-w-0 flex-1 px-5 pb-16 pt-20 md:px-10 md:pt-10">
+          {children}
+        </main>
+      </div>
+    </Shell>
   );
 }

@@ -92,7 +92,7 @@ export default function PreviewStep({
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-            className="w-12 h-12 border-2 border-violet-500 border-t-transparent rounded-full mx-auto"
+            className="w-12 h-12 border-2 border-[#5f7a61] border-t-transparent rounded-full mx-auto"
           />
           <div>
             <p className="text-white text-lg font-light">
@@ -159,9 +159,9 @@ export default function PreviewStep({
             </button>
             <button
               onClick={onNext}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600
-                hover:from-violet-500 hover:to-purple-500 text-white font-medium transition-all
-                shadow-lg shadow-violet-600/20"
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#5f7a61] to-[#5f7a61]
+                hover:from-[#4e6650] hover:to-[#4e6650] text-white font-medium transition-all
+                shadow-lg shadow-[#5f7a61]/20"
             >
               Send to Patient <ArrowRight className="w-4 h-4" />
             </button>

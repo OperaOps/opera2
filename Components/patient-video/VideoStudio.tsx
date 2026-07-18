@@ -147,7 +147,7 @@ function TextInput({ value, onChange, placeholder }: { value: string; onChange: 
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400 transition-all"
+      className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5f7a61]/20 focus:border-[#5f7a61] transition-all"
     />
   );
 }
@@ -159,7 +159,7 @@ function TextArea({ value, onChange, placeholder, rows = 3 }: { value: string; o
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       rows={rows}
-      className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400 transition-all resize-none"
+      className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5f7a61]/20 focus:border-[#5f7a61] transition-all resize-none"
     />
   );
 }
@@ -169,7 +169,7 @@ function Select({ value, onChange, options }: { value: string; onChange: (v: str
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400 transition-all appearance-none"
+      className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#5f7a61]/20 focus:border-[#5f7a61] transition-all appearance-none"
     >
       {options.map((o) => (
         <option key={o.value} value={o.value}>{o.label}</option>
@@ -188,7 +188,7 @@ function ToggleGroup({ value, onChange, options }: { value: string; onChange: (v
           onClick={() => onChange(o.value)}
           className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
             value === o.value
-              ? "bg-white text-purple-700 shadow-sm"
+              ? "bg-white text-[#3e5540] shadow-sm"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -209,8 +209,8 @@ function ChipSelect({ value, onChange, options }: { value: string; onChange: (v:
           onClick={() => onChange(o.value)}
           className={`px-3.5 py-2 rounded-xl text-sm font-medium border transition-all ${
             value === o.value
-              ? "bg-purple-50 border-purple-300 text-purple-700 shadow-sm"
-              : "bg-white border-gray-200 text-gray-600 hover:border-purple-200 hover:bg-purple-50/30"
+              ? "bg-[#5f7a61]/[0.08] border-[#5f7a61]/50 text-[#3e5540] shadow-sm"
+              : "bg-white border-gray-200 text-gray-600 hover:border-[#5f7a61]/30 hover:bg-[#5f7a61]/[0.04]"
           }`}
         >
           {o.icon && <span className="mr-1.5">{o.icon}</span>}
@@ -227,7 +227,7 @@ function ChipSelect({ value, onChange, options }: { value: string; onChange: (v:
 
 function StartScreen({ onStart }: { onStart: () => void }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50/30 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-white via-white to-[#f5f8f5] flex items-center justify-center px-4">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -235,8 +235,8 @@ function StartScreen({ onStart }: { onStart: () => void }) {
         className="max-w-lg w-full text-center"
       >
         <div className="mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-purple-100 mb-6">
-            <Video className="w-8 h-8 text-purple-600" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#5f7a61]/10 mb-6">
+            <Video className="w-8 h-8 text-[#5f7a61]" />
           </div>
           <h1 className="text-3xl font-semibold text-gray-900 mb-3 tracking-tight">
             Patient Video Studio
@@ -249,7 +249,7 @@ function StartScreen({ onStart }: { onStart: () => void }) {
 
         <button
           onClick={onStart}
-          className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-purple-600 text-white rounded-xl text-base font-medium hover:bg-purple-700 active:scale-[0.98] transition-all shadow-lg shadow-purple-600/20"
+          className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#5f7a61] text-white rounded-xl text-base font-medium hover:bg-[#4e6650] active:scale-[0.98] transition-all shadow-lg shadow-[#5f7a61]/20"
         >
           Start Generating Video
           <ArrowRight className="w-4.5 h-4.5" />
@@ -338,7 +338,7 @@ function FormWizard({
   };
 
   return (
-    <div className={embedded ? "" : "min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50/30"}>
+    <div className={embedded ? "" : "min-h-screen bg-gradient-to-br from-white via-white to-[#f5f8f5]"}>
       {/* Header */}
       {embedded ? (
         <div className="max-w-2xl mx-auto px-4 pt-2 flex items-center justify-between">
@@ -371,14 +371,14 @@ function FormWizard({
               <button
                 onClick={() => i <= formStep && setFormStep(i)}
                 className={`flex items-center gap-2 text-xs font-medium transition-colors ${
-                  i === formStep ? "text-purple-700" : i < formStep ? "text-purple-400 cursor-pointer" : "text-gray-300"
+                  i === formStep ? "text-[#3e5540]" : i < formStep ? "text-[#5f7a61]/60 cursor-pointer" : "text-gray-300"
                 }`}
               >
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
                   i === formStep
-                    ? "bg-purple-600 text-white"
+                    ? "bg-[#5f7a61] text-white"
                     : i < formStep
-                    ? "bg-purple-100 text-purple-600"
+                    ? "bg-[#5f7a61]/10 text-[#5f7a61]"
                     : "bg-gray-100 text-gray-400"
                 }`}>
                   {i < formStep ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
@@ -386,7 +386,7 @@ function FormWizard({
                 <span className="hidden sm:inline">{s.title}</span>
               </button>
               {i < STEPS.length - 1 && (
-                <div className={`flex-1 h-0.5 rounded ${i < formStep ? "bg-purple-300" : "bg-gray-100"}`} />
+                <div className={`flex-1 h-0.5 rounded ${i < formStep ? "bg-[#5f7a61]/40" : "bg-gray-100"}`} />
               )}
             </React.Fragment>
           ))}
@@ -517,14 +517,14 @@ function FormWizard({
             <button
               onClick={() => setFormStep(formStep + 1)}
               disabled={!canProceed()}
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-purple-600 text-white rounded-xl text-sm font-medium hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] transition-all shadow-sm"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#5f7a61] text-white rounded-xl text-sm font-medium hover:bg-[#4e6650] disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] transition-all shadow-sm"
             >
               Continue <ChevronRight className="w-4 h-4" />
             </button>
           ) : (
             <button
               onClick={handleSubmit}
-              className="inline-flex items-center gap-2 px-7 py-3 bg-purple-600 text-white rounded-xl text-sm font-semibold hover:bg-purple-700 active:scale-[0.98] transition-all shadow-lg shadow-purple-600/20"
+              className="inline-flex items-center gap-2 px-7 py-3 bg-[#5f7a61] text-white rounded-xl text-sm font-semibold hover:bg-[#4e6650] active:scale-[0.98] transition-all shadow-lg shadow-[#5f7a61]/20"
             >
               <Sparkles className="w-4 h-4" /> Generate Video
             </button>
@@ -546,7 +546,7 @@ function GeneratingScreen({ jobStatus, onCancel, embedded = false }: { jobStatus
   const activeStepIndex = GENERATION_STEPS.findIndex((s) => currentStep.includes(s.key));
 
   return (
-    <div className={`${embedded ? "min-h-[60vh]" : "min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50/30"} flex items-center justify-center px-4`}>
+    <div className={`${embedded ? "min-h-[60vh]" : "min-h-screen bg-gradient-to-br from-white via-white to-[#f5f8f5]"} flex items-center justify-center px-4`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -565,7 +565,7 @@ function GeneratingScreen({ jobStatus, onCancel, embedded = false }: { jobStatus
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-xl font-semibold text-purple-700">{Math.round(progress * 100)}%</span>
+            <span className="text-xl font-semibold text-[#3e5540]">{Math.round(progress * 100)}%</span>
           </div>
         </div>
 
@@ -586,21 +586,21 @@ function GeneratingScreen({ jobStatus, onCancel, embedded = false }: { jobStatus
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 }}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                  isActive ? "bg-purple-50 border border-purple-200" : isDone ? "bg-gray-50" : ""
+                  isActive ? "bg-[#5f7a61]/[0.06] border border-[#5f7a61]/30" : isDone ? "bg-gray-50" : ""
                 }`}
               >
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                  isDone ? "bg-purple-100" : isActive ? "bg-purple-600" : "bg-gray-100"
+                  isDone ? "bg-[#5f7a61]/10" : isActive ? "bg-[#5f7a61]" : "bg-gray-100"
                 }`}>
                   {isDone ? (
-                    <CheckCircle2 className="w-4 h-4 text-purple-600" />
+                    <CheckCircle2 className="w-4 h-4 text-[#5f7a61]" />
                   ) : isActive ? (
                     <Loader2 className="w-4 h-4 text-white animate-spin" />
                   ) : (
                     <Icon className="w-4 h-4 text-gray-400" />
                   )}
                 </div>
-                <span className={`text-sm font-medium ${isDone ? "text-purple-600" : isActive ? "text-gray-900" : "text-gray-400"}`}>
+                <span className={`text-sm font-medium ${isDone ? "text-[#5f7a61]" : isActive ? "text-gray-900" : "text-gray-400"}`}>
                   {step.label}
                 </span>
               </motion.div>
@@ -633,7 +633,7 @@ function PreviewScreen({
   const isFailed = jobStatus.status === "failed";
 
   return (
-    <div className={`${embedded ? "" : "min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50/30 py-12"} flex items-center justify-center px-4`}>
+    <div className={`${embedded ? "" : "min-h-screen bg-gradient-to-br from-white via-white to-[#f5f8f5] py-12"} flex items-center justify-center px-4`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -664,12 +664,12 @@ function PreviewScreen({
             </div>
 
             {/* Patient link — the thing clinics actually send */}
-            <div className="mb-6 rounded-2xl border border-purple-200 bg-purple-50/60 px-5 py-4">
-              <p className="text-[12px] font-semibold uppercase tracking-wider text-purple-700 mb-2">
+            <div className="mb-6 rounded-2xl border border-[#5f7a61]/30 bg-[#5f7a61]/[0.06] px-5 py-4">
+              <p className="text-[12px] font-semibold uppercase tracking-wider text-[#3e5540] mb-2">
                 Patient link
               </p>
               <div className="flex items-center gap-2">
-                <code className="flex-1 truncate rounded-lg border border-purple-100 bg-white px-3 py-2 text-[13px] text-gray-700">
+                <code className="flex-1 truncate rounded-lg border border-[#5f7a61]/20 bg-white px-3 py-2 text-[13px] text-gray-700">
                   {typeof window !== "undefined" ? `${window.location.origin}/v/${jobStatus.jobId}` : `/v/${jobStatus.jobId}`}
                 </code>
                 <button
@@ -678,7 +678,7 @@ function PreviewScreen({
                     setLinkCopied(true);
                     setTimeout(() => setLinkCopied(false), 2000);
                   }}
-                  className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-purple-600 text-white rounded-lg text-[13px] font-medium hover:bg-purple-500 transition-colors"
+                  className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-[#5f7a61] text-white rounded-lg text-[13px] font-medium hover:bg-[#5f7a61]/[0.07]0 transition-colors"
                 >
                   {linkCopied ? "Copied!" : "Copy link"}
                 </button>
@@ -695,20 +695,20 @@ function PreviewScreen({
                 href={`/v/${jobStatus.jobId}`}
                 target="_blank"
                 rel="noopener"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl text-sm font-medium hover:bg-purple-700 active:scale-[0.98] transition-all shadow-lg shadow-purple-600/20"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#5f7a61] text-white rounded-xl text-sm font-medium hover:bg-[#4e6650] active:scale-[0.98] transition-all shadow-lg shadow-[#5f7a61]/20"
               >
                 <Sparkles className="w-4 h-4" /> Open Patient Page
               </a>
               <a
                 href={jobStatus.videoUrl}
                 download
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-xl text-sm font-medium border border-gray-200 hover:border-purple-200 hover:bg-purple-50/30 active:scale-[0.98] transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-xl text-sm font-medium border border-gray-200 hover:border-[#5f7a61]/30 hover:bg-[#5f7a61]/[0.04] active:scale-[0.98] transition-all"
               >
                 <Download className="w-4 h-4" /> Download
               </a>
               <button
                 onClick={onNewVideo}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-xl text-sm font-medium border border-gray-200 hover:border-purple-200 hover:bg-purple-50/30 active:scale-[0.98] transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-xl text-sm font-medium border border-gray-200 hover:border-[#5f7a61]/30 hover:bg-[#5f7a61]/[0.04] active:scale-[0.98] transition-all"
               >
                 <RefreshCw className="w-4 h-4" /> Create Another
               </button>
@@ -724,7 +724,7 @@ function PreviewScreen({
             <div className="flex items-center justify-center gap-3">
               <button
                 onClick={onEdit}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl text-sm font-medium hover:bg-purple-700 active:scale-[0.98] transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#5f7a61] text-white rounded-xl text-sm font-medium hover:bg-[#4e6650] active:scale-[0.98] transition-all"
               >
                 <RefreshCw className="w-4 h-4" /> Try Again
               </button>
@@ -814,6 +814,27 @@ export function VideoStudio({ embedded = false }: { embedded?: boolean }) {
 
       const job = await res.json();
       setJobStatus({ jobId: job.jobId, status: "processing", progress: 0, step: "Starting..." });
+
+      // Keep the patient record durable: link this job to the patient so
+      // their row shows the video link and Ask Opera activity.
+      try {
+        const [firstName, ...rest] = String(data.patientName ?? "").trim().split(/\s+/);
+        if (firstName && job.jobId) {
+          fetch("/api/clinic/patients/attach-job", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              firstName,
+              lastName: rest.join(" "),
+              jobId: job.jobId,
+              treatmentType: data.treatment,
+              provider: data.doctorName,
+            }),
+          }).catch(() => {});
+        }
+      } catch {
+        /* portal-only nicety */
+      }
     } catch (err) {
       setJobStatus({ jobId: "", status: "failed", progress: 0, error: "Network error. Please try again." });
       setStep("preview");

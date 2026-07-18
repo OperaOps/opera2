@@ -43,7 +43,7 @@ export default function PipelineProgress({
             >
               <div className="relative">
                 {isCompleted && (
-                  <div className="w-8 h-8 rounded-full bg-violet-600 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-[#5f7a61] flex items-center justify-center">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
                       <polyline points="20,6 9,17 4,12" />
                     </svg>
@@ -53,12 +53,12 @@ export default function PipelineProgress({
                   <motion.div
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
-                    className="w-8 h-8 rounded-full border-2 border-violet-500 flex items-center justify-center"
+                    className="w-8 h-8 rounded-full border-2 border-[#5f7a61] flex items-center justify-center"
                   >
                     <motion.div
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ repeat: Infinity, duration: 2 }}
-                      className="w-3 h-3 rounded-full bg-violet-500"
+                      className="w-3 h-3 rounded-full bg-[#5f7a61]"
                     />
                   </motion.div>
                 )}
@@ -73,7 +73,7 @@ export default function PipelineProgress({
                   isCurrent
                     ? "text-white font-medium"
                     : isCompleted
-                    ? "text-violet-400"
+                    ? "text-[#5f7a61]"
                     : "text-gray-600"
                 }`}
               >
@@ -86,7 +86,7 @@ export default function PipelineProgress({
               <div className="w-12 md:w-20 h-0.5 mx-2 mt-[-18px]">
                 <div
                   className={`h-full rounded-full ${
-                    i < currentIndex ? "bg-violet-600" : "bg-gray-800"
+                    i < currentIndex ? "bg-[#5f7a61]" : "bg-gray-800"
                   }`}
                 />
               </div>

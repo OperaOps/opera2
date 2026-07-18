@@ -38,7 +38,7 @@ function videoStatusDisplay(p: Patient) {
   }
   if (p.video_url) {
     return (
-      <span className="px-2 py-0.5 text-xs rounded-full bg-purple-50 text-purple-700 border border-purple-100">
+      <span className="px-2 py-0.5 text-xs rounded-full bg-[#5f7a61]/[0.07] text-[#3e5540] border border-[#5f7a61]/20">
         Ready
       </span>
     );
@@ -57,7 +57,7 @@ export default function PatientTable({
         <h2 className="text-xl text-gray-900 font-semibold tracking-tight">Patients</h2>
         <button
           onClick={onAddPatient}
-          className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500
+          className="px-4 py-2 rounded-xl bg-[#5f7a61] hover:bg-[#5f7a61]/[0.07]0
             text-white text-sm font-medium transition-colors"
         >
           + Add Patient

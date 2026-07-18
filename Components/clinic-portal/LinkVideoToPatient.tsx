@@ -99,7 +99,7 @@ export default function LinkVideoToPatient({
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search patients..."
                 className="w-full mt-3 rounded-xl bg-white border border-gray-200 text-gray-900 text-sm p-2.5
-                  focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none placeholder:text-gray-400"
+                  focus:border-[#5f7a61] focus:ring-2 focus:ring-[#5f7a61]/15 outline-none placeholder:text-gray-400"
               />
             </div>
 
@@ -121,7 +121,7 @@ export default function LinkVideoToPatient({
                     </p>
                   </div>
                   {linking === p.id && (
-                    <span className="text-xs text-purple-600">Linking...</span>
+                    <span className="text-xs text-[#5f7a61]">Linking...</span>
                   )}
                 </button>
               ))}
@@ -135,8 +135,8 @@ export default function LinkVideoToPatient({
             <div className="p-3 border-t border-gray-100">
               <button
                 onClick={onCreateNew}
-                className="w-full py-2.5 rounded-xl bg-purple-50 hover:bg-purple-100
-                  text-purple-700 text-sm transition-colors"
+                className="w-full py-2.5 rounded-xl bg-[#5f7a61]/[0.07] hover:bg-[#5f7a61]/10
+                  text-[#3e5540] text-sm transition-colors"
               >
                 + Create New Patient with this video
               </button>

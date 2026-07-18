@@ -27,6 +27,9 @@ export async function GET(request: NextRequest) {
           clinic_phone: account.phone ?? "",
           clinic_address: account.clinicAddress ?? "",
           clinic_logo_url: account.logoUrl ?? null,
+          specialties:
+            ((account as unknown as Record<string, unknown>).specialties as string[]) ??
+            ["dental", "orthodontic"],
           created_at: account.createdAt,
         },
         billing: {
@@ -47,16 +50,23 @@ export async function GET(request: NextRequest) {
   const row = db
     .prepare(
       `SELECT clinic_name, clinic_email, clinic_phone, clinic_address,
-              clinic_logo_url, created_at
+              clinic_logo_url, specialties, created_at
        FROM clinic_accounts WHERE id = ?`
     )
-    .get(clinic.clinicId);
+    .get(clinic.clinicId) as Record<string, unknown> | undefined;
 
   if (!row) {
     return NextResponse.json({ error: "Clinic not found" }, { status: 404 });
   }
 
-  return NextResponse.json({ clinic: row, billing: null });
+  let specs: string[] = ["dental", "orthodontic"];
+  try {
+    if (row.specialties) specs = JSON.parse(String(row.specialties));
+  } catch {
+    /* default */
+  }
+
+  return NextResponse.json({ clinic: { ...row, specialties: specs }, billing: null });
 }
 
 export async function PATCH(request: NextRequest) {
@@ -72,6 +82,9 @@ export async function PATCH(request: NextRequest) {
     typeof body.clinic_logo_url === "string"
       ? body.clinic_logo_url.trim()
       : undefined;
+  const specialties = Array.isArray(body.specialties)
+    ? (body.specialties as string[]).filter((x) => typeof x === "string").slice(0, 6)
+    : undefined;
 
   if (clinicName !== undefined && !clinicName) {
     return NextResponse.json(
@@ -79,7 +92,7 @@ export async function PATCH(request: NextRequest) {
       { status: 400 }
     );
   }
-  if (clinicName === undefined && logoUrl === undefined) {
+  if (clinicName === undefined && logoUrl === undefined && specialties === undefined) {
     return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
   }
 
@@ -89,6 +102,8 @@ export async function PATCH(request: NextRequest) {
     if (account) {
       if (clinicName !== undefined) account.clinicName = clinicName;
       if (logoUrl !== undefined) account.logoUrl = logoUrl || null;
+      if (specialties !== undefined)
+        (account as unknown as Record<string, unknown>).specialties = specialties;
       await saveClinic(account);
       return NextResponse.json({ success: true });
     }
@@ -107,6 +122,10 @@ export async function PATCH(request: NextRequest) {
   if (logoUrl !== undefined) {
     sets.push("clinic_logo_url = ?");
     params.push(logoUrl || null);
+  }
+  if (specialties !== undefined) {
+    sets.push("specialties = ?");
+    params.push(JSON.stringify(specialties));
   }
 
   db.prepare(

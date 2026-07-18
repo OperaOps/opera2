@@ -70,7 +70,7 @@ export default function ExistingPatientSearch({ onSelect }: ExistingPatientSearc
           onFocus={() => query && setOpen(true)}
           placeholder="Search existing patients..."
           className="w-full rounded-lg bg-gray-900/80 border border-gray-700 text-white text-sm p-2.5
-            focus:border-violet-500 outline-none placeholder:text-gray-600"
+            focus:border-[#5f7a61] outline-none placeholder:text-gray-600"
         />
       </div>
 

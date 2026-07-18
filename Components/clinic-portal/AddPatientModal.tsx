@@ -130,7 +130,7 @@ export default function AddPatientModal({
                       <p className="text-xs text-gray-500">Email</p>
                       <p className="text-gray-900 text-sm">{success.email}</p>
                     </div>
-                    <button onClick={() => copyToClipboard(success.email)} className="text-xs text-purple-600 hover:text-purple-500">Copy</button>
+                    <button onClick={() => copyToClipboard(success.email)} className="text-xs text-[#5f7a61] hover:text-[#5f7a61]">Copy</button>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Date of Birth</p>
@@ -141,7 +141,7 @@ export default function AddPatientModal({
                       <p className="text-xs text-gray-500">Access Code</p>
                       <p className="text-gray-900 text-2xl font-mono font-bold tracking-widest">{success.accessCode}</p>
                     </div>
-                    <button onClick={() => copyToClipboard(success.accessCode)} className="text-xs text-purple-600 hover:text-purple-500">Copy</button>
+                    <button onClick={() => copyToClipboard(success.accessCode)} className="text-xs text-[#5f7a61] hover:text-[#5f7a61]">Copy</button>
                   </div>
                 </div>
 
@@ -157,8 +157,8 @@ export default function AddPatientModal({
                       handleClose();
                       router.push(`/clinic/dashboard/pipeline?patient_id=${success.patientId}`);
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-purple-600
-                      hover:bg-purple-500 text-white text-sm font-medium transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#5f7a61]
+                      hover:bg-[#5f7a61]/[0.07]0 text-white text-sm font-medium transition-colors"
                   >
                     Generate Video <ArrowRight className="w-4 h-4" />
                   </button>
@@ -185,7 +185,7 @@ export default function AddPatientModal({
                   <select
                     value={form.treatment_type}
                     onChange={(e) => update("treatment_type", e.target.value)}
-                    className="w-full rounded-xl bg-white border border-gray-200 text-gray-900 text-sm p-2.5 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none"
+                    className="w-full rounded-xl bg-white border border-gray-200 text-gray-900 text-sm p-2.5 focus:border-[#5f7a61] focus:ring-2 focus:ring-[#5f7a61]/15 outline-none"
                   >
                     <option value="">Select treatment...</option>
                     <optgroup label="Dental">
@@ -209,7 +209,7 @@ export default function AddPatientModal({
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex-1 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 py-2.5 rounded-xl bg-[#5f7a61] hover:bg-[#5f7a61]/[0.07]0 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submitting ? "Creating..." : "Create Patient"}
                   </button>
@@ -233,7 +233,7 @@ function Input({
       <label className="text-xs text-gray-700 font-medium mb-1 block">{label}</label>
       <input
         type={type} value={value} onChange={(e) => onChange(e.target.value)} required={required} placeholder={placeholder}
-        className="w-full rounded-xl bg-white border border-gray-200 text-gray-900 text-sm p-2.5 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none placeholder:text-gray-400 [color-scheme:light]"
+        className="w-full rounded-xl bg-white border border-gray-200 text-gray-900 text-sm p-2.5 focus:border-[#5f7a61] focus:ring-2 focus:ring-[#5f7a61]/15 outline-none placeholder:text-gray-400 [color-scheme:light]"
       />
     </div>
   );

@@ -1,169 +1,208 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { CreditCard, ExternalLink, Video } from "lucide-react";
+/**
+ * Billing — plans with Stripe embedded checkout, and the Stripe customer
+ * portal for anything else. Pricing matches the public site.
+ */
 
-interface ClinicInfo {
-  clinic_name: string;
-  clinic_email: string;
-  created_at: string;
+import { useEffect, useRef, useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Check } from "lucide-react";
+
+interface BillingState {
+  plan?: string;
+  status?: string;
+  trialEndsAt?: string | null;
+  videosGenerated?: number;
+  hasSubscription?: boolean;
 }
 
-interface BillingInfo {
-  plan: string;
-  status: string;
-  trialEndsAt: string | null;
-  videosGenerated: number;
-  hasSubscription: boolean;
-}
-
-const STATUS_STYLES: Record<string, { label: string; cls: string }> = {
-  trialing: { label: "Free trial", cls: "bg-purple-50 text-purple-700 border-purple-200" },
-  active: { label: "Active", cls: "bg-green-50 text-green-700 border-green-200" },
-  past_due: { label: "Past due", cls: "bg-amber-50 text-amber-700 border-amber-200" },
-  canceled: { label: "Canceled", cls: "bg-red-50 text-red-700 border-red-200" },
-  pending: { label: "Setup incomplete", cls: "bg-gray-50 text-gray-600 border-gray-200" },
-};
+const PLANS = [
+  {
+    key: "core",
+    name: "Core",
+    price: "$199",
+    per: "per month",
+    blurb: "For a single practice getting started.",
+    features: ["Unlimited patient links", "50 videos per month", "Ask Opera for every patient", "Email support"],
+  },
+  {
+    key: "growth",
+    name: "Growth",
+    price: "$999",
+    per: "per month",
+    blurb: "For multi provider and multi location groups.",
+    features: ["Everything in Core", "Unlimited videos", "All specialties as they launch", "Priority support"],
+  },
+] as const;
 
 export default function BillingPage() {
-  const [clinic, setClinic] = useState<ClinicInfo | null>(null);
-  const [billing, setBilling] = useState<BillingInfo | null>(null);
-  const [portalLoading, setPortalLoading] = useState(false);
-  const [portalUnavailable, setPortalUnavailable] = useState(false);
+  const [billing, setBilling] = useState<BillingState | null>(null);
+  const [loaded, setLoaded] = useState(false);
+  const [checkoutPlan, setCheckoutPlan] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const checkoutRef = useRef<HTMLDivElement>(null);
+  const checkoutInstance = useRef<{ destroy: () => void } | null>(null);
+  const justReturned =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("checkout") === "done";
 
   useEffect(() => {
-    fetch("/api/clinic/settings")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.clinic) setClinic(data.clinic);
-        if (data.billing) setBilling(data.billing);
-      })
-      .catch(() => {});
+    (async () => {
+      try {
+        const res = await fetch("/api/clinic/settings");
+        const data = await res.json();
+        setBilling(data.billing ?? {});
+      } finally {
+        setLoaded(true);
+      }
+    })();
+    return () => checkoutInstance.current?.destroy();
   }, []);
 
-  async function openBillingPortal() {
-    setPortalLoading(true);
+  const startCheckout = async (plan: "core" | "growth") => {
     setError("");
+    setCheckoutPlan(plan);
     try {
-      const res = await fetch("/api/clinic/billing-portal", {
+      const res = await fetch("/api/clinic/billing/checkout", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
       });
-      if (res.status === 503) {
-        setPortalUnavailable(true);
+      const data = await res.json();
+      if (!res.ok || !data.clientSecret) {
+        setError(
+          res.status === 503
+            ? "Billing isn't configured on this environment yet."
+            : "Couldn't start checkout. Try again."
+        );
+        setCheckoutPlan(null);
         return;
       }
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || "Failed to open billing portal");
+      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "");
+      if (!stripe) {
+        setError("Stripe failed to load.");
+        setCheckoutPlan(null);
+        return;
       }
-      window.location.href = data.url;
+      checkoutInstance.current?.destroy();
+      const checkout = await stripe.createEmbeddedCheckoutPage({ clientSecret: data.clientSecret });
+      checkoutInstance.current = checkout;
+      checkout.mount("#stripe-checkout");
+      checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch {
-      setError("Could not open the billing portal. Please try again.");
-    } finally {
-      setPortalLoading(false);
+      setError("Couldn't start checkout. Try again.");
+      setCheckoutPlan(null);
     }
-  }
+  };
 
-  const status = billing ? STATUS_STYLES[billing.status] ?? STATUS_STYLES.active : STATUS_STYLES.active;
-  const trialDaysLeft =
-    billing?.trialEndsAt != null
-      ? Math.max(0, Math.ceil((new Date(billing.trialEndsAt).getTime() - Date.now()) / 86_400_000))
-      : null;
+  const openPortal = async () => {
+    const res = await fetch("/api/clinic/billing-portal", { method: "POST" });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else setError("The billing portal isn't available for this account yet.");
+  };
+
+  const active = billing?.status === "active" || billing?.status === "trialing";
 
   return (
-    <div className="max-w-3xl">
-      <h2 className="text-xl text-gray-900 font-semibold tracking-tight mb-1">Billing</h2>
-      <p className="text-sm text-gray-500 mb-6">
-        Manage your Opera subscription and payment methods.
+    <div className="mx-auto max-w-[1080px]">
+      <h1 className="cf-display text-[clamp(1.8rem,3vw,2.4rem)] font-light tracking-[-0.02em] text-[#1a1a17]">
+        Billing
+      </h1>
+      <p className="cf-body mt-1.5 text-[15px] text-[#5e6a60]">
+        Simple monthly plans. Cancel any time from the billing portal.
       </p>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6"
-      >
-        <div className="flex items-start justify-between gap-4 flex-wrap">
+      {justReturned && (
+        <div className="cf-body mt-6 rounded-2xl border border-[#5f7a61]/25 bg-[#5f7a61]/[0.06] px-5 py-4 text-[14.5px] text-[#3e5540]">
+          You&rsquo;re set — your subscription is being activated. This page
+          updates within a minute.
+        </div>
+      )}
+
+      {loaded && billing && active && (
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#1a1a17]/10 bg-white px-6 py-5">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <CreditCard className="w-4 h-4 text-purple-600" />
-              <h3 className="text-gray-900 text-sm font-medium">Current plan</h3>
-            </div>
-            <p className="text-2xl text-gray-900 font-semibold tracking-tight mb-1">
-              Opera{" "}
-              <span className="text-gray-500 text-base font-normal">
-                — monthly subscription
-              </span>
+            <p className="cf-mono text-[11px] uppercase tracking-[0.16em] text-[#5f7a61]">
+              Current plan
             </p>
-            {billing?.status === "trialing" && billing.trialEndsAt ? (
-              <p className="text-xs text-gray-500">
-                {trialDaysLeft} day{trialDaysLeft === 1 ? "" : "s"} left in your free trial —
-                billing starts{" "}
-                {new Date(billing.trialEndsAt).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-                . Cancel anytime before then and you won&apos;t be charged.
-              </p>
-            ) : billing?.status === "past_due" ? (
-              <p className="text-xs text-amber-600">
-                Your last payment didn&apos;t go through — update your card in the billing
-                portal to keep generating videos.
-              </p>
-            ) : (
-              <p className="text-xs text-gray-500">
-                Your subscription renews monthly. Manage or cancel anytime.
-              </p>
-            )}
-            {clinic && (
-              <p className="text-xs text-gray-400 mt-3">
-                Billed to {clinic.clinic_email}
-              </p>
-            )}
+            <p className="cf-body mt-1 text-[16px] font-medium capitalize text-[#1a1a17]">
+              {billing.plan ?? "monthly"} · {billing.status}
+              {billing.trialEndsAt && billing.status === "trialing"
+                ? ` · trial ends ${new Date(billing.trialEndsAt).toLocaleDateString()}`
+                : ""}
+            </p>
+            <p className="cf-body mt-0.5 text-[13.5px] text-[#5e6a60]">
+              {billing.videosGenerated ?? 0} videos generated on this account.
+            </p>
           </div>
-          <span className={`px-2 py-0.5 text-xs rounded-full border ${status.cls}`}>
-            {status.label}
-          </span>
-        </div>
-
-        {billing && (
-          <div className="mt-5 flex items-center gap-2 text-xs text-gray-500">
-            <Video className="w-3.5 h-3.5 text-purple-500" />
-            {billing.videosGenerated} video{billing.videosGenerated === 1 ? "" : "s"} generated
-            on this account
-          </div>
-        )}
-
-        <div className="mt-6 pt-6 border-t border-gray-100">
           <button
-            onClick={openBillingPortal}
-            disabled={portalLoading}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500
-              text-white text-sm font-medium transition-colors disabled:opacity-50"
+            onClick={openPortal}
+            className="cf-body rounded-full bg-[#1a1a17] px-5 py-2.5 text-[14.5px] font-medium text-white transition-colors hover:bg-[#5f7a61]"
           >
-            <ExternalLink className="w-4 h-4" />
-            {portalLoading ? "Opening…" : "Manage billing"}
+            Manage billing
           </button>
-          <p className="text-xs text-gray-400 mt-2">
-            Update your card, download invoices, or cancel — handled securely by Stripe.
-          </p>
-
-          {portalUnavailable && (
-            <p className="text-sm text-gray-500 mt-4">
-              Billing portal available once Stripe is connected.{" "}
-              <a
-                href="/pricing"
-                className="text-purple-600 hover:text-purple-500 transition-colors"
-              >
-                View plan details on the pricing page →
-              </a>
-            </p>
-          )}
-          {error && <p className="text-sm text-red-600 mt-4">{error}</p>}
         </div>
-      </motion.div>
+      )}
+
+      <div className="mt-8 grid gap-6 md:grid-cols-2">
+        {PLANS.map((plan) => (
+          <div
+            key={plan.key}
+            className={`rounded-2xl border bg-white p-7 ${
+              billing?.plan === plan.key && active
+                ? "border-[#5f7a61]/50 shadow-[0_20px_50px_-30px_rgba(63,85,64,0.4)]"
+                : "border-[#1a1a17]/10"
+            }`}
+          >
+            <p className="cf-mono text-[11px] uppercase tracking-[0.16em] text-[#5f7a61]">
+              {plan.name}
+            </p>
+            <p className="cf-display mt-2 text-[38px] font-light leading-none text-[#1a1a17]">
+              {plan.price}
+              <span className="cf-body text-[14px] text-[#5e6a60]"> {plan.per}</span>
+            </p>
+            <p className="cf-body mt-2 text-[14.5px] text-[#5e6a60]">{plan.blurb}</p>
+            <ul className="mt-5 space-y-2.5">
+              {plan.features.map((f) => (
+                <li key={f} className="cf-body flex items-start gap-2.5 text-[14.5px] text-[#1a1a17]/85">
+                  <Check size={15} className="mt-0.5 shrink-0 text-[#5f7a61]" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => startCheckout(plan.key)}
+              disabled={checkoutPlan === plan.key}
+              className="cf-body mt-6 w-full rounded-full bg-[#5f7a61] py-2.5 text-[14.5px] font-medium text-white transition-colors hover:bg-[#4e6650] disabled:opacity-60"
+            >
+              {billing?.plan === plan.key && active
+                ? "Current plan"
+                : checkoutPlan === plan.key
+                  ? "Opening checkout…"
+                  : "Start 30 day free trial"}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div className="cf-body mt-6 rounded-2xl border border-[#1a1a17]/10 bg-white px-6 py-5 text-[14.5px] text-[#5e6a60]">
+        Need enterprise volume, custom specialties, or an EHR integration?{" "}
+        <a href="mailto:opera@getopera.ai" className="font-medium text-[#3e5540] underline underline-offset-2">
+          Talk to us
+        </a>
+        .
+      </div>
+
+      {error && (
+        <p className="cf-body mt-5 text-[14px] text-[#b91c1c]">{error}</p>
+      )}
+
+      {/* Stripe embedded checkout mounts here */}
+      <div ref={checkoutRef} className="mt-8">
+        <div id="stripe-checkout" className="overflow-hidden rounded-2xl" />
+      </div>
     </div>
   );
 }

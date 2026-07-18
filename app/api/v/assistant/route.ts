@@ -6,6 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { appendChatExchange } from "@/lib/portal/store";
 import { getShareContext } from "@/lib/patient-share";
 
 export const runtime = "nodejs";
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
   if (!id || !question || typeof question !== "string" || question.length > 600) {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
   }
+  const askedAt = new Date().toISOString();
 
   const ctx = await getShareContext(id);
   if (!ctx) return NextResponse.json({ error: "not_found" }, { status: 404 });
@@ -117,6 +119,20 @@ FOLLOWUPS: ["...", "...", "..."]
         /* malformed followups — answer still stands */
       }
     }
+
+        // Persist the exchange so the clinic can see what patients ask and when.
+    appendChatExchange(
+      id,
+      {
+        clinicId: (ctx as { clinicId?: string }).clinicId,
+        patientName: ctx.patientFirstName,
+        treatmentType: ctx.treatmentType,
+      },
+      question,
+      answer,
+      askedAt,
+      new Date().toISOString()
+    ).catch((err) => console.error("[assistant] chat log failed", err));
 
     return NextResponse.json({ answer, followUps });
   } catch (err) {

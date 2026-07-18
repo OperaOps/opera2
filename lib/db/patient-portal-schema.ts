@@ -147,4 +147,7 @@ function initSchema(db: Database.Database) {
   if (!clinicCols.some((c) => c.name === "api_key")) {
     db.exec("ALTER TABLE clinic_accounts ADD COLUMN api_key TEXT");
   }
+  if (!clinicCols.some((c) => c.name === "specialties")) {
+    db.exec("ALTER TABLE clinic_accounts ADD COLUMN specialties TEXT");
+  }
 }

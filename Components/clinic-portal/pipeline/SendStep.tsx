@@ -105,7 +105,7 @@ export default function SendStep({ patient, onBack, onDone }: SendStepProps) {
             </p>
           </div>
           {loading === "email" && (
-            <div className="ml-auto w-4 h-4 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+            <div className="ml-auto w-4 h-4 border-2 border-[#5f7a61] border-t-transparent rounded-full animate-spin" />
           )}
         </button>
 
@@ -123,7 +123,7 @@ export default function SendStep({ patient, onBack, onDone }: SendStepProps) {
             </p>
           </div>
           {loading === "sms" && (
-            <div className="ml-auto w-4 h-4 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+            <div className="ml-auto w-4 h-4 border-2 border-[#5f7a61] border-t-transparent rounded-full animate-spin" />
           )}
         </button>
 
@@ -153,7 +153,7 @@ export default function SendStep({ patient, onBack, onDone }: SendStepProps) {
             <p className="text-xs text-gray-500">Email Message</p>
             <button
               onClick={() => copyText(emailBody)}
-              className="text-xs text-violet-400 hover:text-violet-300"
+              className="text-xs text-[#5f7a61] hover:text-[#5f7a61]/70"
             >
               Copy All
             </button>
@@ -174,7 +174,7 @@ export default function SendStep({ patient, onBack, onDone }: SendStepProps) {
             <p className="text-xs text-gray-500">SMS Message</p>
             <button
               onClick={() => copyText(smsBody)}
-              className="text-xs text-violet-400 hover:text-violet-300"
+              className="text-xs text-[#5f7a61] hover:text-[#5f7a61]/70"
             >
               Copy
             </button>
@@ -210,9 +210,9 @@ export default function SendStep({ patient, onBack, onDone }: SendStepProps) {
         </button>
         <button
           onClick={handleDone}
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600
-            hover:from-violet-500 hover:to-purple-500 text-white font-medium transition-all
-            shadow-lg shadow-violet-600/20"
+          className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#5f7a61] to-[#5f7a61]
+            hover:from-[#4e6650] hover:to-[#4e6650] text-white font-medium transition-all
+            shadow-lg shadow-[#5f7a61]/20"
         >
           Done — Return to Dashboard
         </button>
@@ -247,7 +247,7 @@ function CredRow({
       {copyable && (
         <button
           onClick={() => navigator.clipboard.writeText(value)}
-          className="text-xs text-violet-400 hover:text-violet-300"
+          className="text-xs text-[#5f7a61] hover:text-[#5f7a61]/70"
         >
           Copy
         </button>
