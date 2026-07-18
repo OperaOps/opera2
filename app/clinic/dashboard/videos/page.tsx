@@ -5,8 +5,8 @@
  * Ask Opera assistant the patient sees, right under each preview.
  */
 
-import { useEffect, useState } from "react";
-import { Check, Copy, ExternalLink, MessageCircle, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Check, Copy, ExternalLink, MessageCircle, Search, X } from "lucide-react";
 import { AskOpera } from "@/Components/patient/AskOpera";
 
 interface VideoRow {
@@ -36,6 +36,9 @@ export default function VideosPage() {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState<string | null>(null);
   const [askOpen, setAskOpen] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState<"all" | "ready" | "rendering">("all");
+  const [treatment, setTreatment] = useState("all");
 
   useEffect(() => {
     (async () => {
@@ -58,6 +61,40 @@ export default function VideosPage() {
   const name = (v: VideoRow) =>
     v.patient_name || `${v.first_name ?? ""} ${v.last_name ?? ""}`.trim() || "Patient";
 
+  const treatments = useMemo(
+    () =>
+      Array.from(
+        new Set(videos.map((v) => (v.treatment_type ?? "").trim()).filter(Boolean))
+      ).sort(),
+    [videos]
+  );
+
+  const filtered = useMemo(
+    () =>
+      videos.filter((v) => {
+        if (search.trim() && !name(v).toLowerCase().includes(search.toLowerCase()))
+          return false;
+        if (status === "ready" && !v.video_url) return false;
+        if (status === "rendering" && v.video_url) return false;
+        if (treatment !== "all" && (v.treatment_type ?? "") !== treatment) return false;
+        return true;
+      }),
+    [videos, search, status, treatment]
+  );
+
+  const groups = useMemo(() => {
+    const map = new Map<string, VideoRow[]>();
+    for (const v of filtered) {
+      const k = new Date(v.created_at).toLocaleDateString(undefined, {
+        month: "long",
+        year: "numeric",
+      });
+      if (!map.has(k)) map.set(k, []);
+      map.get(k)!.push(v);
+    }
+    return Array.from(map.entries());
+  }, [filtered]);
+
   return (
     <div className="mx-auto max-w-[1160px]">
       <h1 className="cf-display text-[clamp(1.8rem,3vw,2.4rem)] font-light tracking-[-0.02em] text-[#1a1a17]">
@@ -68,9 +105,50 @@ export default function VideosPage() {
         patient&rsquo;s side.
       </p>
 
+      <div className="mt-7 flex flex-wrap items-center gap-3">
+        <div className="relative w-full max-w-sm">
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6e7a71]" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by patient"
+            className="cf-body w-full rounded-xl border border-[#1a1a17]/12 bg-white py-2.5 pl-10 pr-4 text-[14.5px] outline-none transition-colors focus:border-[#5f7a61]/60"
+          />
+        </div>
+        {([
+          ["all", "All"],
+          ["ready", "Ready"],
+          ["rendering", "Rendering"],
+        ] as const).map(([k, label]) => (
+          <button
+            key={k}
+            onClick={() => setStatus(k)}
+            className={`cf-mono rounded-full border px-4 py-2 text-[11.5px] uppercase tracking-[0.08em] transition-colors ${
+              status === k
+                ? "border-[#5f7a61]/50 bg-[#5f7a61]/[0.08] text-[#3e5540]"
+                : "border-[#1a1a17]/12 text-[#1a1a17]/55 hover:border-[#5f7a61]/40"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+        <select
+          value={treatment}
+          onChange={(e) => setTreatment(e.target.value)}
+          className="cf-mono rounded-full border border-[#1a1a17]/12 bg-white px-4 py-2 text-[11.5px] uppercase tracking-[0.08em] text-[#1a1a17]/70 outline-none transition-colors hover:border-[#5f7a61]/40 focus:border-[#5f7a61]/50"
+        >
+          <option value="all">All treatments</option>
+          {treatments.map((t) => (
+            <option key={t} value={t}>
+              {t.replace(/_/g, " ")}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {loading ? (
         <p className="cf-body mt-10 text-[15px] text-[#5e6a60]">Loading videos…</p>
-      ) : videos.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <div className="mt-10 rounded-2xl border border-[#1a1a17]/10 bg-white p-10 text-center">
           <p className="cf-body text-[15.5px] text-[#5e6a60]">
             No videos yet. Generate your first from the Generate tab — it lands
@@ -78,8 +156,14 @@ export default function VideosPage() {
           </p>
         </div>
       ) : (
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          {videos.map((v) => {
+        groups.map(([month, rows]) => (
+        <section key={month} className="mt-9">
+          <div className="flex items-baseline gap-3 border-b border-[#1a1a17]/10 pb-2">
+            <h2 className="cf-mono text-[12px] uppercase tracking-[0.18em] text-[#5f7a61]">{month}</h2>
+            <span className="cf-mono text-[11px] text-[#6e7a71]">{rows.length}</span>
+          </div>
+        <div className="mt-4 grid gap-6 md:grid-cols-2">
+          {rows.map((v) => {
             const ready = Boolean(v.video_url);
             return (
               <div
@@ -158,6 +242,8 @@ export default function VideosPage() {
             );
           })}
         </div>
+        </section>
+        ))
       )}
     </div>
   );
