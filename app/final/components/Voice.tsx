@@ -46,7 +46,7 @@ export default function Voice() {
             >
               <span className="text-[#1a1a17]">Dr. Umesh Kodu</span>
               <span className="mx-2 text-[#1a1a17]/25">·</span>
-              Pediatrician
+              Owner
               <span className="mx-2 text-[#1a1a17]/25">·</span>
               Penguin Pediatrics
             </motion.p>
