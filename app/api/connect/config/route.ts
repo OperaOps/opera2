@@ -18,5 +18,11 @@ export async function GET(request: NextRequest) {
     planName: PLANS[plan].name,
     priceDisplay: priceDisplay(plan),
     trialDays: TRIAL_DAYS,
+    // Publishable (public by design) — lets clients mount Embedded Checkout
+    // without baking the key into the bundle at build time.
+    publishableKey:
+      process.env.STRIPE_PUBLISHABLE_KEY?.trim() ||
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim() ||
+      null,
   });
 }

@@ -14,6 +14,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import type Stripe from "stripe";
 import bcrypt from "bcryptjs";
 import {
   activateClinic,
@@ -140,9 +141,13 @@ export async function POST(request: NextRequest) {
     passwordHash,
   });
 
+  // uiMode "embedded" renders Stripe's Embedded Checkout inside our page
+  // (used by the Greyfinch in-modal onboarding — no redirect ever leaves the
+  // PMS). Default remains the hosted redirect flow for /connect.
+  const embedded = body.uiMode === "embedded";
   const origin = baseUrl(request);
-  const session = await getStripe().checkout.sessions.create({
-    mode: "subscription",
+  const common = {
+    mode: "subscription" as const,
     customer_email: email,
     line_items: [{ price: planPriceId(plan)!, quantity: 1 }],
     subscription_data: {
@@ -150,12 +155,29 @@ export async function POST(request: NextRequest) {
       metadata: { clinicId: clinic.clinicId, clinicName, plan: PLANS[plan].name },
     },
     metadata: { clinicId: clinic.clinicId, plan },
-    allow_promotion_codes: true,
-    success_url: `${origin}/connect/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}/connect?canceled=1`,
-  });
+  };
+  const session = embedded
+    ? await getStripe().checkout.sessions.create({
+        ...common,
+        // Current Stripe API name for embedded checkout ("embedded" was renamed)
+        ui_mode: "embedded_page" as Stripe.Checkout.SessionCreateParams.UiMode,
+        redirect_on_completion: "never",
+      })
+    : await getStripe().checkout.sessions.create({
+        ...common,
+        allow_promotion_codes: true,
+        success_url: `${origin}/connect/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/connect?canceled=1`,
+      });
 
   await linkCheckoutSession(clinic.clinicId, session.id);
 
+  if (embedded) {
+    return NextResponse.json({
+      mode: "embedded_checkout",
+      sessionId: session.id,
+      clientSecret: session.client_secret,
+    });
+  }
   return NextResponse.json({ mode: "checkout", checkoutUrl: session.url });
 }

@@ -19,6 +19,12 @@
 
 import React, { useCallback, useEffect, useRef, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Onboarding from "./Onboarding";
+
+// Key persistence for the in-modal signup: Greyfinch's connection token is the
+// durable path, but right after an in-embed signup the connection doesn't have
+// the new key yet — localStorage bridges that gap on this machine.
+const STORED_KEY = "opera_connect_key";
 
 const TREATMENTS = [
   "invisalign", "braces", "ceramic_braces", "lingual_braces", "expander",
@@ -49,6 +55,8 @@ function EmbedInner() {
   // standalone testing, or the clinic hasn't connected yet).
   const [apiKey, setApiKey] = useState("");
   const [needsKey, setNeedsKey] = useState(false);
+  const [authReason, setAuthReason] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(false);
   const [patientName, setPatientName] = useState("");
   const [doctorName, setDoctorName] = useState("");
   const [clinicName, setClinicName] = useState("");
@@ -78,7 +86,17 @@ function EmbedInner() {
     setClinicName(params.get("clinic_name") || params.get("clinicName") || "");
     setXid(params.get("xid") || params.get("patient_xid") || "");
     const key = params.get("api_key") || params.get("apiKey") || "";
-    if (key && !key.includes("{{")) setApiKey(key);
+    if (key && !key.includes("{{")) {
+      setApiKey(key);
+    } else {
+      // No key on the launcher URL (fresh install / not connected yet) — fall
+      // back to a key issued via the in-modal signup on this machine.
+      try {
+        const stored = localStorage.getItem(STORED_KEY);
+        if (stored) setApiKey(stored);
+      } catch { /* storage can be blocked in iframes */ }
+    }
+    setHydrated(true);
     setSmsTemplate(params.get("sms_template") || params.get("smsTemplate") || "");
     // Allow the Greyfinch admin base to be overridden via the launcher URL so the
     // "Go to messages" deep link points at the right tenant/host.
@@ -165,6 +183,8 @@ function EmbedInner() {
       const data = await res.json();
       if (res.status === 401 || res.status === 402) {
         setNeedsKey(true);
+        setAuthReason(data?.error || null);
+        try { localStorage.removeItem(STORED_KEY); } catch {}
         throw new Error(data?.error || "This clinic isn't connected to Opera yet.");
       }
       if (!res.ok) throw new Error(data?.error || "Failed to start generation.");
@@ -249,6 +269,7 @@ function EmbedInner() {
 
   const pct = job ? Math.round((job.progress || 0) * 100) : 0;
   const done = job?.status === "completed" && job.videoUrl;
+  const showOnboarding = !done && (needsKey || (hydrated && !apiKey));
 
   // Task 4: when a video finishes, record it onto the patient's Greyfinch
   // treatment timeline (app resource). Fires once per job; the route soft-skips
@@ -273,32 +294,27 @@ function EmbedInner() {
   return (
     <div className="min-h-screen bg-white text-gray-900 flex items-center justify-center p-6 sm:p-10">
       <div className={`w-full ${done ? "max-w-5xl" : "max-w-md"} rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm`}>
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-lg font-semibold text-gray-900">Generate patient video</h1>
-          <p className="text-sm text-gray-500">Create a personalized education video for this patient.</p>
-        </div>
+        {/* Header (the onboarding panel brings its own) */}
+        {!showOnboarding && (
+          <div className="mb-6">
+            <h1 className="text-lg font-semibold text-gray-900">Generate patient video</h1>
+            <p className="text-sm text-gray-500">Create a personalized education video for this patient.</p>
+          </div>
+        )}
 
-        {!done && (
+        {showOnboarding ? (
+          <Onboarding
+            reason={authReason}
+            onKey={(k) => {
+              setApiKey(k);
+              try { localStorage.setItem(STORED_KEY, k); } catch {}
+              setNeedsKey(false);
+              setAuthReason(null);
+              setError(null);
+            }}
+          />
+        ) : !done && (
           <div className="space-y-3">
-            {needsKey && (
-              <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 space-y-2">
-                <div className="text-[12px] text-amber-800">
-                  This clinic isn&apos;t connected to Opera yet. Paste your Opera API key below, or{" "}
-                  <a href="/connect" target="_blank" rel="noopener" className="underline font-medium">
-                    start a 30-day free trial
-                  </a>{" "}
-                  to get one.
-                </div>
-                <input
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value.trim())}
-                  placeholder="opk_…"
-                  disabled={submitting}
-                  className={inputCls}
-                />
-              </div>
-            )}
             <Field label="Patient">
               <input value={patientName} onChange={(e) => setPatientName(e.target.value)}
                 placeholder="Patient name" disabled={submitting} className={inputCls} />
