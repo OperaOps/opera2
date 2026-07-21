@@ -30,6 +30,16 @@ export async function GET(request: NextRequest) {
           specialties:
             ((account as unknown as Record<string, unknown>).specialties as string[]) ??
             ["dental", "orthodontic"],
+          preconsult_video_url:
+            ((account as unknown as Record<string, unknown>).preconsultVideoUrl as string) ?? null,
+          preconsult_upload_pending: Boolean(
+            (account as unknown as Record<string, unknown>).preconsultUploadUrl &&
+              !(account as unknown as Record<string, unknown>).preconsultVideoUrl
+          ),
+          preconsult_note:
+            ((account as unknown as Record<string, unknown>).preconsultNote as string) ?? null,
+          preconsult_note_pending:
+            ((account as unknown as Record<string, unknown>).preconsultNotePending as string) ?? null,
           created_at: account.createdAt,
         },
         billing: {
@@ -50,7 +60,7 @@ export async function GET(request: NextRequest) {
   const row = db
     .prepare(
       `SELECT clinic_name, clinic_email, clinic_phone, clinic_address,
-              clinic_logo_url, specialties, created_at
+              clinic_logo_url, specialties, preconsult_video_url, preconsult_upload_url, preconsult_note, preconsult_note_pending, created_at
        FROM clinic_accounts WHERE id = ?`
     )
     .get(clinic.clinicId) as Record<string, unknown> | undefined;

@@ -23,6 +23,8 @@ interface AdminClinic {
   hasSubscription: boolean;
   preconsultVideoUrl: string | null;
   pendingTourUrl: string | null;
+  liveNote: string | null;
+  pendingNote: string | null;
 }
 
 const fmt = (iso: string | null) =>
@@ -88,6 +90,15 @@ export default function AdminPage() {
     load(key);
   };
 
+  const approveNote = async (clinicId: string, note?: string) => {
+    await fetch("/api/admin/promote-note", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-key": key },
+      body: JSON.stringify({ clinicId, note }),
+    });
+    load(key);
+  };
+
   const promote = async (clinicId: string, videoUrl?: string) => {
     await fetch("/api/admin/promote-tour", {
       method: "POST",
@@ -132,6 +143,7 @@ export default function AdminPage() {
   }
 
   const pending = clinics.filter((c) => c.pendingTourUrl);
+  const pendingNotes = clinics.filter((c) => c.pendingNote);
 
   return (
     <Shell>
@@ -143,7 +155,7 @@ export default function AdminPage() {
                 Clinics
               </h1>
               <p className="cf-body mt-1.5 text-[15px] text-[#5e6a60]">
-                {clinics.length} accounts · {pending.length} tour upload{pending.length === 1 ? "" : "s"} awaiting review
+                {clinics.length} accounts · {pending.length} tour upload{pending.length === 1 ? "" : "s"} · {pendingNotes.length} note{pendingNotes.length === 1 ? "" : "s"} awaiting review
               </p>
             </div>
             <div className="flex gap-2.5">
@@ -240,6 +252,40 @@ export default function AdminPage() {
                       className="cf-mono rounded-full bg-[#1a1a17] px-3.5 py-1.5 text-[11px] uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#5f7a61]"
                     >
                       Promote processed…
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* pending note reviews */}
+          {pendingNotes.length > 0 && (
+            <div className="mt-8 rounded-2xl border border-[#5f7a61]/25 bg-[#5f7a61]/[0.04] p-6">
+              <p className="cf-mono text-[11px] uppercase tracking-[0.16em] text-[#3e5540]">
+                Welcome notes awaiting review
+              </p>
+              <div className="mt-3 space-y-3">
+                {pendingNotes.map((c) => (
+                  <div key={c.clinicId} className="flex flex-wrap items-center gap-3 rounded-xl border border-[#1a1a17]/10 bg-white px-4 py-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="cf-body text-[14px] font-medium text-[#1a1a17]">{c.clinicName}</p>
+                      <p className="cf-display mt-0.5 text-[14.5px] italic text-[#1a1a17]/85">&ldquo;{c.pendingNote}&rdquo;</p>
+                    </div>
+                    <button
+                      onClick={() => approveNote(c.clinicId)}
+                      className="cf-mono rounded-full bg-[#5f7a61] px-3.5 py-1.5 text-[11px] uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#4e6650]"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => {
+                        const edited = prompt("Edit before approving:", c.pendingNote ?? "");
+                        if (edited) approveNote(c.clinicId, edited);
+                      }}
+                      className="cf-mono rounded-full bg-[#1a1a17] px-3.5 py-1.5 text-[11px] uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#5f7a61]"
+                    >
+                      Edit &amp; approve
                     </button>
                   </div>
                 ))}

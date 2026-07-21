@@ -37,6 +37,8 @@ export async function GET(request: NextRequest) {
           (rec.preconsultUploadUrl as string) && !(rec.preconsultVideoUrl as string)
             ? (rec.preconsultUploadUrl as string)
             : null,
+        liveNote: (rec.preconsultNote as string) ?? null,
+        pendingNote: (rec.preconsultNotePending as string) ?? null,
       };
     }),
   });

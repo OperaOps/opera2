@@ -19,6 +19,11 @@ import {
  *  generated welcome visuals land (see settings copy). */
 const DEFAULT_PRECONSULT_VIDEO = "/videos/sitepics/veo-05.mp4";
 
+/** Every welcome page carries a note. This is the house default until the
+ *  clinic writes (and we approve) their own. */
+const DEFAULT_PRECONSULT_NOTE =
+  "Our whole team is looking forward to meeting you. Come exactly as you are, ask us anything, and we'll take great care of you.";
+
 export async function POST(request: NextRequest) {
   const session = await verifyClinicToken(request);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -45,6 +50,7 @@ export async function POST(request: NextRequest) {
   let audioBaked = false;
   let clinicName = session.clinicName;
   let logoUrl: string | null = null;
+  let clinicNote: string | null = null;
   try {
     const account = await getClinic(session.clinicId);
     if (account) {
@@ -53,6 +59,7 @@ export async function POST(request: NextRequest) {
       audioBaked = Boolean(rec.preconsultAudioBaked);
       clinicName = account.clinicName;
       logoUrl = account.logoUrl ?? null;
+      clinicNote = (rec.preconsultNote as string) ?? null;
     }
   } catch {
     /* fall through */
@@ -72,6 +79,10 @@ export async function POST(request: NextRequest) {
         clinicName = row.clinic_name;
         logoUrl = row.clinic_logo_url;
       }
+      const noteRow = getDb()
+        .prepare("SELECT preconsult_note FROM clinic_accounts WHERE id = ?")
+        .get(session.clinicId) as { preconsult_note: string | null } | undefined;
+      if (noteRow?.preconsult_note && !clinicNote) clinicNote = noteRow.preconsult_note;
     } catch {
       /* sqlite unavailable */
     }
@@ -93,7 +104,7 @@ export async function POST(request: NextRequest) {
     patientLastName: body.lastName?.trim() || undefined,
     appointmentType: body.appointmentType?.trim() || "consultation",
     appointmentDate: body.appointmentDate?.trim() || undefined,
-    personalNote: body.personalNote?.trim() || undefined,
+    personalNote: body.personalNote?.trim() || clinicNote || DEFAULT_PRECONSULT_NOTE,
     videoUrl,
     audioBaked,
     logoUrl,

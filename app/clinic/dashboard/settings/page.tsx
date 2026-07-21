@@ -32,6 +32,10 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [tourVideo, setTourVideo] = useState<string | null>(null);
+  const [note, setNote] = useState("");
+  const [liveNote, setLiveNote] = useState<string | null>(null);
+  const [notePending, setNotePending] = useState<string | null>(null);
+  const [noteMsg, setNoteMsg] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState("");
   const [keyCopied, setKeyCopied] = useState(false);
@@ -47,6 +51,8 @@ export default function SettingsPage() {
         setEmail(data.clinic?.clinic_email ?? "");
         if (Array.isArray(data.clinic?.specialties)) setSpecialties(data.clinic.specialties);
         setTourVideo(data.clinic?.preconsult_video_url ?? null);
+        setLiveNote(data.clinic?.preconsult_note ?? null);
+        setNotePending(data.clinic?.preconsult_note_pending ?? null);
       } catch {
         /* leave defaults */
       }
@@ -255,6 +261,61 @@ export default function SettingsPage() {
               MP4 or MOV, up to ~200MB. Vertical phone footage works great.
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* welcome note */}
+      <div className="mt-6 rounded-2xl border border-[#1a1a17]/10 bg-white p-7">
+        <p className="cf-mono text-[11px] uppercase tracking-[0.16em] text-[#5f7a61]">
+          Personal welcome note
+        </p>
+        <p className="cf-body mt-1.5 text-[14px] text-[#5e6a60]">
+          Shows on every pre-consult welcome page. Until yours is approved,
+          patients see Opera&rsquo;s warm default.
+        </p>
+        {liveNote && (
+          <div className="mt-3 rounded-xl border border-[#5f7a61]/20 bg-[#5f7a61]/[0.05] px-4 py-3">
+            <p className="cf-mono text-[10px] uppercase tracking-[0.14em] text-[#5f7a61]">Live now</p>
+            <p className="cf-display mt-1 text-[15px] italic text-[#1a1a17]">&ldquo;{liveNote}&rdquo;</p>
+          </div>
+        )}
+        {notePending && (
+          <div className="mt-3 rounded-xl border border-[#b45309]/25 bg-[#b45309]/[0.05] px-4 py-3">
+            <p className="cf-mono text-[10px] uppercase tracking-[0.14em] text-[#b45309]">In review</p>
+            <p className="cf-display mt-1 text-[15px] italic text-[#1a1a17]">&ldquo;{notePending}&rdquo;</p>
+          </div>
+        )}
+        <textarea
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          rows={2}
+          maxLength={400}
+          placeholder="e.g. From all of us at the front desk to the doctor, we can't wait to welcome you!"
+          className="cf-body mt-4 w-full resize-none rounded-xl border border-[#1a1a17]/12 bg-white px-4 py-3 text-[14.5px] outline-none transition-colors focus:border-[#5f7a61]/60"
+        />
+        <div className="mt-3 flex items-center gap-3">
+          <button
+            onClick={async () => {
+              if (!note.trim()) return;
+              setNoteMsg("");
+              const res = await fetch("/api/clinic/preconsult-note", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ note }),
+              });
+              if (res.ok) {
+                setNotePending(note.trim());
+                setNote("");
+                setNoteMsg("Sent for review — it goes live once our team approves it (usually within a day).");
+              } else {
+                setNoteMsg("Couldn't submit. Try again.");
+              }
+            }}
+            className="cf-body rounded-full bg-[#1a1a17] px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-[#5f7a61]"
+          >
+            Submit for review
+          </button>
+          {noteMsg && <p className="cf-body text-[13px] text-[#3e5540]">{noteMsg}</p>}
         </div>
       </div>
 

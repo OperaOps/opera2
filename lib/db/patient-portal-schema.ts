@@ -156,4 +156,10 @@ function initSchema(db: Database.Database) {
   if (!clinicCols.some((c) => c.name === "preconsult_upload_url")) {
     db.exec("ALTER TABLE clinic_accounts ADD COLUMN preconsult_upload_url TEXT");
   }
+  if (!clinicCols.some((c) => c.name === "preconsult_note")) {
+    db.exec("ALTER TABLE clinic_accounts ADD COLUMN preconsult_note TEXT");
+  }
+  if (!clinicCols.some((c) => c.name === "preconsult_note_pending")) {
+    db.exec("ALTER TABLE clinic_accounts ADD COLUMN preconsult_note_pending TEXT");
+  }
 }
