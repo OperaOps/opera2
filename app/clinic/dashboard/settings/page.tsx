@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { Check, Copy, KeyRound, RefreshCw } from "lucide-react";
+import { Check, Copy, Film, KeyRound, RefreshCw, Upload } from "lucide-react";
 
 const ACTIVE_SPECIALTIES = [
   { key: "dental", label: "Dental" },
@@ -31,6 +31,9 @@ export default function SettingsPage() {
   const [specialties, setSpecialties] = useState<string[]>(["dental", "orthodontic"]);
   const [saved, setSaved] = useState(false);
   const [apiKey, setApiKey] = useState<string | null>(null);
+  const [tourVideo, setTourVideo] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadMsg, setUploadMsg] = useState("");
   const [keyCopied, setKeyCopied] = useState(false);
   const [rotating, setRotating] = useState(false);
 
@@ -43,6 +46,7 @@ export default function SettingsPage() {
         setLogo(data.clinic?.clinic_logo_url ?? "");
         setEmail(data.clinic?.clinic_email ?? "");
         if (Array.isArray(data.clinic?.specialties)) setSpecialties(data.clinic.specialties);
+        setTourVideo(data.clinic?.preconsult_video_url ?? null);
       } catch {
         /* leave defaults */
       }
@@ -175,6 +179,82 @@ export default function SettingsPage() {
               </span>
             </span>
           ))}
+        </div>
+      </div>
+
+      {/* pre-consult tour video */}
+      <div className="mt-6 rounded-2xl border border-[#1a1a17]/10 bg-white p-7">
+        <p className="cf-mono flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-[#5f7a61]">
+          <Film size={13} /> Pre-consult tour video
+        </p>
+        <p className="cf-body mt-1.5 text-[14px] text-[#5e6a60]">
+          A short walkthrough of your office. Patients see it with a calm music
+          bed before their first visit. Upload once, reuse for every patient.
+        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-4">
+          {tourVideo ? (
+            <video
+              src={tourVideo}
+              muted
+              playsInline
+              preload="metadata"
+              className="h-40 rounded-xl border border-[#1a1a17]/10 bg-black object-contain"
+            />
+          ) : (
+            <div className="flex h-40 w-28 items-center justify-center rounded-xl border border-dashed border-[#1a1a17]/20">
+              <Film size={20} className="text-[#6e7a71]" />
+            </div>
+          )}
+          <div>
+            <label className="cf-body inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#1a1a17] px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-[#5f7a61]">
+              <Upload size={14} />
+              {uploading ? "Uploading…" : tourVideo ? "Replace video" : "Upload video"}
+              <input
+                type="file"
+                accept="video/mp4,video/quicktime"
+                className="hidden"
+                disabled={uploading}
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  setUploading(true);
+                  setUploadMsg("");
+                  try {
+                    const pres = await fetch("/api/clinic/preconsult-video/upload-url", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ contentType: file.type || "video/mp4" }),
+                    });
+                    const { uploadUrl, publicUrl } = await pres.json();
+                    if (!uploadUrl) throw new Error("no url");
+                    const put = await fetch(uploadUrl, {
+                      method: "PUT",
+                      headers: { "Content-Type": file.type || "video/mp4" },
+                      body: file,
+                    });
+                    if (!put.ok) throw new Error("upload failed");
+                    const confirm = await fetch("/api/clinic/preconsult-video", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ videoUrl: publicUrl }),
+                    });
+                    if (!confirm.ok) throw new Error("save failed");
+                    setUploadMsg("Received! Our team adds the music bed and polish, then it goes live for your pre-consult welcomes (usually within a day).");
+                  } catch {
+                    setUploadMsg("Upload didn't go through. Try again.");
+                  } finally {
+                    setUploading(false);
+                  }
+                }}
+              />
+            </label>
+            {uploadMsg && (
+              <p className="cf-body mt-2 text-[13px] text-[#3e5540]">{uploadMsg}</p>
+            )}
+            <p className="cf-body mt-2 max-w-sm text-[13px] text-[#5e6a60]">
+              MP4 or MOV, up to ~200MB. Vertical phone footage works great.
+            </p>
+          </div>
         </div>
       </div>
 

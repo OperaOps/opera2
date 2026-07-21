@@ -150,4 +150,10 @@ function initSchema(db: Database.Database) {
   if (!clinicCols.some((c) => c.name === "specialties")) {
     db.exec("ALTER TABLE clinic_accounts ADD COLUMN specialties TEXT");
   }
+  if (!clinicCols.some((c) => c.name === "preconsult_video_url")) {
+    db.exec("ALTER TABLE clinic_accounts ADD COLUMN preconsult_video_url TEXT");
+  }
+  if (!clinicCols.some((c) => c.name === "preconsult_upload_url")) {
+    db.exec("ALTER TABLE clinic_accounts ADD COLUMN preconsult_upload_url TEXT");
+  }
 }

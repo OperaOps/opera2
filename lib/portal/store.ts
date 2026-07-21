@@ -156,6 +156,37 @@ export async function attachJobToPatient(
 }
 
 // ---------------------------------------------------------------------------
+// Pre-consult share records (no render job — the clinic's own tour video)
+// ---------------------------------------------------------------------------
+
+export interface PreconsultShare {
+  shareId: string;
+  stage: "pre";
+  clinicId: string;
+  clinicName: string;
+  provider?: string;
+  patientFirstName: string;
+  patientLastName?: string;
+  appointmentType: string;
+  appointmentDate?: string;
+  personalNote?: string;
+  videoUrl: string;
+  /** true when music is baked into the file; false = overlay bgm on the page */
+  audioBaked: boolean;
+  logoUrl?: string | null;
+  createdAt: string;
+}
+
+export async function savePreconsultShare(share: PreconsultShare): Promise<void> {
+  await portalPutItem(`SHARE#${share.shareId}`, share as unknown as Record<string, unknown>);
+}
+
+export async function getPreconsultShare(shareId: string): Promise<PreconsultShare | null> {
+  const item = await portalGetItem(`SHARE#${shareId}`);
+  return (item as unknown as PreconsultShare) ?? null;
+}
+
+// ---------------------------------------------------------------------------
 // Assistant chat logs
 // ---------------------------------------------------------------------------
 

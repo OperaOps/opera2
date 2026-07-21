@@ -13,6 +13,13 @@ import {
 } from "@/app/api/patient-video/_lib/job-store-dynamo";
 
 export interface ShareContext {
+  /** "pre" = pre-consult welcome experience; absent/"post" = treatment video */
+  stage?: "pre" | "post";
+  appointmentType?: string;
+  appointmentDate?: string;
+  personalNote?: string;
+  audioBaked?: boolean;
+  clinicId?: string;
   id: string;
   videoUrl: string;
   videoTitle: string;
@@ -76,6 +83,42 @@ const DEMO_CONTEXT: ShareContext = {
 
 export async function getShareContext(id: string): Promise<ShareContext | null> {
   if (id === "demo") return DEMO_CONTEXT;
+
+  // Pre-consult welcome shares (clinic tour video, no render job).
+  if (/^pre-[0-9a-f]{16,}$/.test(id)) {
+    try {
+      const { getPreconsultShare } = await import("@/lib/portal/store");
+      const share = await getPreconsultShare(id);
+      if (share) {
+        return {
+          id: share.shareId,
+          stage: "pre",
+          clinicId: share.clinicId,
+          videoUrl: share.videoUrl,
+          videoTitle: `Welcome to ${share.clinicName}`,
+          patientFirstName: share.patientFirstName,
+          patientLastName: share.patientLastName,
+          clinicName: share.clinicName,
+          provider: share.provider,
+          treatmentType: "consultation",
+          consultationDate: share.appointmentDate ?? "soon",
+          appointmentType: share.appointmentType,
+          appointmentDate: share.appointmentDate,
+          personalNote: share.personalNote,
+          audioBaked: share.audioBaked,
+          clinicLogoUrl: share.logoUrl ?? undefined,
+          providerNotes:
+            `${share.patientFirstName} has an upcoming ${share.appointmentType.replace(/_/g, " ")} ` +
+            `at ${share.clinicName}${share.provider ? ` with ${share.provider}` : ""}` +
+            `${share.appointmentDate ? ` on ${share.appointmentDate}` : ""}. ` +
+            `No diagnosis or treatment plan exists yet — this is BEFORE their first visit.` +
+            (share.personalNote ? ` Note from the clinic: ${share.personalNote}` : ""),
+        } as ShareContext;
+      }
+    } catch (err) {
+      console.error("[patient-share] preconsult lookup failed", err);
+    }
+  }
 
   // Generated-video jobs (the pipeline's Dynamo store) — every video produced
   // by Generate Video gets a patient page at /v/{jobId} with the Ask Opera bar.
@@ -177,6 +220,15 @@ export async function getShareContext(id: string): Promise<ShareContext | null> 
 }
 
 /** Treatment-aware suggested questions for the Ask Opera bar. */
+export const PRE_CONSULT_SUGGESTIONS = [
+  "What should I bring to my appointment?",
+  "How long will the visit take?",
+  "Will anything hurt at this visit?",
+  "Do you take my insurance?",
+  "Can someone come with me?",
+  "What happens after the consult?",
+];
+
 export function suggestedQuestions(treatmentType: string): string[] {
   const t = (treatmentType || "").toLowerCase();
   const label = t.replace(/_/g, " ");

@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
   const history = (body.history ?? []).slice(-6); // short memory, keeps answers fast
 
   const contact = ctx.clinicContact;
+  const preMode = ctx.stage === "pre";
   const system = `You are Opera, the friendly patient-education assistant for ${ctx.clinicName}. You appear under ${ctx.patientFirstName}'s personalized treatment video and answer their questions about their own care.
 
 PATIENT CONTEXT (private — use it to personalize, never recite it verbatim):
@@ -78,6 +79,16 @@ FOLLOW-UPS (required): after your answer, on the very last line, write exactly:
 FOLLOWUPS: ["...", "...", "..."]
 — a JSON array of 3 short follow-up questions (under 9 words each) written in ${ctx.patientFirstName}'s voice that naturally continue THIS answer (e.g. an insurance answer invites questions about their specific plan, deductibles, or the benefits check). Never repeat a question already asked.`;
 
+  const systemFinal = preMode
+    ? system +
+      `\n\nPRE-CONSULT MODE — this patient has NOT been seen yet. There is no diagnosis and no treatment plan. ` +
+      `Never speculate about what treatment they will need, costs of specific procedures, or clinical findings. ` +
+      `Your job: welcome them, explain what to expect at their upcoming visit (meet the team, exam, photos or scans, ` +
+      `a conversation about options), answer logistics (what to bring, timing, insurance basics, who can join), ` +
+      `and put them at ease. Keep answers short and warm. If asked clinical questions, reassure them that ` +
+      `${ctx.provider ?? "the doctor"} will look at everything at the visit and answer that properly.`
+    : system;
+
   try {
     const res = await fetch(ANTHROPIC_ENDPOINT, {
       method: "POST",
@@ -89,7 +100,7 @@ FOLLOWUPS: ["...", "...", "..."]
       body: JSON.stringify({
         model: MODEL,
         max_tokens: 520,
-        system,
+        system: systemFinal,
         messages: [...history, { role: "user", content: question }],
       }),
     });

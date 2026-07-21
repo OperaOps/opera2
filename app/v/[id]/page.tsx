@@ -5,7 +5,8 @@
  */
 
 import { notFound } from "next/navigation";
-import { getShareContext, suggestedQuestions } from "@/lib/patient-share";
+import { getShareContext, suggestedQuestions, PRE_CONSULT_SUGGESTIONS } from "@/lib/patient-share";
+import PreconsultWelcome from "@/Components/patient/PreconsultWelcome";
 import { AskOpera } from "@/Components/patient/AskOpera";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +16,57 @@ export default async function PatientSharePage({ params }: { params: { id: strin
   if (!ctx) notFound();
 
   const treatmentLabel = ctx.treatmentType.replace(/_/g, " ");
+
+  if (ctx.stage === "pre") {
+    return (
+      <div className="min-h-screen bg-white text-[#1a1a17] antialiased">
+        <header className="mx-auto flex max-w-5xl items-center justify-between px-5 pt-6">
+          <div className="flex items-center gap-2.5">
+            {ctx.clinicLogoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={ctx.clinicLogoUrl} alt={ctx.clinicName} className="h-8 w-8 rounded-lg object-cover" />
+            ) : (
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#5f7a61] text-[13px] font-bold text-white">
+                {ctx.clinicName.charAt(0)}
+              </span>
+            )}
+            <div className="leading-tight">
+              <p className="text-[13.5px] font-semibold">{ctx.clinicName}</p>
+              {ctx.provider && <p className="text-[11.5px] text-[#5e6a60]">{ctx.provider}</p>}
+            </div>
+          </div>
+          <span className="cf-mono rounded-full bg-[#5f7a61]/10 px-3 py-1 text-[10.5px] uppercase tracking-[0.1em] text-[#3e5540]">
+            {(ctx.appointmentType ?? "visit").replace(/_/g, " ")}
+          </span>
+        </header>
+
+        <PreconsultWelcome
+          firstName={ctx.patientFirstName}
+          clinicName={ctx.clinicName}
+          provider={ctx.provider}
+          appointmentType={ctx.appointmentType ?? "visit"}
+          appointmentDate={ctx.appointmentDate}
+          personalNote={ctx.personalNote}
+          videoUrl={ctx.videoUrl}
+          audioBaked={ctx.audioBaked}
+        />
+
+        <div className="mx-auto max-w-3xl px-5 pb-20 pt-12">
+          <AskOpera
+            shareId={ctx.id}
+            patientFirstName={ctx.patientFirstName}
+            clinicName={ctx.clinicName}
+            provider={ctx.provider}
+            suggestions={PRE_CONSULT_SUGGESTIONS}
+          />
+        </div>
+
+        <footer className="border-t border-[#1a1a17]/10 py-5 text-center text-[11px] text-[#5e6a60]">
+          Powered by <span className="font-semibold text-[#1a1a17]">Opera<span className="text-[#5f7a61]">AI</span></span> · Personalized patient education
+        </footer>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f5f8f5] via-white to-white text-gray-900 antialiased">
