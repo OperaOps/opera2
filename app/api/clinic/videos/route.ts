@@ -11,6 +11,7 @@ import { getDb } from "@/lib/db/patient-portal-schema";
 import { verifyClinicToken } from "@/lib/auth/clinic-auth";
 import {
   dynamoListJobs,
+  dynamoListJobsByClinic,
   isDynamoJobStoreEnabled,
 } from "@/app/api/patient-video/_lib/job-store-dynamo";
 
@@ -47,7 +48,11 @@ export async function GET(request: NextRequest) {
   const isDemoClinic = clinic.email === "demo@getopera.ai";
   if (isDynamoJobStoreEnabled()) {
     try {
-      const jobs = await dynamoListJobs(200);
+      // Per-clinic GSI query (fast at any table size); the demo account also
+      // shows legacy unscoped jobs, which only the scan can see.
+      const jobs = isDemoClinic
+        ? await dynamoListJobs(200)
+        : await dynamoListJobsByClinic(clinic.clinicId, 200);
       const seen = new Set(videos.map((v) => v.id));
       for (const job of jobs) {
         if (seen.has(job.jobId)) continue;

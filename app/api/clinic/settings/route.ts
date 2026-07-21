@@ -9,6 +9,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db/patient-portal-schema";
 import { verifyClinicToken } from "@/lib/auth/clinic-auth";
 import { getClinic, saveClinic } from "@/lib/connect/clinic-store";
+import {
+  dynamoListJobsByClinic,
+  isDynamoJobStoreEnabled,
+} from "@/app/api/patient-video/_lib/job-store-dynamo";
 
 export async function GET(request: NextRequest) {
   const clinic = await verifyClinicToken(request);
@@ -20,6 +24,17 @@ export async function GET(request: NextRequest) {
   try {
     const account = await getClinic(clinic.clinicId);
     if (account) {
+      // The videosGenerated counter historically missed portal-session renders
+      // (it only metered API-key callers), so floor it with the real job count.
+      let videosGenerated = account.videosGenerated ?? 0;
+      if (isDynamoJobStoreEnabled()) {
+        try {
+          const jobs = await dynamoListJobsByClinic(clinic.clinicId, 500);
+          videosGenerated = Math.max(videosGenerated, jobs.length);
+        } catch {
+          /* counter fallback */
+        }
+      }
       return NextResponse.json({
         clinic: {
           clinic_name: account.clinicName,
@@ -46,7 +61,7 @@ export async function GET(request: NextRequest) {
           plan: account.plan,
           status: account.status,
           trialEndsAt: account.trialEndsAt,
-          videosGenerated: account.videosGenerated ?? 0,
+          videosGenerated,
           hasSubscription: Boolean(account.stripeSubscriptionId),
         },
       });

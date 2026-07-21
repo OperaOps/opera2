@@ -150,6 +150,10 @@ export default function PatientsPage() {
   const selShareIds = selected
     ? Array.from(new Set([...(selected.video_jobs ?? []), ...(actData?.shareIds ?? [])]))
     : [];
+  // Pre-consult welcome links aren't rendered treatment videos — list them
+  // separately so the counts here line up with the Videos page.
+  const selVideoIds = selShareIds.filter((s) => !s.startsWith("pre-"));
+  const selWelcomeIds = selShareIds.filter((s) => s.startsWith("pre-"));
 
   return (
     <div className="mx-auto max-w-[1160px]">
@@ -384,7 +388,12 @@ export default function PatientsPage() {
                   </p>
                 ) : (
                   <div className="mt-3 space-y-2">
-                    {selShareIds.map((sid) => (
+                    {selVideoIds.length === 0 && (
+                      <p className="cf-body text-[14px] text-[#5e6a60]">
+                        No treatment video yet — only welcome links below.
+                      </p>
+                    )}
+                    {selVideoIds.map((sid) => (
                       <div
                         key={sid}
                         className="flex items-center gap-2 rounded-xl border border-[#1a1a17]/10 px-3.5 py-2.5"
@@ -412,6 +421,42 @@ export default function PatientsPage() {
                   </div>
                 )}
               </section>
+
+              {/* pre-consult welcome links */}
+              {selWelcomeIds.length > 0 && (
+                <section>
+                  <p className="cf-mono flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-[#5f7a61]">
+                    <Film size={12} /> Pre-consult welcome links
+                  </p>
+                  <div className="mt-3 space-y-2">
+                    {selWelcomeIds.map((sid) => (
+                      <div
+                        key={sid}
+                        className="flex items-center gap-2 rounded-xl border border-[#1a1a17]/10 px-3.5 py-2.5"
+                      >
+                        <span className="cf-mono min-w-0 flex-1 truncate text-[12px] text-[#1a1a17]/80">
+                          /v/{sid}
+                        </span>
+                        <button
+                          onClick={() => copyLink(sid)}
+                          className="cf-mono inline-flex items-center gap-1.5 rounded-full border border-[#5f7a61]/30 px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] text-[#3e5540] transition-colors hover:bg-[#5f7a61]/[0.07]"
+                        >
+                          {copied === sid ? <Check size={11} /> : <Copy size={11} />}
+                          {copied === sid ? "Copied" : "Copy"}
+                        </button>
+                        <a
+                          href={`/v/${sid}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="cf-mono inline-flex items-center gap-1.5 rounded-full bg-[#1a1a17] px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] text-white transition-colors hover:bg-[#5f7a61]"
+                        >
+                          <ExternalLink size={11} /> Open
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
 
               {/* generate */}
               <section>

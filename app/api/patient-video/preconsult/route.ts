@@ -14,6 +14,7 @@ import { proxyToRenderer } from "@/lib/video/upstream-proxy";
 import { saveJob, type VideoJob, type RenderInput } from "../_lib/job-store";
 import { runRenderInBackground } from "@/lib/video/render";
 import { authorizeVideoRequest } from "@/lib/connect/auth";
+import { recordVideoGenerated } from "@/lib/connect/clinic-store";
 import { verifyClinicToken } from "@/lib/auth/clinic-auth";
 
 export async function POST(request: NextRequest) {
@@ -90,6 +91,8 @@ export async function POST(request: NextRequest) {
   await saveJob(jobId, job);
 
   runRenderInBackground(jobId, input);
+
+  if (clinicId) recordVideoGenerated(clinicId);
 
   return NextResponse.json(
     { jobId, status: "processing", statusUrl: `/api/patient-video/${jobId}` },

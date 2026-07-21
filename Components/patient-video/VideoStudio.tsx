@@ -286,18 +286,25 @@ interface PortalPatientOption {
   consulting_provider: string | null;
 }
 
+interface BrandDefaults {
+  doctorName: string;
+  clinicDisplayName: string;
+}
+
 function FormWizard({
   onSubmit,
   onBack,
   embedded = false,
   patients = [],
   prefillPatientId,
+  brandDefaults = null,
 }: {
   onSubmit: (data: Record<string, any>) => void;
   onBack: () => void;
   embedded?: boolean;
   patients?: PortalPatientOption[];
   prefillPatientId?: string | null;
+  brandDefaults?: BrandDefaults | null;
 }) {
   const [formStep, setFormStep] = useState(0);
   const [specialty, setSpecialty] = useState<Specialty>("dental");
@@ -311,9 +318,25 @@ function FormWizard({
   const [treatmentNotes, setTreatmentNotes] = useState("");
   const [concerns, setConcerns] = useState("");
   const [selectedPatient, setSelectedPatient] = useState<string>("");
+  const [showSuggest, setShowSuggest] = useState(false);
+
+  // Typeahead: alphabetical list, narrowed as the clinic types. A name that
+  // matches nobody is simply a new patient — no separate mode.
+  const q = patientName.trim().toLowerCase();
+  const patientSuggestions = [...patients]
+    .sort((a, b) =>
+      `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
+    )
+    .filter((p) => {
+      const full = `${p.first_name} ${p.last_name}`.trim().toLowerCase();
+      if (selectedPatient && full === q) return false; // already picked
+      return !q || full.includes(q);
+    })
+    .slice(0, 30);
 
   const applyPatient = (id: string) => {
     setSelectedPatient(id);
+    setShowSuggest(false);
     if (!id) return;
     const p = patients.find((x) => x.id === id);
     if (!p) return;
@@ -338,6 +361,19 @@ function FormWizard({
     if (prefillPatientId && patients.length) applyPatient(prefillPatientId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefillPatientId, patients.length]);
+
+  // Clinic branding defaults (Customization page) — fill empty fields only,
+  // never overwrite what the user (or a patient prefill) already set.
+  useEffect(() => {
+    if (!brandDefaults) return;
+    if (brandDefaults.doctorName) {
+      setDoctorName((cur) => cur || brandDefaults.doctorName);
+    }
+    if (brandDefaults.clinicDisplayName) {
+      setClinicName((cur) => cur || brandDefaults.clinicDisplayName);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [brandDefaults]);
 
   useEffect(() => {
     const opts = TREATMENT_OPTIONS[specialty];
@@ -450,25 +486,51 @@ function FormWizard({
                   <p className="text-sm text-gray-500">Who is this video for?</p>
                 </div>
                 <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5 shadow-sm">
-                  {patients.length > 0 && (
-                    <FormField label="Start from an existing patient (optional)">
-                      <select
-                        value={selectedPatient}
-                        onChange={(e) => applyPatient(e.target.value)}
-                        className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#5f7a61]/20 focus:border-[#5f7a61] transition-all appearance-none"
-                      >
-                        <option value="">New patient — enter details below</option>
-                        {patients.map((p) => (
-                          <option key={p.id} value={p.id}>
-                            {p.first_name} {p.last_name}
-                            {p.treatment_type ? ` · ${p.treatment_type.replace(/_/g, " ")}` : ""}
-                          </option>
-                        ))}
-                      </select>
-                    </FormField>
-                  )}
-                  <FormField label="Patient Name">
-                    <TextInput value={patientName} onChange={setPatientName} placeholder="e.g. Sarah Johnson" />
+                  <FormField
+                    label="Patient Name"
+                    hint={
+                      patients.length > 0
+                        ? "Start typing — existing patients appear below. A new name just creates a new patient."
+                        : undefined
+                    }
+                  >
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={patientName}
+                        onChange={(e) => {
+                          setPatientName(e.target.value);
+                          setSelectedPatient("");
+                          setShowSuggest(true);
+                        }}
+                        onFocus={() => setShowSuggest(true)}
+                        onBlur={() => setTimeout(() => setShowSuggest(false), 150)}
+                        placeholder="e.g. Sarah Johnson"
+                        className="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5f7a61]/20 focus:border-[#5f7a61] transition-all"
+                      />
+                      {showSuggest && patientSuggestions.length > 0 && (
+                        <div className="absolute z-20 mt-1.5 max-h-60 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
+                          {patientSuggestions.map((p) => (
+                            <button
+                              key={p.id}
+                              type="button"
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={() => applyPatient(p.id)}
+                              className="flex w-full items-center justify-between gap-3 px-3.5 py-2.5 text-left text-sm transition-colors hover:bg-[#5f7a61]/[0.07]"
+                            >
+                              <span className="text-gray-900">
+                                {p.first_name} {p.last_name}
+                              </span>
+                              {p.treatment_type && (
+                                <span className="shrink-0 text-xs text-gray-400">
+                                  {p.treatment_type.replace(/_/g, " ")}
+                                </span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </FormField>
                   <div className="grid grid-cols-2 gap-4">
                     <FormField label="Doctor Name">
@@ -805,8 +867,21 @@ export function VideoStudio({
   prefillPatientId?: string | null;
 }) {
   const [portalPatients, setPortalPatients] = useState<PortalPatientOption[]>([]);
+  const [brandDefaults, setBrandDefaults] = useState<BrandDefaults | null>(null);
   useEffect(() => {
     if (!embedded) return;
+    // Clinic branding defaults (Customization page) prefill doctor + clinic.
+    fetch("/api/clinic/customization")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d) {
+          setBrandDefaults({
+            doctorName: String(d.doctorName ?? ""),
+            clinicDisplayName: String(d.clinicDisplayName ?? ""),
+          });
+        }
+      })
+      .catch(() => {});
     fetch("/api/clinic/patients?limit=200")
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
@@ -941,7 +1016,7 @@ export function VideoStudio({
       )}
       {step === "form" && (
         <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <FormWizard onSubmit={handleSubmit} onBack={() => setStep("start")} embedded={embedded} patients={portalPatients} prefillPatientId={prefillPatientId} />
+          <FormWizard onSubmit={handleSubmit} onBack={() => setStep("start")} embedded={embedded} patients={portalPatients} prefillPatientId={prefillPatientId} brandDefaults={brandDefaults} />
         </motion.div>
       )}
       {step === "generating" && (

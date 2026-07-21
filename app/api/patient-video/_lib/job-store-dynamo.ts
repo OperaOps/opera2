@@ -7,6 +7,7 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
   ScanCommand,
+  QueryCommand,
   GetCommand,
   PutCommand,
 } from "@aws-sdk/lib-dynamodb";
@@ -94,4 +95,35 @@ export async function dynamoListJobs(limit = 100): Promise<Array<VideoJob & { jo
   }));
   jobs.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
   return jobs.slice(0, limit);
+}
+
+/**
+ * List one clinic's jobs, newest first, via the clinicId-createdAt-index GSI —
+ * a targeted query that stays fast no matter how many total jobs exist.
+ * Falls back to the full scan if the index isn't available yet.
+ */
+export async function dynamoListJobsByClinic(
+  clinicId: string,
+  limit = 200
+): Promise<Array<VideoJob & { jobId: string }>> {
+  try {
+    const r = await getDoc().send(
+      new QueryCommand({
+        TableName: TABLE,
+        IndexName: "clinicId-createdAt-index",
+        KeyConditionExpression: "clinicId = :c",
+        ExpressionAttributeValues: { ":c": clinicId },
+        ScanIndexForward: false,
+        Limit: limit,
+      })
+    );
+    return (r.Items ?? []).map((item) => ({
+      ...itemToJob(item as Record<string, unknown>),
+      jobId: (item as Record<string, unknown>).jobId as string,
+    }));
+  } catch (err) {
+    console.error("[job-store] GSI query failed, falling back to scan", err);
+    const all = await dynamoListJobs(500);
+    return all.filter((j) => j.clinicId === clinicId).slice(0, limit);
+  }
 }

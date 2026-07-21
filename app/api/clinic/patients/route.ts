@@ -9,6 +9,7 @@ import { verifyClinicToken } from "@/lib/auth/clinic-auth";
 import { listPortalPatients, upsertPatientByName } from "@/lib/portal/store";
 import {
   dynamoListJobs,
+  dynamoListJobsByClinic,
   isDynamoJobStoreEnabled,
 } from "@/app/api/patient-video/_lib/job-store-dynamo";
 
@@ -104,7 +105,9 @@ export async function GET(request: NextRequest) {
   const isDemoClinic = clinic.email === "demo@getopera.ai";
   if (isDynamoJobStoreEnabled()) {
     try {
-      const jobs = await dynamoListJobs(200);
+      const jobs = isDemoClinic
+        ? await dynamoListJobs(200)
+        : await dynamoListJobsByClinic(clinic.clinicId, 200);
       const known = new Set(
         merged.map((p) =>
           `${String(p.first_name || "").toLowerCase()} ${String(p.last_name || "").toLowerCase()}`.trim()

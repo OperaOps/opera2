@@ -14,6 +14,7 @@ import {
   Users,
   Film,
   Sparkles,
+  Palette,
   CreditCard,
   Settings,
   LogOut,
@@ -25,6 +26,7 @@ const NAV = [
   { href: "/clinic/dashboard/patients", label: "Patients", icon: Users },
   { href: "/clinic/dashboard/videos", label: "Videos", icon: Film },
   { href: "/clinic/dashboard/pipeline", label: "Generate", icon: Sparkles },
+  { href: "/clinic/dashboard/customization", label: "Customization", icon: Palette },
   { href: "/clinic/dashboard/billing", label: "Billing", icon: CreditCard },
   { href: "/clinic/dashboard/settings", label: "Settings", icon: Settings },
 ];

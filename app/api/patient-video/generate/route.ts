@@ -301,8 +301,9 @@ export async function POST(request: NextRequest) {
   // Start render in background via child process
   runRenderInBackground(jobId, input);
 
-  // Usage metering (billing/ROI visibility) — non-blocking.
-  if (auth.kind === "clinic") recordVideoGenerated(auth.clinic.clinicId);
+  // Usage metering (billing/ROI visibility) — non-blocking. Portal sessions
+  // carry clinicId without an API key, so meter on clinicId, not auth kind.
+  if (clinicId) recordVideoGenerated(clinicId);
 
   return NextResponse.json(
     {
