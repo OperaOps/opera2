@@ -25,6 +25,7 @@ interface AdminClinic {
   pendingTourUrl: string | null;
   liveNote: string | null;
   pendingNote: string | null;
+  local?: boolean;
 }
 
 const fmt = (iso: string | null) =>
@@ -44,6 +45,7 @@ export default function AdminPage() {
   const [created, setCreated] = useState<{ email: string; password: string; apiKey: string | null } | null>(null);
   const [form, setForm] = useState({ clinicName: "", contactName: "", email: "", password: "" });
   const [copied, setCopied] = useState(false);
+  const [openRow, setOpenRow] = useState<string | null>(null);
 
   const load = useCallback(async (k: string) => {
     setLoading(true);
@@ -339,11 +341,17 @@ export default function AdminPage() {
                   <th className="px-4 py-3 font-medium">Last used</th>
                   <th className="px-4 py-3 font-medium">Joined</th>
                   <th className="px-4 py-3 font-medium">Tour</th>
+                  <th className="px-4 py-3 font-medium">Note</th>
                 </tr>
               </thead>
               <tbody>
                 {clinics.map((c) => (
-                  <tr key={c.clinicId} className="border-b border-[#1a1a17]/[0.05] last:border-b-0">
+                  <>
+                  <tr
+                    key={c.clinicId}
+                    onClick={() => setOpenRow(openRow === c.clinicId ? null : c.clinicId)}
+                    className="cursor-pointer border-b border-[#1a1a17]/[0.05] transition-colors last:border-b-0 hover:bg-[#5f7a61]/[0.03]"
+                  >
                     <td className="px-5 py-3.5">
                       <p className="cf-body text-[14.5px] font-medium text-[#1a1a17]">{c.clinicName}</p>
                       <p className="cf-body text-[12.5px] text-[#5e6a60]">{c.contactName}</p>
@@ -374,7 +382,140 @@ export default function AdminPage() {
                         <span className="cf-mono text-[10px] uppercase tracking-[0.08em] text-[#6e7a71]">default</span>
                       )}
                     </td>
+                    <td className="px-4 py-3.5">
+                      {c.liveNote ? (
+                        <span className="cf-mono text-[10px] uppercase tracking-[0.08em] text-[#15803d]">live</span>
+                      ) : c.pendingNote ? (
+                        <span className="cf-mono text-[10px] uppercase tracking-[0.08em] text-[#b45309]">pending</span>
+                      ) : (
+                        <span className="cf-mono text-[10px] uppercase tracking-[0.08em] text-[#6e7a71]">default</span>
+                      )}
+                    </td>
                   </tr>
+                  {openRow === c.clinicId && (
+                    <tr className="border-b border-[#1a1a17]/[0.05] bg-[#f5f8f5]/60">
+                      <td colSpan={8} className="px-5 py-5">
+                        <div className="grid gap-6 md:grid-cols-2">
+                          <div>
+                            <p className="cf-mono text-[10.5px] uppercase tracking-[0.16em] text-[#5f7a61]">
+                              Tour video
+                            </p>
+                            {c.preconsultVideoUrl ? (
+                              <div className="mt-2 flex items-center gap-2.5">
+                                <span className="cf-mono min-w-0 flex-1 truncate text-[12px] text-[#1a1a17]/75">
+                                  {c.preconsultVideoUrl}
+                                </span>
+                                <a
+                                  href={c.preconsultVideoUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="cf-mono inline-flex items-center gap-1.5 rounded-full bg-[#1a1a17] px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] text-white hover:bg-[#5f7a61]"
+                                >
+                                  <ExternalLink size={11} /> View
+                                </a>
+                              </div>
+                            ) : c.pendingTourUrl ? (
+                              <div className="mt-2 flex flex-wrap items-center gap-2.5">
+                                <span className="cf-mono min-w-0 flex-1 truncate text-[12px] text-[#b45309]">
+                                  pending: {c.pendingTourUrl}
+                                </span>
+                                <a
+                                  href={c.pendingTourUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="cf-mono rounded-full border border-[#1a1a17]/12 px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] text-[#1a1a17]/70"
+                                >
+                                  View raw
+                                </a>
+                                {!c.local && (
+                                  <>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        promote(c.clinicId);
+                                      }}
+                                      className="cf-mono rounded-full bg-[#5f7a61] px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] text-white hover:bg-[#4e6650]"
+                                    >
+                                      Promote as-is
+                                    </button>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const url = prompt("Processed video URL (music baked in):");
+                                        if (url) promote(c.clinicId, url);
+                                      }}
+                                      className="cf-mono rounded-full bg-[#1a1a17] px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] text-white hover:bg-[#5f7a61]"
+                                    >
+                                      Promote processed…
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            ) : (
+                              <p className="cf-body mt-2 text-[13px] text-[#5e6a60]">
+                                Nothing uploaded — pre-consults use Opera&rsquo;s default visual.
+                              </p>
+                            )}
+                          </div>
+                          <div>
+                            <p className="cf-mono text-[10.5px] uppercase tracking-[0.16em] text-[#5f7a61]">
+                              Welcome note
+                            </p>
+                            {c.liveNote && (
+                              <p className="cf-display mt-2 text-[14px] italic text-[#1a1a17]">
+                                &ldquo;{c.liveNote}&rdquo;{" "}
+                                <span className="cf-mono not-italic text-[9.5px] uppercase text-[#15803d]">live</span>
+                              </p>
+                            )}
+                            {c.pendingNote && (
+                              <div className="mt-2 flex flex-wrap items-center gap-2.5">
+                                <p className="cf-display min-w-0 flex-1 text-[14px] italic text-[#1a1a17]">
+                                  &ldquo;{c.pendingNote}&rdquo;{" "}
+                                  <span className="cf-mono not-italic text-[9.5px] uppercase text-[#b45309]">pending</span>
+                                </p>
+                                {!c.local && (
+                                  <>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        approveNote(c.clinicId);
+                                      }}
+                                      className="cf-mono rounded-full bg-[#5f7a61] px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] text-white hover:bg-[#4e6650]"
+                                    >
+                                      Approve
+                                    </button>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const edited = prompt("Edit before approving:", c.pendingNote ?? "");
+                                        if (edited) approveNote(c.clinicId, edited);
+                                      }}
+                                      className="cf-mono rounded-full bg-[#1a1a17] px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] text-white hover:bg-[#5f7a61]"
+                                    >
+                                      Edit &amp; approve
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            )}
+                            {!c.liveNote && !c.pendingNote && (
+                              <p className="cf-body mt-2 text-[13px] text-[#5e6a60]">
+                                None submitted — pages show Opera&rsquo;s default note.
+                              </p>
+                            )}
+                            {c.local && (
+                              <p className="cf-mono mt-3 text-[9.5px] uppercase tracking-[0.1em] text-[#6e7a71]">
+                                Local demo account — managed in the bundled database
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  </>
                 ))}
               </tbody>
             </table>

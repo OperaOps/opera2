@@ -104,6 +104,9 @@ export default function BillingPage() {
   };
 
   const active = billing?.status === "active" || billing?.status === "trialing";
+  // Partner/comped accounts: active without a Stripe subscription — billing
+  // is handled by Opera, so no plan cards or checkout prompts.
+  const comped = billing?.status === "active" && !billing?.hasSubscription;
 
   return (
     <div className="mx-auto max-w-[1080px]">
@@ -121,7 +124,23 @@ export default function BillingPage() {
         </div>
       )}
 
-      {loaded && billing && active && (
+      {loaded && comped && (
+        <div className="mt-6 rounded-2xl border border-[#5f7a61]/25 bg-[#5f7a61]/[0.05] px-6 py-5">
+          <p className="cf-mono text-[11px] uppercase tracking-[0.16em] text-[#5f7a61]">
+            Account status
+          </p>
+          <p className="cf-body mt-1.5 text-[16px] font-medium text-[#1a1a17]">
+            Your account is fully active.
+          </p>
+          <p className="cf-body mt-1 text-[14px] text-[#5e6a60]">
+            Billing for this account is managed directly with Opera — there&rsquo;s
+            nothing to set up here. {billing?.videosGenerated ?? 0} videos
+            generated so far. Questions? opera@getopera.ai
+          </p>
+        </div>
+      )}
+
+      {loaded && billing && active && !comped && (
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#1a1a17]/10 bg-white px-6 py-5">
           <div>
             <p className="cf-mono text-[11px] uppercase tracking-[0.16em] text-[#5f7a61]">
@@ -146,6 +165,7 @@ export default function BillingPage() {
         </div>
       )}
 
+      {!comped && (
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         {PLANS.map((plan) => (
           <div
@@ -186,7 +206,9 @@ export default function BillingPage() {
           </div>
         ))}
       </div>
+      )}
 
+      {!comped && (
       <div className="cf-body mt-6 rounded-2xl border border-[#1a1a17]/10 bg-white px-6 py-5 text-[14.5px] text-[#5e6a60]">
         Need enterprise volume, custom specialties, or an EHR integration?{" "}
         <a href="mailto:opera@getopera.ai" className="font-medium text-[#3e5540] underline underline-offset-2">
@@ -194,6 +216,7 @@ export default function BillingPage() {
         </a>
         .
       </div>
+      )}
 
       {error && (
         <p className="cf-body mt-5 text-[14px] text-[#b91c1c]">{error}</p>

@@ -7,6 +7,7 @@
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { isAdmin } from "../_lib/auth";
+import { getDb } from "@/lib/db/patient-portal-schema";
 import {
   activateClinic,
   createClinic,
@@ -18,8 +19,60 @@ import {
 export async function GET(request: NextRequest) {
   if (!isAdmin(request)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const clinics = await listClinics();
+
+  // Local/demo accounts live in SQLite — surface them too.
+  const sqliteRows: Record<string, unknown>[] = [];
+  try {
+    const db = getDb();
+    const rows = db
+      .prepare(
+        `SELECT id, clinic_name, clinic_email, created_at, preconsult_video_url,
+                preconsult_upload_url, preconsult_note, preconsult_note_pending
+         FROM clinic_accounts`
+      )
+      .all() as Record<string, unknown>[];
+    const known = new Set(clinics.map((c) => c.email.toLowerCase()));
+    for (const r of rows) {
+      const email = String(r.clinic_email ?? "").toLowerCase();
+      if (known.has(email)) continue;
+      let videos = 0;
+      let lastUsed: string | null = null;
+      try {
+        const v = db
+          .prepare(
+            "SELECT COUNT(*) as n, MAX(created_at) as last FROM patient_videos WHERE clinic_id = ?"
+          )
+          .get(r.id) as { n: number; last: string | null };
+        videos = v.n;
+        lastUsed = v.last;
+      } catch {
+        /* counts stay zero */
+      }
+      sqliteRows.push({
+        clinicId: r.id,
+        clinicName: r.clinic_name,
+        contactName: "Demo account",
+        email: r.clinic_email,
+        status: "demo",
+        plan: "demo",
+        videosGenerated: videos,
+        lastUsedAt: lastUsed,
+        createdAt: r.created_at,
+        hasSubscription: false,
+        preconsultVideoUrl: r.preconsult_video_url ?? null,
+        pendingTourUrl:
+          r.preconsult_upload_url && !r.preconsult_video_url ? r.preconsult_upload_url : null,
+        liveNote: r.preconsult_note ?? null,
+        pendingNote: r.preconsult_note_pending ?? null,
+        local: true,
+      });
+    }
+  } catch (err) {
+    console.error("[admin] sqlite roster read failed", err);
+  }
+
   return NextResponse.json({
-    clinics: clinics.map((c) => {
+    clinics: [...sqliteRows, ...clinics.map((c) => {
       const rec = c as unknown as Record<string, unknown>;
       return {
         clinicId: c.clinicId,
@@ -39,8 +92,9 @@ export async function GET(request: NextRequest) {
             : null,
         liveNote: (rec.preconsultNote as string) ?? null,
         pendingNote: (rec.preconsultNotePending as string) ?? null,
+        local: false,
       };
-    }),
+    })],
   });
 }
 
