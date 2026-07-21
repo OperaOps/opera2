@@ -33,6 +33,13 @@ export interface RenderInput {
   phoneNumber?: string;
   /** Pre-written script JSON — bypasses AI generation when provided. */
   presetScript?: Record<string, unknown>;
+  /** Pre-consult welcome mode — short hello over the clinic tour footage (no AI script). */
+  preconsult?: {
+    tourVideoUrl: string;
+    tourDurationSeconds?: number;
+    appointmentType?: string;
+    appointmentDate?: string;
+  };
 }
 
 export interface VideoJob {

@@ -175,6 +175,10 @@ export interface PreconsultShare {
   audioBaked: boolean;
   logoUrl?: string | null;
   createdAt: string;
+  /** Pipeline job rendering the personalized welcome video ("Hi {name}…" with
+   *  voiceover over the tour footage). Once it completes, the share page
+   *  prefers the rendered video over the raw tour. */
+  renderJobId?: string;
 }
 
 export async function savePreconsultShare(share: PreconsultShare): Promise<void> {

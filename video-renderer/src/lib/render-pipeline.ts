@@ -42,10 +42,12 @@ import {
 } from "./schema";
 import {
   buildFlagshipSegments,
+  buildPreconsultSegments,
   estimateNarrationSeconds,
   flagshipTotalSeconds,
   FLAGSHIP_FPS,
   FLAGSHIP_TEAL,
+  type FlagshipSegment,
   type FlagshipVideoProps,
 } from "./flagship";
 import { stripDoctorPrefix } from "./doctor-format";
@@ -85,6 +87,14 @@ export interface RenderJobInput {
   logoUrl?: string;
   phoneNumber?: string;
   presetScript?: Record<string, unknown>;
+  /** Pre-consult welcome mode — a short hello over the clinic's tour footage.
+   *  Skips script generation entirely (no diagnosis/treatment exists yet). */
+  preconsult?: {
+    tourVideoUrl: string;
+    tourDurationSeconds?: number;
+    appointmentType?: string;
+    appointmentDate?: string;
+  };
 }
 
 export interface RenderJobResult {
@@ -282,7 +292,10 @@ export async function renderPatientVideo(
   let script: GeneratedScript | undefined;
   let premiumScript: PremiumGeneratedScript | undefined;
 
-  if (isPremium) {
+  if (input.preconsult) {
+    // Pre-consult welcome: fixed warm template, no AI script.
+    process.stderr.write("[render-pipeline] Pre-consult welcome mode (no script generation)\n");
+  } else if (isPremium) {
     if (input.presetScript) {
       premiumScript = input.presetScript as unknown as PremiumGeneratedScript;
       process.stderr.write("[render-pipeline] Using preset script (skipping AI generation)\n");
@@ -306,15 +319,33 @@ export async function renderPatientVideo(
   // --------------------------------------------------
   // Step 2: Build flagship segments (intro card → timeline → clips → warm close)
   // --------------------------------------------------
-  const segments = buildFlagshipSegments({
-    patientName: input.patientName,
-    doctorName: stripDoctorPrefix(input.doctorName),
-    clinicName: input.clinicName,
-    category: input.category,
-    treatment: input.treatment,
-    script: isPremium ? undefined : script,
-    premiumScript: isPremium ? premiumScript : undefined,
-  });
+  let segments: FlagshipSegment[];
+  if (input.preconsult) {
+    // Probe the tour footage's true length so the two tour beats can show
+    // different parts of the office (ffprobe reads https URLs directly).
+    const probed =
+      input.preconsult.tourDurationSeconds ||
+      (await probeAudioFileDurationSeconds(input.preconsult.tourVideoUrl));
+    segments = buildPreconsultSegments({
+      patientName: input.patientName,
+      doctorName: stripDoctorPrefix(input.doctorName),
+      clinicName: input.clinicName,
+      tourVideoUrl: input.preconsult.tourVideoUrl,
+      tourDurationSeconds: probed > 0 ? probed : 30,
+      appointmentType: input.preconsult.appointmentType,
+      appointmentDate: input.preconsult.appointmentDate,
+    });
+  } else {
+    segments = buildFlagshipSegments({
+      patientName: input.patientName,
+      doctorName: stripDoctorPrefix(input.doctorName),
+      clinicName: input.clinicName,
+      category: input.category,
+      treatment: input.treatment,
+      script: isPremium ? undefined : script,
+      premiumScript: isPremium ? premiumScript : undefined,
+    });
+  }
   process.stderr.write(`[render-pipeline] Flagship segments: ${segments.length}\n`);
 
   // --------------------------------------------------

@@ -90,11 +90,26 @@ export async function getShareContext(id: string): Promise<ShareContext | null> 
       const { getPreconsultShare } = await import("@/lib/portal/store");
       const share = await getPreconsultShare(id);
       if (share) {
+        // Prefer the rendered welcome video ("Hi {name}…" with voiceover baked
+        // in) once its pipeline job completes; fall back to the raw tour until.
+        let videoUrl = share.videoUrl;
+        let audioBaked = share.audioBaked;
+        if (share.renderJobId && isDynamoJobStoreEnabled()) {
+          try {
+            const job = await dynamoGetJob(share.renderJobId);
+            if (job?.status === "completed" && job.videoUrl) {
+              videoUrl = job.videoUrl;
+              audioBaked = true;
+            }
+          } catch {
+            /* raw tour fallback */
+          }
+        }
         return {
           id: share.shareId,
           stage: "pre",
           clinicId: share.clinicId,
-          videoUrl: share.videoUrl,
+          videoUrl,
           videoTitle: `Welcome to ${share.clinicName}`,
           patientFirstName: share.patientFirstName,
           patientLastName: share.patientLastName,
@@ -105,7 +120,7 @@ export async function getShareContext(id: string): Promise<ShareContext | null> 
           appointmentType: share.appointmentType,
           appointmentDate: share.appointmentDate,
           personalNote: share.personalNote,
-          audioBaked: share.audioBaked,
+          audioBaked,
           clinicLogoUrl: share.logoUrl ?? undefined,
           providerNotes:
             `${share.patientFirstName} has an upcoming ${share.appointmentType.replace(/_/g, " ")} ` +

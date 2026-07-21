@@ -317,6 +317,83 @@ export function buildFlagshipSegments(input: FlagshipBeatInput): FlagshipSegment
   return [...cards, ...clips];
 }
 
+// ---------------------------------------------------------------------------
+// Pre-consult welcome — a short (~25-30s) rendered hello built around the
+// clinic's own tour footage. No diagnosis, no treatment: just "Hi {name},
+// we can't wait to meet you" with the office on screen.
+// ---------------------------------------------------------------------------
+
+export interface PreconsultSegmentInput {
+  patientName: string;
+  /** Provider name WITHOUT the "Dr." prefix (may be empty). */
+  doctorName?: string;
+  clinicName: string;
+  /** Absolute https URL of the clinic tour footage (or default visual). */
+  tourVideoUrl: string;
+  /** True length of the tour footage — lets the two beats show different parts. */
+  tourDurationSeconds: number;
+  appointmentType?: string;
+  appointmentDate?: string;
+}
+
+export function buildPreconsultSegments(input: PreconsultSegmentInput): FlagshipSegment[] {
+  const first = input.patientName.trim().split(/\s+/)[0] || input.patientName;
+  const doctor = input.doctorName?.trim();
+  const appt = (input.appointmentType || "visit").replace(/_/g, " ");
+  const when = input.appointmentDate ? `on ${input.appointmentDate}` : "soon";
+  const tourDur = Math.max(8, input.tourDurationSeconds || 30);
+  // Start the closing beat partway through the footage so the two tour beats
+  // show different parts of the office (when there's enough to go around).
+  const closeTrimStart = tourDur >= 24 ? Math.min(tourDur * 0.5, tourDur - 10) : 0;
+
+  const seg = (s: FlagshipSegment): FlagshipSegment => ({
+    ...s,
+    durationSeconds: estimateNarrationSeconds(s.narration),
+  });
+
+  return [
+    seg({
+      kind: "intro-card",
+      eyebrow: `FOR ${first.toUpperCase()}  ·  ${input.clinicName.toUpperCase()}`,
+      title: "We can't wait to meet you",
+      subtitle: `A quick hello from the ${input.clinicName} team before your ${appt}`,
+      narration: doctor
+        ? `Hi ${first} — welcome! Dr. ${doctor} and everyone at ${input.clinicName} are really looking forward to meeting you, so here's a quick hello just for you.`
+        : `Hi ${first} — welcome! Everyone at ${input.clinicName} is really looking forward to meeting you, so here's a quick hello just for you.`,
+      durationSeconds: 0,
+    }),
+    seg({
+      kind: "clip",
+      clip: { src: input.tourVideoUrl, durationSeconds: tourDur },
+      heading: "A look inside",
+      bullets: [
+        "You'll be greeted the moment you arrive",
+        "Everything moves at your pace",
+        "Ask us anything — big or small",
+      ],
+      narration: `Here's a little look inside our office, so it already feels familiar when you walk in. We'll greet you at the door, get you settled, and go at your pace.`,
+      durationSeconds: 0,
+    }),
+    seg({
+      kind: "clip",
+      clip: {
+        src: input.tourVideoUrl,
+        durationSeconds: tourDur,
+        ...(closeTrimStart > 0 ? { trimStartSeconds: closeTrimStart } : {}),
+      },
+      freeze: true,
+      heading: input.appointmentDate ? `See you ${input.appointmentDate}` : "See you soon",
+      bullets: [
+        "Nothing to prepare",
+        "Come exactly as you are",
+        "We can't wait to meet you",
+      ],
+      narration: `Nothing to prepare, nothing to worry about — come exactly as you are, and bring any questions you have. We'll see you ${when}, ${first}!`,
+      durationSeconds: 0,
+    }),
+  ];
+}
+
 /** Total flagship duration in seconds (sum of segment durations). */
 export function flagshipTotalSeconds(segments: FlagshipSegment[]): number {
   return segments.reduce((a, s) => a + s.durationSeconds, 0);

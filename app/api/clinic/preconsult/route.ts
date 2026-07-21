@@ -93,6 +93,43 @@ export async function POST(request: NextRequest) {
     audioBaked = false;
   }
 
+  // Kick off the rendered welcome video — a ~25s "Hi {name}" with warm
+  // voiceover over the tour footage, via the flagship pipeline. The share
+  // link is live instantly with the raw tour; the page upgrades itself to
+  // the rendered video once the job completes.
+  let renderJobId: string | undefined;
+  try {
+    const origin =
+      process.env.OPERA_PUBLIC_ORIGIN?.trim().replace(/\/$/, "") ||
+      request.nextUrl.origin;
+    const tourVideoUrl = videoUrl.startsWith("http") ? videoUrl : `${origin}${videoUrl}`;
+    if (tourVideoUrl.startsWith("https://")) {
+      const upstream =
+        process.env.OPERA_RENDER_UPSTREAM?.trim().replace(/\/$/, "") || origin;
+      const res = await fetch(`${upstream}/api/patient-video/preconsult`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-opera-clinic-id": session.clinicId,
+        },
+        body: JSON.stringify({
+          patientName: [body.firstName.trim(), body.lastName?.trim()].filter(Boolean).join(" "),
+          doctorName: body.provider?.trim() || "",
+          clinicName,
+          tourVideoUrl,
+          appointmentType: body.appointmentType?.trim() || "consultation",
+          appointmentDate: body.appointmentDate?.trim() || undefined,
+        }),
+        signal: AbortSignal.timeout(15_000),
+      });
+      const data = (await res.json().catch(() => null)) as { jobId?: string } | null;
+      if (res.ok && data?.jobId) renderJobId = data.jobId;
+      else console.error("[preconsult] render kickoff rejected", res.status, data);
+    }
+  } catch (err) {
+    console.error("[preconsult] render kickoff failed", err);
+  }
+
   const shareId = "pre-" + crypto.randomBytes(10).toString("hex");
   await savePreconsultShare({
     shareId,
@@ -109,6 +146,7 @@ export async function POST(request: NextRequest) {
     audioBaked,
     logoUrl,
     createdAt: new Date().toISOString(),
+    renderJobId,
   });
 
   // keep the patient record durable + linked
