@@ -34,6 +34,8 @@ const fmt = (iso: string | null) =>
 
 export default function AdminPage() {
   const [key, setKey] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
   const [clinics, setClinics] = useState<AdminClinic[]>([]);
   const [loading, setLoading] = useState(false);
@@ -71,6 +73,29 @@ export default function AdminPage() {
       load(saved);
     }
   }, [load]);
+
+  const login = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.key) {
+        setError("Wrong email or password.");
+        return;
+      }
+      setKey(data.key);
+      await load(data.key);
+    } catch {
+      setError("Login failed. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const createClinic = async () => {
     setError("");
@@ -121,20 +146,29 @@ export default function AdminPage() {
             </span>
             <h1 className="cf-display mt-4 text-[26px] font-light text-[#1a1a17]">Opera admin</h1>
             <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              autoComplete="username"
+              className={input + " mt-5"}
+            />
+            <input
               type="password"
-              value={key}
-              onChange={(e) => setKey(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && load(key)}
-              placeholder="Admin key"
-              className={input + " mt-5 text-center"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && login()}
+              placeholder="Password"
+              autoComplete="current-password"
+              className={input + " mt-3"}
             />
             {error && <p className="cf-body mt-3 text-[13.5px] text-[#b91c1c]">{error}</p>}
             <button
-              onClick={() => load(key)}
-              disabled={loading || !key.trim()}
+              onClick={login}
+              disabled={loading || !email.trim() || !password}
               className="cf-body mt-4 w-full rounded-full bg-[#1a1a17] py-3 text-[15px] font-medium text-white transition-colors hover:bg-[#5f7a61] disabled:opacity-50"
             >
-              {loading ? "Checking…" : "Enter"}
+              {loading ? "Signing in…" : "Sign in"}
             </button>
           </div>
         </main>
