@@ -3,6 +3,7 @@ import {
   AbsoluteFill,
   Audio,
   Freeze,
+  Img,
   OffthreadVideo,
   Sequence,
   staticFile,
@@ -331,12 +332,20 @@ const ClipScene: React.FC<{ seg: FlagshipClipSegment }> = ({ seg }) => {
     />
   );
 
-  const body: React.ReactNode =
-    frame < videoFrames ? (
-      makeVideo()
-    ) : (
-      <Freeze frame={Math.max(0, videoFrames - 1)}>{makeVideo()}</Freeze>
-    );
+  // Still images render with a slow push-in so the beat doesn't feel frozen.
+  const isImage = /\.(jpe?g|png|webp)(\?|$)/i.test(clip.src);
+  const imageScale = 1 + 0.07 * Math.min(1, frame / Math.max(1, segFrames));
+
+  const body: React.ReactNode = isImage ? (
+    <Img
+      src={resolveClipSrc(clip.src)}
+      style={{ ...clipStyle(clip), transform: `scale(${imageScale})` }}
+    />
+  ) : frame < videoFrames ? (
+    makeVideo()
+  ) : (
+    <Freeze frame={Math.max(0, videoFrames - 1)}>{makeVideo()}</Freeze>
+  );
 
   // Presentation layout — the clip sits in a framed panel on the left, with the
   // beat's heading + key points on the right (never full-bleed).

@@ -39,6 +39,10 @@ export interface RenderInput {
     tourDurationSeconds?: number;
     appointmentType?: string;
     appointmentDate?: string;
+    /** Visual is Opera stock, not the clinic's office — narration stays neutral. */
+    genericVisual?: boolean;
+    /** Still image for the closing beat when the visual is generic. */
+    stillImageUrl?: string;
   };
 }
 

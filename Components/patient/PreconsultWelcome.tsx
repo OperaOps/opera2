@@ -22,6 +22,7 @@ export default function PreconsultWelcome({
   personalNote,
   videoUrl,
   audioBaked,
+  genericVisual,
 }: {
   firstName: string;
   clinicName: string;
@@ -31,9 +32,10 @@ export default function PreconsultWelcome({
   personalNote?: string;
   videoUrl: string;
   audioBaked?: boolean;
+  genericVisual?: boolean;
 }) {
   const [intro, setIntro] = useState(true);
-  const [playing, setPlaying] = useState(false);
+  const [started, setStarted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const bgmRef = useRef<HTMLAudioElement>(null);
 
@@ -41,17 +43,19 @@ export default function PreconsultWelcome({
     const v = videoRef.current;
     if (!v) return;
     v.play().catch(() => {});
-    if (!audioBaked && bgmRef.current) {
-      bgmRef.current.volume = 0.3;
-      bgmRef.current.play().catch(() => {});
-    }
-    setPlaying(true);
+    setStarted(true);
   };
 
-  const pause = () => {
-    videoRef.current?.pause();
-    bgmRef.current?.pause();
-    setPlaying(false);
+  // Keep the music bed in step with whatever the patient does via the
+  // native controls (play/pause/scrub).
+  const syncBgm = (playing: boolean) => {
+    if (audioBaked || !bgmRef.current) return;
+    if (playing) {
+      bgmRef.current.volume = 0.3;
+      bgmRef.current.play().catch(() => {});
+    } else {
+      bgmRef.current.pause();
+    }
   };
 
   const apptLabel = appointmentType.replace(/_/g, " ");
@@ -94,7 +98,7 @@ export default function PreconsultWelcome({
               onClick={() => setIntro(false)}
               className="cf-body mt-9 rounded-full bg-[#5f7a61] px-8 py-3 text-[15.5px] font-medium text-white transition-colors hover:bg-[#4e6650]"
             >
-              Take a look inside
+              {genericVisual ? "Watch your welcome" : "Take a look inside"}
             </motion.button>
           </motion.div>
         )}
@@ -112,9 +116,9 @@ export default function PreconsultWelcome({
           {appointmentDate
             ? `Your visit is ${appointmentDate}. `
             : "Your visit is coming up. "}
-          Here&rsquo;s a look at where you&rsquo;re headed
-          {provider ? ` and the team around ${provider}` : ""} — so walking in
-          feels familiar.
+          {genericVisual
+            ? `${provider ? `${provider} and the whole team` : "The whole team"} can't wait to meet you — here's a short hello made just for you.`
+            : `Here's a look at where you're headed${provider ? ` and the team around ${provider}` : ""} — so walking in feels familiar.`}
         </p>
       </div>
 
@@ -124,15 +128,18 @@ export default function PreconsultWelcome({
             ref={videoRef}
             src={videoUrl}
             playsInline
-            loop
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
-            onClick={() => (playing ? pause() : start())}
-            className="aspect-video w-full cursor-pointer object-contain"
+            controls
+            preload="metadata"
+            onPlay={() => {
+              setStarted(true);
+              syncBgm(true);
+            }}
+            onPause={() => syncBgm(false)}
+            className="aspect-video w-full object-contain"
           />
-          {!playing && (
+          {!started && (
             <button
-              aria-label="Play tour"
+              aria-label="Play welcome video"
               onClick={start}
               className="absolute inset-0 flex items-center justify-center bg-black/25 transition-colors hover:bg-black/15"
             >

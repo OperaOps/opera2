@@ -49,6 +49,7 @@ export default async function PatientSharePage({ params }: { params: { id: strin
           personalNote={ctx.personalNote}
           videoUrl={ctx.videoUrl}
           audioBaked={ctx.audioBaked}
+          genericVisual={ctx.genericVisual}
         />
 
         <div className="mx-auto max-w-3xl px-5 pb-20 pt-12">

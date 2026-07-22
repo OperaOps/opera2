@@ -19,6 +19,8 @@ export interface ShareContext {
   appointmentDate?: string;
   personalNote?: string;
   audioBaked?: boolean;
+  /** Pre-consult: visual is Opera stock, not the clinic's own office. */
+  genericVisual?: boolean;
   clinicId?: string;
   id: string;
   videoUrl: string;
@@ -121,6 +123,7 @@ export async function getShareContext(id: string): Promise<ShareContext | null> 
           appointmentDate: share.appointmentDate,
           personalNote: share.personalNote,
           audioBaked,
+          genericVisual: share.genericVisual,
           clinicLogoUrl: share.logoUrl ?? undefined,
           providerNotes:
             `${share.patientFirstName} has an upcoming ${share.appointmentType.replace(/_/g, " ")} ` +

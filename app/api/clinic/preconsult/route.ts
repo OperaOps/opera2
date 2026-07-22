@@ -88,6 +88,9 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // No clinic tour uploaded → Opera's stock visual. The welcome video and
+  // page must then never present the footage as the clinic's own office.
+  const genericVisual = !videoUrl;
   if (!videoUrl) {
     videoUrl = DEFAULT_PRECONSULT_VIDEO;
     audioBaked = false;
@@ -119,6 +122,10 @@ export async function POST(request: NextRequest) {
           tourVideoUrl,
           appointmentType: body.appointmentType?.trim() || "consultation",
           appointmentDate: body.appointmentDate?.trim() || undefined,
+          genericVisual,
+          stillImageUrl: genericVisual
+            ? `${origin}/videos/sitepics/happypatient.jpg`
+            : undefined,
         }),
         signal: AbortSignal.timeout(15_000),
       });
@@ -147,6 +154,7 @@ export async function POST(request: NextRequest) {
     logoUrl,
     createdAt: new Date().toISOString(),
     renderJobId,
+    genericVisual,
   });
 
   // keep the patient record durable + linked

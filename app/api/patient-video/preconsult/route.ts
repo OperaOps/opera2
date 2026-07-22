@@ -64,6 +64,11 @@ export async function POST(request: NextRequest) {
         typeof body.appointmentType === "string" ? body.appointmentType.trim() : undefined,
       appointmentDate:
         typeof body.appointmentDate === "string" ? body.appointmentDate.trim() : undefined,
+      genericVisual: body.genericVisual === true,
+      stillImageUrl:
+        typeof body.stillImageUrl === "string" && /^https:\/\//.test(body.stillImageUrl)
+          ? body.stillImageUrl.trim()
+          : undefined,
     },
   };
 

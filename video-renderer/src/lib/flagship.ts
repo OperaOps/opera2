@@ -334,6 +334,12 @@ export interface PreconsultSegmentInput {
   tourDurationSeconds: number;
   appointmentType?: string;
   appointmentDate?: string;
+  /** True when the footage is Opera's stock visual, NOT the clinic's own
+   *  office — the narration must never present it as "our office". */
+  genericVisual?: boolean;
+  /** Still image (https) for the closing beat when the visual is generic,
+   *  so the stock clip doesn't just repeat. */
+  stillImageUrl?: string;
 }
 
 export function buildPreconsultSegments(input: PreconsultSegmentInput): FlagshipSegment[] {
@@ -351,6 +357,46 @@ export function buildPreconsultSegments(input: PreconsultSegmentInput): Flagship
     durationSeconds: estimateNarrationSeconds(s.narration),
   });
 
+  // With the clinic's real tour, the narration can point at the footage
+  // ("a look inside our office"). With Opera's stock visual it must NOT —
+  // the visual just sits there while the narration stays about the visit.
+  const middleBeat: FlagshipSegment = input.genericVisual
+    ? seg({
+        kind: "clip",
+        clip: { src: input.tourVideoUrl, durationSeconds: tourDur },
+        heading: "What to expect",
+        bullets: [
+          "You'll be greeted the moment you arrive",
+          "Everything moves at your pace",
+          "Ask us anything — big or small",
+        ],
+        narration: `When you arrive, we'll greet you at the door, get you settled, and walk you through everything at your pace — no rush, and nothing to figure out on your own.`,
+        durationSeconds: 0,
+      })
+    : seg({
+        kind: "clip",
+        clip: { src: input.tourVideoUrl, durationSeconds: tourDur },
+        heading: "A look inside",
+        bullets: [
+          "You'll be greeted the moment you arrive",
+          "Everything moves at your pace",
+          "Ask us anything — big or small",
+        ],
+        narration: `Here's a little look inside our office, so it already feels familiar when you walk in. We'll greet you at the door, get you settled, and go at your pace.`,
+        durationSeconds: 0,
+      });
+
+  // Closing visual: a later part of the clinic's tour, or the warm still
+  // image when the visual is generic (never the same stock clip twice).
+  const closeClip: VideoClipInfo =
+    input.genericVisual && input.stillImageUrl
+      ? { src: input.stillImageUrl, durationSeconds: 12 }
+      : {
+          src: input.tourVideoUrl,
+          durationSeconds: tourDur,
+          ...(closeTrimStart > 0 ? { trimStartSeconds: closeTrimStart } : {}),
+        };
+
   return [
     seg({
       kind: "intro-card",
@@ -362,25 +408,10 @@ export function buildPreconsultSegments(input: PreconsultSegmentInput): Flagship
         : `Hi ${first} — welcome! Everyone at ${input.clinicName} is really looking forward to meeting you, so here's a quick hello just for you.`,
       durationSeconds: 0,
     }),
+    middleBeat,
     seg({
       kind: "clip",
-      clip: { src: input.tourVideoUrl, durationSeconds: tourDur },
-      heading: "A look inside",
-      bullets: [
-        "You'll be greeted the moment you arrive",
-        "Everything moves at your pace",
-        "Ask us anything — big or small",
-      ],
-      narration: `Here's a little look inside our office, so it already feels familiar when you walk in. We'll greet you at the door, get you settled, and go at your pace.`,
-      durationSeconds: 0,
-    }),
-    seg({
-      kind: "clip",
-      clip: {
-        src: input.tourVideoUrl,
-        durationSeconds: tourDur,
-        ...(closeTrimStart > 0 ? { trimStartSeconds: closeTrimStart } : {}),
-      },
+      clip: closeClip,
       freeze: true,
       heading: input.appointmentDate ? `See you ${input.appointmentDate}` : "See you soon",
       bullets: [

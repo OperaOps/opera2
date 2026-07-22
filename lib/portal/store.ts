@@ -179,6 +179,9 @@ export interface PreconsultShare {
    *  voiceover over the tour footage). Once it completes, the share page
    *  prefers the rendered video over the raw tour. */
   renderJobId?: string;
+  /** Visual is Opera's stock footage, not the clinic's own office — page copy
+   *  must not present it as "a look at where you're headed". */
+  genericVisual?: boolean;
 }
 
 export async function savePreconsultShare(share: PreconsultShare): Promise<void> {
