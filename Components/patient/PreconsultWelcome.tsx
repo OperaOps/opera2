@@ -89,8 +89,17 @@ export default function PreconsultWelcome({
               transition={{ duration: 1, delay: 0.45, ease: EASE }}
               className="cf-display mt-4 text-center text-[clamp(2.2rem,6vw,4rem)] font-light leading-[1.05] tracking-[-0.02em] text-[#1a1a17]"
             >
-              Hi {firstName}, we can&rsquo;t wait to meet you.
+              Your welcome video, {firstName}!
             </motion.h1>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.9, delay: 0.8, ease: EASE }}
+              className="cf-body mt-4 text-center text-[15.5px] text-[#5e6a60]"
+            >
+              We can&rsquo;t wait to meet you — the {clinicName} team made this
+              just for you.
+            </motion.p>
             <motion.button
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -98,7 +107,7 @@ export default function PreconsultWelcome({
               onClick={() => setIntro(false)}
               className="cf-body mt-9 rounded-full bg-[#5f7a61] px-8 py-3 text-[15.5px] font-medium text-white transition-colors hover:bg-[#4e6650]"
             >
-              {genericVisual ? "Watch your welcome" : "Take a look inside"}
+              Watch your welcome
             </motion.button>
           </motion.div>
         )}

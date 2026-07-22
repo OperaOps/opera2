@@ -31,7 +31,6 @@ export default function PreConsultForm() {
   const [provider, setProvider] = useState("");
   const [appointmentType, setAppointmentType] = useState(APPOINTMENT_TYPES[0].value);
   const [appointmentDate, setAppointmentDate] = useState("");
-  const [personalNote, setPersonalNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<string | null>(null);
@@ -86,7 +85,6 @@ export default function PreConsultForm() {
           provider,
           appointmentType,
           appointmentDate,
-          personalNote,
         }),
       });
       const data = await res.json();
@@ -152,7 +150,6 @@ export default function PreConsultForm() {
             setResult(null);
             setFirstName("");
             setLastName("");
-            setPersonalNote("");
           }}
           className="cf-body mt-5 text-[14px] font-medium text-[#5e6a60] underline underline-offset-2 hover:text-[#1a1a17]"
         >
@@ -255,18 +252,13 @@ export default function PreConsultForm() {
             ))}
           </select>
         </div>
-        <div>
-          <label className="cf-mono mb-1.5 block text-[11px] uppercase tracking-[0.12em] text-[#6e7a71]">
-            Personal note (optional, shows on their page)
-          </label>
-          <textarea
-            value={personalNote}
-            onChange={(e) => setPersonalNote(e.target.value)}
-            rows={2}
-            className={input + " resize-none"}
-            placeholder="We're so excited to meet you, Sarah!"
-          />
-        </div>
+        <p className="cf-body text-[12.5px] text-[#6e7a71]">
+          The welcome note on their page comes from your{" "}
+          <a href="/clinic/dashboard/customization" className="font-medium underline underline-offset-2">
+            Customization
+          </a>{" "}
+          settings — set it once, it shows for every patient.
+        </p>
         {error && <p className="cf-body text-[14px] text-[#b91c1c]">{error}</p>}
         <button
           onClick={submit}

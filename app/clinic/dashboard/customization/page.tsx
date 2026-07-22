@@ -20,6 +20,13 @@ export default function CustomizationPage() {
   const [error, setError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // Welcome note (shows on every pre-consult page; Opera reviews before live)
+  const [note, setNote] = useState("");
+  const [noteLive, setNoteLive] = useState<string | null>(null);
+  const [notePending, setNotePending] = useState<string | null>(null);
+  const [noteBusy, setNoteBusy] = useState(false);
+  const [noteSent, setNoteSent] = useState(false);
+
   useEffect(() => {
     (async () => {
       try {
@@ -30,11 +37,39 @@ export default function CustomizationPage() {
           setClinicDisplayName(d.clinicDisplayName ?? "");
           setLogoUrl(d.logoUrl ?? null);
         }
+        const s = await fetch("/api/clinic/settings");
+        if (s.ok) {
+          const d = await s.json();
+          setNoteLive(d.clinic?.preconsult_note ?? null);
+          setNotePending(d.clinic?.preconsult_note_pending ?? null);
+        }
       } finally {
         setLoaded(true);
       }
     })();
   }, []);
+
+  const submitNote = async () => {
+    if (!note.trim()) return;
+    setNoteBusy(true);
+    setError("");
+    try {
+      const res = await fetch("/api/clinic/preconsult-note", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ note: note.trim() }),
+      });
+      if (!res.ok) throw new Error();
+      setNotePending(note.trim());
+      setNote("");
+      setNoteSent(true);
+      setTimeout(() => setNoteSent(false), 3000);
+    } catch {
+      setError("Couldn't submit the note — try again.");
+    } finally {
+      setNoteBusy(false);
+    }
+  };
 
   const save = async (extra?: { logoUrl?: string }) => {
     setSaving(true);
@@ -186,6 +221,51 @@ export default function CustomizationPage() {
           </button>
           {error && <p className="cf-body text-[13.5px] text-[#b91c1c]">{error}</p>}
         </div>
+      </div>
+
+      {/* Welcome note — set once, shows on every pre-consult page */}
+      <div className="mt-6 rounded-2xl border border-[#1a1a17]/10 bg-white p-7">
+        <p className="cf-mono text-[11px] uppercase tracking-[0.16em] text-[#5f7a61]">
+          Personal welcome note
+        </p>
+        <p className="cf-body mt-2 text-[13.5px] text-[#5e6a60]">
+          Shown on every pre-consult welcome page — write it once, no need to
+          retype it per patient. Notes go live after a quick Opera review.
+        </p>
+
+        {noteLive && (
+          <div className="mt-4 rounded-xl border border-[#5f7a61]/20 bg-[#5f7a61]/[0.05] px-4 py-3">
+            <p className="cf-mono text-[10px] uppercase tracking-[0.14em] text-[#5f7a61]">
+              Live now
+            </p>
+            <p className="cf-body mt-1 text-[14px] italic text-[#1a1a17]">&ldquo;{noteLive}&rdquo;</p>
+          </div>
+        )}
+        {notePending && (
+          <div className="mt-3 rounded-xl border border-[#1a1a17]/10 bg-[#f5f8f5]/70 px-4 py-3">
+            <p className="cf-mono text-[10px] uppercase tracking-[0.14em] text-[#6e7a71]">
+              In review
+            </p>
+            <p className="cf-body mt-1 text-[14px] italic text-[#1a1a17]/80">&ldquo;{notePending}&rdquo;</p>
+          </div>
+        )}
+
+        <textarea
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          rows={2}
+          maxLength={400}
+          placeholder="Our whole team is looking forward to meeting you…"
+          className="cf-body mt-4 w-full resize-none rounded-xl border border-[#1a1a17]/12 bg-white px-4 py-2.5 text-[14.5px] outline-none transition-colors focus:border-[#5f7a61]/60"
+        />
+        <button
+          onClick={submitNote}
+          disabled={noteBusy || !note.trim()}
+          className="cf-body mt-3 inline-flex items-center gap-2 rounded-full border border-[#1a1a17]/15 px-5 py-2 text-[13.5px] font-medium text-[#1a1a17] transition-colors hover:border-[#5f7a61]/50 disabled:opacity-50"
+        >
+          {noteSent ? <Check size={14} /> : null}
+          {noteBusy ? "Submitting…" : noteSent ? "Sent for review" : "Submit for review"}
+        </button>
       </div>
     </div>
   );
