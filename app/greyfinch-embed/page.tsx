@@ -77,7 +77,6 @@ function EmbedInner() {
   const [smsState, setSmsState] = useState<"idle" | "sending" | "done">("idle");
   const [smsResult, setSmsResult] = useState<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const recordedRef = useRef<string | null>(null);
 
   // Hydrate from Greyfinch-provided query params (with sensible defaults).
   useEffect(() => {
@@ -107,6 +106,28 @@ function EmbedInner() {
   }, [params]);
 
   useEffect(() => () => { if (pollRef.current) clearInterval(pollRef.current); }, []);
+
+  // Validate the launcher-supplied key up front so a dead connection token
+  // (e.g. a stale test key) sends the clinic straight to onboarding instead of
+  // letting them fill the form and fail on Generate.
+  useEffect(() => {
+    if (!hydrated || !apiKey || needsKey) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/connect/validate", {
+          headers: { "x-opera-source": "greyfinch", "x-opera-key": apiKey },
+        });
+        const d = await res.json();
+        if (!cancelled && d && d.valid === false) {
+          setNeedsKey(true);
+          setAuthReason(d.error || null);
+          try { localStorage.removeItem(STORED_KEY); } catch {}
+        }
+      } catch { /* network hiccup — Generate still enforces server-side */ }
+    })();
+    return () => { cancelled = true; };
+  }, [hydrated, apiKey, needsKey]);
 
   // Auto-pull the patient's chart "Notes" into the Patient concerns field —
   // once, and only if the provider hasn't typed there (so they can edit/add).
@@ -271,25 +292,9 @@ function EmbedInner() {
   const done = job?.status === "completed" && job.videoUrl;
   const showOnboarding = !done && (needsKey || (hydrated && !apiKey));
 
-  // Task 4: when a video finishes, record it onto the patient's Greyfinch
-  // treatment timeline (app resource). Fires once per job; the route soft-skips
-  // if no connection exists yet, so this never blocks the UI.
-  useEffect(() => {
-    if (!done || !job?.jobId || recordedRef.current === job.jobId) return;
-    recordedRef.current = job.jobId;
-    if (!patientName.trim()) return;
-    fetch("/api/patient-video/record-resource", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-opera-source": "greyfinch", ...(apiKey ? { "x-opera-key": apiKey } : {}) },
-      body: JSON.stringify({
-        videoUrl: shareUrl(),
-        patientName,
-        xid: xid || undefined,
-        treatment,
-        jobId: job.jobId,
-      }),
-    }).catch(() => { /* best-effort; tracking is non-blocking */ });
-  }, [done, job, patientName, xid, treatment, shareUrl, apiKey]);
+  // Timeline tracking now happens server-side when the render completes (see
+  // generate/route.ts onCompleted) — no client-side write, so the card lands
+  // even if this modal is closed mid-render.
 
   return (
     <div className="min-h-screen bg-white text-gray-900 flex items-center justify-center p-6 sm:p-10">
