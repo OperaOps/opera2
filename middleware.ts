@@ -46,10 +46,12 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/concepts") ||
     pathname.startsWith("/concept-") ||
     pathname.startsWith("/final") ||
+    pathname.startsWith("/lightwall") ||
     pathname.startsWith("/live") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/api/admin") ||
     pathname.startsWith("/live") ||
+    pathname.startsWith("/terms") ||
     pathname.includes(".") // static files like .css, .js, .ico
   ) {
     return true;

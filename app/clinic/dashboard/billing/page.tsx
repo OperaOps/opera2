@@ -24,7 +24,15 @@ const PLANS = [
     price: "$199",
     per: "per month",
     blurb: "For a single practice getting started.",
-    features: ["Unlimited patient links", "50 videos per month", "Ask Opera for every patient", "Email support"],
+    features: [
+      "50 personalized treatment videos per month",
+      "Pre-consult welcome videos and pages",
+      "Unlimited patient share links",
+      "Ask Opera assistant for every patient",
+      "Patient question and engagement tracking",
+      "Your branding — logo, doctor, clinic name, office tour",
+      "Helpdesk support included",
+    ],
   },
   {
     key: "growth",
@@ -32,7 +40,13 @@ const PLANS = [
     price: "$999",
     per: "per month",
     blurb: "For multi provider and multi location groups.",
-    features: ["Everything in Core", "Unlimited videos", "All specialties as they launch", "Priority support"],
+    features: [
+      "Everything in Core",
+      "Unlimited videos",
+      "All specialties as they launch",
+      "Practice management system integrations",
+      "Priority support",
+    ],
   },
 ] as const;
 
@@ -209,12 +223,28 @@ export default function BillingPage() {
       )}
 
       {!comped && (
-      <div className="cf-body mt-6 rounded-2xl border border-[#1a1a17]/10 bg-white px-6 py-5 text-[14.5px] text-[#5e6a60]">
-        Need enterprise volume, custom specialties, or an EHR integration?{" "}
-        <a href="mailto:opera@getopera.ai" className="font-medium text-[#3e5540] underline underline-offset-2">
-          Talk to us
-        </a>
-        .
+      <div className="mt-6 rounded-2xl border border-[#1a1a17]/10 bg-white px-6 py-5">
+        <p className="cf-mono text-[11px] uppercase tracking-[0.16em] text-[#5f7a61]">
+          How billing works
+        </p>
+        <ul className="cf-body mt-3 space-y-1.5 text-[13.5px] text-[#5e6a60]">
+          <li>Subscriptions are billed monthly in advance and renew until canceled.</li>
+          <li>Your 30 day free trial converts to the plan you chose unless you cancel first.</li>
+          <li>Cancel any time from the billing portal — effective at the end of the current period.</li>
+          <li>Support is included on every plan: phone, text, or opera@getopera.ai, first response within 48 hours on business days.</li>
+          <li>Prices exclude applicable sales or use taxes. A HIPAA Business Associate Agreement is available on request.</li>
+        </ul>
+        <p className="cf-body mt-3 text-[13.5px] text-[#5e6a60]">
+          Full details in the{" "}
+          <a href="/terms" target="_blank" rel="noreferrer" className="font-medium text-[#3e5540] underline underline-offset-2">
+            Terms of Service
+          </a>
+          . Need enterprise volume, custom specialties, or an EHR integration?{" "}
+          <a href="mailto:opera@getopera.ai" className="font-medium text-[#3e5540] underline underline-offset-2">
+            Talk to us
+          </a>
+          .
+        </p>
       </div>
       )}
 
