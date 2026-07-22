@@ -39,6 +39,7 @@ export default function VideosPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<"all" | "ready" | "rendering">("all");
   const [treatment, setTreatment] = useState("all");
+  const [stage, setStage] = useState<"post" | "pre">("post");
 
   useEffect(() => {
     (async () => {
@@ -61,10 +62,22 @@ export default function VideosPage() {
   const name = (v: VideoRow) =>
     v.patient_name || `${v.first_name ?? ""} ${v.last_name ?? ""}`.trim() || "Patient";
 
+  // Pre-consult welcome renders vs. post-consult treatment videos — separate
+  // sections, not just mixed rows.
+  const isWelcome = (v: VideoRow) =>
+    ["welcome", "pre_consult"].includes((v.treatment_type ?? "").trim());
+  const preCount = useMemo(() => videos.filter(isWelcome).length, [videos]);
+  const postCount = videos.length - preCount;
+
   const treatments = useMemo(
     () =>
       Array.from(
-        new Set(videos.map((v) => (v.treatment_type ?? "").trim()).filter(Boolean))
+        new Set(
+          videos
+            .filter((v) => !isWelcome(v))
+            .map((v) => (v.treatment_type ?? "").trim())
+            .filter(Boolean)
+        )
       ).sort(),
     [videos]
   );
@@ -72,14 +85,16 @@ export default function VideosPage() {
   const filtered = useMemo(
     () =>
       videos.filter((v) => {
+        if (isWelcome(v) !== (stage === "pre")) return false;
         if (search.trim() && !name(v).toLowerCase().includes(search.toLowerCase()))
           return false;
         if (status === "ready" && !v.video_url) return false;
         if (status === "rendering" && v.video_url) return false;
-        if (treatment !== "all" && (v.treatment_type ?? "") !== treatment) return false;
+        if (stage === "post" && treatment !== "all" && (v.treatment_type ?? "") !== treatment)
+          return false;
         return true;
       }),
-    [videos, search, status, treatment]
+    [videos, search, status, treatment, stage]
   );
 
   const groups = useMemo(() => {
@@ -105,7 +120,32 @@ export default function VideosPage() {
         patient&rsquo;s side.
       </p>
 
-      <div className="mt-7 flex flex-wrap items-center gap-3">
+      {/* stage sections */}
+      <div className="mt-7 flex rounded-full border border-[#1a1a17]/12 bg-white p-1 w-fit">
+        {(
+          [
+            ["post", `Post-consult · ${postCount}`],
+            ["pre", `Pre-consult · ${preCount}`],
+          ] as const
+        ).map(([k, label]) => (
+          <button
+            key={k}
+            onClick={() => setStage(k)}
+            className={`cf-body rounded-full px-5 py-2 text-[13.5px] font-medium transition-colors ${
+              stage === k ? "bg-[#5f7a61] text-white" : "text-[#1a1a17]/55 hover:text-[#1a1a17]"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <p className="cf-body mt-2 text-[13px] text-[#6e7a71]">
+        {stage === "post"
+          ? "Treatment videos generated after a consult."
+          : "Personalized welcome videos sent before a patient's first visit."}
+      </p>
+
+      <div className="mt-5 flex flex-wrap items-center gap-3">
         <div className="relative w-full max-w-sm">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6e7a71]" />
           <input
@@ -132,18 +172,20 @@ export default function VideosPage() {
             {label}
           </button>
         ))}
-        <select
-          value={treatment}
-          onChange={(e) => setTreatment(e.target.value)}
-          className="cf-mono rounded-full border border-[#1a1a17]/12 bg-white px-4 py-2 text-[11.5px] uppercase tracking-[0.08em] text-[#1a1a17]/70 outline-none transition-colors hover:border-[#5f7a61]/40 focus:border-[#5f7a61]/50"
-        >
-          <option value="all">All treatments</option>
-          {treatments.map((t) => (
-            <option key={t} value={t}>
-              {t.replace(/_/g, " ")}
-            </option>
-          ))}
-        </select>
+        {stage === "post" && (
+          <select
+            value={treatment}
+            onChange={(e) => setTreatment(e.target.value)}
+            className="cf-mono rounded-full border border-[#1a1a17]/12 bg-white px-4 py-2 text-[11.5px] uppercase tracking-[0.08em] text-[#1a1a17]/70 outline-none transition-colors hover:border-[#5f7a61]/40 focus:border-[#5f7a61]/50"
+          >
+            <option value="all">All treatments</option>
+            {treatments.map((t) => (
+              <option key={t} value={t}>
+                {t.replace(/_/g, " ")}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       {loading ? (
@@ -151,8 +193,9 @@ export default function VideosPage() {
       ) : filtered.length === 0 ? (
         <div className="mt-10 rounded-2xl border border-[#1a1a17]/10 bg-white p-10 text-center">
           <p className="cf-body text-[15.5px] text-[#5e6a60]">
-            No videos yet. Generate your first from the Generate tab — it lands
-            here with a patient link the moment it finishes.
+            {stage === "pre"
+              ? "No pre-consult welcomes yet. Create one from the Generate tab (Pre-consult) — the rendered video lands here."
+              : "No videos yet. Generate your first from the Generate tab — it lands here with a patient link the moment it finishes."}
           </p>
         </div>
       ) : (

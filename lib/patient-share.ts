@@ -148,6 +148,31 @@ export async function getShareContext(id: string): Promise<ShareContext | null> 
         const patientName = (input.patientName || "there").trim();
         const [firstName, ...rest] = patientName.split(/\s+/);
         const treatment = input.treatment || "treatment";
+        // Pre-consult welcome renders opened by their job id get the welcome
+        // page, not the treatment layout — no diagnosis exists yet.
+        if (treatment === "welcome") {
+          const pre = (input as { preconsult?: Record<string, string> }).preconsult;
+          return {
+            id,
+            stage: "pre",
+            clinicId: job.clinicId,
+            videoUrl: job.videoUrl,
+            videoTitle: `Welcome to ${input.clinicName || "the clinic"}`,
+            patientFirstName: firstName,
+            patientLastName: rest.join(" ") || undefined,
+            clinicName: input.clinicName || "the clinic",
+            provider: input.doctorName || undefined,
+            treatmentType: "consultation",
+            consultationDate: pre?.appointmentDate ?? "soon",
+            appointmentType: pre?.appointmentType ?? "visit",
+            appointmentDate: pre?.appointmentDate,
+            audioBaked: true,
+            genericVisual: true,
+            providerNotes:
+              `${firstName} has an upcoming visit at ${input.clinicName || "the clinic"}. ` +
+              `No diagnosis or treatment plan exists yet — this is BEFORE their first visit.`,
+          };
+        }
         const notes = [
           input.treatmentNotes && `Treatment notes: ${input.treatmentNotes}`,
           input.concerns && `Patient concerns: ${input.concerns}`,

@@ -7,6 +7,7 @@
 import { notFound } from "next/navigation";
 import { getShareContext, suggestedQuestions, PRE_CONSULT_SUGGESTIONS } from "@/lib/patient-share";
 import PreconsultWelcome from "@/Components/patient/PreconsultWelcome";
+import PostConsultIntro from "@/Components/patient/PostConsultIntro";
 import { AskOpera } from "@/Components/patient/AskOpera";
 
 export const dynamic = "force-dynamic";
@@ -71,6 +72,11 @@ export default async function PatientSharePage({ params }: { params: { id: strin
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f5f8f5] via-white to-white text-gray-900 antialiased">
+      <PostConsultIntro
+        firstName={ctx.patientFirstName}
+        clinicName={ctx.clinicName}
+        provider={ctx.provider}
+      />
       {/* Clinic header */}
       <header className="mx-auto flex max-w-3xl items-center justify-between px-5 pt-6">
         <div className="flex items-center gap-2.5">
