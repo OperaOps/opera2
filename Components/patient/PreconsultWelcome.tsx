@@ -100,9 +100,26 @@ export default function PreconsultWelcome({
         )}
       </AnimatePresence>
 
-      {/* ——— video left, welcome right ——— */}
-      <div className="mx-auto mt-8 grid max-w-5xl items-start gap-8 px-5 lg:grid-cols-[minmax(0,42fr)_minmax(0,58fr)] lg:gap-12">
-        <div className="relative overflow-hidden rounded-2xl border border-[#1a1a17]/10 bg-black shadow-[0_30px_80px_-30px_rgba(63,85,64,0.35)]">
+      {/* ——— big centered title + video, post-consult style ——— */}
+      <div className="mx-auto mt-8 max-w-3xl px-5 text-center">
+        <p className="cf-mono text-[11.5px] uppercase tracking-[0.22em] text-[#5f7a61]">
+          Before your {apptLabel}
+        </p>
+        <h2 className="cf-display mt-2 text-[clamp(1.7rem,3.4vw,2.5rem)] font-light leading-[1.1] tracking-[-0.02em] text-[#1a1a17]">
+          Welcome to {clinicName}, {firstName}.
+        </h2>
+        <p className="cf-body mt-3 text-[14.5px] text-[#5e6a60]">
+          {appointmentDate
+            ? `Your visit is ${appointmentDate}. `
+            : "Your visit is coming up. "}
+          Here&rsquo;s a look at where you&rsquo;re headed
+          {provider ? ` and the team around ${provider}` : ""} — so walking in
+          feels familiar.
+        </p>
+      </div>
+
+      <div className="mx-auto mt-6 max-w-3xl px-5">
+        <div className="relative overflow-hidden rounded-2xl border border-[#1a1a17]/10 bg-black shadow-[0_24px_70px_rgba(63,85,64,0.18)]">
           <video
             ref={videoRef}
             src={videoUrl}
@@ -111,7 +128,7 @@ export default function PreconsultWelcome({
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
             onClick={() => (playing ? pause() : start())}
-            className="max-h-[72vh] w-full cursor-pointer object-contain"
+            className="aspect-video w-full cursor-pointer object-contain"
           />
           {!playing && (
             <button
@@ -126,54 +143,40 @@ export default function PreconsultWelcome({
           )}
           {!audioBaked && <audio ref={bgmRef} src="/audio/opera-bgm.m4a" loop />}
         </div>
+      </div>
 
-        <div className="lg:pt-4">
-          <p className="cf-mono text-[11.5px] uppercase tracking-[0.2em] text-[#5f7a61]">
-            Before your {apptLabel}
-          </p>
-          <h2 className="cf-display mt-3 text-[clamp(1.6rem,3vw,2.3rem)] font-light leading-[1.1] tracking-[-0.02em] text-[#1a1a17]">
-            Welcome to {clinicName}, {firstName}.
-          </h2>
-          <p className="cf-body mt-4 text-[15.5px] leading-relaxed text-[#1a1a17]/80">
-            {appointmentDate
-              ? `Your visit is ${appointmentDate}. `
-              : "Your visit is coming up. "}
-            Here&rsquo;s a look at where you&rsquo;re headed
-            {provider ? ` and the team around ${provider}` : ""} — so walking
-            in feels familiar.
-          </p>
-
-          <div className="mt-6 space-y-3">
-            {[
-              "A warm welcome at the front desk — no paperwork marathon.",
-              "A comfortable look around, plus any photos or scans we need.",
-              provider ? `Time with ${provider} to talk through what you're noticing.` : "Time with your doctor to talk through what you're noticing.",
-              "A relaxed conversation about options. No decisions needed on the spot.",
-            ].map((t, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <span className="cf-mono mt-1 shrink-0 text-[11px] text-[#5f7a61]">
-                  0{i + 1}
-                </span>
-                <p className="cf-body text-[14.5px] leading-relaxed text-[#1a1a17]/80">{t}</p>
-              </div>
-            ))}
-          </div>
-
-          {personalNote && (
-            <div className="mt-6 rounded-2xl border border-[#5f7a61]/20 bg-[#5f7a61]/[0.05] px-5 py-4">
-              <p className="cf-mono text-[10.5px] uppercase tracking-[0.16em] text-[#5f7a61]">
-                A note from {clinicName}
-              </p>
-              <p className="cf-display mt-1.5 text-[16px] italic leading-relaxed text-[#1a1a17]">
-                &ldquo;{personalNote}&rdquo;
-              </p>
+      {/* ——— what to expect + note, centered under the video ——— */}
+      <div className="mx-auto mt-10 max-w-3xl px-5">
+        <div className="grid gap-3 sm:grid-cols-2">
+          {[
+            "A warm welcome at the front desk — no paperwork marathon.",
+            "A comfortable look around, plus any photos or scans we need.",
+            provider ? `Time with ${provider} to talk through what you're noticing.` : "Time with your doctor to talk through what you're noticing.",
+            "A relaxed conversation about options. No decisions needed on the spot.",
+          ].map((t, i) => (
+            <div key={i} className="flex items-start gap-3 rounded-2xl border border-[#1a1a17]/[0.08] bg-[#f5f8f5]/60 px-4 py-3.5">
+              <span className="cf-mono mt-0.5 shrink-0 text-[11px] text-[#5f7a61]">
+                0{i + 1}
+              </span>
+              <p className="cf-body text-[14px] leading-relaxed text-[#1a1a17]/80">{t}</p>
             </div>
-          )}
-
-          <p className="cf-body mt-6 text-[14px] text-[#5e6a60]">
-            Questions before your visit? Ask below — any time, day or night.
-          </p>
+          ))}
         </div>
+
+        {personalNote && (
+          <div className="mt-5 rounded-2xl border border-[#5f7a61]/20 bg-[#5f7a61]/[0.05] px-6 py-5 text-center">
+            <p className="cf-mono text-[10.5px] uppercase tracking-[0.16em] text-[#5f7a61]">
+              A note from {clinicName}
+            </p>
+            <p className="cf-display mt-1.5 text-[16.5px] italic leading-relaxed text-[#1a1a17]">
+              &ldquo;{personalNote}&rdquo;
+            </p>
+          </div>
+        )}
+
+        <p className="cf-body mt-6 text-center text-[14px] text-[#5e6a60]">
+          Questions before your visit? Ask below — any time, day or night.
+        </p>
       </div>
     </>
   );
