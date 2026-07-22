@@ -48,8 +48,25 @@ export default function PreConsultForm() {
       .catch(() => setHasVideo(false));
   }, []);
 
+  const [showSuggest, setShowSuggest] = useState(false);
+
+  // Typeahead over the first-name box: alphabetical, narrowed as they type.
+  // Unknown names are simply new patients.
+  const q = `${firstName} ${lastName}`.trim().toLowerCase();
+  const suggestions = [...patients]
+    .sort((a, b) =>
+      `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
+    )
+    .filter((p) => {
+      const full = `${p.first_name} ${p.last_name}`.trim().toLowerCase();
+      if (full === q) return false; // already picked
+      return !q || full.includes(q) || full.includes(firstName.trim().toLowerCase());
+    })
+    .slice(0, 30);
+
   const pickPatient = (id: string) => {
     const p = patients.find((x) => x.id === id);
+    setShowSuggest(false);
     if (!p) return;
     setFirstName(p.first_name);
     setLastName(p.last_name);
@@ -109,8 +126,9 @@ export default function PreConsultForm() {
           {firstName}&rsquo;s welcome page is live.
         </h2>
         <p className="cf-body mt-2 text-[14.5px] text-[#5e6a60]">
-          No rendering needed — send it now. Their questions land on their
-          patient card.
+          Send it now — the page is live immediately, and their personalized
+          welcome video appears on it within a few minutes. Their questions
+          land on their patient card.
         </p>
         <div className="mt-5 flex items-center justify-center gap-2">
           <button
@@ -161,31 +179,44 @@ export default function PreConsultForm() {
       )}
 
       <div className="space-y-5 rounded-2xl border border-[#1a1a17]/10 bg-white p-6">
-        {patients.length > 0 && (
-          <div>
-            <label className="cf-mono mb-1.5 block text-[11px] uppercase tracking-[0.12em] text-[#6e7a71]">
-              Start from an existing patient (optional)
-            </label>
-            <select
-              onChange={(e) => pickPatient(e.target.value)}
-              defaultValue=""
-              className={input + " appearance-none"}
-            >
-              <option value="">New patient — enter details below</option>
-              {patients.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.first_name} {p.last_name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
         <div className="grid grid-cols-2 gap-4">
-          <div>
+          <div className="relative">
             <label className="cf-mono mb-1.5 block text-[11px] uppercase tracking-[0.12em] text-[#6e7a71]">
               First name
             </label>
-            <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className={input} placeholder="Sarah" />
+            <input
+              value={firstName}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+                setShowSuggest(true);
+              }}
+              onFocus={() => setShowSuggest(true)}
+              onBlur={() => setTimeout(() => setShowSuggest(false), 150)}
+              className={input}
+              placeholder="Sarah"
+            />
+            {showSuggest && suggestions.length > 0 && (
+              <div className="absolute z-20 mt-1.5 max-h-56 w-[220%] max-w-[420px] overflow-y-auto rounded-xl border border-[#1a1a17]/12 bg-white shadow-lg">
+                {suggestions.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => pickPatient(p.id)}
+                    className="cf-body flex w-full items-center justify-between gap-3 px-3.5 py-2.5 text-left text-[14px] transition-colors hover:bg-[#5f7a61]/[0.07]"
+                  >
+                    <span className="text-[#1a1a17]">
+                      {p.first_name} {p.last_name}
+                    </span>
+                    {p.consulting_provider && (
+                      <span className="cf-mono shrink-0 text-[10.5px] text-[#6e7a71]">
+                        {p.consulting_provider}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <div>
             <label className="cf-mono mb-1.5 block text-[11px] uppercase tracking-[0.12em] text-[#6e7a71]">
