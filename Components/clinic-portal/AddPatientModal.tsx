@@ -155,7 +155,7 @@ export default function AddPatientModal({
                   <button
                     onClick={() => {
                       handleClose();
-                      router.push(`/clinic/dashboard/pipeline?patient_id=${success.patientId}`);
+                      router.push(`/clinic/dashboard/pipeline?patient=${success.patientId}`);
                     }}
                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#5f7a61]
                       hover:bg-[#5f7a61]/[0.07]0 text-white text-sm font-medium transition-colors"
@@ -176,8 +176,8 @@ export default function AddPatientModal({
                   <Input label="First Name *" value={form.first_name} onChange={(v) => update("first_name", v)} required />
                   <Input label="Last Name *" value={form.last_name} onChange={(v) => update("last_name", v)} required />
                 </div>
-                <Input label="Email *" type="email" value={form.email} onChange={(v) => update("email", v)} required />
-                <Input label="Date of Birth *" type="date" value={form.date_of_birth} onChange={(v) => update("date_of_birth", v)} required />
+                <Input label="Email" type="email" value={form.email} onChange={(v) => update("email", v)} />
+                <Input label="Date of Birth" type="date" value={form.date_of_birth} onChange={(v) => update("date_of_birth", v)} />
                 <Input label="Phone" type="tel" value={form.phone} onChange={(v) => update("phone", v)} />
 
                 <div>

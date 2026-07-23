@@ -101,6 +101,7 @@ export async function upsertPatientByName(
     lastName: string;
     email?: string;
     phone?: string;
+    dateOfBirth?: string;
     treatmentType?: string;
     provider?: string;
     notes?: string;
@@ -114,7 +115,7 @@ export async function upsertPatientByName(
   );
   if (found) {
     let dirty = false;
-    for (const k of ["email", "phone", "treatmentType", "provider", "notes"] as const) {
+    for (const k of ["email", "phone", "dateOfBirth", "treatmentType", "provider", "notes"] as const) {
       if (input[k] && input[k] !== found[k]) {
         (found as unknown as Record<string, unknown>)[k] = input[k];
         dirty = true;
@@ -131,6 +132,7 @@ export async function upsertPatientByName(
     lastName: input.lastName.trim(),
     email: input.email,
     phone: input.phone,
+    dateOfBirth: input.dateOfBirth,
     treatmentType: input.treatmentType,
     provider: input.provider,
     notes: input.notes,

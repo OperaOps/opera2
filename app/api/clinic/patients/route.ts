@@ -185,18 +185,41 @@ export async function POST(request: NextRequest) {
     video_title,
   } = body;
 
-  if (!first_name || !last_name || !email || !date_of_birth) {
+  if (!first_name || !last_name) {
     return NextResponse.json(
-      { error: "First name, last name, email, and date of birth are required" },
+      { error: "First and last name are required." },
       { status: 400 }
     );
   }
 
   const accessCode = generateAccessCode();
-  const db = getDb();
 
+  // Durable Dynamo store is the source of truth — SQLite is read-only on the
+  // serverless filesystem in production, so it can't be the primary write.
+  let durablePatient;
   try {
-    const result = db
+    durablePatient = await upsertPatientByName(clinic.clinicId, {
+      firstName: String(first_name),
+      lastName: String(last_name),
+      email: email ? String(email) : undefined,
+      phone: phone ? String(phone) : undefined,
+      dateOfBirth: date_of_birth ? String(date_of_birth) : undefined,
+      treatmentType: treatment_type ? String(treatment_type) : undefined,
+      provider: consulting_provider ? String(consulting_provider) : undefined,
+    });
+  } catch (err) {
+    console.error("[patients] durable create failed", err);
+    return NextResponse.json(
+      { error: "Couldn't save the patient. Please try again." },
+      { status: 500 }
+    );
+  }
+
+  // Best-effort SQLite mirror (local dev + the seeded demo account). A
+  // read-only filesystem in production just skips this — the patient already
+  // lives in the durable store above.
+  try {
+    getDb()
       .prepare(
         `INSERT INTO patient_accounts
          (clinic_id, first_name, last_name, email, date_of_birth, phone,
@@ -208,8 +231,8 @@ export async function POST(request: NextRequest) {
         clinic.clinicId,
         first_name,
         last_name,
-        email.toLowerCase(),
-        date_of_birth,
+        email ? String(email).toLowerCase() : null,
+        date_of_birth || null,
         phone || null,
         accessCode,
         treatment_type || null,
@@ -218,35 +241,18 @@ export async function POST(request: NextRequest) {
         video_url || null,
         video_title || null
       );
-
-    // Mirror into the durable portal store so real clinics keep patients
-    // across serverless deploys (SQLite is ephemeral in production).
-    upsertPatientByName(clinic.clinicId, {
-      firstName: String(first_name),
-      lastName: String(last_name),
-      email: email ? String(email) : undefined,
-      phone: phone ? String(phone) : undefined,
-      treatmentType: treatment_type ? String(treatment_type) : undefined,
-      provider: consulting_provider ? String(consulting_provider) : undefined,
-    }).catch((err) => console.error("[patients] durable mirror failed", err));
-
-    const patient = db
-      .prepare("SELECT id, first_name, last_name, email FROM patient_accounts WHERE rowid = ?")
-      .get(result.lastInsertRowid);
-
-    return NextResponse.json({
-      success: true,
-      patient,
-      accessCode,
-    });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    if (message.includes("UNIQUE constraint")) {
-      return NextResponse.json(
-        { error: "A patient with this email already exists for your clinic" },
-        { status: 409 }
-      );
-    }
-    return NextResponse.json({ error: "Failed to create patient" }, { status: 500 });
+  } catch {
+    /* read-only fs (serverless) or duplicate — durable store is authoritative */
   }
+
+  return NextResponse.json({
+    success: true,
+    patient: {
+      id: durablePatient.patientId,
+      first_name,
+      last_name,
+      email: email || null,
+    },
+    accessCode,
+  });
 }
