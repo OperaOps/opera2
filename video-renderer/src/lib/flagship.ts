@@ -62,6 +62,9 @@ export interface FlagshipClipSegment extends FlagshipSegmentBase {
   clip: VideoClipInfo;
   /** Freeze the clip's last frame once it ends (used for the warm close). */
   freeze?: boolean;
+  /** This beat continues the previous beat's footage — render with no panel
+   *  re-reveal and natural speed so the cut is invisible. */
+  continuous?: boolean;
   /** Right-panel presentation content (from the generated script). */
   heading?: string;
   bullets?: string[];
@@ -348,9 +351,10 @@ export function buildPreconsultSegments(input: PreconsultSegmentInput): Flagship
   const appt = (input.appointmentType || "visit").replace(/_/g, " ");
   const when = input.appointmentDate ? `on ${input.appointmentDate}` : "soon";
   const tourDur = Math.max(8, input.tourDurationSeconds || 30);
-  // Start the closing beat partway through the footage so the two tour beats
-  // show different parts of the office (when there's enough to go around).
-  const closeTrimStart = tourDur >= 24 ? Math.min(tourDur * 0.5, tourDur - 10) : 0;
+  // The closing beat CONTINUES the tour where the middle beat leaves off —
+  // the pipeline sets the exact trim start once real narration durations are
+  // known (see chainPreconsultTourBeats). This estimate is just a fallback.
+  const closeTrimStart = tourDur >= 24 ? Math.min(tourDur * 0.4, tourDur - 10) : 0;
 
   const seg = (s: FlagshipSegment): FlagshipSegment => ({
     ...s,
@@ -386,22 +390,22 @@ export function buildPreconsultSegments(input: PreconsultSegmentInput): Flagship
         durationSeconds: 0,
       });
 
-  // Closing visual: a later part of the clinic's tour, or the warm still
-  // image when the visual is generic (never the same stock clip twice).
-  const closeClip: VideoClipInfo =
-    input.genericVisual && input.stillImageUrl
-      ? { src: input.stillImageUrl, durationSeconds: 12 }
-      : {
-          src: input.tourVideoUrl,
-          durationSeconds: tourDur,
-          ...(closeTrimStart > 0 ? { trimStartSeconds: closeTrimStart } : {}),
-        };
+  // Closing visual: the clinic's tour continuing seamlessly, or the warm
+  // still image when the visual is generic (never the same stock clip twice).
+  const closeIsStill = Boolean(input.genericVisual && input.stillImageUrl);
+  const closeClip: VideoClipInfo = closeIsStill
+    ? { src: input.stillImageUrl!, durationSeconds: 12 }
+    : {
+        src: input.tourVideoUrl,
+        durationSeconds: tourDur,
+        ...(closeTrimStart > 0 ? { trimStartSeconds: closeTrimStart } : {}),
+      };
 
   return [
     seg({
       kind: "intro-card",
       eyebrow: `FOR ${first.toUpperCase()}  ·  ${input.clinicName.toUpperCase()}`,
-      title: "We can't wait to meet you",
+      title: "Welcome!",
       subtitle: `A quick hello from the ${input.clinicName} team before your ${appt}`,
       narration: doctor
         ? `Hi ${first} — welcome! Dr. ${doctor} and everyone at ${input.clinicName} are really looking forward to meeting you, so here's a quick hello just for you.`
@@ -412,6 +416,7 @@ export function buildPreconsultSegments(input: PreconsultSegmentInput): Flagship
     seg({
       kind: "clip",
       clip: closeClip,
+      continuous: !closeIsStill && !input.genericVisual,
       freeze: true,
       heading: input.appointmentDate ? `See you ${input.appointmentDate}` : "See you soon",
       bullets: [
@@ -423,6 +428,25 @@ export function buildPreconsultSegments(input: PreconsultSegmentInput): Flagship
       durationSeconds: 0,
     }),
   ];
+}
+
+/**
+ * After real narration audio has sized the segments, make the closing tour
+ * beat pick up EXACTLY where the middle beat's footage stops — no jump, no
+ * visible cut. Call only for pre-consult segment lists.
+ */
+export function chainPreconsultTourBeats(segments: FlagshipSegment[]): void {
+  const clips = segments.filter((s): s is FlagshipClipSegment => s.kind === "clip");
+  if (clips.length !== 2) return;
+  const [mid, close] = clips;
+  if (mid.clip.src !== close.clip.src) return; // still-image close — nothing to chain
+  const tourDur = mid.clip.durationSeconds;
+  const resumeAt = (mid.clip.trimStartSeconds ?? 0) + mid.durationSeconds;
+  // Chain only when enough footage remains for the closing beat to breathe;
+  // otherwise leave the estimated trim (the freeze covers any shortfall).
+  if (tourDur - resumeAt >= 6) {
+    close.clip.trimStartSeconds = resumeAt;
+  }
 }
 
 /** Total flagship duration in seconds (sum of segment durations). */

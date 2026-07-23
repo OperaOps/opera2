@@ -312,12 +312,18 @@ const ClipScene: React.FC<{ seg: FlagshipClipSegment }> = ({ seg }) => {
   const clipSeconds = Math.max(1, clip.durationSeconds - (clip.trimStartSeconds ?? 0));
 
   // Fit the clip to the narration:
+  //  - continuous beats (footage picks up mid-tour) always play natural speed
+  //    so the hand-off from the previous beat is invisible
   //  - close in length → gently stretch/squeeze to fill exactly
   //  - clip much shorter → play near-natural speed, then FREEZE on the last frame
   //    for the rest of the beat (clips never loop).
   const rawRate = clipSeconds / seg.durationSeconds;
-  const stretchable = rawRate >= 0.55 && rawRate <= 1.3 && !seg.freeze;
-  const playbackRate = stretchable ? rawRate : Math.min(1, Math.max(0.85, rawRate));
+  const stretchable = !seg.continuous && rawRate >= 0.55 && rawRate <= 1.3 && !seg.freeze;
+  const playbackRate = seg.continuous
+    ? 1
+    : stretchable
+      ? rawRate
+      : Math.min(1, Math.max(0.85, rawRate));
   const videoFrames = stretchable
     ? segFrames
     : Math.min(segFrames, Math.floor((clipSeconds / playbackRate) * fps));
@@ -356,10 +362,14 @@ const ClipScene: React.FC<{ seg: FlagshipClipSegment }> = ({ seg }) => {
   const TEXT_X = PANEL_X + PANEL_W + 88;
   const TEXT_W = VIDEO_WIDTH - TEXT_X - 96;
 
-  const panelReveal = interpolate(frame, [0, 12], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  // Continuous beats keep the panel rock-steady — re-running the reveal
+  // while the same footage keeps playing reads as a glitch.
+  const panelReveal = seg.continuous
+    ? 1
+    : interpolate(frame, [0, 12], [0, 1], {
+        extrapolateLeft: "clamp",
+        extrapolateRight: "clamp",
+      });
 
   const bullets = (seg.bullets ?? []).slice(0, 4);
   const segF = Math.max(1, segFrames);

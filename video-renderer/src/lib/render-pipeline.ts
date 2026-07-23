@@ -43,6 +43,7 @@ import {
 import {
   buildFlagshipSegments,
   buildPreconsultSegments,
+  chainPreconsultTourBeats,
   estimateNarrationSeconds,
   flagshipTotalSeconds,
   FLAGSHIP_FPS,
@@ -385,6 +386,9 @@ export async function renderPatientVideo(
         .map((s) => s.durationSeconds.toFixed(1))
         .join("s, ")}s (total ${flagshipTotalSeconds(segments).toFixed(1)}s)\n`
     );
+    // Pre-consult: with real durations known, make the closing tour beat
+    // continue exactly where the middle beat's footage stops (seamless cut).
+    if (input.preconsult) chainPreconsultTourBeats(segments);
   } else {
     console.warn(
       "[render-pipeline] ELEVENLABS_API_KEY not set — rendering without voiceover audio."

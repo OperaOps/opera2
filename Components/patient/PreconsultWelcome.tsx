@@ -79,7 +79,7 @@ export default function PreconsultWelcome({
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.2, ease: EASE }}
-              className="cf-mono text-[12px] uppercase tracking-[0.24em] text-[#5f7a61]"
+              className="cf-display text-center text-[clamp(1.4rem,3.2vw,2.2rem)] font-light tracking-[-0.01em] text-[#5f7a61]"
             >
               {clinicName}
             </motion.p>
