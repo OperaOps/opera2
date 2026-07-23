@@ -72,6 +72,40 @@ export default function PreConsultForm() {
     if (p.consulting_provider) setProvider(p.consulting_provider);
   };
 
+  // Same contract as post-consult: the link is only handed over once the
+  // rendered welcome video is actually on the page.
+  const [rendering, setRendering] = useState<{ progress: number; step: string } | null>(null);
+
+  const pollRender = async (jobId: string, shareId: string) => {
+    setRendering({ progress: 0.05, step: "Writing the welcome" });
+    const deadline = Date.now() + 10 * 60 * 1000;
+    while (Date.now() < deadline) {
+      await new Promise((r) => setTimeout(r, 3000));
+      try {
+        const res = await fetch(`/api/patient-video/${jobId}`);
+        if (!res.ok) continue;
+        const s = await res.json();
+        if (s.status === "completed") {
+          setRendering(null);
+          setResult(shareId);
+          return;
+        }
+        if (s.status === "failed") break;
+        setRendering({
+          progress: Math.max(0.05, s.progress ?? 0),
+          step: s.step || "Rendering",
+        });
+      } catch {
+        /* keep polling */
+      }
+    }
+    // Render failed or took too long — the page still works with the tour
+    // footage, so hand the link over rather than stranding the clinic.
+    setRendering(null);
+    setError("The welcome video is taking longer than usual — the page below is live with your tour and will pick up the video when it finishes.");
+    setResult(shareId);
+  };
+
   const submit = async () => {
     setBusy(true);
     setError("");
@@ -96,7 +130,11 @@ export default function PreConsultForm() {
         );
         return;
       }
-      setResult(data.shareId);
+      if (data.renderJobId) {
+        await pollRender(data.renderJobId, data.shareId);
+      } else {
+        setResult(data.shareId);
+      }
     } catch {
       setError("Couldn't create the welcome page. Try again.");
     } finally {
@@ -114,6 +152,30 @@ export default function PreConsultForm() {
   const input =
     "cf-body w-full rounded-xl border border-[#1a1a17]/12 bg-white px-4 py-2.5 text-[14.5px] outline-none transition-colors focus:border-[#5f7a61]/60";
 
+  if (rendering) {
+    const pct = Math.round(rendering.progress * 100);
+    return (
+      <div className="mx-auto max-w-xl rounded-2xl border border-[#1a1a17]/10 bg-white p-10 text-center">
+        <h2 className="cf-display text-[24px] font-light text-[#1a1a17]">
+          Rendering {firstName}&rsquo;s welcome video…
+        </h2>
+        <p className="cf-body mt-2 text-[14.5px] text-[#5e6a60]">
+          A personal &ldquo;Hi {firstName}&rdquo; with your office on screen.
+          Usually about two minutes — the link appears the moment it&rsquo;s ready.
+        </p>
+        <div className="mx-auto mt-7 h-2 w-full max-w-sm overflow-hidden rounded-full bg-[#5f7a61]/10">
+          <div
+            className="h-full rounded-full bg-[#5f7a61] transition-all duration-700"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+        <p className="cf-mono mt-3 text-[11px] uppercase tracking-[0.14em] text-[#6e7a71]">
+          {rendering.step} · {pct}%
+        </p>
+      </div>
+    );
+  }
+
   if (result) {
     return (
       <div className="mx-auto max-w-xl rounded-2xl border border-[#5f7a61]/25 bg-white p-8 text-center">
@@ -121,13 +183,13 @@ export default function PreConsultForm() {
           <Check size={24} className="text-[#5f7a61]" />
         </span>
         <h2 className="cf-display mt-4 text-[24px] font-light text-[#1a1a17]">
-          {firstName}&rsquo;s welcome page is live.
+          {firstName}&rsquo;s welcome video is ready.
         </h2>
         <p className="cf-body mt-2 text-[14.5px] text-[#5e6a60]">
-          Send it now — the page is live immediately, and their personalized
-          welcome video appears on it within a few minutes. Their questions
-          land on their patient card.
+          Their page is live with the video on it — send the link whenever
+          you&rsquo;re ready. Their questions land on their patient card.
         </p>
+        {error && <p className="cf-body mt-2 text-[13px] text-[#8a6d1a]">{error}</p>}
         <div className="mt-5 flex items-center justify-center gap-2">
           <button
             onClick={copyLink}

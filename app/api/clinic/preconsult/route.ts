@@ -170,5 +170,5 @@ export async function POST(request: NextRequest) {
     console.error("[preconsult] patient attach failed", err);
   }
 
-  return NextResponse.json({ shareId, url: `/v/${shareId}` });
+  return NextResponse.json({ shareId, url: `/v/${shareId}`, renderJobId: renderJobId ?? null });
 }
