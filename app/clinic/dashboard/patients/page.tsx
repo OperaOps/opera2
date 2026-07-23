@@ -17,10 +17,99 @@ import {
   MessageCircle,
   Plus,
   Search,
+  Send,
   Sparkles,
   X,
 } from "lucide-react";
 import AddPatientModal from "@/Components/clinic-portal/AddPatientModal";
+
+/** "Text to patient" — sends the /v link by SMS; asks for a number if the
+ *  patient has none. Gracefully explains when SMS isn't configured yet. */
+function TextButton({
+  shareId,
+  patientId,
+  patientPhone,
+}: {
+  shareId: string;
+  patientId: string;
+  patientPhone: string | null;
+}) {
+  const [open, setOpen] = useState(false);
+  const [phone, setPhone] = useState(patientPhone ?? "");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [note, setNote] = useState("");
+
+  const send = async (num?: string) => {
+    setState("sending");
+    setNote("");
+    try {
+      const res = await fetch("/api/clinic/send-video-sms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ shareId, patientId, phone: num }),
+      });
+      const d = await res.json();
+      if (d.ok) {
+        setState("sent");
+        setOpen(false);
+        return;
+      }
+      setState("error");
+      if (d.configured === false)
+        setNote("Texting isn't set up yet — email opera@getopera.ai to turn it on.");
+      else if (d.error === "no_phone") {
+        setNote("Add a mobile number to text this patient.");
+        setOpen(true);
+      } else setNote(d.message || "Couldn't send. Check the number and try again.");
+    } catch {
+      setState("error");
+      setNote("Couldn't send. Try again.");
+    }
+  };
+
+  const onClick = () => {
+    if (patientPhone && !open) return void send();
+    setOpen((v) => !v);
+  };
+
+  return (
+    <div className="relative">
+      <button
+        onClick={onClick}
+        disabled={state === "sending"}
+        className={`cf-mono inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] transition-colors ${
+          state === "sent"
+            ? "border-[#5f7a61]/40 bg-[#5f7a61]/[0.1] text-[#3e5540]"
+            : "border-[#5f7a61]/30 text-[#3e5540] hover:bg-[#5f7a61]/[0.07]"
+        }`}
+      >
+        {state === "sent" ? <Check size={11} /> : <Send size={11} />}
+        {state === "sending" ? "Sending" : state === "sent" ? "Texted" : "Text"}
+      </button>
+      {open && (
+        <div className="absolute right-0 z-20 mt-1.5 w-60 rounded-xl border border-[#1a1a17]/12 bg-white p-3 shadow-lg">
+          <input
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="(555) 123-4567"
+            className="cf-body w-full rounded-lg border border-[#1a1a17]/15 px-3 py-2 text-[13px] outline-none focus:border-[#5f7a61]/60"
+          />
+          <button
+            onClick={() => send(phone)}
+            disabled={!phone.trim() || state === "sending"}
+            className="cf-body mt-2 w-full rounded-full bg-[#5f7a61] py-1.5 text-[12.5px] font-medium text-white transition-colors hover:bg-[#4e6650] disabled:opacity-50"
+          >
+            {state === "sending" ? "Sending…" : "Send text"}
+          </button>
+          {note && <p className="cf-body mt-1.5 text-[11.5px] text-[#8a6d1a]">{note}</p>}
+        </div>
+      )}
+      {!open && note && state === "error" && (
+        <p className="cf-body absolute right-0 mt-1 w-52 text-right text-[10.5px] text-[#8a6d1a]">{note}</p>
+      )}
+    </div>
+  );
+}
 
 interface PatientRow {
   id: string;
@@ -401,6 +490,7 @@ export default function PatientsPage() {
                         <span className="cf-mono min-w-0 flex-1 truncate text-[12px] text-[#1a1a17]/80">
                           /v/{sid}
                         </span>
+                        <TextButton shareId={sid} patientId={selected.id} patientPhone={selected.phone} />
                         <button
                           onClick={() => copyLink(sid)}
                           className="cf-mono inline-flex items-center gap-1.5 rounded-full border border-[#5f7a61]/30 px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] text-[#3e5540] transition-colors hover:bg-[#5f7a61]/[0.07]"
@@ -437,6 +527,7 @@ export default function PatientsPage() {
                         <span className="cf-mono min-w-0 flex-1 truncate text-[12px] text-[#1a1a17]/80">
                           /v/{sid}
                         </span>
+                        <TextButton shareId={sid} patientId={selected.id} patientPhone={selected.phone} />
                         <button
                           onClick={() => copyLink(sid)}
                           className="cf-mono inline-flex items-center gap-1.5 rounded-full border border-[#5f7a61]/30 px-3 py-1 text-[10.5px] uppercase tracking-[0.06em] text-[#3e5540] transition-colors hover:bg-[#5f7a61]/[0.07]"
