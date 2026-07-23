@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db/patient-portal-schema";
 import { verifyClinicToken } from "@/lib/auth/clinic-auth";
-import { listPortalPatients, upsertPatientByName } from "@/lib/portal/store";
+import { listPortalPatients, createPortalPatient } from "@/lib/portal/store";
 import {
   dynamoListJobs,
   dynamoListJobsByClinic,
@@ -203,7 +203,9 @@ export async function POST(request: NextRequest) {
   // serverless filesystem in production, so it can't be the primary write.
   let durablePatient;
   try {
-    durablePatient = await upsertPatientByName(clinic.clinicId, {
+    // Always a NEW distinct record — the clinic explicitly asked to add a
+    // patient, so never merge with a same-named existing one.
+    durablePatient = await createPortalPatient(clinic.clinicId, {
       firstName: String(first_name),
       lastName: String(last_name),
       email: email ? String(email) : undefined,

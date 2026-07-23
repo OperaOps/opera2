@@ -13,7 +13,7 @@ import {
   attachJobToPatient,
   getPortalPatient,
   savePreconsultShare,
-  upsertPatientByName,
+  createPortalPatient,
 } from "@/lib/portal/store";
 
 /** Used when a clinic hasn't uploaded its own tour yet. Swap when the
@@ -169,7 +169,7 @@ export async function POST(request: NextRequest) {
       if (existing) patientId = existing.patientId;
     }
     if (!patientId) {
-      const patient = await upsertPatientByName(session.clinicId, {
+      const patient = await createPortalPatient(session.clinicId, {
         firstName: body.firstName.trim(),
         lastName: body.lastName?.trim() ?? "",
         provider: body.provider?.trim(),

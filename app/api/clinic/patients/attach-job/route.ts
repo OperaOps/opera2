@@ -10,7 +10,7 @@ import { verifyClinicToken } from "@/lib/auth/clinic-auth";
 import {
   attachJobToPatient,
   getPortalPatient,
-  upsertPatientByName,
+  createPortalPatient,
 } from "@/lib/portal/store";
 
 export async function POST(request: NextRequest) {
@@ -49,7 +49,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const patient = await upsertPatientByName(clinic.clinicId, {
+    // No explicit patient selected → a typed new name makes a new record.
+    const patient = await createPortalPatient(clinic.clinicId, {
       firstName: body.firstName ?? "",
       lastName: body.lastName ?? "",
       email: body.email,

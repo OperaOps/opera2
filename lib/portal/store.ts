@@ -93,6 +93,44 @@ export async function deletePortalPatient(clinicId: string, patientId: string): 
   await portalPutItem(idxKey(clinicId), { ids });
 }
 
+/**
+ * Always create a NEW distinct patient (fresh id) — used by the explicit
+ * "Add patient" action and when generating for a typed (unselected) name, so
+ * two different people who share a name never collapse into one record.
+ */
+export async function createPortalPatient(
+  clinicId: string,
+  input: {
+    firstName: string;
+    lastName: string;
+    email?: string;
+    phone?: string;
+    dateOfBirth?: string;
+    treatmentType?: string;
+    provider?: string;
+    notes?: string;
+  }
+): Promise<PortalPatient> {
+  const now = new Date().toISOString();
+  const fresh: PortalPatient = {
+    patientId: crypto.randomUUID(),
+    clinicId,
+    firstName: input.firstName.trim(),
+    lastName: input.lastName.trim(),
+    email: input.email,
+    phone: input.phone,
+    dateOfBirth: input.dateOfBirth,
+    treatmentType: input.treatmentType,
+    provider: input.provider,
+    notes: input.notes,
+    videoJobs: [],
+    createdAt: now,
+    updatedAt: now,
+  };
+  await savePortalPatient(fresh);
+  return fresh;
+}
+
 /** Find a clinic patient by exact name (case-insensitive), or create one. */
 export async function upsertPatientByName(
   clinicId: string,
