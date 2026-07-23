@@ -107,15 +107,24 @@ export async function POST(request: NextRequest) {
     email?: string;
     password?: string;
     practiceType?: string;
+    /** Owner's login email — creates this clinic as an additional LOCATION of
+     *  that owner's organization (no separate login; reachable through the
+     *  owner's location switcher). */
+    locationOfEmail?: string;
   };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
   }
-  if (!body.clinicName || !body.email || !body.password || body.password.length < 8) {
+  const isLocation = Boolean(body.locationOfEmail?.trim());
+  if (
+    !body.clinicName ||
+    !body.email ||
+    (!isLocation && (!body.password || body.password.length < 8))
+  ) {
     return NextResponse.json(
-      { error: "clinicName, email, and a password of 8+ characters are required" },
+      { error: "clinicName, email, and a password of 8+ characters are required (password optional for locations)" },
       { status: 400 }
     );
   }
@@ -125,22 +134,38 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "email_exists" }, { status: 409 });
   }
 
+  // Linked location: resolve the owner and their org anchor.
+  let orgId: string | undefined;
+  if (isLocation) {
+    const owner = await findClinicByEmail(body.locationOfEmail!.trim().toLowerCase());
+    if (!owner) return NextResponse.json({ error: "owner_not_found" }, { status: 404 });
+    const ownerRec = owner as unknown as Record<string, unknown>;
+    orgId = (ownerRec.orgId as string) ?? owner.clinicId;
+    // Anchor the owner's record so the switcher lists it as part of the org.
+    if (!ownerRec.orgId) {
+      ownerRec.orgId = orgId;
+      await saveClinic(owner);
+    }
+  }
+
   let clinic = await createClinic({
     clinicName: body.clinicName.trim(),
     contactName: body.contactName?.trim() || body.clinicName.trim(),
     email: body.email.trim().toLowerCase(),
     practiceType: body.practiceType || "dental",
     activationMethod: "activation_code",
-    passwordHash: bcrypt.hashSync(body.password, 10),
+    ...(body.password ? { passwordHash: bcrypt.hashSync(body.password, 10) } : {}),
   });
   clinic = await activateClinic(clinic, { status: "active", trialEndsAt: null });
   const rec = clinic as unknown as Record<string, unknown>;
   rec.specialties = ["dental", "orthodontic"];
+  if (orgId) rec.orgId = orgId;
   await saveClinic(clinic);
 
   return NextResponse.json({
     clinicId: clinic.clinicId,
     email: clinic.email,
     apiKey: clinic.apiKey,
+    orgId: orgId ?? null,
   });
 }

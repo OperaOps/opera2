@@ -16,12 +16,17 @@ export interface ClinicJwtPayload extends JWTPayload {
   clinicId: string;
   clinicName: string;
   email: string;
+  /** Organization anchor (primary location's clinicId) — lets one login
+   *  switch between a multi-location owner's clinics. Absent on old tokens;
+   *  treat session.clinicId as the org in that case. */
+  orgId?: string;
 }
 
 export async function signClinicToken(payload: {
   clinicId: string;
   clinicName: string;
   email: string;
+  orgId?: string;
 }): Promise<string> {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })

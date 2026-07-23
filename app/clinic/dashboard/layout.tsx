@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Shell from "@/app/final/components/Shell";
+import ProfileMenu from "@/Components/clinic-portal/ProfileMenu";
 import {
   Users,
   Film,
@@ -118,15 +119,21 @@ export default function ClinicDashboardLayout({
           <span className="cf-display text-[19px] text-[#1a1a17]">
             Opera<span className="text-[#5f7a61]">AI</span>
           </span>
-          <button aria-label="Menu" onClick={() => setMobileOpen((v) => !v)}>
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          <div className="flex items-center gap-3">
+            <ProfileMenu />
+            <button aria-label="Menu" onClick={() => setMobileOpen((v) => !v)}>
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
         {mobileOpen && (
           <div className="fixed inset-0 z-30 bg-white pt-14 md:hidden">{sidebar}</div>
         )}
 
-        <main className="min-w-0 flex-1 px-5 pb-16 pt-20 md:px-10 md:pt-10">
+        <main className="relative min-w-0 flex-1 px-5 pb-16 pt-20 md:px-10 md:pt-10">
+          <div className="absolute right-5 top-5 z-30 hidden md:block md:right-8 md:top-6">
+            <ProfileMenu />
+          </div>
           {children}
         </main>
       </div>

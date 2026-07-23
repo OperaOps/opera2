@@ -68,6 +68,9 @@ export async function POST(request: NextRequest) {
         clinicId: account.clinicId,
         clinicName: account.clinicName,
         email: account.email,
+        orgId:
+          ((account as unknown as Record<string, unknown>).orgId as string) ??
+          account.clinicId,
       });
       return loginResponse(
         { id: account.clinicId, name: account.clinicName, email: account.email },
@@ -105,6 +108,7 @@ export async function POST(request: NextRequest) {
     clinicId: clinic.id,
     clinicName: clinic.clinic_name,
     email: clinic.clinic_email,
+    orgId: clinic.id,
   });
 
   return loginResponse(
