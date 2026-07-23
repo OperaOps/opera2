@@ -55,8 +55,6 @@ const VALID_TREATMENTS = new Set([
   "dentures",
   "full_mouth",
   "full_mouth_rehab",
-  "inlay_onlay",
-  "sleep_apnea",
   "space_maintainer",
   "headgear",
 ]);
@@ -94,10 +92,8 @@ const TREATMENT_TO_DIAGNOSIS: Record<string, string> = {
   space_maintainer: "crowding",
   jaw_surgery: "underbite",
   headgear: "overbite",
-  sleep_apnea: "overbite",
   full_mouth: "cavity",
   full_mouth_rehab: "missing_tooth",
-  inlay_onlay: "cavity",
 };
 
 function validateInput(body: unknown): { ok: true; data: RenderInput } | { ok: false; error: string } {
@@ -298,12 +294,40 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  // Start render in background via child process
-  runRenderInBackground(jobId, input);
+  // Start render in background via child process. For Greyfinch-originated
+  // jobs, write the treatment-timeline card server-side on completion — the
+  // old client-side write silently vanished if the clinician closed the modal
+  // before the render finished.
+  const fromGreyfinch = request.headers.get("x-opera-source") === "greyfinch";
+  runRenderInBackground(
+    jobId,
+    input,
+    fromGreyfinch
+      ? {
+          onCompleted: (videoUrl) => {
+            import("../_lib/greyfinch")
+              .then(({ writeTimelineCard }) =>
+                writeTimelineCard({
+                  patientName: input.patientName,
+                  patientXid: xid || undefined,
+                  treatment: input.treatment,
+                  jobId,
+                  videoUrl,
+                })
+              )
+              .then((r) => {
+                if (!r.ok) console.warn(`[patient-video ${jobId}] timeline card skipped: ${r.reason}`);
+              })
+              .catch((err) => console.error(`[patient-video ${jobId}] timeline card failed`, err));
+          },
+        }
+      : undefined
+  );
 
   // Usage metering (billing/ROI visibility) — non-blocking. Portal sessions
   // carry clinicId without an API key, so meter on clinicId, not auth kind.
-  if (clinicId) recordVideoGenerated(clinicId);
+  // clinicName carries the Greyfinch {{location.name}} for per-office rollups.
+  if (clinicId) recordVideoGenerated(clinicId, input.clinicName);
 
   return NextResponse.json(
     {

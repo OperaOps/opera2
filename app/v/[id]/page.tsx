@@ -4,6 +4,7 @@
  * No login required — the link itself is the key.
  */
 
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getShareContext, suggestedQuestions, PRE_CONSULT_SUGGESTIONS } from "@/lib/patient-share";
 import PreconsultWelcome from "@/Components/patient/PreconsultWelcome";
@@ -11,6 +12,43 @@ import PostConsultIntro from "@/Components/patient/PostConsultIntro";
 import { AskOpera } from "@/Components/patient/AskOpera";
 
 export const dynamic = "force-dynamic";
+
+// SMS/iMessage/WhatsApp previews read these tags. Make the card about the
+// CLINIC and PATIENT (e.g. "Welcome, Maya!") — never Opera's site branding.
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const ctx = await getShareContext(params.id);
+  if (!ctx) return { title: "Your video" };
+
+  const isPre = ctx.stage === "pre";
+  const title = isPre
+    ? `Welcome, ${ctx.patientFirstName}!`
+    : `Your visit summary, ${ctx.patientFirstName}`;
+  const description = isPre
+    ? `A personal hello from ${ctx.clinicName} before your visit — tap to watch.`
+    : `${ctx.provider ?? "Your doctor"} at ${ctx.clinicName} made this just for you — tap to watch.`;
+
+  return {
+    title,
+    description,
+    // Relative to this route → hits opengraph-image.tsx below.
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: [{ url: `/v/${params.id}/opengraph-image`, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`/v/${params.id}/opengraph-image`],
+    },
+  };
+}
 
 export default async function PatientSharePage({ params }: { params: { id: string } }) {
   const ctx = await getShareContext(params.id);
