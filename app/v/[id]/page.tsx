@@ -31,21 +31,28 @@ export async function generateMetadata({
     ? `A personal hello from ${ctx.clinicName} before your visit — tap to watch.`
     : `${ctx.provider ?? "Your doctor"} at ${ctx.clinicName} made this just for you — tap to watch.`;
 
+  // Absolute base so the banner image resolves for SMS/iMessage crawlers
+  // (without this Next points og:image at localhost → the phone can't fetch
+  // it and falls back to the site favicon on a gray card).
+  const origin =
+    process.env.OPERA_PUBLIC_ORIGIN?.trim().replace(/\/$/, "") || "https://getopera.ai";
+  const ogUrl = `${origin}/v/${params.id}/opengraph-image`;
+
   return {
+    metadataBase: new URL(origin),
     title,
     description,
-    // Relative to this route → hits opengraph-image.tsx below.
     openGraph: {
       title,
       description,
       type: "website",
-      images: [{ url: `/v/${params.id}/opengraph-image`, width: 1200, height: 630 }],
+      images: [{ url: ogUrl, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [`/v/${params.id}/opengraph-image`],
+      images: [ogUrl],
     },
   };
 }

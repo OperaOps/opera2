@@ -1,8 +1,7 @@
 /**
- * Dynamic SMS/social preview card for a patient share link.
- * Renders a clean sage banner: "Welcome, {name}!" (pre) or
- * "Your visit summary, {name}" (post) with the clinic name — so a texted
- * link reads as coming from the clinic, not from Opera's marketing site.
+ * Dynamic SMS/social preview card for a patient share link — a clean, bright
+ * "video card": white surface, clinic logo, big title, and a sage play button
+ * so a texted link reads as a real video from the clinic (not Opera).
  */
 
 import { ImageResponse } from "next/og";
@@ -18,10 +17,11 @@ export default async function Image({ params }: { params: { id: string } }) {
   const first = ctx?.patientFirstName ?? "there";
   const clinic = ctx?.clinicName ?? "Your clinic";
   const isPre = ctx?.stage === "pre";
+  const logo = ctx?.clinicLogoUrl;
   const headline = isPre ? `Welcome, ${first}!` : `Your visit summary, ${first}`;
   const sub = isPre
     ? "A personal hello before your visit"
-    : "A personal walkthrough of your care";
+    : "A personalized walkthrough of your care";
 
   return new ImageResponse(
     (
@@ -31,54 +31,91 @@ export default async function Image({ params }: { params: { id: string } }) {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          padding: "90px 96px",
-          background: "linear-gradient(135deg, #5f7a61 0%, #3e5540 100%)",
-          color: "#ffffff",
+          background: "#ffffff",
           fontFamily: "sans-serif",
         }}
       >
-        <div
-          style={{
-            fontSize: 30,
-            letterSpacing: 6,
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.82)",
-            marginBottom: 28,
-          }}
-        >
-          {clinic}
-        </div>
-        <div style={{ fontSize: 92, fontWeight: 700, lineHeight: 1.05, letterSpacing: -2 }}>
-          {headline}
-        </div>
-        <div style={{ fontSize: 38, color: "rgba(255,255,255,0.9)", marginTop: 26 }}>
-          {sub}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginTop: 54,
-            fontSize: 30,
-            color: "rgba(255,255,255,0.95)",
-          }}
-        >
+        {/* top sage accent bar */}
+        <div style={{ height: 14, width: "100%", background: "linear-gradient(90deg,#5f7a61,#a9c0aa)" }} />
+
+        <div style={{ display: "flex", flex: 1, padding: "64px 72px", alignItems: "center" }}>
+          {/* left: text */}
+          <div style={{ display: "flex", flexDirection: "column", flex: 1, paddingRight: 40 }}>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: 30 }}>
+              {logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={logo}
+                  width={64}
+                  height={64}
+                  style={{
+                    borderRadius: 14,
+                    border: "1px solid #e6ebe6",
+                    objectFit: "contain",
+                    background: "#fff",
+                    marginRight: 20,
+                  }}
+                />
+              ) : null}
+              <div style={{ fontSize: 30, fontWeight: 600, color: "#3e5540", letterSpacing: 0.5 }}>
+                {clinic}
+              </div>
+            </div>
+            <div style={{ fontSize: 74, fontWeight: 800, color: "#1a1a17", lineHeight: 1.04, letterSpacing: -2 }}>
+              {headline}
+            </div>
+            <div style={{ fontSize: 34, color: "#5e6a60", marginTop: 22 }}>{sub}</div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: 40,
+                fontSize: 26,
+                fontWeight: 600,
+                color: "#5f7a61",
+              }}
+            >
+              Tap to watch your video
+            </div>
+          </div>
+
+          {/* right: video tile with play button */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: 58,
-              height: 58,
-              borderRadius: 40,
-              background: "rgba(255,255,255,0.2)",
-              marginRight: 22,
+              width: 360,
+              height: 360,
+              borderRadius: 32,
+              background: "linear-gradient(135deg,#5f7a61,#3e5540)",
+              boxShadow: "0 30px 60px -20px rgba(63,85,64,0.5)",
             }}
           >
-            ▶
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 128,
+                height: 128,
+                borderRadius: 80,
+                background: "#ffffff",
+              }}
+            >
+              {/* play triangle */}
+              <div
+                style={{
+                  width: 0,
+                  height: 0,
+                  marginLeft: 12,
+                  borderTop: "34px solid transparent",
+                  borderBottom: "34px solid transparent",
+                  borderLeft: "56px solid #3e5540",
+                }}
+              />
+            </div>
           </div>
-          Tap to watch your video
         </div>
       </div>
     ),
