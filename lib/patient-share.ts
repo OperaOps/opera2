@@ -83,6 +83,18 @@ const DEMO_CONTEXT: ShareContext = {
   isDemo: true,
 };
 
+/** The clinic's current logo — patient pages always show the latest one. */
+async function clinicLogo(clinicId?: string): Promise<string | undefined> {
+  if (!clinicId) return undefined;
+  try {
+    const { getClinic } = await import("@/lib/connect/clinic-store");
+    const account = await getClinic(clinicId);
+    return account?.logoUrl ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function getShareContext(id: string): Promise<ShareContext | null> {
   if (id === "demo") return DEMO_CONTEXT;
 
@@ -124,7 +136,7 @@ export async function getShareContext(id: string): Promise<ShareContext | null> 
           personalNote: share.personalNote,
           audioBaked,
           genericVisual: share.genericVisual,
-          clinicLogoUrl: share.logoUrl ?? undefined,
+          clinicLogoUrl: share.logoUrl ?? (await clinicLogo(share.clinicId)),
           providerNotes:
             `${share.patientFirstName} has an upcoming ${share.appointmentType.replace(/_/g, " ")} ` +
             `at ${share.clinicName}${share.provider ? ` with ${share.provider}` : ""}` +
@@ -168,6 +180,7 @@ export async function getShareContext(id: string): Promise<ShareContext | null> 
             appointmentDate: pre?.appointmentDate,
             audioBaked: true,
             genericVisual: true,
+            clinicLogoUrl: await clinicLogo(job.clinicId),
             providerNotes:
               `${firstName} has an upcoming visit at ${input.clinicName || "the clinic"}. ` +
               `No diagnosis or treatment plan exists yet — this is BEFORE their first visit.`,
@@ -189,6 +202,7 @@ export async function getShareContext(id: string): Promise<ShareContext | null> 
           clinicName: input.clinicName || "your clinic",
           provider: input.doctorName || undefined,
           treatmentType: treatment,
+          clinicLogoUrl: await clinicLogo(job.clinicId),
           providerNotes: notes || undefined,
         };
       }

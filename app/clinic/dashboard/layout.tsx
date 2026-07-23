@@ -40,7 +40,15 @@ export default function ClinicDashboardLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [clinicName, setClinicName] = useState("Your clinic");
+  const [clinicLogo, setClinicLogo] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/clinic/customization")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d?.logoUrl && setClinicLogo(d.logoUrl))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const match = document.cookie
@@ -71,9 +79,19 @@ export default function ClinicDashboardLayout({
         </span>
       </Link>
 
-      <p className="cf-mono mt-6 px-5 text-[11px] uppercase tracking-[0.16em] text-[#6e7a71]">
-        {clinicName}
-      </p>
+      <div className="mt-6 flex items-center gap-2.5 px-5">
+        {clinicLogo && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={clinicLogo}
+            alt=""
+            className="h-7 w-7 shrink-0 rounded-lg border border-[#1a1a17]/10 bg-white object-contain p-0.5"
+          />
+        )}
+        <p className="cf-mono text-[11px] uppercase tracking-[0.16em] text-[#6e7a71]">
+          {clinicName}
+        </p>
+      </div>
 
       <nav className="mt-3 flex-1 space-y-1 px-3">
         {NAV.map((item) => {
