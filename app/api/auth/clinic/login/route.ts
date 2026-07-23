@@ -14,8 +14,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { getDb } from "@/lib/db/patient-portal-schema";
-import { findClinicByEmail } from "@/lib/connect/clinic-store";
+import { findClinicByEmail, portalPutItem } from "@/lib/connect/clinic-store";
 import { signClinicToken, CLINIC_COOKIE_NAME } from "@/lib/auth/clinic-auth";
+import { encryptPassword } from "@/lib/auth/password-vault";
+
+/** Store the (encrypted) password so Profile can reveal it — keyed by the
+ *  org anchor so every location of a multi-location login resolves it. */
+function storePasswordVault(orgId: string, password: string): void {
+  portalPutItem(`PWD#${orgId}`, {
+    vault: encryptPassword(password),
+    updatedAt: new Date().toISOString(),
+  }).catch(() => {});
+}
 
 function loginResponse(clinic: { id: string; name: string; email: string; address?: string }, token: string) {
   const response = NextResponse.json({
@@ -64,13 +74,15 @@ export async function POST(request: NextRequest) {
           { status: 402 }
         );
       }
+      const orgId =
+        ((account as unknown as Record<string, unknown>).orgId as string) ??
+        account.clinicId;
+      storePasswordVault(orgId, password);
       const token = await signClinicToken({
         clinicId: account.clinicId,
         clinicName: account.clinicName,
         email: account.email,
-        orgId:
-          ((account as unknown as Record<string, unknown>).orgId as string) ??
-          account.clinicId,
+        orgId,
       });
       return loginResponse(
         { id: account.clinicId, name: account.clinicName, email: account.email },
@@ -104,6 +116,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  storePasswordVault(clinic.id, password);
   const token = await signClinicToken({
     clinicId: clinic.id,
     clinicName: clinic.clinic_name,

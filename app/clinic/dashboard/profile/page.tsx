@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { Check, MapPin } from "lucide-react";
+import { Check, Eye, EyeOff, MapPin } from "lucide-react";
 
 interface LocationRow {
   clinicId: string;
@@ -38,6 +38,34 @@ export default function ProfilePage() {
   const [clinic, setClinic] = useState<ClinicInfo>({});
   const [billing, setBilling] = useState<BillingInfo | null>(null);
   const [switching, setSwitching] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordState, setPasswordState] = useState<"idle" | "loading" | "unavailable">("idle");
+
+  const togglePassword = async () => {
+    if (showPassword) {
+      setShowPassword(false);
+      return;
+    }
+    if (password) {
+      setShowPassword(true);
+      return;
+    }
+    setPasswordState("loading");
+    try {
+      const res = await fetch("/api/clinic/password");
+      if (res.ok) {
+        const d = await res.json();
+        setPassword(d.password);
+        setShowPassword(true);
+        setPasswordState("idle");
+        return;
+      }
+    } catch {
+      /* fall through */
+    }
+    setPasswordState("unavailable");
+  };
 
   useEffect(() => {
     fetch("/api/clinic/locations")
@@ -109,6 +137,35 @@ export default function ProfilePage() {
               Login email
             </p>
             <p className="cf-body mt-1 text-[15px] text-[#1a1a17]">{email || "—"}</p>
+          </div>
+          <div>
+            <p className="cf-mono text-[10.5px] uppercase tracking-[0.12em] text-[#6e7a71]">
+              Password
+            </p>
+            <div className="mt-1 flex items-center gap-2">
+              <p className="cf-body text-[15px] tracking-wide text-[#1a1a17]">
+                {passwordState === "unavailable"
+                  ? "Shown after your next sign-in"
+                  : showPassword && password
+                    ? password
+                    : "••••••••••"}
+              </p>
+              {passwordState !== "unavailable" && (
+                <button
+                  onClick={togglePassword}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="rounded-full p-1.5 text-[#6e7a71] transition-colors hover:bg-[#1a1a17]/[0.05] hover:text-[#1a1a17]"
+                >
+                  {passwordState === "loading" ? (
+                    <span className="cf-mono text-[10px]">…</span>
+                  ) : showPassword ? (
+                    <EyeOff size={15} />
+                  ) : (
+                    <Eye size={15} />
+                  )}
+                </button>
+              )}
+            </div>
           </div>
           <div>
             <p className="cf-mono text-[10.5px] uppercase tracking-[0.12em] text-[#6e7a71]">
