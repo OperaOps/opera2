@@ -396,7 +396,14 @@ function FormWizard({
   };
 
   const handleSubmit = () => {
+    // Only send patientId when the current name still matches the picked
+    // patient — typing a new name clears selectedPatient, so a fresh name
+    // creates a fresh patient instead of hijacking a selected one.
+    const picked = patients.find((x) => x.id === selectedPatient);
+    const stillMatches =
+      picked && `${picked.first_name} ${picked.last_name}`.trim() === patientName.trim();
     onSubmit({
+      patientId: stillMatches ? selectedPatient : undefined,
       patientName: patientName.trim(),
       doctorName: doctorName.trim(),
       clinicName: clinicName.trim(),
@@ -978,11 +985,12 @@ export function VideoStudio({
       // their row shows the video link and Ask Opera activity.
       try {
         const [firstName, ...rest] = String(data.patientName ?? "").trim().split(/\s+/);
-        if (firstName && job.jobId) {
+        if ((data.patientId || firstName) && job.jobId) {
           fetch("/api/clinic/patients/attach-job", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
+              patientId: data.patientId, // attach to the exact selected patient
               firstName,
               lastName: rest.join(" "),
               jobId: job.jobId,

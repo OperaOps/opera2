@@ -7,13 +7,18 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { verifyClinicToken } from "@/lib/auth/clinic-auth";
-import { attachJobToPatient, upsertPatientByName } from "@/lib/portal/store";
+import {
+  attachJobToPatient,
+  getPortalPatient,
+  upsertPatientByName,
+} from "@/lib/portal/store";
 
 export async function POST(request: NextRequest) {
   const clinic = await verifyClinicToken(request);
   if (!clinic) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   let body: {
+    patientId?: string;
     firstName?: string;
     lastName?: string;
     jobId?: string;
@@ -28,13 +33,24 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
   }
-  if (!body.firstName || !body.jobId) {
-    return NextResponse.json({ error: "firstName and jobId required" }, { status: 400 });
+  if ((!body.patientId && !body.firstName) || !body.jobId) {
+    return NextResponse.json({ error: "patientId or firstName, plus jobId, required" }, { status: 400 });
   }
 
   try {
+    // When the video was generated for a SPECIFIC selected patient, attach by
+    // their stable id — never re-resolve by name (two real patients can share
+    // a name). Only fall back to name-upsert for a genuinely new patient.
+    if (body.patientId) {
+      const p = await getPortalPatient(clinic.clinicId, body.patientId);
+      if (p) {
+        await attachJobToPatient(clinic.clinicId, p.patientId, body.jobId);
+        return NextResponse.json({ ok: true, patientId: p.patientId });
+      }
+    }
+
     const patient = await upsertPatientByName(clinic.clinicId, {
-      firstName: body.firstName,
+      firstName: body.firstName ?? "",
       lastName: body.lastName ?? "",
       email: body.email,
       phone: body.phone,

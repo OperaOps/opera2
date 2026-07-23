@@ -28,6 +28,7 @@ export default function PreConsultForm() {
   const [hasVideo, setHasVideo] = useState<boolean | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [selectedPatientId, setSelectedPatientId] = useState("");
   const [provider, setProvider] = useState("");
   const [appointmentType, setAppointmentType] = useState(APPOINTMENT_TYPES[0].value);
   const [appointmentDate, setAppointmentDate] = useState("");
@@ -67,6 +68,7 @@ export default function PreConsultForm() {
     const p = patients.find((x) => x.id === id);
     setShowSuggest(false);
     if (!p) return;
+    setSelectedPatientId(id);
     setFirstName(p.first_name);
     setLastName(p.last_name);
     if (p.consulting_provider) setProvider(p.consulting_provider);
@@ -114,6 +116,14 @@ export default function PreConsultForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          // Only when the picked patient's name is still intact — a typed
+          // change clears the id, so a new name makes a new patient.
+          patientId: (() => {
+            const p = patients.find((x) => x.id === selectedPatientId);
+            return p && `${p.first_name} ${p.last_name}`.trim() === `${firstName} ${lastName}`.trim()
+              ? selectedPatientId
+              : undefined;
+          })(),
           firstName,
           lastName,
           provider,
@@ -247,6 +257,7 @@ export default function PreConsultForm() {
               value={firstName}
               onChange={(e) => {
                 setFirstName(e.target.value);
+                setSelectedPatientId("");
                 setShowSuggest(true);
               }}
               onFocus={() => setShowSuggest(true)}

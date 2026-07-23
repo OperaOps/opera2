@@ -65,17 +65,22 @@ export async function GET(request: NextRequest) {
   let merged = patients as Record<string, unknown>[];
   let mergedTotal = total.count;
   // Durable portal patients (production store) — merge ahead of job stubs.
+  // Dedup only against SQLite rows (the same person mirrored to both stores);
+  // NEVER dedup durable-vs-durable, so two different patients who happen to
+  // share a name both appear (each has its own stable id).
   try {
     const durable = await listPortalPatients(clinic.clinicId);
-    const knownNames = new Set(
+    const sqliteNames = new Set(
       merged.map((p) =>
         `${String(p.first_name ?? "").toLowerCase()} ${String(p.last_name ?? "").toLowerCase()}`.trim()
       )
     );
+    const seenIds = new Set(merged.map((p) => String(p.id)));
     for (const dp of durable) {
       const nameKey = `${dp.firstName.toLowerCase()} ${dp.lastName.toLowerCase()}`.trim();
-      if (knownNames.has(nameKey)) continue;
-      knownNames.add(nameKey);
+      if (seenIds.has(dp.patientId)) continue;
+      if (sqliteNames.has(nameKey)) continue; // same person already in SQLite
+      seenIds.add(dp.patientId);
       merged.push({
         id: dp.patientId,
         first_name: dp.firstName,

@@ -11,6 +11,7 @@ import { getClinic } from "@/lib/connect/clinic-store";
 import { getDb } from "@/lib/db/patient-portal-schema";
 import {
   attachJobToPatient,
+  getPortalPatient,
   savePreconsultShare,
   upsertPatientByName,
 } from "@/lib/portal/store";
@@ -29,6 +30,7 @@ export async function POST(request: NextRequest) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   let body: {
+    patientId?: string;
     firstName?: string;
     lastName?: string;
     provider?: string;
@@ -157,15 +159,25 @@ export async function POST(request: NextRequest) {
     genericVisual,
   });
 
-  // keep the patient record durable + linked
+  // keep the patient record durable + linked. Attach to the SPECIFIC selected
+  // patient by id when one was picked (never re-resolve by name); only
+  // upsert-by-name for a genuinely new patient typed in.
   try {
-    const patient = await upsertPatientByName(session.clinicId, {
-      firstName: body.firstName.trim(),
-      lastName: body.lastName?.trim() ?? "",
-      provider: body.provider?.trim(),
-      treatmentType: "pre_consult",
-    });
-    await attachJobToPatient(session.clinicId, patient.patientId, shareId);
+    let patientId: string | undefined;
+    if (body.patientId) {
+      const existing = await getPortalPatient(session.clinicId, body.patientId);
+      if (existing) patientId = existing.patientId;
+    }
+    if (!patientId) {
+      const patient = await upsertPatientByName(session.clinicId, {
+        firstName: body.firstName.trim(),
+        lastName: body.lastName?.trim() ?? "",
+        provider: body.provider?.trim(),
+        treatmentType: "pre_consult",
+      });
+      patientId = patient.patientId;
+    }
+    await attachJobToPatient(session.clinicId, patientId, shareId);
   } catch (err) {
     console.error("[preconsult] patient attach failed", err);
   }
