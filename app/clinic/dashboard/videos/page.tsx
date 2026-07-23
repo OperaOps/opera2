@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
-import { Check, Copy, ExternalLink, MessageCircle, Search, X } from "lucide-react";
+import { Check, ChevronDown, Copy, ExternalLink, MessageCircle, Search, X } from "lucide-react";
 import { AskOpera } from "@/Components/patient/AskOpera";
 
 interface VideoRow {
@@ -173,18 +173,24 @@ export default function VideosPage() {
           </button>
         ))}
         {stage === "post" && (
-          <select
-            value={treatment}
-            onChange={(e) => setTreatment(e.target.value)}
-            className="cf-mono rounded-full border border-[#1a1a17]/12 bg-white px-4 py-2 text-[11.5px] uppercase tracking-[0.08em] text-[#1a1a17]/70 outline-none transition-colors hover:border-[#5f7a61]/40 focus:border-[#5f7a61]/50"
-          >
-            <option value="all">All treatments</option>
-            {treatments.map((t) => (
-              <option key={t} value={t}>
-                {t.replace(/_/g, " ")}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              value={treatment}
+              onChange={(e) => setTreatment(e.target.value)}
+              className="cf-mono appearance-none rounded-full border border-[#1a1a17]/12 bg-white py-2 pl-4 pr-10 text-[11.5px] uppercase tracking-[0.08em] text-[#1a1a17]/70 outline-none transition-colors hover:border-[#5f7a61]/40 focus:border-[#5f7a61]/50"
+            >
+              <option value="all">All treatments</option>
+              {treatments.map((t) => (
+                <option key={t} value={t}>
+                  {t.replace(/_/g, " ")}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              size={13}
+              className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6e7a71]"
+            />
+          </div>
         )}
       </div>
 
