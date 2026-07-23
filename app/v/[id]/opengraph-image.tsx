@@ -103,17 +103,11 @@ export default async function Image({ params }: { params: { id: string } }) {
                 background: "#ffffff",
               }}
             >
-              {/* play triangle */}
-              <div
-                style={{
-                  width: 0,
-                  height: 0,
-                  marginLeft: 12,
-                  borderTop: "34px solid transparent",
-                  borderBottom: "34px solid transparent",
-                  borderLeft: "56px solid #3e5540",
-                }}
-              />
+              {/* play triangle (SVG renders crisply in Satori; CSS border
+                  triangles do not) */}
+              <svg width="52" height="58" viewBox="0 0 52 58">
+                <polygon points="6,4 50,29 6,54" fill="#3e5540" />
+              </svg>
             </div>
           </div>
         </div>
