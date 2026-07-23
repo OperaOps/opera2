@@ -15,10 +15,12 @@ export default function PostConsultIntro({
   firstName,
   clinicName,
   provider,
+  clinicLogoUrl,
 }: {
   firstName: string;
   clinicName: string;
   provider?: string;
+  clinicLogoUrl?: string;
 }) {
   const [open, setOpen] = useState(true);
 
@@ -32,6 +34,16 @@ export default function PostConsultIntro({
           transition={{ duration: 0.8, ease: EASE }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white px-6"
         >
+          {clinicLogoUrl && (
+            <motion.img
+              src={clinicLogoUrl}
+              alt=""
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+              className="mb-5 h-16 w-16 rounded-2xl border border-[#1a1a17]/10 bg-white object-contain p-1.5 shadow-[0_12px_30px_-12px_rgba(26,26,23,0.25)]"
+            />
+          )}
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}

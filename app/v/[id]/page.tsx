@@ -51,6 +51,7 @@ export default async function PatientSharePage({ params }: { params: { id: strin
           videoUrl={ctx.videoUrl}
           audioBaked={ctx.audioBaked}
           genericVisual={ctx.genericVisual}
+          clinicLogoUrl={ctx.clinicLogoUrl}
         />
 
         <div className="mx-auto max-w-3xl px-5 pb-20 pt-12">
@@ -76,6 +77,7 @@ export default async function PatientSharePage({ params }: { params: { id: strin
         firstName={ctx.patientFirstName}
         clinicName={ctx.clinicName}
         provider={ctx.provider}
+        clinicLogoUrl={ctx.clinicLogoUrl}
       />
       {/* Clinic header */}
       <header className="mx-auto flex max-w-3xl items-center justify-between px-5 pt-6">

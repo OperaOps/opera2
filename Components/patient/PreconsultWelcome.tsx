@@ -23,6 +23,7 @@ export default function PreconsultWelcome({
   videoUrl,
   audioBaked,
   genericVisual,
+  clinicLogoUrl,
 }: {
   firstName: string;
   clinicName: string;
@@ -33,6 +34,7 @@ export default function PreconsultWelcome({
   videoUrl: string;
   audioBaked?: boolean;
   genericVisual?: boolean;
+  clinicLogoUrl?: string;
 }) {
   const [intro, setIntro] = useState(true);
   const [started, setStarted] = useState(false);
@@ -75,6 +77,16 @@ export default function PreconsultWelcome({
               /* auto-dismiss after the greeting breathes */
             }}
           >
+            {clinicLogoUrl && (
+              <motion.img
+                src={clinicLogoUrl}
+                alt=""
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+                className="mb-5 h-16 w-16 rounded-2xl border border-[#1a1a17]/10 bg-white object-contain p-1.5 shadow-[0_12px_30px_-12px_rgba(26,26,23,0.25)]"
+              />
+            )}
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
