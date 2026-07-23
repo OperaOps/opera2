@@ -25,7 +25,11 @@ export default async function PatientSharePage({ params }: { params: { id: strin
           <div className="flex items-center gap-2.5">
             {ctx.clinicLogoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={ctx.clinicLogoUrl} alt={ctx.clinicName} className="h-8 w-8 rounded-lg object-cover" />
+              <img
+                src={ctx.clinicLogoUrl}
+                alt={ctx.clinicName}
+                className="h-9 w-auto max-w-[140px] rounded-lg border border-[#1a1a17]/[0.07] bg-white object-contain p-1"
+              />
             ) : (
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#5f7a61] text-[13px] font-bold text-white">
                 {ctx.clinicName.charAt(0)}
@@ -87,7 +91,7 @@ export default async function PatientSharePage({ params }: { params: { id: strin
             <img
               src={ctx.clinicLogoUrl}
               alt={ctx.clinicName}
-              className="h-8 w-8 rounded-lg object-cover"
+              className="h-9 w-auto max-w-[140px] rounded-lg border border-gray-100 bg-white object-contain p-1"
             />
           ) : (
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#5f7a61] to-[#5f7a61] text-[13px] font-bold text-white">
